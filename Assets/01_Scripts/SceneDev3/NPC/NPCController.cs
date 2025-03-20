@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.Timeline.Actions;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 public enum NPCType
@@ -21,9 +22,14 @@ public class NPCController : MonoBehaviour
     public float workRange = 3f; //일을 시작할 거리
     public float woringTimer = 3f; //일하는 시간
 
+    public Vector3 idlePos;
+    
+    private bool canVisit = false;
+    public bool CanVisit { get { return canVisit; } }
+
     private bool workTakenAway;
     public bool WorkTakenAway {  get { return workTakenAway; } set { workTakenAway = value; } }
-
+    
     void Start()
     {
         switch (NPCType)
@@ -39,7 +45,26 @@ public class NPCController : MonoBehaviour
 
     public void EmployeeInitBehaviorTree()
     {
+        behaviorTree = new BehaviorTree<NPCController>(this);
+        var rootSelcector = new SelectorrNode<NPCController>(this);
 
+        var workingSequence = new SequenceNode<NPCController>(this);
+        workingSequence.AddChild(new WorkingCondition(this));
+        workingSequence.AddChild(new WorkingAction(this));
+
+        var returnSequence = new SequenceNode<NPCController>(this);
+        returnSequence.AddChild(new CanReturnCondition(this));
+        returnSequence.AddChild(new ReturnAction(this));
+
+        var visitIdleSequence = new SequenceNode<NPCController>(this);
+        visitIdleSequence.AddChild(new VisitAction(this));
+        visitIdleSequence.AddChild(new IdleAction(this));
+
+        rootSelcector.AddChild(workingSequence);
+        rootSelcector.AddChild(returnSequence);
+        rootSelcector.AddChild(visitIdleSequence);
+
+        behaviorTree.SetRoot(rootSelcector);
     }
     public void CustomerInitBehaviorTree()
     {
