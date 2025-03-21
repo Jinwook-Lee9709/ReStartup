@@ -5,8 +5,6 @@ using UnityEngine;
 public class ObjectData : MonoBehaviour
 {
     private GameObject objectReference;
-
-
     public bool IsInteractable
     {
         get

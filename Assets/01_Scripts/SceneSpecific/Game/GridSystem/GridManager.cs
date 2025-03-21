@@ -12,5 +12,4 @@ public class GridManager : MonoBehaviour
         return gridInfo.ContainsKey(position);
     }
     
-    
 }
