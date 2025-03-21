@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using static UnityEditor.PlayerSettings;
 
-public class EmployeeFSM : MonoBehaviour
+public class EmployeeFSM : WorkerBase
 {
     [SerializeField]
     private Transform idleArea;
@@ -14,7 +14,6 @@ public class EmployeeFSM : MonoBehaviour
         ReturnidleArea,
         Working,
     }
-    private NavMeshAgent agent;
 
     private EnployedState currentStatus;
 
@@ -28,12 +27,19 @@ public class EmployeeFSM : MonoBehaviour
             switch (currentStatus)
             {
                 case EnployedState.Idle:
+                    //DataTable« ø‰
                     break;
                 case EnployedState.ReturnidleArea:
+                    if (currentWork != null)
+                        currentStatus = EnployedState.Working;
+
                     agent.SetDestination(idleArea.position);
-                    
                     break;
                 case EnployedState.Working:
+                    if (currentWork == null)
+                        currentStatus = EnployedState.ReturnidleArea;
+
+                    currentWork.DoWork();
                     break;
             }
         }
