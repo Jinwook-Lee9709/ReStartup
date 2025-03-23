@@ -1,12 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class UserDataManager : Singleton<UserDataManager>
 {
     private UserData currentUserData;
+    private SettingData currentSettingData;
     public UserData CurrentUserData
     {
         get => currentUserData;
@@ -22,19 +23,35 @@ public class UserDataManager : Singleton<UserDataManager>
 
     public bool SaveDB()
     {
-        throw new NotImplementedException();
+        throw new System.NotImplementedException();
     }
 
-    public bool LoadDB(string uid = "12345678")
+    public async Task<bool> LoadDB(string uid = "1234")
     {
-        throw new NotImplementedException();
+        var result = await UserDataDAC.GetUserData(uid);
+        CurrentUserData = result;
+        return true;
     }
 
     public void InitCurrentUserData()
     {
-        if(!LoadDB())
+        StartCoroutine(LoadRoutine());
+    }
+
+    IEnumerator LoadRoutine()
+    {
+        Task<bool> task = LoadDB();
+        while (!task.IsCompleted)
         {
-            return;
+            yield return new WaitForEndOfFrame();
+        }
+        if(task.Result)
+        {
+            Debug.Log("Load DB Success");
+        }
+        else
+        {
+            Debug.Log("Load DB Fail");
         }
     }
 }

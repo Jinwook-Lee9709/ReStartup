@@ -1,4 +1,4 @@
-public enum WorkType
+using System;public enum WorkType
 {
     Payment,
     Clean,
@@ -12,6 +12,7 @@ public enum WorkStatus
     Assigned,
 }
 
+
 public enum InteractStatus
 {
     Pending,
@@ -19,7 +20,9 @@ public enum InteractStatus
     Success,
 }
 
-public enum LanguageType
+
+public static class Endpoints
 {
-    Korean,
+    private static string BaseUrl = "127.0.0.1:3000";
+    public static string UserUrl = BaseUrl + "/users";
 }
