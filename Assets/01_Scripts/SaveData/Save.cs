@@ -4,17 +4,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 /// <summary>
-/// DB¿¡ ÀúÀåµÉ À¯ÀúÀÇ Á¤º¸ Å¬·¡½º
+/// DBï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½
 /// </summary>
 [Serializable]
 public class UserData
 {
-    public string UID { get; set; }
-    public string Name { get; set; }
+    public string id { get; set; } = null;
+    public string email { get; set; }
+    public string login_source { get; set; }
 }
 
+
 /// <summary>
-/// ·ÎÄÃ¿¡ ÀúÀåÇÒ À¯ÀúÀÇ °ÔÀÓ ¼³Á¤ Å¬·¡½º
+/// ï¿½ï¿½ï¿½Ã¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½
 /// </summary>
 [Serializable]
 public class SettingData
@@ -23,7 +25,7 @@ public class SettingData
     public float BackGroundVolume { get; set; } = 1f;
     public float SFXVolume { get; set; } = 1f;
     /// <summary>
-    /// Define ¸ÓÁö ÈÄ ¾ð¾î Å¸ÀÔ enumÀ¸·Î º¯°æ
+    /// Define ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ enumï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     public int LanguageType { get; set; } = 0;
 }

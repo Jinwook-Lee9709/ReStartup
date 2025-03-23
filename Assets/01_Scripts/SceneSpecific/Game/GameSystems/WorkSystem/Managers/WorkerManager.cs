@@ -6,10 +6,6 @@ using UnityEngine;
 
 public class WorkerManager : MonoBehaviour
 {
-    //ForTest
-    public WorkerBase testWorker;
-    //ForTest
-    
     
     //References
     private WorkManager workManager;
@@ -37,7 +33,7 @@ public class WorkerManager : MonoBehaviour
 
     private void Start()
     {
-        workers[WorkType.Clean].Add(testWorker);
+        // workers[WorkType.Clean].Add(testWorker);
     }
     public bool AssignWork(WorkBase work)
     {

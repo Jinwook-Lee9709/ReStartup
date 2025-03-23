@@ -9,19 +9,19 @@ public class WorkManager : MonoBehaviour
 {
     [SerializeField] private WorkerManager workerManager;
     
-    private Dictionary<WorkType, PriorityQueue<WorkBase, float>> taskQueues;
+    private Dictionary<WorkType, PriorityQueue<WorkBase, float>> workQueues;
     private Dictionary<WorkType, PriorityQueue<WorkBase, float>> canceledWorkQueues;
 
     private Dictionary<WorkType, List<WorkBase>> assignedWorks;
     private void Awake()
     {
-        taskQueues = new Dictionary<WorkType, PriorityQueue<WorkBase, float>>();
+        workQueues = new Dictionary<WorkType, PriorityQueue<WorkBase, float>>();
         canceledWorkQueues = new Dictionary<WorkType, PriorityQueue<WorkBase, float>>();
         assignedWorks = new Dictionary<WorkType, List<WorkBase>>();
         
         foreach (WorkType taskType in System.Enum.GetValues(typeof(WorkType)))
         {
-            taskQueues[taskType] = new PriorityQueue<WorkBase, float>();
+            workQueues[taskType] = new PriorityQueue<WorkBase, float>();
         }
         foreach (WorkType taskType in System.Enum.GetValues(typeof(WorkType)))
         {
@@ -41,14 +41,13 @@ public class WorkManager : MonoBehaviour
     public void AddWork(WorkBase work)
     {
         bool isAssigned = workerManager.AssignWork(work);
-        Debug.Log(isAssigned);
         if (isAssigned)
         {
             assignedWorks[work.workType].Add(work);
         }
         else
         {
-            taskQueues[work.workType].Enqueue(work, Time.time);
+            workQueues[work.workType].Enqueue(work, Time.time);
         }
     }
 
@@ -64,6 +63,22 @@ public class WorkManager : MonoBehaviour
             WorkBase work = canceledWorkQueues[type].Peek();
             workerManager.AssignWork(work);
             assignedWorks[work.workType].Add(work);
+        }
+    }
+
+    public void OnWorkFinished(WorkBase work)
+    {
+        if(assignedWorks[work.workType].Contains(work))
+            assignedWorks[work.workType].Remove(work);
+        if (work.NextWork != null)
+        {
+            var nextWork = work.NextWork;
+            if (work.NextWorker != null)
+            {
+                nextWork.OnAssignWorker(work.NextWorker);
+                return;
+            }
+            AddWork(nextWork);
         }
     }
     

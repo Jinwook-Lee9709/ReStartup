@@ -37,7 +37,11 @@ public class WorkerBase : MonoBehaviour
         currentWork = work;
         currentWork.OnAssignWorker(this);
     }
-    
+
+    public void ClearWork()
+    {
+        currentWork = null;
+    }
 
     public virtual void OnWorkFinished()
     {

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class UserDataManager : Singleton<UserDataManager>
@@ -25,16 +26,32 @@ public class UserDataManager : Singleton<UserDataManager>
         throw new System.NotImplementedException();
     }
 
-    public bool LoadDB(string uid = "12345678")
+    public async Task<bool> LoadDB(string uid = "1234")
     {
-        throw new System.NotImplementedException();
+        var result = await UserDataDAC.GetUserData(uid);
+        CurrentUserData = result;
+        return true;
     }
 
     public void InitCurrentUserData()
     {
-        if(!LoadDB())
+        StartCoroutine(LoadRoutine());
+    }
+
+    IEnumerator LoadRoutine()
+    {
+        Task<bool> task = LoadDB();
+        while (!task.IsCompleted)
         {
-            return;
+            yield return new WaitForEndOfFrame();
+        }
+        if(task.Result)
+        {
+            Debug.Log("Load DB Success");
+        }
+        else
+        {
+            Debug.Log("Load DB Fail");
         }
     }
 }
