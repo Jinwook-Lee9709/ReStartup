@@ -18,3 +18,8 @@ public enum InteractStatus
     Progressing,
     Success,
 }
+
+public enum LanguageType
+{
+    Korean,
+}

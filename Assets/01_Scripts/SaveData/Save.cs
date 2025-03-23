@@ -1,33 +1,24 @@
-using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 /// <summary>
 /// DB에 저장될 유저의 정보 클래스
 /// </summary>
 [Serializable]
 public class UserData
 {
-    public string UID { get; set; }
-    public string Name { get; set; }
-}
+    public string UID { get; set; }                                 //유저 UID
+    public string Name { get; set; }                                //유저 이름
+    public int? Gold { get; set; }                                  //인게임 재화
+    public int? CurrentRankPoint { get; set; }                      //현재 랭킹 포인트
+    public int? PositiveCnt { get; set; }                           //매우만족 손님 카운트
+    public int? NegativeCnt { get; set; }                           //불만족 손님 카운트
 
-/// <summary>
-/// 로컬에 저장할 유저의 게임 설정 클래스
-/// </summary>
-[Serializable]
-public class SettingData
-{
-    public float MasterVolume { get; set; } = 1f;
-    public float BackGroundVolume { get; set; } = 1f;
-    public float SFXVolume { get; set; } = 1f;
-    /// <summary>
-    /// Define 머지 후 언어 타입 enum으로 변경
-    /// </summary>
-    public int LanguageType { get; set; } = 0;
-}
+    public Dictionary<string, int> FoodSalesVolume { get; set; }    //Key : 음식ID
+                                                                    //Value : 해당 음식 판매량
 
+
+}
 
 public abstract class SaveData
 {
@@ -38,7 +29,11 @@ public abstract class SaveData
 
 public class SaveDataV1 : SaveData
 {
-    public SettingData settingData;
+    public float MasterVolume { get; set; } = 1f;
+    public float BackGroundVolume { get; set; } = 1f;
+    public float SFXVolume { get; set; } = 1f;
+    public string UserToken { get; set; }
+    public LanguageType LanguageType { get; set; } = LanguageType.Korean;
     public SaveDataV1()
     {
         Version = 1;

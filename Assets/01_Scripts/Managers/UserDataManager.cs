@@ -2,11 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class UserDataManager : Singleton<UserDataManager>
 {
     private UserData currentUserData;
-    private SettingData currentSettingData;
     public UserData CurrentUserData
     {
         get => currentUserData;
@@ -22,12 +22,12 @@ public class UserDataManager : Singleton<UserDataManager>
 
     public bool SaveDB()
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public bool LoadDB(string uid = "12345678")
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public void InitCurrentUserData()
