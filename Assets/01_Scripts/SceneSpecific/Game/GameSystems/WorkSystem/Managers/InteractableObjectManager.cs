@@ -13,7 +13,7 @@ public class InteractableObjectManager<T> where T : class, IComparable<T>
     
     public event Action ObjectAvailableEvent; 
 
-    private void Awake()
+    public void Awake()
     {
         availableObjects = new SortedSet<T>();
         occupiedObjects = new HashSet<T>();
@@ -39,14 +39,14 @@ public class InteractableObjectManager<T> where T : class, IComparable<T>
         return true;
     }
 
-    private T Enqueue(T obj)
+    public T Enqueue(T obj)
     {
         availableObjects.Add(obj);
         occupiedObjects.Remove(obj);
         return obj;
     }
     
-    private T Dequeue()
+    public T Dequeue()
     {
         if(availableObjects.Count == 0)
             return default;

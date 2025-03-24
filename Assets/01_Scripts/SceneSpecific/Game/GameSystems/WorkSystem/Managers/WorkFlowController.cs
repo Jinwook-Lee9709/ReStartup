@@ -12,33 +12,44 @@ public class WorkFlowController : MonoBehaviour
 {
     [SerializeField] private WorkManager workManager;
 
-    private InteractableObjectManager<Table> tableManager;
+    private InteractableObjectManager<Table> tableManager = new();
     private InteractableObjectManager<CookingStation> cookingStationManager;
 
-    private Queue<int> customerQueue;
+    private Queue<Consumer> customerQueue;
     private Queue<int> orderQueue;
-    
+
+
+#if UNITY_EDITOR
+    public Table tempTable;
+#endif
+
+    private void Awake()
+    {
+        tableManager.Awake();
+        tableManager.Enqueue(tempTable);
+        customerQueue = new Queue<Consumer>();
+    }
+
     private void Start()
     {
         tableManager.ObjectAvailableEvent += OnTableVacated;
-        cookingStationManager.ObjectAvailableEvent += OnCookingStationVacated;
+        //cookingStationManager.ObjectAvailableEvent += OnCookingStationVacated;
     }
 
     #region CustomerLogic
     
-    public void RegisterCustomer(int customerId)
+    public bool RegisterCustomer(Consumer consumer)
     {
         if (tableManager.IsAvailableObjectExist)
         {
-            //TODO:Assign이 아니라 손님을 이동
-            //consumer.Table = tableManager.GetAvailableObject();
-            //consuMer.SetTable(tableManager.GetAvailableObject());
-            
-            AssignGetOrderWork(customerId);
+            consumer.SetTable(tableManager.GetAvailableObject());
+            AssignGetOrderWork(consumer);
+            return true;
         }
         else
         {
-            customerQueue.Enqueue(customerId);
+            customerQueue.Enqueue(consumer);
+            return false;
         }
     }
 
@@ -46,16 +57,16 @@ public class WorkFlowController : MonoBehaviour
     {
         if (customerQueue.Count > 0)
         {
-            int customerId = customerQueue.Dequeue();
+            var consumer = customerQueue.Dequeue();
             //TODO:Assign이 아니라 손님을 이동
-            AssignGetOrderWork(customerId);
+            AssignGetOrderWork(consumer);
         }
     }
 
-    public void AssignGetOrderWork(int customerId)
+    public void AssignGetOrderWork(Consumer consumer)
     {
         //TODO:손님이 할당 받은 TABLED을 Interactable로 사용하도록 변경
-        var table = tableManager.GetAvailableObject(); //Customer의 테이블 받아오기
+        var table = consumer.currentTable; //Customer의 테이블 받아오기
         WorkGetOrder work = new WorkGetOrder(workManager, WorkType.Hall, 0);
         work.SetInteractable(table);
         workManager.AddWork(work);
