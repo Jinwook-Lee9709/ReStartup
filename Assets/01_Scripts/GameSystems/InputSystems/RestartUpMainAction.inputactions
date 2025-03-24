@@ -1,12 +1,12 @@
 {
-    "name": "CameraAction",
+    "name": "RestartUpMainAction",
     "maps": [
         {
             "name": "Swipe",
             "id": "f5fd73ec-37ca-4b5d-86ac-ac06e2237a8e",
             "actions": [
                 {
-                    "name": "TouchAction",
+                    "name": "SlowTouchAction",
                     "type": "Button",
                     "id": "b498f2c1-cba3-4f43-86f4-524e37795c67",
                     "expectedControlType": "",
@@ -22,6 +22,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "TouchAction",
+                    "type": "Button",
+                    "id": "c1bfab17-5d13-4d8c-946b-3d13e7ff189e",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -32,7 +41,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "TouchAction",
+                    "action": "SlowTouchAction",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -43,7 +52,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "TouchAction",
+                    "action": "SlowTouchAction",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -54,7 +63,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "TouchAction",
+                    "action": "SlowTouchAction",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -88,6 +97,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "GetPos",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0254ebd4-3c62-46e3-963b-4692a1277d93",
+                    "path": "<Mouse>/press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TouchAction",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "84f6efea-ef0c-49ee-8277-5cd9acdf9fc5",
+                    "path": "<Touchscreen>/Press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TouchAction",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
