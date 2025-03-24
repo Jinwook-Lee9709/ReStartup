@@ -12,6 +12,11 @@ public class Table : InteractableObjectBase
 
     public override void OnInteractCompleted()
     {
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
+        Debug.Log("Job's Done");
+    }
+
+    public Table()
+    {
     }
 }

@@ -16,6 +16,7 @@ public class WorkerManager : MonoBehaviour
     
     //Events
     public event Action<WorkType> OnWorkFinished;
+    [SerializeField] private WorkerBase testWorker;
 
     private void Awake()
     {
@@ -33,7 +34,7 @@ public class WorkerManager : MonoBehaviour
 
     private void Start()
     {
-        // workers[WorkType.Clean].Add(testWorker);
+         workers[WorkType.Hall].Add(testWorker);
     }
     public bool AssignWork(WorkBase work)
     {
