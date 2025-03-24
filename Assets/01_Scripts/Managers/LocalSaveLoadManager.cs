@@ -5,14 +5,14 @@ using System.IO;
 using UnityEngine;
 using SaveDataVC = SaveDataV1;
 
-public class LocalSaveLoadManager : Singleton<LocalSaveLoadManager>
+public static class LocalSaveLoadManager
 {
-    public  int SaveDataVersion { get; private set; } = 1;
+    public static int SaveDataVersion { get; private set; } = 1;
 
-    public  SaveDataVC Data { get; set; }
+    public static SaveDataVC Data { get; set; }
 
-    private  string LocalSaveFileName => "LocalSave.json";
-    private  string LocalSaveDirectory
+    private static string LocalSaveFileName => "LocalSave.json";
+    private static string LocalSaveDirectory
     {
         get
         {
@@ -21,28 +21,24 @@ public class LocalSaveLoadManager : Singleton<LocalSaveLoadManager>
     }
 
 
-    private JsonSerializerSettings settings = new JsonSerializerSettings
+    private static JsonSerializerSettings settings = new JsonSerializerSettings
     {
         Formatting = Formatting.Indented,
         TypeNameHandling = TypeNameHandling.All,
     };
 
-
-    private LocalSaveLoadManager()
+    public static void GameSettingInit()
     {
         if (!Load())
-        {
-            Data = new SaveDataVC();
-            Save();
-        }
+            Data = new();
+        //TODO : 인게임 세팅 (사운드, 언어 등) 세팅
     }
-
-    public void GameSettingInit()
+    public static void UpdateSaveData()
     {
-        //TODO : 인게임 세팅 (사운드, 언어 등) 이니셜라이징
+        //TODO : 인게임 세팅 (사운드, 언어 등) 인게임 설정 값들 가져와서 Data 갱신
     }
 
-    public bool Save()
+    public static bool Save()
     {
         if (Data == null)
             return false;
@@ -52,7 +48,7 @@ public class LocalSaveLoadManager : Singleton<LocalSaveLoadManager>
             Directory.CreateDirectory(LocalSaveDirectory);
         }
 
-
+        UpdateSaveData();
 
         var path = Path.Combine(LocalSaveDirectory, LocalSaveFileName);
         var json = JsonConvert.SerializeObject(Data, settings);
@@ -62,7 +58,7 @@ public class LocalSaveLoadManager : Singleton<LocalSaveLoadManager>
         return true;
     }
 
-    public bool Load()
+    public static bool Load()
     {
         var path = Path.Combine(LocalSaveDirectory, LocalSaveFileName);
         if (!File.Exists(path))

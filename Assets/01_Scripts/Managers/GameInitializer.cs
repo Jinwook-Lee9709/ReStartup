@@ -9,7 +9,6 @@ public class GameInitializer : MonoBehaviour
 {
     private void Awake()
     {
-        LocalSaveLoadManager.Instance.GameSettingInit();
-        UserDataManager.Instance.InitCurrentUserData();
+        LocalSaveLoadManager.GameSettingInit();
     }
 }
