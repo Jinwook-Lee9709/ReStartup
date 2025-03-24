@@ -7,7 +7,6 @@ using UnityEngine;
 public class UserDataManager : Singleton<UserDataManager>
 {
     private UserData currentUserData;
-    private SettingData currentSettingData;
     public UserData CurrentUserData
     {
         get => currentUserData;
@@ -44,6 +43,7 @@ public class UserDataManager : Singleton<UserDataManager>
         while (!task.IsCompleted)
         {
             yield return new WaitForEndOfFrame();
+
         }
         if(task.Result)
         {
