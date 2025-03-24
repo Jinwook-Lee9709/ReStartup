@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using static UnityEditor.PlayerSettings;
@@ -8,6 +9,13 @@ public class EmployeeFSM : WorkerBase
 {
     [SerializeField]
     private Transform idleArea;
+    public float Speed { get; private set; }
+    private float defultSpeed = 1f;
+    private int upgradeCount;
+    public new string name;
+    public EmployeeManager employeeManager;
+
+
     public enum EnployedState
     {
         Idle,
@@ -47,5 +55,16 @@ public class EmployeeFSM : WorkerBase
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+    }
+    private void Start()
+    {
+        Debug.Log("EmployeeFSM »£√‚");
+        employeeManager.AddEmployee(name, this);
+    }
+    public void OnUpgrade()
+    {
+        upgradeCount++;
+        Speed = defultSpeed * upgradeCount;
+        Debug.Log(Speed);
     }
 }
