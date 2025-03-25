@@ -45,6 +45,26 @@ public class ConsumerManager : MonoBehaviour
             currentSpawnedConsumerDictionary[consumerState] = new();
         }
     }
+
+    public void OnChangeConsumerState(Consumer consumer, ConsumerFSM.ConsumerState state)
+    {
+        var prevState = consumer.FSM.CurrentStatus;
+        currentSpawnedConsumerDictionary[state].Add(consumer);
+        currentSpawnedConsumerDictionary[prevState].Remove(consumer);
+    }
+
+    public void OnWaitingLineUpdate(Consumer consumer)
+    {
+        OnChangeConsumerState(consumer, ConsumerFSM.ConsumerState.BeforeOrder);
+
+        if (currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count > 0)
+        {
+            for (int i = 0; i < currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count; i++)
+            {
+                currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting][i].NextTargetTransform = waitingConsumerSeats[i];
+            }
+        }
+    }
     private GameObject OnCreateConsumer()
     {
         var obj = Instantiate(consumerPrefab);
@@ -78,6 +98,13 @@ public class ConsumerManager : MonoBehaviour
     }
     private void OnReturnConsumer(GameObject consumer)
     {
+        foreach (var list in currentSpawnedConsumerDictionary.Values)
+        {
+            if (list.Contains(consumer.GetComponent<Consumer>()))
+            {
+                list.Remove(consumer.GetComponent<Consumer>());
+            }
+        }
         consumer.SetActive(false);
     }
     private void OnDestroyConsumer(GameObject consumer)
