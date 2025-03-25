@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -18,7 +17,7 @@ public class Player : MonoBehaviour
 
     public void OnMoveOrWork(bool work, Vector2 pos)
     {
-        Debug.Log("OnMoveOrWork 클릭함 호출됨");
+        Debug.Log(work);
         if (work)
         {
             Debug.Log("Interection 클릭함 호출됨");
