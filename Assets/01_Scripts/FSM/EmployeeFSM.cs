@@ -1,19 +1,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.AddressableAssets.Build;
 using UnityEngine;
 using UnityEngine.AI;
 using static UnityEditor.PlayerSettings;
 
-public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
+public class EmployeeFSM : WorkerBase, IInteractor, ITransformable
 {
-    [SerializeField] private Transform idleArea;
-    [SerializeField] private Transform handPivot; 
-    public float Speed { get; private set; }
-    private float defultSpeed = 1f;
-    private int upgradeCount;
-    public new string name;
+    [SerializeField]
+    private Transform idleArea;
+    private EmployeeData employeeData = new();
+    public EmployeeData EmployeeData
+    {
+        get => employeeData;
+    }
     public EmployeeManager employeeManager;
     public enum EnployedState
     {
@@ -90,39 +90,28 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     }
 
 
-    public Transform HandPivot { get; }
-    public void LiftPackage(GameObject package)
+    public Transform handPivot { get; set; }
+    public void LiftPackage(Sprite packageSprite)
     {
-        package.transform.SetParent(handPivot);
-        package.transform.localPosition = Vector3.zero;
-    }
-    public void DropPackage(Transform dropPoint)
-    {
-        if (handPivot.childCount > 0)
-        {
-            var package = handPivot.GetChild(0).gameObject;
-            package.transform.SetParent(dropPoint);
-            package.transform.localPosition = Vector3.zero;
-        }
-            
-        
+        throw new System.NotImplementedException();
     }
 
+    public void DropPackage()
+    {
+        throw new System.NotImplementedException();
+    }
+    private void Awake()
+    {
+        DataTableManager.Get<EmployeeDataTable>("Employee");
+    }
     private void Start()
     {
-        // employeeManager.AddEmployee(name, this);
+        employeeData.name = name;
+        employeeManager.AddEmployee(this);
     }
-
-    public void OnUpgrade()
-    {   
-        upgradeCount++;
-        Speed = defultSpeed * upgradeCount;
-        Debug.Log(Speed);
-
-        var distance = Vector3.Distance(transform.position, idleArea.position);
-        if (distance <= agent.stoppingDistance)
-        {
-            CurrentStatus = EnployedState.Idle;
-        }
+    public void StatsUpdate()
+    {
+        agent.speed = employeeData.Speed;
+        Debug.Log(agent.speed);
     }
 }

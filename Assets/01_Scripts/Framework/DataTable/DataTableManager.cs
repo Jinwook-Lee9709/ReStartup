@@ -9,9 +9,9 @@ public static class DataTableManager
 
     static DataTableManager()
     {
-        var table1 = new EmployeeDataTable();
-        table1.Load();
-        tables.Add("Employee", table1);
+        var table = new EmployeeDataTable();
+        table.Load();
+        tables.Add("Employee", table);
     }
 
     public static T Get<T>(string id) where T : DataTable

@@ -4,24 +4,14 @@ using UnityEngine;
 
 public class EmployeeManager : MonoBehaviour
 {
-    private Dictionary<string, EmployeeFSM> employeeDictionary = new Dictionary<string, EmployeeFSM>();
-    private Dictionary<string, EmployeeFSM> EmployeeDictionary { get { return employeeDictionary; } }
-    public void AddEmployee(string name, EmployeeFSM employee)
+    [SerializeField] private List<EmployeeFSM> employeeList = new List<EmployeeFSM>();
+
+    public EmployeeListUi employeeListUi;
+    public void AddEmployee(EmployeeFSM employee)
     {
-        EmployeeDictionary.Add(name, employee);
+        employeeList.Add(employee);
+        employeeListUi.AddUpgradeList(employee);
         Debug.Log("EmployeeManager 호출");
         Debug.Log(name);
-    }
-    public void UpgradeEmployee(string name)
-    {
-        if (EmployeeDictionary.ContainsKey(name))
-        {
-            EmployeeDictionary[name].OnUpgrade();
-        }
-        else
-        {
-            Debug.LogError("업그레이드 이름 없음");
-        }
-
     }
 }
