@@ -100,7 +100,10 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransformable
     {
         throw new System.NotImplementedException();
     }
-
+    private void Awake()
+    {
+        DataTableManager.Get<EmployeeDataTable>("Employee");
+    }
     private void Start()
     {
         employeeData.name = name;

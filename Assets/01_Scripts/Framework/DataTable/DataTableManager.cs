@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public static class DataTableManager
@@ -8,7 +9,9 @@ public static class DataTableManager
 
     static DataTableManager()
     {
-
+        var table = new EmployeeDataTable();
+        table.Load();
+        tables.Add("Employee", table);
     }
 
     public static T Get<T>(string id) where T : DataTable
