@@ -1,27 +1,23 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using static UnityEditor.PlayerSettings;
 
-public class EmployeeFSM : WorkerBase
+public class EmployeeFSM : WorkerBase, IInteractor, ITransformable
 {
     [SerializeField]
     private Transform idleArea;
-    public float Speed { get; private set; }
-    private float defultSpeed = 1f;
-    private int upgradeCount;
-    public new string name;
-    public EmployeeManager employeeManager;
-
-
     public enum EnployedState
     {
         Idle,
         ReturnidleArea,
         Working,
     }
+
+    private float interactionSpeed = 1f;
+    public float InteractionSpeed { get; }
 
     private EnployedState currentStatus;
 
@@ -32,39 +28,71 @@ public class EmployeeFSM : WorkerBase
         {
             EnployedState prevStatus = currentStatus;
             currentStatus = value;
-            switch (currentStatus)
+            if (currentStatus == EnployedState.ReturnidleArea)
             {
-                case EnployedState.Idle:
-                    //DataTable필요
-                    break;
-                case EnployedState.ReturnidleArea:
-                    if (currentWork != null)
-                        currentStatus = EnployedState.Working;
-
-                    agent.SetDestination(idleArea.position);
-                    break;
-                case EnployedState.Working:
-                    if (currentWork == null)
-                        currentStatus = EnployedState.ReturnidleArea;
-
-                    currentWork.DoWork();
-                    break;
+                agent.SetDestination(idleArea.position);
             }
         }
     }
-    private void Awake()
+
+    private void Update()
     {
-        agent = GetComponent<NavMeshAgent>();
+        switch (currentStatus)
+        {
+            case EnployedState.Idle:
+                UpdateIdle();
+                break;
+            case EnployedState.ReturnidleArea:
+                UpdateReturnidleArea();
+                break;
+            case EnployedState.Working:
+                UpdateWorking();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
-    private void Start()
+
+    public override void AssignWork(WorkBase work)
     {
-        Debug.Log("EmployeeFSM 호출");
-        employeeManager.AddEmployee(name, this);
+        base.AssignWork(work);
+        CurrentStatus = EnployedState.Working;
     }
-    public void OnUpgrade()
+
+    private void UpdateIdle()
     {
-        upgradeCount++;
-        Speed = defultSpeed * upgradeCount;
-        Debug.Log(Speed);
+
     }
+
+    private void UpdateReturnidleArea()
+    {
+        var distance = Vector3.Distance(transform.position, idleArea.position);
+        if (distance <= agent.stoppingDistance)
+        {
+            CurrentStatus = EnployedState.Idle;
+        }
+    }
+
+    private void UpdateWorking()
+    {
+        if (currentWork == null)
+        {
+            CurrentStatus = EnployedState.ReturnidleArea;
+            return;
+        }
+        currentWork.DoWork();
+    }
+
+
+    public Transform handPivot { get; set; }
+    public void LiftPackage(Sprite packageSprite)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void DropPackage()
+    {
+        throw new System.NotImplementedException();
+    }
+
 }
