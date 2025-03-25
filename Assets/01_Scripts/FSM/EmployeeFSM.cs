@@ -44,11 +44,32 @@ public class EmployeeFSM : WorkerBase, ITransformable
             }
         }
     }
-    private void Awake()
+
+    private void Update()
     {
-        agent = GetComponent<NavMeshAgent>();
+        
     }
 
+    private void UpdateIdle()
+    {
+        
+    }
+
+    private void UpdateReturnidleArea()
+    {
+        
+    }
+
+    private void UpdateWorking()
+    {
+        if (currentWork == null)
+        {
+            currentStatus = EnployedState.ReturnidleArea;
+        }
+        
+    }
+    
+    
     public Transform handPivot { get; set; }
     public void LiftPackage(Sprite packageSprite)
     {
