@@ -16,7 +16,7 @@ public class EmployeeManager : MonoBehaviour
     {
         if (EmployeeDictionary.ContainsKey(name))
         {
-            EmployeeDictionary[name].OnUpgrade();
+            //EmployeeDictionary[name].OnUpgrade();
         }
         else
         {
