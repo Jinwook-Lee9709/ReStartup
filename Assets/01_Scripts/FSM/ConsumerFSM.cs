@@ -22,6 +22,7 @@ public class ConsumerFSM : MonoBehaviour
 
     private NavMeshAgent agent;
     private float orderWaitTimer;
+    private float maxOrderWaitLimit = 30f;
     [SerializeField]
     private List<float> satisfactionChangeLimit = new List<float>
     {
@@ -89,7 +90,7 @@ public class ConsumerFSM : MonoBehaviour
     private void OnEnable()
     {
         currentSatisfaction = Satisfaction.High;
-        orderWaitTimer = 0f;
+        orderWaitTimer = maxOrderWaitLimit;
     }
 
     private void Update()
