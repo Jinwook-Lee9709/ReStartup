@@ -6,18 +6,12 @@ using UnityEngine;
 
 public class InteractableObjectManager<T> where T : class, IComparable<T>
 {
-    private SortedSet<T> availableObjects;
-    private HashSet<T> occupiedObjects; 
+    private SortedSet<T> availableObjects = new();
+    private HashSet<T> occupiedObjects = new(); 
     
     public bool IsAvailableObjectExist => availableObjects.Count > 0;
     
     public event Action ObjectAvailableEvent; 
-
-    public void Awake()
-    {
-        availableObjects = new SortedSet<T>();
-        occupiedObjects = new HashSet<T>();
-    }
     
     public T GetAvailableObject()
     {
@@ -49,7 +43,7 @@ public class InteractableObjectManager<T> where T : class, IComparable<T>
     public T Dequeue()
     {
         if(availableObjects.Count == 0)
-            return default;
+            return null;
         T obj = availableObjects.Min;
         availableObjects.Remove(obj);
         occupiedObjects.Add(obj);

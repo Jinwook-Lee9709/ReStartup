@@ -5,13 +5,8 @@ using UnityEngine;
 
 public class CookingStation : InteractableObjectBase
 {
-    public override void OnInteractCanceled()
-    {
-        throw new NotImplementedException();
-    }
-
     public override void OnInteractCompleted()
     {
-        throw new NotImplementedException();
+        Debug.Log("Job's Done");
     }
 }

@@ -30,3 +30,8 @@ public static class Endpoints
     public static string UserUrl = BaseUrl + "/users";
 }
 
+public static class Constants
+{
+    public static float defaultOrderTime = 0f;
+}
+

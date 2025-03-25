@@ -16,8 +16,9 @@ public class WorkerManager : MonoBehaviour
     
     //Events
     public event Action<WorkType> OnWorkFinished;
-    [SerializeField] private WorkerBase testWorker;
-
+    [SerializeField] private WorkerBase testHallWorker;
+    [SerializeField] private WorkerBase testKitchenWorker;
+    
     private void Awake()
     {
         workers = new Dictionary<WorkType, List<WorkerBase>>();
@@ -34,7 +35,8 @@ public class WorkerManager : MonoBehaviour
 
     private void Start()
     {
-         workers[WorkType.Hall].Add(testWorker);
+         workers[WorkType.Hall].Add(testHallWorker);
+         workers[WorkType.Kitchen].Add(testKitchenWorker);
     }
     public bool AssignWork(WorkBase work)
     {

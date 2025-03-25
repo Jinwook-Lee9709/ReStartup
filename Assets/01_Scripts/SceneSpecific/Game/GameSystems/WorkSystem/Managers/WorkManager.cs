@@ -73,12 +73,9 @@ public class WorkManager : MonoBehaviour
         if (work.NextWork != null)
         {
             var nextWork = work.NextWork;
-            if (work.NextWorker != null)
-            {
-                nextWork.OnAssignWorker(work.NextWorker);
-                return;
-            }
-            AddWork(nextWork);
+            if (work.NextWorker == null)
+                AddWork(nextWork);
+
         }
     }
     

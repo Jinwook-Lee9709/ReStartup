@@ -12,7 +12,7 @@ public class WorkTest : MonoBehaviour
     [ContextMenu("Assign Work")]
     public void AssingWork()
     {
-        InteractWorkBase cleanWorkBase = new WorkGetOrder(workManager, WorkType.Hall, testDuration);
+        InteractWorkBase cleanWorkBase = new WorkGetOrder(workManager, WorkType.Hall);
         cleanWorkBase.SetInteractable(interactableObject);
         interactableObject.SetWork(cleanWorkBase);
         workManager.AddWork(cleanWorkBase);

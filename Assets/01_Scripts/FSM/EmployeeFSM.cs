@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using static UnityEditor.PlayerSettings;
 
-public class EmployeeFSM : WorkerBase
+public class EmployeeFSM : WorkerBase, ITransformable
 {
     [SerializeField]
     private Transform idleArea;
@@ -27,7 +27,7 @@ public class EmployeeFSM : WorkerBase
             switch (currentStatus)
             {
                 case EnployedState.Idle:
-                    //DataTableÇÊ¿ä
+                    //DataTableï¿½Ê¿ï¿½
                     break;
                 case EnployedState.ReturnidleArea:
                     if (currentWork != null)
@@ -47,5 +47,16 @@ public class EmployeeFSM : WorkerBase
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+    }
+
+    public Transform handPivot { get; set; }
+    public void LiftPackage(Sprite packageSprite)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void DropPackage()
+    {
+        throw new System.NotImplementedException();
     }
 }

@@ -3,37 +3,38 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-//주문할 음식이 뭔지
-//현재 Table
-
-//나 자리에 앉았어요 -> ConsumerManager -> AssignGetOrderWork(consumer)
-
 public class WorkFlowController : MonoBehaviour
 {
     [SerializeField] private WorkManager workManager;
 
     private InteractableObjectManager<Table> tableManager = new();
-    private InteractableObjectManager<CookingStation> cookingStationManager;
+    private InteractableObjectManager<CookingStation> cookingStationManager = new();
+    private InteractableObjectManager<FoodPickupCounter> foodPickupCounterManager = new();
 
-    private Queue<Consumer> customerQueue;
-    private Queue<int> orderQueue;
+    private Queue<Consumer> customerQueue = new();
+    private Queue<MainLoopWorkContext> orderQueue = new();
+    private Queue<MainLoopWorkContext> foodPickupCounterQueue = new();
 
 
 #if UNITY_EDITOR
     public Table tempTable;
+    public CookingStation tempStation;
+    public FoodPickupCounter tempCounter;
 #endif
 
     private void Awake()
     {
-        tableManager.Awake();
         tableManager.Enqueue(tempTable);
+        cookingStationManager.Enqueue(tempStation);
+        foodPickupCounterManager.Enqueue(tempCounter);
         customerQueue = new Queue<Consumer>();
     }
 
     private void Start()
     {
         tableManager.ObjectAvailableEvent += OnTableVacated;
-        //cookingStationManager.ObjectAvailableEvent += OnCookingStationVacated;
+        cookingStationManager.ObjectAvailableEvent += OnCookingStationVacated;
+        foodPickupCounterManager.ObjectAvailableEvent += OnCookingStationVacated;
     }
 
     #region CustomerLogic
@@ -65,26 +66,33 @@ public class WorkFlowController : MonoBehaviour
 
     public void AssignGetOrderWork(Consumer consumer)
     {
-        //TODO:손님이 할당 받은 TABLED을 Interactable로 사용하도록 변경
         var table = consumer.currentTable; //Customer의 테이블 받아오기
-        WorkGetOrder work = new WorkGetOrder(workManager, WorkType.Hall, 0);
+        WorkGetOrder work = new WorkGetOrder(workManager, WorkType.Hall);
+        MainLoopWorkContext context = new MainLoopWorkContext(consumer, this);
+        table.SetWork(work);
+        work.SetContext(context);
         work.SetInteractable(table);
         workManager.AddWork(work);
+    }
+
+    public void ReturnTable(Table table)
+    {
+        tableManager.ReturnObject(table);
     }
 
     #endregion
 
     #region CookingLogic
 
-    public void RegisterOrder(int orderId)
+    public void RegisterOrder(MainLoopWorkContext context)
     {
         if (cookingStationManager.IsAvailableObjectExist)
         {
-            AssignOrderWork(orderId);
+            AssignOrderWork(context);
         }
         else
         {
-            orderQueue.Enqueue(orderId);
+            orderQueue.Enqueue(context);
         }
     }
 
@@ -92,21 +100,59 @@ public class WorkFlowController : MonoBehaviour
     {
         if (orderQueue.Count > 0)
         {
-            int orderId = orderQueue.Dequeue();
-            AssignOrderWork(orderId);
+            MainLoopWorkContext context = orderQueue.Dequeue();
+            AssignOrderWork(context);
         }
     }
 
-    private void AssignOrderWork(int orderId)
+    private void AssignOrderWork(MainLoopWorkContext context)
     {
         var cookingStation = cookingStationManager.GetAvailableObject();
-        WorkCooking work = new WorkCooking(workManager, WorkType.Kitchen, 5);
+        WorkCooking work = new WorkCooking(workManager, WorkType.Kitchen);
+        cookingStation.SetWork(work);
+        work.SetContext(context);
         work.SetInteractable(cookingStation);
         workManager.AddWork(work);
     }
-    
+
+    public void ReturnCookingStation(CookingStation station)
+    {
+        cookingStationManager.ReturnObject(station);
+    }
     #endregion
     
+    #region FoodPickupLogic
+
+    public bool IsFoodCounterAvailable()
+    {
+        return foodPickupCounterManager.IsAvailableObjectExist;
+    }
+
+    public void RegisterFoodToHall(MainLoopWorkContext context)
+    {
+        foodPickupCounterQueue.Enqueue(context);
+    }
+
+    public FoodPickupCounter GetEmptyFoodCounter()
+    {
+        return foodPickupCounterManager.Dequeue();
+    }
+
+    private void OnFoodPickupCounterVacated()
+    {
+        if (foodPickupCounterQueue.Count > 0)
+        {
+            MainLoopWorkContext context = foodPickupCounterQueue.Dequeue();
+            
+        }
+    }
+    public void ReturnFoodPickupCounter(FoodPickupCounter counter)
+    {
+        foodPickupCounterManager.ReturnObject(counter);
+    }
+    
+    
+    #endregion
     
     //손님 대기열
     //Table에 자리가 나면 손님할당
