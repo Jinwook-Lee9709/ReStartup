@@ -13,7 +13,7 @@ public class WorkFlowController : MonoBehaviour
 
     private Queue<Consumer> customerQueue = new();
     private Queue<MainLoopWorkContext> orderQueue = new();
-    private Queue<MainLoopWorkContext> foodPickupCounterQueue = new();
+    private Queue<(MainLoopWorkContext, CookingStation)> foodPickupCounterQueue = new();
 
 
 #if UNITY_EDITOR
@@ -126,9 +126,9 @@ public class WorkFlowController : MonoBehaviour
         return foodPickupCounterManager.IsAvailableObjectExist;
     }
 
-    public void RegisterFoodToHall(MainLoopWorkContext context)
+    public void RegisterFoodToHall(MainLoopWorkContext context, CookingStation target)
     {
-        foodPickupCounterQueue.Enqueue(context);
+        foodPickupCounterQueue.Enqueue((context, target));
     }
 
     public FoodPickupCounter GetEmptyFoodCounter()
@@ -140,8 +140,12 @@ public class WorkFlowController : MonoBehaviour
     {
         if (foodPickupCounterQueue.Count > 0)
         {
-            MainLoopWorkContext context = foodPickupCounterQueue.Dequeue();
-            
+            var counter = GetEmptyFoodCounter();
+            (var context, var target) = foodPickupCounterQueue.Dequeue();
+            WorkGotoCookingStation work = new WorkGotoCookingStation(workManager, WorkType.Kitchen);
+            target.SetWork(work);
+            work.SetInteractable(target);
+            work.SetContext(context, counter);
         }
     }
     public void ReturnFoodPickupCounter(FoodPickupCounter counter)

@@ -75,7 +75,7 @@ public class WorkManager : MonoBehaviour
             var nextWork = work.NextWork;
             if (work.NextWorker == null)
                 AddWork(nextWork);
-
+            
         }
     }
     

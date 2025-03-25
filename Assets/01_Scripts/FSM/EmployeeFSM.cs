@@ -1,10 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using static UnityEditor.PlayerSettings;
 
-public class EmployeeFSM : WorkerBase, ITransformable
+public class EmployeeFSM : WorkerBase, IInteractor, ITransformable
 {
     [SerializeField]
     private Transform idleArea;
@@ -14,6 +15,9 @@ public class EmployeeFSM : WorkerBase, ITransformable
         ReturnidleArea,
         Working,
     }
+    
+    private float interactionSpeed = 1f;
+    public float InteractionSpeed { get; }
 
     private EnployedState currentStatus;
 
@@ -24,30 +28,35 @@ public class EmployeeFSM : WorkerBase, ITransformable
         {
             EnployedState prevStatus = currentStatus;
             currentStatus = value;
-            switch (currentStatus)
+            if (currentStatus == EnployedState.ReturnidleArea)
             {
-                case EnployedState.Idle:
-                    //DataTable�ʿ�
-                    break;
-                case EnployedState.ReturnidleArea:
-                    if (currentWork != null)
-                        currentStatus = EnployedState.Working;
-
-                    agent.SetDestination(idleArea.position);
-                    break;
-                case EnployedState.Working:
-                    if (currentWork == null)
-                        currentStatus = EnployedState.ReturnidleArea;
-
-                    currentWork.DoWork();
-                    break;
+                agent.SetDestination(idleArea.position);
             }
         }
     }
 
     private void Update()
     {
-        
+        switch (currentStatus)
+        {
+            case EnployedState.Idle:
+                UpdateIdle();
+                break;
+            case EnployedState.ReturnidleArea:
+                UpdateReturnidleArea();
+                break;
+            case EnployedState.Working:
+                UpdateWorking();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+
+    public override void AssignWork(WorkBase work)
+    {
+        base.AssignWork(work);
+        CurrentStatus = EnployedState.Working;
     }
 
     private void UpdateIdle()
@@ -57,16 +66,21 @@ public class EmployeeFSM : WorkerBase, ITransformable
 
     private void UpdateReturnidleArea()
     {
-        
+        var distance = Vector3.Distance(transform.position, idleArea.position);
+        if (distance <= agent.stoppingDistance)
+        {
+            CurrentStatus = EnployedState.Idle;
+        }
     }
 
     private void UpdateWorking()
     {
         if (currentWork == null)
         {
-            currentStatus = EnployedState.ReturnidleArea;
+            CurrentStatus = EnployedState.ReturnidleArea;
+            return;
         }
-        
+        currentWork.DoWork();
     }
     
     
@@ -80,4 +94,5 @@ public class EmployeeFSM : WorkerBase, ITransformable
     {
         throw new System.NotImplementedException();
     }
+    
 }

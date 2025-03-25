@@ -5,27 +5,27 @@ using UnityEngine;
 public class WorkFoodToHall : InteractWorkBase
 {
     private MainLoopWorkContext context;
+    private FoodPickupCounter counter;
     
     public WorkFoodToHall(WorkManager workManager, WorkType workType) : base(workManager, workType)
     {
     }
 
-    public void SetContext(MainLoopWorkContext context)
+    public void SetContext(MainLoopWorkContext context, FoodPickupCounter counter)
     {
         this.context = context;
-    }
-    
-    public override void OnAssignWorker(WorkerBase worker)
-    {
-        base.OnAssignWorker(worker);
-        // ITransformable porter = worker as ITransformable;
-        // //TODO:Worker손에 음식 들려주기
+        this.counter = counter;
     }
     protected override void HandlePostInteraction()
     {
-        Debug.Log("Food to hall");
-        // ITransformable porter = worker as ITransformable;
-        // porter.DropPackage();
-        //
+        WorkGotoFoodPickupCounter work = new WorkGotoFoodPickupCounter(workManager, WorkType.Hall);
+        
+        FoodPickupCounter counter = target as FoodPickupCounter;
+        counter.ClearWork();
+        
+        work.SetContext(context);
+        work.SetInteractable(counter);
+        counter.SetWork(work);
+        nextWork = work;
     }
 }
