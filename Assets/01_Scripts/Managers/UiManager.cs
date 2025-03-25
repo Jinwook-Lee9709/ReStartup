@@ -7,6 +7,7 @@ public class UiManager : MonoBehaviour
     public GameObject uiHUD;
     public GameObject uiApps;
     public GameObject uiReview;
+    public GameObject uiUpgrade;
     public void OnClickButtonSetAppsUi()
     {
         var uiSetChack = uiHUD.gameObject.GetComponent<HeadsUpDisplayUi>().includedUiSet;
@@ -16,9 +17,17 @@ public class UiManager : MonoBehaviour
             uiApps.SetActive(true);
         }
     }
-    public void UnCilckButtonSetUiReview()
+    public void OnCilckButtonSetUiReview()
     {
         uiApps.SetActive(false);
         uiReview.SetActive(true);
+    }
+    public void OnClickButtonSetUiUpgrade()
+    {
+        uiUpgrade.SetActive(true);
+    }  
+    public void OnClickButtonUnSetUiUpgrade()
+    {
+        uiUpgrade.SetActive(false);
     }
 }

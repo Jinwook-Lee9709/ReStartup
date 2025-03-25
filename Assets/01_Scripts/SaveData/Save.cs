@@ -7,16 +7,17 @@ using System.Collections.Generic;
 [Serializable]
 public class UserData
 {
-    public string UID { get; set; }                                 //유저 UID
-    public string Name { get; set; }                                //유저 이름
-    public int? Gold { get; set; }                                  //인게임 재화
-    public int? CurrentRankPoint { get; set; }                      //현재 랭킹 포인트
-    public int? PositiveCnt { get; set; }                           //매우만족 손님 카운트
-    public int? NegativeCnt { get; set; }                           //불만족 손님 카운트
-
-    public Dictionary<string, int> FoodSalesVolume { get; set; }    //Key : 음식ID
-                                                                    //Value : 해당 음식 판매량
-
+    public string UID { get; set; }                                  //유저 UID
+    public string Name { get; set; }                                 //유저 이름
+    public int? Gold { get; set; }                                   //인게임 재화
+    public int? CurrentRankPoint { get; set; }                       //현재 랭킹 포인트
+    public int? PositiveCnt { get; set; }                            //매우만족 손님 카운트
+    public int? NegativeCnt { get; set; }                            //불만족 손님 카운트
+                                                                    
+    public Dictionary<string, int> FoodSalesVolume { get; set; }     //Key : 음식ID
+                                                                     //Value : 해당 음식 판매량
+    public Dictionary<string, int> EmployeeLevelValue { get; set; }  //Key : 직원ID
+                                                                     //Value : 해당 직원의 레벨
 
 }
 
