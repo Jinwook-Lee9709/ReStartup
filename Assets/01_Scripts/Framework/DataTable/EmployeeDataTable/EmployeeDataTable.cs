@@ -10,7 +10,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class EmployeeDataTable : DataTable
 {
-    public Dictionary<int, EmployeeTableGetData> Data;
+    public Dictionary<int, EmployeeTableGetData> Data = new Dictionary<int, EmployeeTableGetData>();
     public List<EmployeeTableGetData> DataList { get; private set; }
 
     public override void Load()
@@ -23,7 +23,7 @@ public class EmployeeDataTable : DataTable
                 continue;
             }
             Data.Add(row.StaffID, row);
-            Debug.Log(row);
+            Debug.Log(row.StaffID);
         }
     }
 }

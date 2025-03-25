@@ -5,16 +5,16 @@ using UnityEngine;
 
 public class EmployeeTableGetData
 {
-    public int StaffID;
-    public int StaffNameKey;
-    public int Description;
-    public int Theme;
-    public int StaffType;
-    public float WorkSpeed;
-    public float MoveSpeed;
-    public int Health;
-    public int RankPoint;
-    public int Cost;
-    public string Icon;
-    public string Resouces;
+    public int StaffID { get; set; }
+    public int StaffNameKey { get; set; }
+    public int Description { get; set; }
+    public int Theme { get; set; }
+    public int StaffType { get; set; }
+    public float WorkSpeed { get; set; }
+    public float MoveSpeed { get; set; }
+    public int Health { get; set; }
+    public int RankPoint { get; set; }
+    public int Cost { get; set; }
+    public string Icon { get; set; }
+    public string Resouces { get; set; }
 }
