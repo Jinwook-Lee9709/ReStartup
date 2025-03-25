@@ -11,7 +11,7 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
     
     //LocalVariables
     private float interactProgress = 0;
-    private float interactionSpeed;
+    [SerializeField] private float interactionSpeed;
     private InteractStatus interactStatus;
     
     //Properties
@@ -26,6 +26,12 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
     public void SetWork(InteractWorkBase workBase)
     {
         currentWork = workBase;
+    }
+
+    public void ClearWork()
+    {
+        currentWork = null;
+        interactProgress = 0f;
     }
     
     public void OnInteractStarted(IInteractor interactor)
@@ -45,11 +51,14 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
         {
             OnInteractCompleted();
         }
-        
+
         return interactStatus;
     }
 
-    public abstract void OnInteractCanceled();
+    public virtual void OnInteractCanceled()
+    {
+        interactStatus = InteractStatus.Pending;
+    }
 
     public virtual void OnInteractCompleted()
     {
@@ -65,8 +74,11 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
 
     private float CalculateInteractionSpeed(IInteractor interactor)
     {
-        if (interactor == null || currentWork == null)
+        if (interactor == null)
             return 0;
+        if (currentWork.InteractTime == 0)
+            return 1;
+        
         return 1 / interactor.InteractionSpeed / currentWork.InteractTime;
     }
 

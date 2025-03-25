@@ -3,6 +3,7 @@ using UnityEngine;
 using System;
 using Unity.VisualScripting;
 using JetBrains.Annotations;
+using UnityEngine.EventSystems;
 
 public class InputManager : MonoBehaviour
 {
@@ -24,7 +25,6 @@ public class InputManager : MonoBehaviour
 
     private bool isPressed;
     private bool isReleased;
-    private bool cheakWork;
 
     private bool slowTouchDetected = false;
 
@@ -47,13 +47,24 @@ public class InputManager : MonoBehaviour
             if (MathF.Abs(distance) < minSwipeDistance)
             {
                 Vector2 worldPoint = Camera.main.ScreenToWorldPoint(pos); // 마우스 좌표를 월드 좌표로 변환
-                RaycastHit2D hit = Physics2D.Raycast(worldPoint, Vector2.zero);
+                RaycastHit2D[] hit = Physics2D.RaycastAll(worldPoint, Vector2.zero);
 
-                if (hit.collider != null)
+                if (EventSystem.current.IsPointerOverGameObject())
                 {
-                    bool cheakWork = hit.collider.CompareTag("Work");
-                    player.OnMoveOrWork(cheakWork, worldPoint);
+                    return;
                 }
+                bool cheakWork = false;
+                for (int i = 0; i < hit.Length; i++)
+                {
+                    if (hit[i].collider != null)
+                    {
+                        if (hit[i].collider.CompareTag("Work"))
+                        {
+                            cheakWork = true;
+                        }
+                    }
+                }
+                player.OnMoveOrWork(cheakWork, worldPoint);
                 return;
             }
             hollCamera.SetActive(distance > 0);
@@ -70,15 +81,27 @@ public class InputManager : MonoBehaviour
             }
 
             Vector2 worldPoint = Camera.main.ScreenToWorldPoint(pos); // 마우스 좌표를 월드 좌표로 변환
-            RaycastHit2D hit = Physics2D.Raycast(worldPoint, Vector2.zero);
+            RaycastHit2D[] hit = Physics2D.RaycastAll(worldPoint, Vector2.zero);
 
-            if (hit.collider != null)
+            if (EventSystem.current.IsPointerOverGameObject())
             {
-                bool cheakWork = hit.collider.CompareTag("Work");
-                player.OnMoveOrWork(cheakWork, worldPoint);
+                return;
             }
+            bool cheakWork = false;
+            for (int i = 0; i < hit.Length; i++)
+            {
+                if (hit[i].collider != null)
+                {
+                    if (hit[i].collider.CompareTag("Work"))
+                    {
+                        cheakWork = true;
+                    }
+                }
+            }
+            player.OnMoveOrWork(cheakWork, worldPoint);
         };
     }
+
     public void GetPos(InputAction.CallbackContext callbackContext)
     {
         pos = callbackContext.ReadValue<Vector2>();

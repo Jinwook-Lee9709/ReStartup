@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,8 +6,7 @@ using UnityEngine.AI;
 
 public class ConsumerFSM : MonoBehaviour
 {
-    //TODO : ÁÖ¹®ÇÑ À½½Ä, ÇöÀç Å×ÀÌºí
-    public Table currentTable = null;
+    public ConsumerManager consumerManager;
     public enum ConsumerState
     {
         Waiting,
@@ -15,10 +15,32 @@ public class ConsumerFSM : MonoBehaviour
         Eatting,
         BeforePay,
         AfterPay,
-    }
-    private NavMeshAgent agent;
 
-    private ConsumerState currentStatus = ConsumerState.Waiting;
+        Disappoint,
+    }
+
+
+    private NavMeshAgent agent;
+    private float orderWaitTimer;
+    private float maxOrderWaitLimit = 30f;
+    [SerializeField]
+    private List<float> satisfactionChangeLimit = new List<float>
+    {
+        15f,
+        0f
+    };
+    public enum Satisfaction
+    {
+        High,
+        Middle,
+        Low,
+    }
+
+    public event Action<Consumer> OnSeatEvent;
+
+
+    [SerializeField] private ConsumerState currentStatus = ConsumerState.Waiting;
+    private Satisfaction currentSatisfaction = Satisfaction.High;
 
     public ConsumerState CurrentStatus
     {
@@ -33,14 +55,29 @@ public class ConsumerFSM : MonoBehaviour
                 case ConsumerState.Waiting:
                     break;
                 case ConsumerState.BeforeOrder:
+                    agent.SetDestination(GetComponent<Consumer>().currentTable.InteractablePoints[1].position);
                     break;
                 case ConsumerState.AfterOrder:
                     break;
                 case ConsumerState.Eatting:
+                    //StartCoroutine();
                     break;
                 case ConsumerState.BeforePay:
                     break;
                 case ConsumerState.AfterPay:
+                    switch (currentSatisfaction)
+                    {
+                        case Satisfaction.High:
+                            UserDataManager.Instance.CurrentUserData.PositiveCnt++;
+                            break;
+                        case Satisfaction.Low:
+                            UserDataManager.Instance.CurrentUserData.NegativeCnt++;
+                            break;
+                    }
+                    agent.SetDestination(consumerManager.spawnPoint.position);
+                    break;
+                case ConsumerState.Disappoint:
+                    agent.SetDestination(consumerManager.spawnPoint.position);
                     break;
             }
         }
@@ -48,6 +85,12 @@ public class ConsumerFSM : MonoBehaviour
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+    }
+
+    private void OnEnable()
+    {
+        currentSatisfaction = Satisfaction.High;
+        orderWaitTimer = maxOrderWaitLimit;
     }
 
     private void Update()
@@ -72,37 +115,70 @@ public class ConsumerFSM : MonoBehaviour
             case ConsumerState.AfterPay:
                 UpdateAfterPay();
                 break;
+            case ConsumerState.Disappoint:
+                UpdateDisappoint();
+                break;
         }
     }
 
     private void UpdateWaiting()
     {
-        //ºóÀÚ¸®°¡ ¾ø¾î ´ë±âÇÏ´Â »óÅÂ.
-        //¾Õ»ç¶÷ÀÌ »ç¶óÁö¸é ¾Õ»ç¶÷ ÀÚ¸®·Î ÀÌµ¿.
+        //ï¿½ï¿½ï¿½Ú¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½.
+        //ï¿½Õ»ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Õ»ï¿½ï¿½ ï¿½Ú¸ï¿½ï¿½ï¿½ ï¿½Ìµï¿½.
     }
     private void UpdateBeforeOrder()
     {
-        //ºóÀÚ¸®°¡ »ý°Ü ºóÀÚ¸®·Î ÀÌµ¿ ÈÄ ÁÖ¹®.
-        //Á÷¿øÀÌ ÁÖ¹®À» ¹Þ¾Æ°¡±â Àü±îÁöÀÇ »óÅÂ.
+        //ï¿½ï¿½ï¿½Ú¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú¸ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ ï¿½ï¿½ ï¿½Ö¹ï¿½.
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¹ï¿½ï¿½ï¿½ ï¿½Þ¾Æ°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
+        if(agent.remainingDistance < 0.1f)
+        {
+            OnSeatEvent?.Invoke(GetComponent<Consumer>());
+            CurrentStatus = ConsumerState.AfterOrder;
+        }
     }
     private void UpdateAfterOrder()
     {
-        //ÁÖ¹®À» ¹Þ¾Æ°£ ÈÄ, À½½ÄÀÌ ³ª¿À±â±îÁöÀÇ »óÅÂ.
-        //deltaTimeÀ» Àû»êÇÏ¿© ¸¸Á·µµ »óÅÂ¸¦ °»½Å
+        //ï¿½Ö¹ï¿½ï¿½ï¿½ ï¿½Þ¾Æ°ï¿½ ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
+        //deltaTimeï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¸ï¿½ ï¿½ï¿½ï¿½ï¿½.
+        orderWaitTimer -= Time.deltaTime;
+        // Debug.Log(orderWaitTimer);
+        switch (orderWaitTimer)
+        {
+            case var t when t < satisfactionChangeLimit[0]:
+                currentSatisfaction = Satisfaction.Middle;
+                break;
+            case var t when t < satisfactionChangeLimit[1]:
+                currentSatisfaction = Satisfaction.Low;
+                currentStatus = ConsumerState.Disappoint;
+                break;
+        }
     }
     private void UpdateEatting()
     {
-        //½Ä»çÁßÀÎ »óÅÂ
+        //ï¿½Ä»ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
     }
     private void UpdateBeforePay()
     {
-        //½Ä»ç°¡ ³¡³­ ÈÄ °è»ê´ë·Î ÀÌµ¿ÇÑ ÈÄ, °è»êÀ» ±â´Ù¸®´Â »óÅÂ.
-        //¿©±â¼­ÀÇ ±â´Ù¸²Àº ¸¸Á·µµ¿¡ ¿µÇâÀ» ¹ÌÄ¡Áö ¾ÊÀ½
+        //ï¿½Ä»ç°¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½É¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
+        //ï¿½ï¿½ï¿½â¼­ï¿½ï¿½ ï¿½ï¿½Ù¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
     }
     private void UpdateAfterPay()
     {
-        //°è»ê ÈÄ ÅðÀåÇÏ´Â »óÅÂ.
-        //AfterOrder»óÅÂÀÏ ¶§ ¸¶Áö¸·À¸·Î °»½ÅµÈ ¸¸Á·µµ°¡ UserData¿¡ ´©ÀûµÊ
-        //ÀÌÈÄ ¿ÀºêÁ§Æ®Ç®¿¡ ¹ÝÈ¯µÊ
+        //ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½.
+        //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®Ç®ï¿½ï¿½ ï¿½ï¿½È¯ï¿½ï¿½.
+        if (agent.remainingDistance <= 0.1f)
+        {
+            consumerManager.consumerPool.Release(gameObject);
+        }
+    }
+
+    private void UpdateDisappoint()
+    {
+        //ï¿½Ö¹ï¿½ ï¿½ï¿½ 30ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾ï¿½ ï¿½Ò¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½.
+        //agentï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®Ç®ï¿½ï¿½ ï¿½ï¿½È¯ï¿½ï¿½
+        if(agent.remainingDistance <= 0.1f)
+        {
+            consumerManager.consumerPool.Release(gameObject);
+        }
     }
 }

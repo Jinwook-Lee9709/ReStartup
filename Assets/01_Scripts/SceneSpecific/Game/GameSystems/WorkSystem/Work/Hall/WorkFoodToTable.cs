@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WorkFoodToTable : InteractWorkBase
 {
-    public WorkFoodToTable(WorkManager workManager, WorkType workType, float interactTime) : base(workManager, workType, interactTime)
+    public WorkFoodToTable(WorkManager workManager, WorkType workType) : base(workManager, workType)
     {
     }
     
