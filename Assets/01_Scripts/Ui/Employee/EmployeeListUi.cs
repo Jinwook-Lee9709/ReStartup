@@ -2,18 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EmployeeListUi : MonoBehaviour
 {
-    private TextMeshProUGUI text;
     public EmployeeManager employeeManager;
+    public GameObject upgradeObject;
     void Start()
     {
-        text = GetComponentInChildren<TextMeshProUGUI>();
     }
-    public void OnUpgradeButtonClick()
+    public void AddUpgradeList(EmployeeFSM data)
     {
-        Debug.Log("OnUpgradeButtonClick »£√‚");
-        employeeManager.UpgradeEmployee(text.text);
+        var ui = Instantiate(upgradeObject, transform).GetComponent<testUi>();
+        ui.Init(data);
     }
 }

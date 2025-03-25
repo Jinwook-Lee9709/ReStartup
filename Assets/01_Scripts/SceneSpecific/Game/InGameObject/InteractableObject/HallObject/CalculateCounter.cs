@@ -7,10 +7,11 @@ public class CalculateCounter : InteractableObjectBase
     public override void OnInteractCompleted()
     {
         Debug.Log("Calculate");
-        OnInteractFinishedEvent += UpGold;
+        OnInteractFinishedEvent += UpMoney;
     }
-    private void UpGold()
+    private void UpMoney()
     {
         //골드 올려주는 매서드 호출
+        TestMoney.GetMoney(1);
     }
 }

@@ -9,10 +9,11 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransformable
 {
     [SerializeField]
     private Transform idleArea;
-    public float Speed { get; private set; }
-    private float defultSpeed = 1f;
-    private int upgradeCount;
-    public new string name;
+    private EmployeeData employeeData = new();
+    public EmployeeData EmployeeData
+    {
+        get => employeeData;
+    }
     public EmployeeManager employeeManager;
     public enum EnployedState
     {
@@ -102,19 +103,12 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransformable
 
     private void Start()
     {
-        employeeManager.AddEmployee(name, this);
+        employeeData.name = name;
+        employeeManager.AddEmployee(this);
     }
-
-    public void OnUpgrade()
-    {   
-        upgradeCount++;
-        Speed = defultSpeed * upgradeCount;
-        Debug.Log(Speed);
-
-        var distance = Vector3.Distance(transform.position, idleArea.position);
-        if (distance <= agent.stoppingDistance)
-        {
-            CurrentStatus = EnployedState.Idle;
-        }
+    public void StatsUpdate()
+    {
+        agent.speed = employeeData.Speed;
+        Debug.Log(agent.speed);
     }
 }
