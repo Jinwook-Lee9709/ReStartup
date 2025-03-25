@@ -75,6 +75,7 @@ public class InputManager : MonoBehaviour
             if (hit.collider != null)
             {
                 bool cheakWork = hit.collider.CompareTag("Work");
+                Debug.Log(pos);
                 player.OnMoveOrWork(cheakWork, worldPoint);
             }
         };
