@@ -12,9 +12,9 @@ public class Consumer : MonoBehaviour
     }
     private Animator animator;
     private NavMeshAgent agent;
-    //TODO : ÁÖ¹®ÇÑ À½½Ä, ÇöÀç Å×ÀÌºí
+    //TODO : ï¿½Ö¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½
     public Table currentTable = null;
-    //public Food needFood = null;
+    public FoodData needFood = new();
     private Transform nextTargetTransform;
     public Transform NextTargetTransform
     {

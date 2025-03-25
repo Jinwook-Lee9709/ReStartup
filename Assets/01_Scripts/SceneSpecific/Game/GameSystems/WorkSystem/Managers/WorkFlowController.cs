@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -10,12 +11,16 @@ public class WorkFlowController : MonoBehaviour
     private InteractableObjectManager<Table> tableManager = new();
     private InteractableObjectManager<CookingStation> cookingStationManager = new();
     private InteractableObjectManager<FoodPickupCounter> foodPickupCounterManager = new();
-
+    private CashierCounter cashierCounter;
+    
+    
     private Queue<Consumer> customerQueue = new();
     private Queue<MainLoopWorkContext> orderQueue = new();
     private Queue<(MainLoopWorkContext, CookingStation)> foodPickupCounterQueue = new();
+    private Queue<Consumer> cashierQueue = new();
 
-
+    
+    
 #if UNITY_EDITOR
     public Table tempTable;
     public CookingStation tempStation;
@@ -155,6 +160,50 @@ public class WorkFlowController : MonoBehaviour
     
     
     #endregion
+
+
+
+    #region CashierLogic
+
+    public int AssignCashier(Consumer consumer)
+    {
+        cashierQueue.Enqueue(consumer);
+        if (cashierQueue.Count > 1)
+        {
+            return cashierQueue.Count - 1;
+        }
+        else
+        {
+            consumer.NextTargetTransform = cashierCounter.transform;
+            return 0;
+        }
+    }
+
+    public int OnCashierFinished()
+    {
+        Transform buf = cashierQueue.Dequeue().transform;
+        if(cashierQueue.Count > 0)
+        foreach (var consumer in cashierQueue)
+        {
+            consumer.NextTargetTransform = buf;
+            buf = consumer.transform;
+        }
+        WorkCashier work = new WorkCashier(workManager, WorkType.Payment);
+        var context = new MainLoopWorkContext(cashierQueue.First(), this);
+        work.SetContext(context);
+        cashierCounter.SetWork(work);
+        work.SetInteractable(cashierCounter);
+        workManager.AddWork(work);
+        return cashierQueue.Count;
+    }
+    
+    public CashierCounter GetCashierCounter()
+    {
+        return cashierCounter;
+    }
+
+    #endregion
+    
     
     //손님 대기열
     //Table에 자리가 나면 손님할당

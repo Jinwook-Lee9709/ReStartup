@@ -2,10 +2,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class WorkCooking : InteractWorkBase
 {
     private MainLoopWorkContext context;
+    
+    private ITransportable transformer;
+    private FoodObject foodObject;
+    private Sprite foodSprite;
     public WorkCooking(WorkManager workManager, WorkType workType) : base(workManager, workType)
     {
     }
@@ -50,9 +56,34 @@ public class WorkCooking : InteractWorkBase
         worker.AssignWork(work);
         nextWork = work;
         nextWorker = worker;
+        
+        transformer = worker as ITransportable;
+        Addressables.InstantiateAsync("FoodObject").Completed += OnFoodObjectInstantiated;
+        Addressables.LoadAssetAsync<Sprite>(context.Consumer.needFood.spriteId).Completed += OnSpriteLoaded;
+    }
+    
+
+    private void OnFoodObjectInstantiated(AsyncOperationHandle<GameObject> handle)
+    {
+        var obj = handle.Result;
+        foodObject = obj.GetComponent<FoodObject>();
+        if (foodSprite != null)
+        {
+            foodObject.SetSprite(foodSprite);
+            transformer.LiftPackage(obj);
+        }
+
     }
 
-
+    private void OnSpriteLoaded(AsyncOperationHandle<Sprite> handle)
+    {
+        foodSprite = handle.Result;
+        if (foodObject != null)
+        {
+            foodObject.SetSprite(foodSprite);
+            transformer.LiftPackage(foodObject.gameObject);
+        }
+    }
 
     
     

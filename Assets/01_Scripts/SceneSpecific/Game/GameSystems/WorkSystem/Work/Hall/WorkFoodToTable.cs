@@ -16,6 +16,8 @@ public class WorkFoodToTable : InteractWorkBase
     
     protected override void HandlePostInteraction()
     {
+        var porter = worker as ITransportable;
+        porter.DropPackage(context.Consumer.currentTable.FoodPlacePivot);
         context.Consumer.FSM.OnGetFood();
     }
 }
