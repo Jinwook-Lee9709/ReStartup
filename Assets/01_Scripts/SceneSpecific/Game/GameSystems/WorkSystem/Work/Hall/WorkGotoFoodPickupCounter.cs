@@ -29,7 +29,11 @@ public class WorkGotoFoodPickupCounter : InteractWorkBase
         work.SetInteractable(context.Consumer.currentTable);
         context.Consumer.currentTable.SetWork(work);
         worker.AssignWork(work);
-
+        
+        var transporter = worker as ITransportable;
+        var package = counter.LiftFood();
+        transporter.LiftPackage(package);
+        
         nextWork = work;
         nextWorker = worker;
     }

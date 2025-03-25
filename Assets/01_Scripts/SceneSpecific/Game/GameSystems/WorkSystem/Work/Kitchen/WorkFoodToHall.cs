@@ -19,12 +19,13 @@ public class WorkFoodToHall : InteractWorkBase
     protected override void HandlePostInteraction()
     {
         WorkGotoFoodPickupCounter work = new WorkGotoFoodPickupCounter(workManager, WorkType.Hall);
-        
+
+        var transporter = worker as ITransportable;
         FoodPickupCounter counter = target as FoodPickupCounter;
-        counter.ClearWork();
-        
         work.SetContext(context);
         work.SetInteractable(counter);
+        transporter.DropPackage(counter.FoodPlacePivot);
+        counter.ClearWork();
         counter.SetWork(work);
         nextWork = work;
     }

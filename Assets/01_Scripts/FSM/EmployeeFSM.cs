@@ -1,14 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.AddressableAssets.Build;
 using UnityEngine;
 using UnityEngine.AI;
 using static UnityEditor.PlayerSettings;
 
-public class EmployeeFSM : WorkerBase, IInteractor, ITransformable
+public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
 {
-    [SerializeField]
-    private Transform idleArea;
+    [SerializeField] private Transform idleArea;
+    [SerializeField] private Transform handPivot; 
     public float Speed { get; private set; }
     private float defultSpeed = 1f;
     private int upgradeCount;
@@ -89,20 +90,27 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransformable
     }
 
 
-    public Transform handPivot { get; set; }
-    public void LiftPackage(Sprite packageSprite)
+    public Transform HandPivot { get; }
+    public void LiftPackage(GameObject package)
     {
-        throw new System.NotImplementedException();
+        package.transform.SetParent(handPivot);
+        package.transform.localPosition = Vector3.zero;
     }
-
-    public void DropPackage()
+    public void DropPackage(Transform dropPoint)
     {
-        throw new System.NotImplementedException();
+        if (handPivot.childCount > 0)
+        {
+            var package = handPivot.GetChild(0).gameObject;
+            package.transform.SetParent(dropPoint);
+            package.transform.localPosition = Vector3.zero;
+        }
+            
+        
     }
 
     private void Start()
     {
-        employeeManager.AddEmployee(name, this);
+        // employeeManager.AddEmployee(name, this);
     }
 
     public void OnUpgrade()

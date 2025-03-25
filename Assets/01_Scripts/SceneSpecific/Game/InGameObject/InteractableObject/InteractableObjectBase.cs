@@ -11,7 +11,7 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
     
     //LocalVariables
     private float interactProgress = 0;
-    [SerializeField] private float interactionSpeed;
+    private float interactionSpeed;
     private InteractStatus interactStatus;
     
     //Properties

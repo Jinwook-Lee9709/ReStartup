@@ -13,10 +13,10 @@ public abstract class DataTable
 {
     public abstract void Load();
 
-    public static async Task<List<T>> LoadCsv<T>(string assetId)
+    public static List<T> LoadCsv<T>(string assetId)
     {
         var handle =  Addressables.LoadAssetAsync<TextAsset>(assetId);
-        await handle.Task;
+        handle.WaitForCompletion();
 
         if (handle.Status != AsyncOperationStatus.Succeeded)
         {
