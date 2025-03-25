@@ -76,6 +76,7 @@ public class ConsumerManager : MonoBehaviour
         consumer.transform.position = spawnPoint.position;
         consumer.consumerManager = this;
         consumer.FSM.consumerManager = this;
+        consumer.FSM.SetCashierCounter(workFlowController.GetCashierCounter());
 
         consumer.FSM.OnSeatEvent += workFlowController.AssignGetOrderWork;
 
@@ -126,4 +127,12 @@ public class ConsumerManager : MonoBehaviour
         }
     }
 
+    public void OnEndMeal(Consumer consumer)
+    {
+        int cnt = workFlowController.AssignCashier(consumer);
+        if (cnt != 0)
+        {
+            consumer.transform.position = workFlowController.GetCashierCounter().InteractablePoints[0].position + new Vector3(-1, 0, 0) * cnt;
+        }
+    }
 }

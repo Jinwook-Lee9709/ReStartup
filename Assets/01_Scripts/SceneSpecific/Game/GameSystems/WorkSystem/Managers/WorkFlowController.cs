@@ -11,7 +11,7 @@ public class WorkFlowController : MonoBehaviour
     private InteractableObjectManager<Table> tableManager = new();
     private InteractableObjectManager<CookingStation> cookingStationManager = new();
     private InteractableObjectManager<FoodPickupCounter> foodPickupCounterManager = new();
-    private CashierCounter cashierCounter;
+    [SerializeField] private CashierCounter cashierCounter;
     
     
     private Queue<Consumer> customerQueue = new();
@@ -181,7 +181,9 @@ public class WorkFlowController : MonoBehaviour
 
     public int OnCashierFinished()
     {
-        Transform buf = cashierQueue.Dequeue().transform;
+        var firstConsumer = cashierQueue.Dequeue();
+        firstConsumer.FSM.OnEndPayment();
+        Transform buf = firstConsumer.transform;
         if(cashierQueue.Count > 0)
         foreach (var consumer in cashierQueue)
         {

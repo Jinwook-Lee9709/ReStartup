@@ -8,7 +8,8 @@ public class ConsumerFSM : MonoBehaviour
 {
     public ConsumerData consumerData = new();
     public ConsumerManager consumerManager;
-    private Transform calculateCounter;
+    private Consumer consumer;
+    private CashierCounter cashierCounter;
     public enum ConsumerState
     {
         Waiting,
@@ -54,22 +55,22 @@ public class ConsumerFSM : MonoBehaviour
                 case ConsumerState.Waiting:
                     break;
                 case ConsumerState.BeforeOrder:
-                    consumerManager.OnWaitingLineUpdate(GetComponent<Consumer>());
-                    agent.SetDestination(GetComponent<Consumer>().currentTable.InteractablePoints[1].position);
+                    consumerManager.OnWaitingLineUpdate(consumer);
+                    agent.SetDestination(consumer.currentTable.InteractablePoints[1].position);
                     break;
                 case ConsumerState.AfterOrder:
-                    consumerManager.OnChangeConsumerState(GetComponent<Consumer>(), ConsumerState.AfterOrder);
+                    consumerManager.OnChangeConsumerState(consumer, ConsumerState.AfterOrder);
                     break;
                 case ConsumerState.Eatting:
-                    consumerManager.OnChangeConsumerState(GetComponent<Consumer>(), ConsumerState.Eatting);
+                    consumerManager.OnChangeConsumerState(consumer, ConsumerState.Eatting);
                     StartCoroutine(EattingCoroutine());
                     break;
                 case ConsumerState.BeforePay:
-                    consumerManager.OnChangeConsumerState(GetComponent<Consumer>(), ConsumerState.BeforePay);
-                    agent.SetDestination(calculateCounter.position);
+                    consumerManager.OnChangeConsumerState(consumer, ConsumerState.BeforePay);
+                    consumerManager.OnEndMeal(consumer);
                     break;
                 case ConsumerState.AfterPay:
-                    consumerManager.OnChangeConsumerState(GetComponent<Consumer>(), ConsumerState.AfterPay);
+                    consumerManager.OnChangeConsumerState(consumer, ConsumerState.AfterPay);
                     switch (currentSatisfaction)
                     {
                         case Satisfaction.High:
@@ -82,12 +83,22 @@ public class ConsumerFSM : MonoBehaviour
                     agent.SetDestination(consumerManager.spawnPoint.position);
                     break;
                 case ConsumerState.Disappoint:
-                    consumerManager.OnChangeConsumerState(GetComponent<Consumer>(), ConsumerState.Disappoint);
+                    consumerManager.OnChangeConsumerState(consumer, ConsumerState.Disappoint);
                     agent.SetDestination(consumerManager.spawnPoint.position);
                     break;
             }
             currentStatus = value;
         }
+    }
+
+    public void OnEndPayment()
+    {
+        CurrentStatus = ConsumerState.AfterPay;
+    }
+
+    public void SetCashierCounter(CashierCounter cashierCounter)
+    {
+        this.cashierCounter = cashierCounter;
     }
 
     private IEnumerator EattingCoroutine()
@@ -114,6 +125,7 @@ public class ConsumerFSM : MonoBehaviour
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        consumer = GetComponent<Consumer>();
     }
 
     private void OnEnable()
@@ -161,7 +173,7 @@ public class ConsumerFSM : MonoBehaviour
         //������ �ֹ��� �޾ư��� �������� ����.
         if (agent.remainingDistance < 0.1f)
         {
-            OnSeatEvent?.Invoke(GetComponent<Consumer>());
+            OnSeatEvent?.Invoke(consumer);
         }
     }
     private void UpdateAfterOrder()

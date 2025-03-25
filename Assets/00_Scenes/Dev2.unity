@@ -344,6 +344,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   workManager: {fileID: 173956728}
+  cashierCounter: {fileID: 2089997161}
   tempTable: {fileID: 595826895}
   tempStation: {fileID: 267479856}
   tempCounter: {fileID: 1810808506}
@@ -395,7 +396,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactablePoint:
   - {fileID: 1574215402}
-  interactionSpeed: 3
 --- !u!212 &267479857
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1052,7 +1052,6 @@ MonoBehaviour:
   interactablePoint:
   - {fileID: 1380831186}
   - {fileID: 1510507125}
-  interactionSpeed: 3
   foodPlacePivot: {fileID: 672798319}
 --- !u!212 &595826896
 SpriteRenderer:
@@ -3045,6 +3044,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 267479855}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1590147229
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1590147230}
+  m_Layer: 0
+  m_Name: Pivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1590147230
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1590147229}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.01, y: -0.99, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2089997158}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1659515682
 GameObject:
   m_ObjectHideFlags: 0
@@ -4929,7 +4959,6 @@ MonoBehaviour:
   interactablePoint:
   - {fileID: 580636269}
   - {fileID: 271090594}
-  interactionSpeed: 0
   foodPlacePivot: {fileID: 535335203}
 --- !u!1 &1853294416
 GameObject:
@@ -5200,6 +5229,7 @@ GameObject:
   - component: {fileID: 2089997158}
   - component: {fileID: 2089997160}
   - component: {fileID: 2089997159}
+  - component: {fileID: 2089997161}
   m_Layer: 0
   m_Name: Counter
   m_TagString: Untagged
@@ -5219,7 +5249,8 @@ Transform:
   m_LocalPosition: {x: -2.48, y: 0.6, z: 7.463485}
   m_LocalScale: {x: 1.93, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1590147230}
   m_Father: {fileID: 1412798717}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2089997159
@@ -5290,6 +5321,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &2089997161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2089997157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfbcdb57da79ac648a1d91c79d40bf9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactablePoint:
+  - {fileID: 1590147230}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
