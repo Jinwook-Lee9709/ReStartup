@@ -33,7 +33,7 @@ public class WorkCooking : InteractWorkBase
     {
         if (!workFlowController.IsFoodCounterAvailable())
         {
-            workFlowController.RegisterOrder(context);
+            workFlowController.RegisterFoodToHall(context, target as CookingStation);
             return false; // 더 이상 진행할 필요 없음
         }
         return true;
@@ -44,11 +44,11 @@ public class WorkCooking : InteractWorkBase
         worker.ClearWork();
         var emptyFoodCounter = workFlowController.GetEmptyFoodCounter();
         WorkFoodToHall work = new WorkFoodToHall(workManager, WorkType.Kitchen);
-        work.SetContext(context);
+        work.SetContext(context, emptyFoodCounter);
         work.SetInteractable(emptyFoodCounter);
         emptyFoodCounter.SetWork(work);
         worker.AssignWork(work);
-        nextWork = new WorkFoodToHall(workManager, WorkType.Kitchen);
+        nextWork = work;
         nextWorker = worker;
     }
 

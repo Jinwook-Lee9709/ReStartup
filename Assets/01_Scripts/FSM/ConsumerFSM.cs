@@ -6,6 +6,7 @@ using UnityEngine.AI;
 
 public class ConsumerFSM : MonoBehaviour
 {
+    public ConsumerData consumerData;
     public ConsumerManager consumerManager;
     public enum ConsumerState
     {
@@ -21,8 +22,6 @@ public class ConsumerFSM : MonoBehaviour
 
 
     private NavMeshAgent agent;
-    private float orderWaitTimer;
-    private float maxOrderWaitLimit = 30f;
     [SerializeField]
     private List<float> satisfactionChangeLimit = new List<float>
     {
@@ -55,16 +54,21 @@ public class ConsumerFSM : MonoBehaviour
                 case ConsumerState.Waiting:
                     break;
                 case ConsumerState.BeforeOrder:
+                    consumerManager.OnWaitingLineUpdate(this.GetComponent<Consumer>());
                     agent.SetDestination(GetComponent<Consumer>().currentTable.InteractablePoints[1].position);
                     break;
                 case ConsumerState.AfterOrder:
+                    consumerManager.OnChangeConsumerState(GetComponent<Consumer>(), ConsumerState.AfterOrder);
                     break;
                 case ConsumerState.Eatting:
-                    //StartCoroutine();
+                    consumerManager.OnChangeConsumerState(GetComponent<Consumer>(), ConsumerState.Eatting);
+                    StartCoroutine(EattingCoroutine());
                     break;
                 case ConsumerState.BeforePay:
+                    consumerManager.OnChangeConsumerState(GetComponent<Consumer>(), ConsumerState.BeforePay);
                     break;
                 case ConsumerState.AfterPay:
+                    consumerManager.OnChangeConsumerState(GetComponent<Consumer>(), ConsumerState.AfterPay);
                     switch (currentSatisfaction)
                     {
                         case Satisfaction.High:
@@ -77,11 +81,29 @@ public class ConsumerFSM : MonoBehaviour
                     agent.SetDestination(consumerManager.spawnPoint.position);
                     break;
                 case ConsumerState.Disappoint:
+                    consumerManager.OnChangeConsumerState(GetComponent<Consumer>(), ConsumerState.Disappoint);
                     agent.SetDestination(consumerManager.spawnPoint.position);
                     break;
             }
         }
     }
+
+    private IEnumerator EattingCoroutine()
+    {
+        float eattingTimer = 0f;
+        while(eattingTimer < consumerData.MaxEattingLimit)
+        {
+            eattingTimer += Time.deltaTime;
+            yield return null;
+        }
+        CurrentStatus = ConsumerState.BeforePay;
+    }
+
+    public void OnGetFood()
+    {
+        CurrentStatus = ConsumerState.Eatting;
+    }
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -90,7 +112,7 @@ public class ConsumerFSM : MonoBehaviour
     private void OnEnable()
     {
         currentSatisfaction = Satisfaction.High;
-        orderWaitTimer = maxOrderWaitLimit;
+        consumerData.OrderWaitTimer = consumerData.MaxOrderWaitLimit;
     }
 
     private void Update()
@@ -140,9 +162,9 @@ public class ConsumerFSM : MonoBehaviour
     {
         //�ֹ��� �޾ư� ��, ������ ����������� ����.
         //deltaTime�� �����Ͽ� ������ ���¸� ����.
-        orderWaitTimer -= Time.deltaTime;
+        consumerData.OrderWaitTimer -= Time.deltaTime;
         // Debug.Log(orderWaitTimer);
-        switch (orderWaitTimer)
+        switch (consumerData.OrderWaitTimer)
         {
             case var t when t < satisfactionChangeLimit[0]:
                 currentSatisfaction = Satisfaction.Middle;
