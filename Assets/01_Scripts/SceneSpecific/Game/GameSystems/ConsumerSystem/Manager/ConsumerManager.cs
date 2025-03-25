@@ -55,8 +55,6 @@ public class ConsumerManager : MonoBehaviour
 
     public void OnWaitingLineUpdate(Consumer consumer)
     {
-        OnChangeConsumerState(consumer, ConsumerFSM.ConsumerState.BeforeOrder);
-
         if (currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count > 0)
         {
             for (int i = 0; i < currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count; i++)
@@ -65,11 +63,13 @@ public class ConsumerManager : MonoBehaviour
             }
         }
     }
+
     private GameObject OnCreateConsumer()
     {
         var obj = Instantiate(consumerPrefab);
         return obj;
     }
+
     private void InitConsumer(Consumer consumer)
     {
         //TODO : 손님을 오브젝트풀에서 꺼낼 때 설정 (원하는 음식, 손님 타입, 줄설 자리 등)

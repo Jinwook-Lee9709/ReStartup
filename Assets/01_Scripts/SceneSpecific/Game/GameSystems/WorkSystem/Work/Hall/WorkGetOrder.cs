@@ -20,6 +20,7 @@ public class WorkGetOrder : InteractWorkBase
 
     protected override void HandlePostInteraction()
     {
+        context.Consumer.FSM.OnOrderComplete();
         context.Consumer.currentTable.ClearWork();
         context.WorkFlowController.RegisterOrder(context);
     }

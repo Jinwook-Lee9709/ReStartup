@@ -8,6 +8,7 @@ public class ConsumerFSM : MonoBehaviour
 {
     public ConsumerData consumerData = new();
     public ConsumerManager consumerManager;
+    private Transform calculateCounter;
     public enum ConsumerState
     {
         Waiting,
@@ -47,14 +48,13 @@ public class ConsumerFSM : MonoBehaviour
         set
         {
             ConsumerState prevStatus = currentStatus;
-            currentStatus = value;
 
-            switch (currentStatus)
+            switch (value)
             {
                 case ConsumerState.Waiting:
                     break;
                 case ConsumerState.BeforeOrder:
-                    consumerManager.OnWaitingLineUpdate(this.GetComponent<Consumer>());
+                    consumerManager.OnWaitingLineUpdate(GetComponent<Consumer>());
                     agent.SetDestination(GetComponent<Consumer>().currentTable.InteractablePoints[1].position);
                     break;
                 case ConsumerState.AfterOrder:
@@ -66,6 +66,7 @@ public class ConsumerFSM : MonoBehaviour
                     break;
                 case ConsumerState.BeforePay:
                     consumerManager.OnChangeConsumerState(GetComponent<Consumer>(), ConsumerState.BeforePay);
+                    agent.SetDestination(calculateCounter.position);
                     break;
                 case ConsumerState.AfterPay:
                     consumerManager.OnChangeConsumerState(GetComponent<Consumer>(), ConsumerState.AfterPay);
@@ -85,18 +86,24 @@ public class ConsumerFSM : MonoBehaviour
                     agent.SetDestination(consumerManager.spawnPoint.position);
                     break;
             }
+            currentStatus = value;
         }
     }
 
     private IEnumerator EattingCoroutine()
     {
         float eattingTimer = 0f;
-        while(eattingTimer < consumerData.MaxEattingLimit)
+        while (eattingTimer < consumerData.MaxEattingLimit)
         {
             eattingTimer += Time.deltaTime;
             yield return null;
         }
         CurrentStatus = ConsumerState.BeforePay;
+    }
+
+    public void OnOrderComplete()
+    {
+        CurrentStatus = ConsumerState.AfterOrder;
     }
 
     public void OnGetFood()
@@ -152,10 +159,9 @@ public class ConsumerFSM : MonoBehaviour
     {
         //���ڸ��� ���� ���ڸ��� �̵� �� �ֹ�.
         //������ �ֹ��� �޾ư��� �������� ����.
-        if(agent.remainingDistance < 0.1f)
+        if (agent.remainingDistance < 0.1f)
         {
             OnSeatEvent?.Invoke(GetComponent<Consumer>());
-            CurrentStatus = ConsumerState.AfterOrder;
         }
     }
     private void UpdateAfterOrder()
@@ -198,7 +204,7 @@ public class ConsumerFSM : MonoBehaviour
     {
         //�ֹ� �� 30�� ���� ������ ������ �ʾ� �Ҹ��� ���·� �����ϴ� ����.
         //agent�� �������� �����ϸ� ������ƮǮ�� ��ȯ��
-        if(agent.remainingDistance <= 0.1f)
+        if (agent.remainingDistance <= 0.1f)
         {
             consumerManager.consumerPool.Release(gameObject);
         }
