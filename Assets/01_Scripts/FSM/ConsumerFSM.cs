@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 public class ConsumerFSM : MonoBehaviour
 {
-    public ConsumerData consumerData;
+    public ConsumerData consumerData = new();
     public ConsumerManager consumerManager;
     public enum ConsumerState
     {

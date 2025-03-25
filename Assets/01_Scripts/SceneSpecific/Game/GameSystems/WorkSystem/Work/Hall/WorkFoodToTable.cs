@@ -16,6 +16,6 @@ public class WorkFoodToTable : InteractWorkBase
     
     protected override void HandlePostInteraction()
     {
-        
+        context.Consumer.FSM.OnGetFood();
     }
 }
