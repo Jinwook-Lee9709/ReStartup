@@ -10,24 +10,24 @@ using Debug = UnityEngine.Debug;
 public abstract class InteractWorkBase : WorkBase
 {
     //References
-    private IInteractable target;
-    private Transform targetTransform;
     protected WorkerBase worker;
+    protected IInteractable target;
+    private Transform targetTransform;
     private IInteractor interactor;
     private NavMeshAgent workerAgent;
 
     //LocalVariables
     private WorkPhase workPhase;
-    private float interactTime;
+    protected float interactTime;
     
+    public Func<Transform> customTarget;
     
     //Properties
     public float InteractTime => interactTime;
 
 
-    public InteractWorkBase(WorkManager workManager, WorkType workType, float interactTime) : base(workManager, workType)
+    public InteractWorkBase(WorkManager workManager, WorkType workType) : base(workManager, workType)
     {
-        this.interactTime = interactTime;
     }
 
     public void SetInteractable(IInteractable target)
@@ -45,8 +45,23 @@ public abstract class InteractWorkBase : WorkBase
         workerAgent = worker.GetComponent<NavMeshAgent>();
         interactor = worker as IInteractor;
 
-        targetTransform = GetClosestInteractablePoint();
-
+        SetTarget();
+        EvaluateWorkerArrival();
+    }
+    private void SetTarget()
+    {
+        if (customTarget == null)
+        {
+            targetTransform = GetClosestInteractablePoint();
+        }
+        else
+        {
+            targetTransform = customTarget();
+        }
+    }
+    
+    private void EvaluateWorkerArrival()
+    {
         bool isArrive = IsArrive(workerAgent, targetTransform);
         if (!isArrive)
         {
@@ -75,6 +90,7 @@ public abstract class InteractWorkBase : WorkBase
             case WorkPhase.Working:
             {
                 var interactStatus = target.OnInteract(interactor);
+                Debug.Log(interactStatus);
                 if (interactStatus == InteractStatus.Success)
                 {
                     CompleteInteraction();

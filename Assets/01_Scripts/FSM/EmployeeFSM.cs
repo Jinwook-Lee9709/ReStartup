@@ -1,21 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using static UnityEditor.PlayerSettings;
 
-public class EmployeeFSM : WorkerBase
+public class EmployeeFSM : WorkerBase, ITransformable
 {
     [SerializeField]
     private Transform idleArea;
-    public float Speed { get; private set; }
-    private float defultSpeed = 1f;
-    private int upgradeCount;
-    public new string name;
-    public EmployeeManager employeeManager;
-
-
     public enum EnployedState
     {
         Idle,
@@ -35,7 +27,7 @@ public class EmployeeFSM : WorkerBase
             switch (currentStatus)
             {
                 case EnployedState.Idle:
-                    //DataTableÇÊ¿ä
+                    //DataTableï¿½Ê¿ï¿½
                     break;
                 case EnployedState.ReturnidleArea:
                     if (currentWork != null)
@@ -56,15 +48,15 @@ public class EmployeeFSM : WorkerBase
     {
         agent = GetComponent<NavMeshAgent>();
     }
-    private void Start()
+
+    public Transform handPivot { get; set; }
+    public void LiftPackage(Sprite packageSprite)
     {
-        Debug.Log("EmployeeFSM È£Ãâ");
-        employeeManager.AddEmployee(name, this);
+        throw new System.NotImplementedException();
     }
-    public void OnUpgrade()
+
+    public void DropPackage()
     {
-        upgradeCount++;
-        Speed = defultSpeed * upgradeCount;
-        Debug.Log(Speed);
+        throw new System.NotImplementedException();
     }
 }

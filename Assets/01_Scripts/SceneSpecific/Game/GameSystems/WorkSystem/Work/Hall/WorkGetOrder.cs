@@ -5,20 +5,21 @@ using UnityEngine;
 
 public class WorkGetOrder : InteractWorkBase
 {
-    private WorkFlowController workFlowController;
+    private MainLoopWorkContext context;
 
-    public void SetWorkFlowController(WorkFlowController workFlowController)
+    public WorkGetOrder(WorkManager workManager, WorkType workType)
+        : base(workManager, workType)
     {
-        this.workFlowController = workFlowController;
     }
-
-    public WorkGetOrder(WorkManager workManager, WorkType workType, float interactTime)
-        : base(workManager, workType, interactTime)
+    
+    public void SetContext(MainLoopWorkContext context)
     {
+        this.context = context;
+        interactTime = Constants.defaultOrderTime;
     }
 
     protected override void HandlePostInteraction()
     {
-        
+        context.WorkFlowController.RegisterOrder(context);
     }
 }

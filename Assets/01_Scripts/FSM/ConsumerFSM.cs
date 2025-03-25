@@ -5,8 +5,7 @@ using UnityEngine.AI;
 
 public class ConsumerFSM : MonoBehaviour
 {
-    //TODO : 주문한 음식, 현재 테이블
-    public Table currentTable = null;
+    public ConsumerManager consumerManager;
     public enum ConsumerState
     {
         Waiting,
@@ -15,10 +14,30 @@ public class ConsumerFSM : MonoBehaviour
         Eatting,
         BeforePay,
         AfterPay,
-    }
-    private NavMeshAgent agent;
 
-    private ConsumerState currentStatus = ConsumerState.Waiting;
+        Disappoint,
+    }
+
+
+    private NavMeshAgent agent;
+    private float orderWaitTimer;
+    [SerializeField]
+    private List<float> satisfactionChangeLimit = new List<float>
+    {
+        15f,
+        0f
+    };
+    public enum Satisfaction
+    {
+        High,
+        Middle,
+        Low,
+    }
+
+
+
+    [SerializeField] private ConsumerState currentStatus = ConsumerState.Waiting;
+    private Satisfaction currentSatisfaction = Satisfaction.High;
 
     public ConsumerState CurrentStatus
     {
@@ -33,6 +52,7 @@ public class ConsumerFSM : MonoBehaviour
                 case ConsumerState.Waiting:
                     break;
                 case ConsumerState.BeforeOrder:
+                    agent.SetDestination(GetComponent<Consumer>().currentTable.InteractablePoints[1].position);
                     break;
                 case ConsumerState.AfterOrder:
                     break;
@@ -41,6 +61,19 @@ public class ConsumerFSM : MonoBehaviour
                 case ConsumerState.BeforePay:
                     break;
                 case ConsumerState.AfterPay:
+                    switch (currentSatisfaction)
+                    {
+                        case Satisfaction.High:
+                            UserDataManager.Instance.CurrentUserData.PositiveCnt++;
+                            break;
+                        case Satisfaction.Low:
+                            UserDataManager.Instance.CurrentUserData.NegativeCnt++;
+                            break;
+                    }
+                    agent.SetDestination(consumerManager.spawnPoint.position);
+                    break;
+                case ConsumerState.Disappoint:
+                    agent.SetDestination(consumerManager.spawnPoint.position);
                     break;
             }
         }
@@ -48,6 +81,12 @@ public class ConsumerFSM : MonoBehaviour
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+    }
+
+    private void OnEnable()
+    {
+        currentSatisfaction = Satisfaction.High;
+        orderWaitTimer = 0f;
     }
 
     private void Update()
@@ -72,6 +111,9 @@ public class ConsumerFSM : MonoBehaviour
             case ConsumerState.AfterPay:
                 UpdateAfterPay();
                 break;
+            case ConsumerState.Disappoint:
+                UpdateDisappoint();
+                break;
         }
     }
 
@@ -88,21 +130,46 @@ public class ConsumerFSM : MonoBehaviour
     private void UpdateAfterOrder()
     {
         //주문을 받아간 후, 음식이 나오기까지의 상태.
-        //deltaTime을 적산하여 만족도 상태를 갱신
+        //deltaTime을 적산하여 만족도 상태를 갱신.
+        orderWaitTimer -= Time.deltaTime;
+        Debug.Log(orderWaitTimer);
+        switch (orderWaitTimer)
+        {
+            case var t when t < satisfactionChangeLimit[0]:
+                currentSatisfaction = Satisfaction.Middle;
+                break;
+            case var t when t < satisfactionChangeLimit[1]:
+                currentSatisfaction = Satisfaction.Low;
+                currentStatus = ConsumerState.Disappoint;
+                break;
+        }
     }
     private void UpdateEatting()
     {
-        //식사중인 상태
+        //식사중인 상태.
     }
     private void UpdateBeforePay()
     {
-        //식사가 끝난 후 계산대로 이동한 후, 계산을 기다리는 상태.
-        //여기서의 기다림은 만족도에 영향을 미치지 않음
+        //식사가 끝난 후 계산대로 이동한 후, 계산이 완료될때까지의 상태.
+        //여기서의 기다림은 만족도에 영향을 미치지 않음.
     }
     private void UpdateAfterPay()
     {
         //계산 후 퇴장하는 상태.
-        //AfterOrder상태일 때 마지막으로 갱신된 만족도가 UserData에 누적됨
-        //이후 오브젝트풀에 반환됨
+        //이후 오브젝트풀에 반환됨.
+        if (agent.remainingDistance <= 0.1f)
+        {
+            consumerManager.consumerPool.Release(gameObject);
+        }
+    }
+
+    private void UpdateDisappoint()
+    {
+        //주문 후 30초 내로 음식이 나오지 않아 불만족 상태로 퇴장하는 상태.
+        //agent가 목적지에 도달하면 오브젝트풀에 반환됨
+        if(agent.remainingDistance <= 0.1f)
+        {
+            consumerManager.consumerPool.Release(gameObject);
+        }
     }
 }
