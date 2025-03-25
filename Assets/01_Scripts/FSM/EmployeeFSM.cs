@@ -8,11 +8,6 @@ public class EmployeeFSM : WorkerBase, ITransformable
 {
     [SerializeField]
     private Transform idleArea;
-    public float Speed { get; private set; }
-    private float defultSpeed = 1f;
-    private int upgradeCount;
-    public new string name;
-    public EmployeeManager employeeManager;
     public enum EnployedState
     {
         Idle,
@@ -49,21 +44,32 @@ public class EmployeeFSM : WorkerBase, ITransformable
             }
         }
     }
-    private void Awake()
+
+    private void Update()
     {
-        agent = GetComponent<NavMeshAgent>();
+        
     }
-    private void Start()
+
+    private void UpdateIdle()
     {
-        Debug.Log("EmployeeFSM 호출");
-        employeeManager.AddEmployee(name, this);
+        
     }
-    public void OnUpgrade()
+
+    private void UpdateReturnidleArea()
     {
-        upgradeCount++;
-        Speed = defultSpeed * upgradeCount;
-        Debug.Log(Speed);
+        
     }
+
+    private void UpdateWorking()
+    {
+        if (currentWork == null)
+        {
+            currentStatus = EnployedState.ReturnidleArea;
+        }
+        
+    }
+    
+    
     public Transform handPivot { get; set; }
     public void LiftPackage(Sprite packageSprite)
     {
@@ -74,6 +80,4 @@ public class EmployeeFSM : WorkerBase, ITransformable
     {
         throw new System.NotImplementedException();
     }
-
-
 }
