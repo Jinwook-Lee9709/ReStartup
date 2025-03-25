@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
         Debug.Log(work);
         if (work)
         {
-            Debug.Log("Interection 클릭함 호출됨");
+            Debug.Log("InteractableObjects Touch");
             //워커에 넣어줘야함.
         }
         else

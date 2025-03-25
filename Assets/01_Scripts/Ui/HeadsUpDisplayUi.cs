@@ -8,6 +8,9 @@ public class HeadsUpDisplayUi : MonoBehaviour
     public GameObject smartPhoneIncludedButton;
     public bool includedUiSet = false;
 
+    private void OnEnable()
+    {
+    }
     public void OnClickButtonSmartPhoneButton()
     {
         if (!includedUiSet)

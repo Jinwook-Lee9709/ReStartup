@@ -19,6 +19,7 @@ public class UiManager : MonoBehaviour
     }
     public void OnCilckButtonSetUiReview()
     {
+        uiUpgrade.SetActive(false);
         uiApps.SetActive(false);
         uiReview.SetActive(true);
     }
@@ -29,5 +30,10 @@ public class UiManager : MonoBehaviour
     public void OnClickButtonUnSetUiUpgrade()
     {
         uiUpgrade.SetActive(false);
+    }
+    public void OnClickButtonExitReviewUi()
+    {
+        uiReview.SetActive(false);
+        uiHUD.SetActive(true);
     }
 }
