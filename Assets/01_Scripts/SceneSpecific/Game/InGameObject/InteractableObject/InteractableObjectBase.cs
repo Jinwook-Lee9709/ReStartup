@@ -47,11 +47,11 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
 
         interactStatus = interactionResult ? InteractStatus.Success : InteractStatus.Progressing;
 
-        //if (interactStatus == InteractStatus.Success)
-        //{
-        //    OnInteractCompleted();
-        //}
-        
+        if (interactStatus == InteractStatus.Success)
+        {
+            OnInteractCompleted();
+        }
+
         return interactStatus;
     }
 

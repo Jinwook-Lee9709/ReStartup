@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -34,6 +35,7 @@ public class ConsumerFSM : MonoBehaviour
         Low,
     }
 
+    public event Action<Consumer> OnSeatEvent;
 
 
     [SerializeField] private ConsumerState currentStatus = ConsumerState.Waiting;
@@ -57,6 +59,7 @@ public class ConsumerFSM : MonoBehaviour
                 case ConsumerState.AfterOrder:
                     break;
                 case ConsumerState.Eatting:
+                    //StartCoroutine();
                     break;
                 case ConsumerState.BeforePay:
                     break;
@@ -126,6 +129,10 @@ public class ConsumerFSM : MonoBehaviour
     {
         //빈자리가 생겨 빈자리로 이동 후 주문.
         //직원이 주문을 받아가기 전까지의 상태.
+        if(agent.remainingDistance < 0.1f)
+        {
+            OnSeatEvent?.Invoke(GetComponent<Consumer>());
+        }
     }
     private void UpdateAfterOrder()
     {
