@@ -54,10 +54,14 @@ public class ConsumerManager : MonoBehaviour
     {
         //TODO : 손님을 오브젝트풀에서 꺼낼 때 설정 (원하는 음식, 손님 타입, 줄설 자리 등)
         consumer.transform.position = spawnPoint.position;
-        consumer.GetComponent<ConsumerFSM>().consumerManager = this;
+        consumer.consumerManager = this;
+        consumer.FSM.consumerManager = this;
+
+        consumer.FSM.OnSeatEvent += workFlowController.AssignGetOrderWork;
+
         if (workFlowController.RegisterCustomer(consumer))
         {
-            consumer.GetComponent<ConsumerFSM>().CurrentStatus = ConsumerFSM.ConsumerState.BeforeOrder;
+            consumer.FSM.CurrentStatus = ConsumerFSM.ConsumerState.BeforeOrder;
             currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.BeforeOrder].Add(consumer);
         }
         else
@@ -86,7 +90,7 @@ public class ConsumerManager : MonoBehaviour
     {
         if (currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count < maxWaitingSeatCnt)
         {
-            consumerPool.Get().GetComponent<Consumer>();
+            consumerPool.Get();
             Debug.Log(currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count);
         }
         else

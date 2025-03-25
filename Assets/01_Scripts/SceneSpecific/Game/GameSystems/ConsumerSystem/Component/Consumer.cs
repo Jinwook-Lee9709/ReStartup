@@ -5,6 +5,11 @@ using UnityEngine.AI;
 
 public class Consumer : MonoBehaviour
 {
+    public ConsumerManager consumerManager;
+    public ConsumerFSM FSM
+    {
+        get => GetComponent<ConsumerFSM>();
+    }
     private Animator animator;
     private NavMeshAgent agent;
     //TODO : 주문한 음식, 현재 테이블

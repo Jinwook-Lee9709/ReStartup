@@ -44,7 +44,6 @@ public class WorkFlowController : MonoBehaviour
         if (tableManager.IsAvailableObjectExist)
         {
             consumer.SetTable(tableManager.GetAvailableObject());
-            AssignGetOrderWork(consumer);
             return true;
         }
         else
@@ -60,7 +59,6 @@ public class WorkFlowController : MonoBehaviour
         {
             var consumer = customerQueue.Dequeue();
             //TODO:Assign이 아니라 손님을 이동
-            AssignGetOrderWork(consumer);
         }
     }
 
