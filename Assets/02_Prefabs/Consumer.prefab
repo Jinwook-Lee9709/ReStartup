@@ -98,7 +98,7 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 3.5
-  m_Acceleration: 8
+  m_Acceleration: 100
   avoidancePriority: 50
   m_AngularSpeed: 120
   m_StoppingDistance: 0.1
@@ -121,6 +121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6d87c1ceef93c84ca206592725ff6a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  consumerManager: {fileID: 0}
   currentTable: {fileID: 0}
 --- !u!114 &5636809137127063160
 MonoBehaviour:
@@ -135,7 +136,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   consumerManager: {fileID: 0}
-  orderWaitLimit: 30
   satisfactionChangeLimit:
   - 30
   - 15

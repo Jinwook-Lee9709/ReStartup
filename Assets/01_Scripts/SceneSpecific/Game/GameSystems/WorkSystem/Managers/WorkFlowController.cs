@@ -48,7 +48,13 @@ public class WorkFlowController : MonoBehaviour
     {
         if (tableManager.IsAvailableObjectExist)
         {
-            consumer.SetTable(tableManager.GetAvailableObject());
+            var table = tableManager.GetAvailableObject();
+            consumer.SetTable(table);
+            //if (consumer.pairData != null)
+            //{
+            //    consumer.pairData.pairTable = consumer.currentTable;
+            //    consumer.pairData.partner.SetTable(consumer.currentTable);
+            //}
             return true;
         }
         else

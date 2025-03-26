@@ -10,6 +10,7 @@ public class ConsumerFSM : MonoBehaviour
     public ConsumerManager consumerManager;
     private Consumer consumer;
     private CashierCounter cashierCounter;
+    private Vector2 targetPivot;
     public enum ConsumerState
     {
         Waiting,
@@ -18,8 +19,6 @@ public class ConsumerFSM : MonoBehaviour
         Eatting,
         BeforePay,
         AfterPay,
-
-        Disappoint,
     }
 
 
@@ -40,8 +39,8 @@ public class ConsumerFSM : MonoBehaviour
     public event Action<Consumer> OnSeatEvent;
 
 
-    [SerializeField] private ConsumerState currentStatus = ConsumerState.Waiting;
-    private Satisfaction currentSatisfaction = Satisfaction.High;
+    [SerializeField] public ConsumerState currentStatus = ConsumerState.Waiting;
+    [SerializeField] private Satisfaction currentSatisfaction = Satisfaction.High;
 
     public ConsumerState CurrentStatus
     {
@@ -55,9 +54,21 @@ public class ConsumerFSM : MonoBehaviour
                 case ConsumerState.Waiting:
                     break;
                 case ConsumerState.BeforeOrder:
-                    consumerManager.OnChangeConsumerState(consumer, ConsumerState.AfterOrder);
+                    consumerManager.OnChangeConsumerState(consumer, ConsumerState.BeforeOrder);
                     consumerManager.OnWaitingLineUpdate(consumer);
-                    agent.SetDestination(consumer.currentTable.InteractablePoints[1].position);
+                    //if (consumer.pairData?.partner == consumer)
+                    //{
+                    //    break;
+                    //}
+                    //if (consumer.pairData?.owner == consumer)
+                    //{
+                    //    consumer.pairData.partner.FSM.CurrentStatus = ConsumerState.BeforeOrder;
+                    //    targetPivot = consumer.pairData.pairTable.InteractablePoints[2].position;
+                    //    consumer.pairData.partner.GetComponent<NavMeshAgent>().SetDestination(targetPivot);
+                    //}
+                    //targetPivot = consumer.pairData.pairTable.InteractablePoints[1].position;
+                    targetPivot = consumer.currentTable.InteractablePoints[1].position;
+                    agent.SetDestination(targetPivot);
                     break;
                 case ConsumerState.AfterOrder:
                     consumerManager.OnChangeConsumerState(consumer, ConsumerState.AfterOrder);
@@ -67,7 +78,7 @@ public class ConsumerFSM : MonoBehaviour
                     StartCoroutine(EattingCoroutine());
                     break;
                 case ConsumerState.BeforePay:
-                    
+
                     consumerManager.OnChangeConsumerState(consumer, ConsumerState.BeforePay);
                     consumerManager.OnEndMeal(consumer);
                     break;
@@ -84,17 +95,22 @@ public class ConsumerFSM : MonoBehaviour
                     }
                     agent.SetDestination(consumerManager.spawnPoint.position);
                     break;
-                case ConsumerState.Disappoint:
-                    consumerManager.OnChangeConsumerState(consumer, ConsumerState.Disappoint);
-                    agent.SetDestination(consumerManager.spawnPoint.position);
-                    break;
             }
             currentStatus = value;
         }
     }
 
+
+
     public void OnEndPayment()
     {
+        ///TODO : If End Payment
+        ///if(IsTip)
+        ///{
+        ///     StartCoroutiner(UserDataManager.Instance.GoldUp(this);
+        ///}
+        ///And Play Tip PopUp
+
         CurrentStatus = ConsumerState.AfterPay;
     }
 
@@ -158,9 +174,6 @@ public class ConsumerFSM : MonoBehaviour
             case ConsumerState.AfterPay:
                 UpdateAfterPay();
                 break;
-            case ConsumerState.Disappoint:
-                UpdateDisappoint();
-                break;
         }
     }
 
@@ -173,7 +186,15 @@ public class ConsumerFSM : MonoBehaviour
     {
         //���ڸ��� ���� ���ڸ��� �̵� �� �ֹ�.
         //������ �ֹ��� �޾ư��� �������� ����.
-        if (agent.IsArrive(consumer.currentTable.InteractablePoints[1]))
+        //if(consumer.pairData != null)
+        //{
+        //    if (agent.IsArrive(targetPivot))
+        //    {
+        //        OnSeatEvent?.Invoke(consumer);
+        //    }
+        //    return;
+        //}
+        if (agent.IsArrive(targetPivot))
         {
             OnSeatEvent?.Invoke(consumer);
         }
@@ -183,6 +204,9 @@ public class ConsumerFSM : MonoBehaviour
         //�ֹ��� �޾ư� ��, ������ ����������� ����.
         //deltaTime�� �����Ͽ� ������ ���¸� ����.
         consumerData.OrderWaitTimer -= Time.deltaTime;
+        if (consumerData.Type == ConsumerData.ConsumerType.Obnoxious)
+            consumerData.OrderWaitTimer -= Time.deltaTime;
+
         // Debug.Log(orderWaitTimer);
         switch (consumerData.OrderWaitTimer)
         {
@@ -191,7 +215,7 @@ public class ConsumerFSM : MonoBehaviour
                 break;
             case var t when t < satisfactionChangeLimit[1]:
                 currentSatisfaction = Satisfaction.Low;
-                currentStatus = ConsumerState.Disappoint;
+                CurrentStatus = ConsumerState.AfterPay;
                 break;
         }
     }
@@ -205,7 +229,7 @@ public class ConsumerFSM : MonoBehaviour
         //���⼭�� ��ٸ��� �������� ������ ��ġ�� ����.
         if (agent.remainingDistance <= 0.1f)
         {
-            consumerManager.OnPayStart();
+            consumerManager.OnPayStart(consumerData);
         }
     }
     private void UpdateAfterPay()
@@ -213,16 +237,6 @@ public class ConsumerFSM : MonoBehaviour
         //��� �� �����ϴ� ����.
         //���� ������ƮǮ�� ��ȯ��.
         if (agent.IsArrive(consumerManager.spawnPoint))
-        {
-            consumerManager.consumerPool.Release(gameObject);
-        }
-    }
-
-    private void UpdateDisappoint()
-    {
-        //�ֹ� �� 30�� ���� ������ ������ �ʾ� �Ҹ��� ���·� �����ϴ� ����.
-        //agent�� �������� �����ϸ� ������ƮǮ�� ��ȯ��
-        if (agent.remainingDistance <= 0.1f)
         {
             consumerManager.consumerPool.Release(gameObject);
         }
