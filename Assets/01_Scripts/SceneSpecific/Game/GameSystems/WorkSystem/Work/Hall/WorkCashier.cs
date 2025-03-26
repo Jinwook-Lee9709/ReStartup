@@ -19,6 +19,7 @@ public class WorkCashier : InteractWorkBase
     protected override void HandlePostInteraction()
     {
         var counter = target as CashierCounter;
+        worker.ClearWork();
         counter.ClearWork();
         context.WorkFlowController.OnCashierFinished();
     }

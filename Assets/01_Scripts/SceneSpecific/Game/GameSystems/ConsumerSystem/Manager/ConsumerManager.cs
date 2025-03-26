@@ -6,7 +6,7 @@ using UnityEngine.Pool;
 
 public class ConsumerManager : MonoBehaviour
 {
-    [SerializeField] private WorkFlowController workFlowController;
+    [SerializeField] public WorkFlowController workFlowController;
     [SerializeField] private int maxConsumerCnt;
     [SerializeField] private int maxWaitingSeatCnt;
     [SerializeField] private GameObject consumerPrefab;
@@ -134,5 +134,10 @@ public class ConsumerManager : MonoBehaviour
         {
             consumer.transform.position = workFlowController.GetCashierCounter().InteractablePoints[0].position + new Vector3(-1, 0, 0) * cnt;
         }
+    }
+
+    public void OnPayStart()
+    {
+        workFlowController.RegisterPayment();
     }
 }

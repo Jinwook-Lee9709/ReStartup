@@ -183,20 +183,27 @@ public class WorkFlowController : MonoBehaviour
     {
         var firstConsumer = cashierQueue.Dequeue();
         firstConsumer.FSM.OnEndPayment();
+
+        if (cashierQueue.Count == 0)
+            return 0;
         Transform buf = firstConsumer.transform;
-        if(cashierQueue.Count > 0)
         foreach (var consumer in cashierQueue)
         {
             consumer.NextTargetTransform = buf;
             buf = consumer.transform;
         }
+        RegisterPayment();
+        return cashierQueue.Count;
+    }
+
+    public void RegisterPayment()
+    {
         WorkCashier work = new WorkCashier(workManager, WorkType.Payment);
         var context = new MainLoopWorkContext(cashierQueue.First(), this);
         work.SetContext(context);
         cashierCounter.SetWork(work);
         work.SetInteractable(cashierCounter);
         workManager.AddWork(work);
-        return cashierQueue.Count;
     }
     
     public CashierCounter GetCashierCounter()

@@ -6,19 +6,20 @@ using UnityEngine;
 
 public class WorkerManager : MonoBehaviour
 {
-    
+
     //References
     private WorkManager workManager;
-    
+
     //Containers
     private Dictionary<WorkType, List<WorkerBase>> workers;
     private Dictionary<WorkType, List<WorkerBase>> workingWorkers;
-    
+
     //Events
     public event Action<WorkType> OnWorkFinished;
     [SerializeField] private WorkerBase testHallWorker;
     [SerializeField] private WorkerBase testKitchenWorker;
-    
+    [SerializeField] private WorkerBase testCashier;
+
     private void Awake()
     {
         workers = new Dictionary<WorkType, List<WorkerBase>>();
@@ -35,8 +36,9 @@ public class WorkerManager : MonoBehaviour
 
     private void Start()
     {
-         workers[WorkType.Hall].Add(testHallWorker);
-         workers[WorkType.Kitchen].Add(testKitchenWorker);
+        workers[WorkType.Hall].Add(testHallWorker);
+        workers[WorkType.Kitchen].Add(testKitchenWorker);
+        workers[WorkType.Payment].Add(testCashier);
     }
     public bool AssignWork(WorkBase work)
     {
@@ -51,7 +53,7 @@ public class WorkerManager : MonoBehaviour
         }
 
         return false;
-        
+
     }
 
     public void ReturnWorker(WorkerBase worker)
@@ -65,7 +67,7 @@ public class WorkerManager : MonoBehaviour
                 return;
             }
         }
-        
+
         Debug.LogError("Worker not found");
     }
 
@@ -73,8 +75,8 @@ public class WorkerManager : MonoBehaviour
     {
         return true;
     }
-    
-    
+
+
     //WorkManager 에 Work가 추가됐을때
     //Worker가 작업이 끝났을때
     //화구매니저가 WorkManager한테 -> 빈공간이 있으니, Work를 큐에 추가해라

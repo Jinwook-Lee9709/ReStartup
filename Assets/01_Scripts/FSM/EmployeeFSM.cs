@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using static UnityEditor.PlayerSettings;
 
-public class EmployeeFSM : WorkerBase, IInteractor, ITransformable
+public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
 {
     [SerializeField]
     private Transform idleArea;
@@ -90,18 +90,27 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransformable
     }
 
 
-    public Transform handPivot { get; set; }
-    public void LiftPackage(Sprite packageSprite)
+    [SerializeField] private Transform handPivot;
+
+    public Transform HandPivot { get; }
+    public void LiftPackage(GameObject package)
     {
-        throw new System.NotImplementedException();
+        package.transform.SetParent(handPivot);
+        package.transform.localPosition = Vector3.zero;
+    }
+    public void DropPackage(Transform dropPoint)
+    {
+        if (handPivot.childCount > 0)
+        {
+            var package = handPivot.GetChild(0).gameObject;
+            package.transform.SetParent(dropPoint);
+            package.transform.localPosition = Vector3.zero;
+        }
     }
 
-    public void DropPackage()
-    {
-        throw new System.NotImplementedException();
-    }
     private void Awake()
     {
+        base.Awake();
         DataTableManager.Get<EmployeeDataTable>("Employee");
     }
     private void Start()
@@ -114,4 +123,5 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransformable
         agent.speed = employeeData.Speed;
         Debug.Log(agent.speed);
     }
+
 }

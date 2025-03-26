@@ -17,7 +17,7 @@ public class WorkerBase : MonoBehaviour
         workerManager = manager;
     }
 
-    private void Awake()
+    protected void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = false;
