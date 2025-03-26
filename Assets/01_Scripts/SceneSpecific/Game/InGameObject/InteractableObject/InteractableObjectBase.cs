@@ -10,7 +10,7 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
     private InteractWorkBase currentWork;
     
     //LocalVariables
-    private float interactProgress = 0;
+    [SerializeField] private float interactProgress = 0;
     private float interactionSpeed;
     private InteractStatus interactStatus;
     

@@ -9,6 +9,7 @@ public class Table : InteractableObjectBase
     public Transform FoodPlacePivot => foodPlacePivot;
     public override void OnInteractCompleted()
     {
+        base.OnInteractCompleted();
         Debug.Log("Job's Done");
     }
 

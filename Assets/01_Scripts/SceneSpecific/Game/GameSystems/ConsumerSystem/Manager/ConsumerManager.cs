@@ -13,20 +13,20 @@ public class ConsumerManager : MonoBehaviour
     [SerializeField] public Transform spawnPoint;
 
     /// <summary>
-    /// ÇöÀç °ÔÀÓ½Å¿¡ ½ºÆùµÇ¾îÀÖ´Â ¼Õ´ÔµéÀ» »óÅÂº°·Î °ü¸®ÇÏ´Â µñ¼Å³Ê¸®
+    /// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ó½Å¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½Ö´ï¿½ ï¿½Õ´Ôµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Âºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½Å³Ê¸ï¿½
     /// </summary>
     private Dictionary<ConsumerFSM.ConsumerState, List<Consumer>> currentSpawnedConsumerDictionary = new();
 
 
     /// <summary>
-    /// ´ë±â¿­ ÀÚ¸®
+    /// ï¿½ï¿½â¿­ ï¿½Ú¸ï¿½
     /// </summary>
     [SerializeField] private List<Transform> waitingConsumerSeats;
 
 
     #region ConsumerObjPoolling
     /// <summary>
-    /// ¼Õ´Ô ¿ÀºêÁ§Æ® Ç®
+    /// ï¿½Õ´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® Ç®
     /// </summary>
     public IObjectPool<GameObject> consumerPool;
     private void Start()
@@ -74,7 +74,7 @@ public class ConsumerManager : MonoBehaviour
 
     private void InitConsumer(Consumer consumer)
     {
-        //TODO : ¼Õ´ÔÀ» ¿ÀºêÁ§Æ®Ç®¿¡¼­ ²¨³¾ ¶§ ¼³Á¤ (¿øÇÏ´Â À½½Ä, ¼Õ´Ô Å¸ÀÔ, ÁÙ¼³ ÀÚ¸® µî)
+        //TODO : ï¿½Õ´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®Ç®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½Õ´ï¿½ Å¸ï¿½ï¿½, ï¿½Ù¼ï¿½ ï¿½Ú¸ï¿½ ï¿½ï¿½)
         consumer.transform.position = spawnPoint.position;
         consumer.consumerManager = this;
         consumer.FSM.consumerManager = this;
@@ -141,6 +141,7 @@ public class ConsumerManager : MonoBehaviour
 
     public void OnEndMeal(Consumer consumer)
     {
+        workFlowController.OnEatComplete(consumer.currentTable);
         int cnt = workFlowController.AssignCashier(consumer);
         if (cnt != 0)
         {

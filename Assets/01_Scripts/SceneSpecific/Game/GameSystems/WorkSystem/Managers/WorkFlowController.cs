@@ -219,6 +219,7 @@ public class WorkFlowController : MonoBehaviour
     {
         WorkCleanTable work = new WorkCleanTable(workManager, WorkType.Hall);
         work.SetInteractable(table);
+        work.SetContext(this);
         table.SetWork(work);
         var food = table.GetFood();
         var sprite = food.GetComponent<SpriteRenderer>();

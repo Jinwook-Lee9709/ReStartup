@@ -22,7 +22,6 @@ public class FoodDataTable : DataTable
                 continue;
             }
             Data.Add(row.FoodID, row);
-            Debug.Log(row.FoodID);
         }
     }
 }
