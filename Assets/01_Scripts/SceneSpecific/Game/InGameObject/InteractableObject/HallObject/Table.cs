@@ -11,9 +11,15 @@ public class Table : InteractableObjectBase
     {
         Debug.Log("Job's Done");
     }
-    
 
-    public Table()
+    public GameObject GetFood()
     {
+        var food = foodPlacePivot.GetChild(0).gameObject;
+        return food;
+    }
+
+    public void OnCleaned()
+    {
+        Destroy(foodPlacePivot.GetChild(0).gameObject);
     }
 }

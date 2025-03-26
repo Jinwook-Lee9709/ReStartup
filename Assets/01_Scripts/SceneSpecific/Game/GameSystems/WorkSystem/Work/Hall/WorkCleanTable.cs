@@ -11,7 +11,6 @@ public class WorkCleanTable : InteractWorkBase
 
     protected override void HandlePostInteraction()
     {
-        var table = target as Table;
-        table.ClearWork();
+        
     }
 }

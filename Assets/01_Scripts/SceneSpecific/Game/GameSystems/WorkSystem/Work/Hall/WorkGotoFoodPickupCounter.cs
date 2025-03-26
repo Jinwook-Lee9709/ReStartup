@@ -21,7 +21,6 @@ public class WorkGotoFoodPickupCounter : InteractWorkBase
         worker.ClearWork();
         
         FoodPickupCounter counter = target as FoodPickupCounter;
-        counter.ClearWork();
         context.WorkFlowController.ReturnFoodPickupCounter(target as FoodPickupCounter);
         
         WorkFoodToTable work = new WorkFoodToTable(workManager, WorkType.Hall);

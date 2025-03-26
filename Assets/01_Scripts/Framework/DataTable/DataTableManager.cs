@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -9,9 +10,13 @@ public static class DataTableManager
 
     static DataTableManager()
     {
-        var table = new EmployeeDataTable();
-        table.Load();
-        tables.Add("Employee", table);
+        var employeeDataTabletable = new EmployeeDataTable();
+        employeeDataTabletable.Load();
+        tables.Add(DataTableIds.Employee.ToString(), employeeDataTabletable);
+        
+        var foodDataTabletable = new FoodDataTable();
+        foodDataTabletable.Load();
+        tables.Add(DataTableIds.Food.ToString(), foodDataTabletable);
     }
 
     public static T Get<T>(string id) where T : DataTable

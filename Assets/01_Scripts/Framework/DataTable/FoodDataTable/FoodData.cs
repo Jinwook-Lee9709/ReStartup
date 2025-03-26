@@ -5,6 +5,12 @@ using UnityEngine;
 
 public class FoodData
 {
-    public readonly string spriteId = "Food_2001_Sprite";
-    public readonly int price = 100;
+    public int FoodID { get; set; }
+    public int Type { get; set; }
+    public int SellingCost { get; set; }
+    public int Requirements { get; set; }
+    public int BasicCost { get; set; }
+    public int GetRankPoints { get; set; }
+    public int StringID { get; set; }
+    public string IconID { get; set;}
 }

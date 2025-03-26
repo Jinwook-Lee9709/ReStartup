@@ -20,7 +20,6 @@ public class WorkCashier : InteractWorkBase
     {
         var counter = target as CashierCounter;
         worker.ClearWork();
-        counter.ClearWork();
         context.WorkFlowController.OnCashierFinished();
     }
 }

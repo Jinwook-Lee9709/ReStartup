@@ -2,17 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FoodDataTable : MonoBehaviour
+public class FoodDataTable : DataTable
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public Dictionary<int, FoodData> Data = new ();
 
-    // Update is called once per frame
-    void Update()
+    public FoodData GetFoodData(int id)
     {
-        
+        Data.TryGetValue(id, out var data);
+        return data;
+    }
+    
+    public override void Load()
+    {
+        var result = LoadCsv<FoodData>(assetId: "foodtable");
+        foreach (var row in result)
+        {
+            if (Data.ContainsKey(row.FoodID))
+            {
+                continue;
+            }
+            Data.Add(row.FoodID, row);
+            Debug.Log(row.FoodID);
+        }
     }
 }

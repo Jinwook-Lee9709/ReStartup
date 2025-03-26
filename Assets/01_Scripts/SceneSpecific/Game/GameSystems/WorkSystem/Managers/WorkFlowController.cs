@@ -160,9 +160,7 @@ public class WorkFlowController : MonoBehaviour
     
     
     #endregion
-
-
-
+    
     #region CashierLogic
 
     public int AssignCashier(Consumer consumer)
@@ -212,8 +210,21 @@ public class WorkFlowController : MonoBehaviour
     }
 
     #endregion
-    
-    
+
+    #region TableCleanLogic()
+
+    public void OnEatComplete(Table table)
+    {
+        WorkCleanTable work = new WorkCleanTable(workManager, WorkType.Hall);
+        work.SetInteractable(table);
+        table.SetWork(work);
+        var food = table.GetFood();
+        var sprite = food.GetComponent<SpriteRenderer>();
+        sprite.color = Color.red;
+        workManager.AddWork(work);
+    }
+
+    #endregion
     //손님 대기열
     //Table에 자리가 나면 손님할당
     //주문 대기

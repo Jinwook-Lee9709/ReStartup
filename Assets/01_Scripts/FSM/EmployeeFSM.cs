@@ -108,7 +108,7 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
         }
     }
 
-    private void Awake()
+    protected override void Awake()
     {
         base.Awake();
         DataTableManager.Get<EmployeeDataTable>("Employee");

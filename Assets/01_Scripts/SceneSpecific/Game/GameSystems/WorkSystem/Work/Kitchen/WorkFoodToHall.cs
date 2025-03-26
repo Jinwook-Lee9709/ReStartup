@@ -25,7 +25,6 @@ public class WorkFoodToHall : InteractWorkBase
         work.SetContext(context);
         work.SetInteractable(counter);
         transporter.DropPackage(counter.FoodPlacePivot);
-        counter.ClearWork();
         counter.SetWork(work);
         nextWork = work;
     }

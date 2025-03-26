@@ -63,6 +63,7 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
     public virtual void OnInteractCompleted()
     {
         OnInteractFinishedEvent?.Invoke();
+        ClearWork();
     }
     
     private bool IncreaseProgress(float interactionSpeed)
