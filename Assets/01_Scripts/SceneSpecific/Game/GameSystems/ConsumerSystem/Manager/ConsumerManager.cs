@@ -44,6 +44,8 @@ public class ConsumerManager : MonoBehaviour
         {
             currentSpawnedConsumerDictionary[consumerState] = new();
         }
+
+        StartCoroutine(SpawnCoroutine());
     }
 
     public void OnChangeConsumerState(Consumer consumer, ConsumerFSM.ConsumerState state)
@@ -87,6 +89,7 @@ public class ConsumerManager : MonoBehaviour
         }
         else
         {
+            consumer.FSM.CurrentStatus = ConsumerFSM.ConsumerState.Waiting;
             consumer.NextTargetTransform = waitingConsumerSeats[currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count];
             currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Add(consumer);
         }
@@ -127,6 +130,15 @@ public class ConsumerManager : MonoBehaviour
         }
     }
 
+    private IEnumerator SpawnCoroutine()
+    {
+        while (true)
+        {
+            SpawnConsumer();
+            yield return new WaitForSeconds(5f);
+        }
+    }
+
     public void OnEndMeal(Consumer consumer)
     {
         int cnt = workFlowController.AssignCashier(consumer);
@@ -134,6 +146,8 @@ public class ConsumerManager : MonoBehaviour
         {
             consumer.transform.position = workFlowController.GetCashierCounter().InteractablePoints[0].position + new Vector3(-1, 0, 0) * cnt;
         }
+
+
     }
 
     public void OnPayStart()

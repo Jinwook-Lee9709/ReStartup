@@ -63,13 +63,15 @@ public class WorkFlowController : MonoBehaviour
         if (customerQueue.Count > 0)
         {
             var consumer = customerQueue.Dequeue();
+            consumer.SetTable(tableManager.GetAvailableObject());
+            consumer.OnTableVacated();
             //TODO:Assign이 아니라 손님을 이동
         }
     }
 
     public void AssignGetOrderWork(Consumer consumer)
     {
-        var table = consumer.currentTable; //Customer의 테이블 받아오기
+        var table = consumer.currentTable;
         WorkGetOrder work = new WorkGetOrder(workManager, WorkType.Hall);
         MainLoopWorkContext context = new MainLoopWorkContext(consumer, this);
         table.SetWork(work);
