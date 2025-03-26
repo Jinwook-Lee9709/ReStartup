@@ -6,5 +6,10 @@ using UnityEngine;
 [Serializable]
 public class GameManager : MonoBehaviour
 {
-    
+    [SerializeField] ThemeIds currentTheme;
+
+    public void Awake()
+    {
+        throw new NotImplementedException();
+    }
 }

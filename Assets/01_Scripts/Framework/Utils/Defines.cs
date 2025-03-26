@@ -4,6 +4,13 @@ public enum DataTableIds
     Food
 }
 
+public enum ThemeIds
+{
+    Theme1,
+    Theme2,
+    Theme3
+}
+
 
 public enum WorkType
 {
