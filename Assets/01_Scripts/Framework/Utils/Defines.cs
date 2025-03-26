@@ -30,6 +30,19 @@ public enum LanguageType
     Korean,
 }
 
+public enum SceneIds
+{
+    Title,
+    Lobby,
+    Loading,
+    Theme1,
+    Theme2,
+    Theme3,
+    Dev1,
+    Dev2,
+    Dev3,
+}
+
 public static class Endpoints
 {
     private static string BaseUrl = "127.0.0.1:3000";
@@ -41,3 +54,7 @@ public static class Constants
     public static float defaultOrderTime = 0f;
 }
 
+public static class Strings
+{
+    public static readonly string GameManagerTag = "GameManager";
+}

@@ -10,6 +10,7 @@ public class Test : MonoBehaviour
     private void Awake()
     {
         surface = GetComponent<NavMeshSurface>();
+        ServiceLocator.Instance.GetSceneService<GameManager>();
     }
 
     [ContextMenu( "Test" )]
