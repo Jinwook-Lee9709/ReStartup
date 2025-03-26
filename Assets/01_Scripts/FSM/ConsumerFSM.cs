@@ -55,6 +55,7 @@ public class ConsumerFSM : MonoBehaviour
                 case ConsumerState.Waiting:
                     break;
                 case ConsumerState.BeforeOrder:
+                    consumerManager.OnChangeConsumerState(consumer, ConsumerState.AfterOrder);
                     consumerManager.OnWaitingLineUpdate(consumer);
                     agent.SetDestination(consumer.currentTable.InteractablePoints[1].position);
                     break;

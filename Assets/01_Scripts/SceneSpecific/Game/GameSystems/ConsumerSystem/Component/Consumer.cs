@@ -29,6 +29,11 @@ public class Consumer : MonoBehaviour
         }
     }
 
+    public void OnTableVacated()
+    {
+        FSM.CurrentStatus = ConsumerFSM.ConsumerState.BeforeOrder;
+    }
+
     private void OnTargetTransformChanged(Transform transform)
     {
         agent.SetDestination(transform.position);
