@@ -9,10 +9,11 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
 {
     [SerializeField]
     private Transform idleArea;
-    private EmployeeData employeeData = new();
-    public EmployeeData EmployeeData
+    private EmployeeTableGetData employeeData = new();
+    public EmployeeTableGetData EmployeeData
     {
         get => employeeData;
+        set => employeeData = value;
     }
     public EmployeeManager employeeManager;
     public enum EnployedState
@@ -90,38 +91,40 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     }
 
 
-    [SerializeField] private Transform handPivot;
+    public Transform handPivot { get; set; }
 
-    public Transform HandPivot { get; }
-    public void LiftPackage(GameObject package)
+    public Transform HandPivot => throw new NotImplementedException();
+
+    public void LiftPackage(Sprite packageSprite)
     {
-        package.transform.SetParent(handPivot);
-        package.transform.localPosition = Vector3.zero;
-    }
-    public void DropPackage(Transform dropPoint)
-    {
-        if (handPivot.childCount > 0)
-        {
-            var package = handPivot.GetChild(0).gameObject;
-            package.transform.SetParent(dropPoint);
-            package.transform.localPosition = Vector3.zero;
-        }
+        throw new System.NotImplementedException();
     }
 
-    private void Awake()
+    public void DropPackage()
+    {
+        throw new System.NotImplementedException();
+    }
+    protected override void Awake()
     {
         base.Awake();
-        DataTableManager.Get<EmployeeDataTable>("Employee");
     }
     private void Start()
     {
-        employeeData.name = name;
-        employeeManager.AddEmployee(this);
+        //employeeManager.AddEmployee(this);
     }
     public void StatsUpdate()
     {
-        agent.speed = employeeData.Speed;
+        agent.speed = employeeData.MoveSpeed;
         Debug.Log(agent.speed);
     }
 
+    public void LiftPackage(GameObject package)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DropPackage(Transform dropPoint)
+    {
+        throw new NotImplementedException();
+    }
 }
