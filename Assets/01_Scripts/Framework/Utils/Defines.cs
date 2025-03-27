@@ -6,7 +6,7 @@ public enum DataTableIds
 
 public enum ThemeIds
 {
-    Theme1,
+    Theme1 = 1,
     Theme2,
     Theme3
 }
@@ -14,8 +14,7 @@ public enum ThemeIds
 
 public enum WorkType
 {
-    Payment,
-    Clean,
+    Payment = 1,
     Hall,
     Kitchen,
 }
