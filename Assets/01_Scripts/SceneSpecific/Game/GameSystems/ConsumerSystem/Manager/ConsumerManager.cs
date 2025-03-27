@@ -29,21 +29,20 @@ public class ConsumerManager : MonoBehaviour
 
 
     #region ConsumerObjPoolling
+
     /// <summary>
     /// �մ� ������Ʈ Ǯ
     /// </summary>
     public IObjectPool<GameObject> consumerPool;
+
     private void Start()
     {
         maxWaitingSeatCnt = waitingConsumerSeats.Count;
-        consumerPool = new ObjectPool<GameObject>(() =>
-        {
-            return OnCreateConsumer();
-        }
-        , OnTakeConsumer
-        , OnReturnConsumer
-        , OnDestroyConsumer
-        , false);
+        consumerPool = new ObjectPool<GameObject>(() => { return OnCreateConsumer(); }
+            , OnTakeConsumer
+            , OnReturnConsumer
+            , OnDestroyConsumer
+            , false);
         foreach (ConsumerFSM.ConsumerState consumerState in System.Enum.GetValues(typeof(ConsumerFSM.ConsumerState)))
         {
             currentSpawnedConsumerDictionary[consumerState] = new();
@@ -65,7 +64,8 @@ public class ConsumerManager : MonoBehaviour
         {
             for (int i = 0; i < currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count; i++)
             {
-                currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting][i].NextTargetTransform = waitingConsumerSeats[i];
+                currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting][i].NextTargetTransform =
+                    waitingConsumerSeats[i];
             }
         }
     }
@@ -92,6 +92,7 @@ public class ConsumerManager : MonoBehaviour
         InitConsumer(consumer.GetComponent<Consumer>());
         consumer.SetActive(true);
     }
+
     private void OnReturnConsumer(GameObject consumer)
     {
         foreach (var list in currentSpawnedConsumerDictionary.Values)
@@ -101,18 +102,22 @@ public class ConsumerManager : MonoBehaviour
                 list.Remove(consumer.GetComponent<Consumer>());
             }
         }
-        if(consumer.GetComponent<ConsumerFSM>().consumerData.Type == ConsumerData.ConsumerType.Influencer)
+
+        if (consumer.GetComponent<ConsumerFSM>().consumerData.Type == ConsumerData.ConsumerType.Influencer)
         {
             InfluencerBuff buff = new();
             //TODO : Make InfluencerBuff on consumerData based
             buffManager.TempBuffOn();
         }
+
         consumer.SetActive(false);
     }
+
     private void OnDestroyConsumer(GameObject consumer)
     {
         Destroy(consumer);
     }
+
     private void AfterSpawnInit(Consumer consumer)
     {
         if (workFlowController.RegisterCustomer(consumer))
@@ -123,11 +128,14 @@ public class ConsumerManager : MonoBehaviour
         else
         {
             consumer.FSM.CurrentStatus = ConsumerFSM.ConsumerState.Waiting;
-            consumer.NextTargetTransform = waitingConsumerSeats[currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count];
+            consumer.NextTargetTransform =
+                waitingConsumerSeats[currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count];
             currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Add(consumer);
         }
     }
+
     #endregion
+
     [ContextMenu("Consumer Spawn")]
     public void SpawnConsumer()
     {
@@ -143,7 +151,7 @@ public class ConsumerManager : MonoBehaviour
             //}
             //else
             //{
-                AfterSpawnInit(consumer1);
+            AfterSpawnInit(consumer1);
             //}
             Debug.Log(currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count);
         }
@@ -180,10 +188,10 @@ public class ConsumerManager : MonoBehaviour
         int cnt = workFlowController.AssignCashier(consumer);
         if (cnt != 0)
         {
-            consumer.transform.position = workFlowController.GetCashierCounter().GetInteractablePoints(InteractPermission.Consumer)[0].transform.position + new Vector3(-1, 0, 0) * cnt;
+            consumer.GetComponent<NavMeshAgent>().SetDestination(
+                workFlowController.GetCashierCounter().GetInteractablePoints(InteractPermission.Consumer)[0].transform
+                    .position + new Vector3(-1, 0, 0) * cnt);
         }
-
-
     }
 
     public void OnPayStart(ConsumerData consumerData)
