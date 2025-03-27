@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class UiItem : MonoBehaviour
 {
+    //Fortest
     public EmployeeTableGetData employeeData;
     public GameObject employee;
     [SerializeField]
@@ -35,6 +36,7 @@ public class UiItem : MonoBehaviour
             if (employeeData.upgradeCount < 1)
             {
                 var newEmployee = Instantiate(employee).GetComponent<EmployeeFSM>();
+                newEmployee.Init(ServiceLocator.Instance.GetSceneService<GameManager>().WorkerManager);
                 newEmployee.EmployeeData = employeeData;
             }
             employeeData.upgradeCount++;

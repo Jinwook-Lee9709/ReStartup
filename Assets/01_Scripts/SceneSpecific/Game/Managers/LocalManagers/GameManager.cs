@@ -14,15 +14,19 @@ public class GameManager : MonoBehaviour
     
     private FoodUpgradeDataManager foodUpgradeData;
     private ObjectPoolManager objectPoolManager;
+    private WorkerManager workerManager;
     
     public ThemeIds CurrentTheme => currentTheme;
     public FoodUpgradeDataManager FoodUpgradeData => foodUpgradeData;
     public ObjectPoolManager ObjectPoolManager => objectPoolManager;
+    public WorkerManager WorkerManager => workerManager;
 
     private void Awake()
     {
         foodUpgradeData = new FoodUpgradeDataManager();
         objectPoolManager = new ObjectPoolManager();
+
+        workerManager = FindObjectOfType<WorkerManager>();
         
         foodUpgradeData.Init();
 
