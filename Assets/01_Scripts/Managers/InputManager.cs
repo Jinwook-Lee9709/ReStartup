@@ -1,103 +1,82 @@
-using UnityEngine.InputSystem;
-using UnityEngine;
 using System;
-using Unity.VisualScripting;
-using JetBrains.Annotations;
+using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject hollCamera;
-    [SerializeField]
-    private float minSwipeDistance = 10f; // ½ºÅ©¸° ÇÈ¼¿ ±âÁØ ÃÖ¼Ò °Å¸®
-    [SerializeField]
-    private float swipeTolerance = 0.5f; // ¹æÇâ ÆÇ´Ü¿¡ Çã¿ëÇÒ ¿ÀÂ÷
+    [SerializeField] private GameObject hollCamera;
+
+    [SerializeField] private float minSwipeDistance = 10f; // ï¿½ï¿½Å©ï¿½ï¿½ ï¿½È¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½ ï¿½Å¸ï¿½
+
+    [SerializeField] private float swipeTolerance = 0.5f; // ï¿½ï¿½ï¿½ï¿½ ï¿½Ç´Ü¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     public Player player;
-    private Vector2 startPos;
+
+    public LayerMask clickableLayers;
     private Vector2 endPos;
-
-    private InputAction slowTouchAction;
-    private InputAction touchAction;
-
-    private Vector2 pos;
 
     private bool isPressed;
     private bool isReleased;
 
-    private bool slowTouchDetected = false;
+    private Vector2 pos;
 
-    public LayerMask clickableLayers;
+    private InputAction slowTouchAction;
+
+    private bool slowTouchDetected;
+    private Vector2 startPos;
+    private InputAction touchAction;
 
     private void Start()
     {
         minSwipeDistance = Screen.width * 0.5f;
         slowTouchAction = InputSystem.actions.FindAction("SlowTouchAction");
-        slowTouchAction.started += (ctx) =>
-        {
-            isPressed = true;
-        };
+        slowTouchAction.started += ctx => { isPressed = true; };
 
-        slowTouchAction.performed += (ctx) =>
+        slowTouchAction.performed += ctx =>
         {
             slowTouchDetected = true;
             endPos = pos;
             var distance = endPos.x - startPos.x;
             if (MathF.Abs(distance) < minSwipeDistance)
             {
-                Vector2 worldPoint = Camera.main.ScreenToWorldPoint(pos); // ¸¶¿ì½º ÁÂÇ¥¸¦ ¿ùµå ÁÂÇ¥·Î º¯È¯
-                RaycastHit2D[] hit = Physics2D.RaycastAll(worldPoint, Vector2.zero);
+                Vector2 worldPoint = Camera.main.ScreenToWorldPoint(pos); // ï¿½ï¿½ï¿½ì½º ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½È¯
+                var hit = Physics2D.RaycastAll(worldPoint, Vector2.zero);
 
-                if (EventSystem.current.IsPointerOverGameObject())
-                {
-                    return;
-                }
-                bool cheakWork = false;
-                for (int i = 0; i < hit.Length; i++)
-                {
+                if (EventSystem.current.IsPointerOverGameObject()) return;
+                var cheakWork = false;
+                for (var i = 0; i < hit.Length; i++)
                     if (hit[i].collider != null)
-                    {
                         if (hit[i].collider.CompareTag("Work"))
-                        {
                             cheakWork = true;
-                        }
-                    }
-                }
+
                 player.OnMoveOrWork(cheakWork, worldPoint);
                 return;
             }
+
             hollCamera.SetActive(distance > 0);
         };
 
         touchAction = InputSystem.actions.FindAction("TouchAction");
 
-        touchAction.canceled += (ctx) =>
+        touchAction.canceled += ctx =>
         {
             if (slowTouchDetected)
             {
-                slowTouchDetected = false; // ½½·Î¿ì ÅÍÄ¡°¡ ½ÇÇàµÇ¾úÀ¸¸é ÀÏ¹Ý ÅÍÄ¡ ¹«½Ã
+                slowTouchDetected = false; // ï¿½ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï¹ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
                 return;
             }
 
-            Vector2 worldPoint = Camera.main.ScreenToWorldPoint(pos); // ¸¶¿ì½º ÁÂÇ¥¸¦ ¿ùµå ÁÂÇ¥·Î º¯È¯
-            RaycastHit2D[] hit = Physics2D.RaycastAll(worldPoint, Vector2.zero);
+            Vector2 worldPoint = Camera.main.ScreenToWorldPoint(pos); // ï¿½ï¿½ï¿½ì½º ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½È¯
+            var hit = Physics2D.RaycastAll(worldPoint, Vector2.zero);
 
-            if (EventSystem.current.IsPointerOverGameObject())
-            {
-                return;
-            }
-            bool cheakWork = false;
-            for (int i = 0; i < hit.Length; i++)
-            {
+            if (EventSystem.current.IsPointerOverGameObject()) return;
+            var cheakWork = false;
+            for (var i = 0; i < hit.Length; i++)
                 if (hit[i].collider != null)
-                {
                     if (hit[i].collider.CompareTag("Work"))
-                    {
                         cheakWork = true;
-                    }
-                }
-            }
+
             player.OnMoveOrWork(cheakWork, worldPoint);
         };
     }

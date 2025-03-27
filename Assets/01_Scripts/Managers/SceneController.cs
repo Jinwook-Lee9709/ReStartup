@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -26,23 +24,17 @@ public class SceneController
         finally
         {
             loadingSceneHandle.Release();
-        }        
+        }
+
         var loadingController = ServiceLocator.Instance.GetSceneService<LoadingSceneManager>();
         if (loadingController != null)
-        {
             loadingController.StartSceneLoad(sceneId);
-        }
         else
-        {
             Debug.LogError("Loading Scene Manager is null");
-        }
     }
-    
+
 
     public void OnSceneLoaded()
     {
-        
     }
-    
-    
 }

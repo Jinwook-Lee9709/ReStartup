@@ -1,34 +1,31 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
-using Debug = UnityEngine.Debug;
 
 public abstract class InteractWorkBase : WorkBase
 {
+    public Func<Transform> customTarget;
+    private IInteractor interactor;
+    protected float interactTime;
+    protected IInteractable target;
+
+    private Transform targetTransform;
+
     //References
     protected WorkerBase worker;
-    protected IInteractable target;
-    private Transform targetTransform;
-    private IInteractor interactor;
     private NavMeshAgent workerAgent;
-    
+
     //LocalVariables
     private WorkPhase workPhase;
-    protected float interactTime;
-    
-    public Func<Transform> customTarget;
-    
-    //Properties
-    public float InteractTime => interactTime;
 
 
     public InteractWorkBase(WorkManager workManager, WorkType workType) : base(workManager, workType)
     {
     }
+
+    //Properties
+    public float InteractTime => interactTime;
 
     public void SetInteractable(IInteractable target)
     {
@@ -48,21 +45,18 @@ public abstract class InteractWorkBase : WorkBase
         SetTarget();
         EvaluateWorkerArrival();
     }
+
     private void SetTarget()
     {
         if (customTarget == null)
-        {
             targetTransform = GetClosestInteractablePoint();
-        }
         else
-        {
             targetTransform = customTarget();
-        }
     }
-    
+
     private void EvaluateWorkerArrival()
     {
-        bool isArrive = IsArrive(workerAgent, targetTransform);
+        var isArrive = IsArrive(workerAgent, targetTransform);
         if (!isArrive)
         {
             workerAgent.SetDestination(targetTransform.position);
@@ -81,19 +75,13 @@ public abstract class InteractWorkBase : WorkBase
         {
             case WorkPhase.Moving:
             {
-                if (IsArrive(workerAgent, targetTransform))
-                {
-                    StartInteraction();
-                }
+                if (IsArrive(workerAgent, targetTransform)) StartInteraction();
                 break;
             }
             case WorkPhase.Working:
             {
                 var interactStatus = target.OnInteract(interactor);
-                if (interactStatus == InteractStatus.Success)
-                {
-                    CompleteInteraction();
-                }
+                if (interactStatus == InteractStatus.Success) CompleteInteraction();
                 break;
             }
         }
@@ -102,10 +90,7 @@ public abstract class InteractWorkBase : WorkBase
     public override void OnWorkCanceled()
     {
         workManager.AddStoppedWork(workType, this);
-        if (workPhase == WorkPhase.Working)
-        {
-            target.OnInteractCanceled();
-        }
+        if (workPhase == WorkPhase.Working) target.OnInteractCanceled();
     }
 
     public override void OnWorkStopped()
@@ -114,33 +99,33 @@ public abstract class InteractWorkBase : WorkBase
 
     public override void OnWorkFinished()
     {
-        if(nextWorker != worker)
+        if (nextWorker != worker)
             worker.OnWorkFinished();
         workManager.OnWorkFinished(this);
     }
-    
+
     protected abstract void HandlePostInteraction();
-    
+
     private void StartInteraction()
     {
         workPhase = WorkPhase.Working;
         target.OnInteractStarted(interactor);
         target.OnInteract(interactor);
     }
-    
+
     private void CompleteInteraction()
     {
         HandlePostInteraction();
         OnWorkFinished();
     }
-    
+
     private bool IsArrive(NavMeshAgent agent, Transform target)
     {
-        Vector3 agentPosition = agent.transform.position;
-        Vector3 targetPosition = target.position;
+        var agentPosition = agent.transform.position;
+        var targetPosition = target.position;
         return Vector3.SqrMagnitude(agentPosition - targetPosition) <= Mathf.Sqrt(agent.stoppingDistance);
     }
-    
+
     private Transform GetClosestInteractablePoint()
     {
         return target.GetInteractablePoints(workType.WorkTypeToPermission())

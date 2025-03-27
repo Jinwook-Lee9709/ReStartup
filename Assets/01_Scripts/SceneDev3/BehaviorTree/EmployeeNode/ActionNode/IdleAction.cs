@@ -1,24 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class IdleAction : ActionNode<NPCController>
 {
-    NPCController other;
+    private readonly NPCController other;
+
     public IdleAction(NPCController context) : base(context)
     {
         other = context.GetComponent<NPCController>();
     }
+
     protected override void OnStart()
     {
-        //¾Ö´Ï¸ÞÀÌ¼Ç º¯°æ
+        //ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½
     }
+
     protected override NodeStatus OnUpdate()
     {
-        if (other.CanVisit)
-        {
-            return NodeStatus.Success;
-        }
+        if (other.CanVisit) return NodeStatus.Success;
 
         return NodeStatus.Running;
     }

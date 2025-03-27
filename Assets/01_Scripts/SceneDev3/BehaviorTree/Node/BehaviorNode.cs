@@ -1,18 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public enum NodeStatus //»óÅÂ¹ÝÈ¯À» À§ÇÑ enum
+public enum NodeStatus //ï¿½ï¿½ï¿½Â¹ï¿½È¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ enum
 {
     Success,
     Failure,
-    Running, // ½ÇÇàÁß
+    Running // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 }
 
-public abstract class BehaviorNode<T> where T : MonoBehaviour //where ÇÑÁ¤ÀÚ MonoBehaviour¸¸ »ç¿ë°¡´É
+public abstract class BehaviorNode<T> where T : MonoBehaviour //where ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ MonoBehaviourï¿½ï¿½ ï¿½ï¿½ë°¡ï¿½ï¿½
 {
     protected readonly T context; // T == MonoBehaviour
-    private bool isStarted = false;
+    private bool isStarted;
 
     protected BehaviorNode(T context)
     {
@@ -26,16 +24,15 @@ public abstract class BehaviorNode<T> where T : MonoBehaviour //where ÇÑÁ¤ÀÚ Mon
 
     protected virtual void OnStart()
     {
-
     }
+
     protected abstract NodeStatus OnUpdate();
 
     protected virtual void OnEnd()
     {
-
     }
 
-    public NodeStatus Execute() // »óÅÂ °ü¸® base³ëµå
+    public NodeStatus Execute() // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ baseï¿½ï¿½ï¿½
     {
         if (!isStarted)
         {
@@ -43,7 +40,7 @@ public abstract class BehaviorNode<T> where T : MonoBehaviour //where ÇÑÁ¤ÀÚ Mon
             OnStart();
         }
 
-        NodeStatus statues = OnUpdate();
+        var statues = OnUpdate();
         if (statues != NodeStatus.Running)
         {
             OnEnd();
@@ -52,6 +49,4 @@ public abstract class BehaviorNode<T> where T : MonoBehaviour //where ÇÑÁ¤ÀÚ Mon
 
         return statues;
     }
-
-
 }

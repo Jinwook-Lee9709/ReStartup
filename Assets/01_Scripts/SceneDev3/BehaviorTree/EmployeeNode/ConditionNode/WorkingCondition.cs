@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class WorkingCondition : ConditionNode<NPCController>
 {
     public WorkingCondition(NPCController context) : base(context)

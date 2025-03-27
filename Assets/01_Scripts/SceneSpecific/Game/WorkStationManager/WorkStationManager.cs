@@ -7,19 +7,19 @@ using UnityEngine.UI;
 
 public class WorkStationManager : MonoBehaviour
 {
-    [SerializeField] WorkFlowController workFlowController;
+    [SerializeField] private WorkFlowController workFlowController;
     [SerializeField] private Button button;
     [SerializeField] private List<Transform> tablePivots;
     [SerializeField] private NavMeshSurface surface2D;
 
     public int currentTableCount = 1;
-    
+
     private void Start()
-    { 
+    {
         button.onClick.AddListener(OnTableAdd);
         surface2D.BuildNavMesh();
     }
-    
+
     public void OnTableAdd()
     {
         if (currentTableCount < tablePivots.Count)
@@ -27,10 +27,9 @@ public class WorkStationManager : MonoBehaviour
             Debug.Log("Table Add");
             Addressables.InstantiateAsync("Table").Completed += OnTableInstantiated;
         }
-        
     }
-    
-    private void OnTableInstantiated( AsyncOperationHandle<GameObject> obj)
+
+    private void OnTableInstantiated(AsyncOperationHandle<GameObject> obj)
     {
         currentTableCount++;
         var table = obj.Result.GetComponent<Table>();
@@ -40,9 +39,7 @@ public class WorkStationManager : MonoBehaviour
         obj.Result.transform.localScale = Vector3.one;
         table.SetId(currentTableCount);
         workFlowController.AddTable(table);
-        
+
         surface2D.UpdateNavMesh(surface2D.navMeshData);
     }
-    
-    
 }

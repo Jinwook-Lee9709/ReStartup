@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FoodPickupCounter : InteractableObjectBase
 {
     [SerializeField] private Transform foodPlacePivot;
-    
+
     public Transform FoodPlacePivot => foodPlacePivot;
 
     public GameObject LiftFood()

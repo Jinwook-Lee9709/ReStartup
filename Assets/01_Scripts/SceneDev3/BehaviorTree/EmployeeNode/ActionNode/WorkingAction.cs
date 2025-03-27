@@ -1,23 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class WorkingAction : ActionNode<NPCController>
 {
-    NPCController other;
+    private NPCController other;
     private float timer;
-    
+
     public WorkingAction(NPCController context) : base(context)
     {
         other = context.GetComponent<NPCController>();
     }
+
     protected override void OnStart()
     {
-        //¾Ö´Ï¸ÞÀÌ¼Ç º¯°æ
+        //ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½
     }
+
     protected override NodeStatus OnUpdate()
     {
-
         return NodeStatus.Running;
     }
 }

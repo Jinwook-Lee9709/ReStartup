@@ -1,34 +1,31 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class UserDataManager : Singleton<UserDataManager>
 {
-    private UserData currentUserData = new UserData();
+    private UserData currentUserData = new();
+
     public UserData CurrentUserData
     {
         get
         {
-            if(currentUserData == null)
+            if (currentUserData == null)
                 currentUserData = new UserData();
             return currentUserData;
         }
         set
         {
-            if (value == null)
-            {
-                throw new ArgumentNullException("currentUserInfo Set Value");
-            }
+            if (value == null) throw new ArgumentNullException("currentUserInfo Set Value");
             currentUserData = value;
         }
     }
-    
+
     public bool SaveDB()
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public async Task<bool> LoadDB(string uid = "1234")
@@ -43,22 +40,14 @@ public class UserDataManager : Singleton<UserDataManager>
         StartCoroutine(LoadRoutine());
     }
 
-    IEnumerator LoadRoutine()
+    private IEnumerator LoadRoutine()
     {
-        Task<bool> task = LoadDB();
-        while (!task.IsCompleted)
-        {
-            yield return new WaitForEndOfFrame();
-
-        }
-        if(task.Result)
-        {
+        var task = LoadDB();
+        while (!task.IsCompleted) yield return new WaitForEndOfFrame();
+        if (task.Result)
             Debug.Log("Load DB Success");
-        }
         else
-        {
             Debug.Log("Load DB Fail");
-        }
     }
 
     public IEnumerator OnGoldUp(Consumer consumer)
@@ -68,10 +57,8 @@ public class UserDataManager : Singleton<UserDataManager>
         yield return new WaitForSeconds(0.5f);
 
         if (consumer.FSM.consumerData.TempTipProb < Random.Range(0f, 1f))
-        {
             //TODO : Play Tip PopUp
-            CurrentUserData.Gold += Mathf.CeilToInt(consumer.needFood.SellingCost * (consumer.FSM.consumerData.SellTipPercent / 100));
-        }
+            CurrentUserData.Gold +=
+                Mathf.CeilToInt(consumer.needFood.SellingCost * (consumer.FSM.consumerData.SellTipPercent / 100));
     }
 }
-

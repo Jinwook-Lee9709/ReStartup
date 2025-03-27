@@ -1,8 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.AddressableAssets.Settings;
-using UnityEngine;
-
 public class FoodData
 {
     public int FoodID { get; set; }
@@ -12,5 +7,5 @@ public class FoodData
     public int BasicCost { get; set; }
     public int GetRankPoints { get; set; }
     public int StringID { get; set; }
-    public string IconID { get; set;}
+    public string IconID { get; set; }
 }

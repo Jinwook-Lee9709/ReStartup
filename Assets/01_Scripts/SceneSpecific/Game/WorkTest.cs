@@ -1,13 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class WorkTest : MonoBehaviour
 {
     [SerializeField] private WorkManager workManager;
-    [SerializeField] WorkerManager workerManager;
-    [SerializeField] Table interactableObject;
-    [SerializeField] [Range(1f,5f)] float testDuration = 1f;
+    [SerializeField] private WorkerManager workerManager;
+    [SerializeField] private Table interactableObject;
+    [SerializeField] [Range(1f, 5f)] private float testDuration = 1f;
 
     [ContextMenu("Assign Work")]
     public void AssingWork()
@@ -17,5 +15,4 @@ public class WorkTest : MonoBehaviour
         interactableObject.SetWork(cleanWorkBase);
         workManager.AddWork(cleanWorkBase);
     }
-
 }

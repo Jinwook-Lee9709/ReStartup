@@ -1,36 +1,32 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.Timeline.Actions;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
+
 public enum NPCType
 {
-    Employee, //Á÷¿ø
-    Customer, //¼Õ´Ô
+    Employee, //ï¿½ï¿½ï¿½ï¿½
+    Customer //ï¿½Õ´ï¿½
 }
+
 public class NPCController : MonoBehaviour
 {
-    private BehaviorTree<NPCController> behaviorTree;
+    [SerializeField] private NPCType NPCType;
 
-    [SerializeField]
-    private NPCType NPCType;
-    public Transform target;     //ÀÛ¾÷´ë
+    public Transform target; //ï¿½Û¾ï¿½ï¿½ï¿½
     public float speed;
-    [HideInInspector]
-    public float targetDistance; //ÀÛ¾÷´ë¿Í ³ªÀÇ °Å¸®
-    public float workRange = 3f; //ÀÏÀ» ½ÃÀÛÇÒ °Å¸®
-    public float woringTimer = 3f; //ÀÏÇÏ´Â ½Ã°£
+
+    [HideInInspector] public float targetDistance; //ï¿½Û¾ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Å¸ï¿½
+
+    public float workRange = 3f; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Å¸ï¿½
+    public float woringTimer = 3f; //ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Ã°ï¿½
 
     public Vector3 idlePos;
-    
-    private bool canVisit = false;
-    public bool CanVisit { get { return canVisit; } }
 
-    private bool workTakenAway;
-    public bool WorkTakenAway {  get { return workTakenAway; } set { workTakenAway = value; } }
-    
-    void Start()
+    private BehaviorTree<NPCController> behaviorTree;
+
+    public bool CanVisit { get; } = false;
+
+    public bool WorkTakenAway { get; set; }
+
+    private void Start()
     {
         switch (NPCType)
         {
@@ -41,6 +37,11 @@ public class NPCController : MonoBehaviour
                 CustomerInitBehaviorTree();
                 break;
         }
+    }
+
+    private void Update()
+    {
+        targetDistance = Vector3.Distance(transform.position, target.position);
     }
 
     public void EmployeeInitBehaviorTree()
@@ -66,12 +67,8 @@ public class NPCController : MonoBehaviour
 
         behaviorTree.SetRoot(rootSelcector);
     }
+
     public void CustomerInitBehaviorTree()
     {
-
-    }
-    private void Update()
-    {
-        targetDistance = Vector3.Distance(transform.position, target.position);
     }
 }

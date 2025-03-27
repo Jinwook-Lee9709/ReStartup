@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -13,6 +9,7 @@ public static class Extends
         Vector2 targetPosition = target.position;
         return Vector2.SqrMagnitude(agentPosition - targetPosition) <= Mathf.Sqrt(agent.stoppingDistance);
     }
+
     public static bool IsArrive(this NavMeshAgent agent, Vector2 target)
     {
         Vector2 agentPosition = agent.transform.position;
@@ -24,7 +21,7 @@ public static class Extends
         switch (workType)
         {
             case WorkType.All:
-                InteractPermission permission = InteractPermission.None;
+                var permission = InteractPermission.None;
                 permission |= InteractPermission.HallEmployee;
                 permission |= InteractPermission.KitchenEmployee;
                 permission |= InteractPermission.PaymentEmployee;
@@ -36,6 +33,7 @@ public static class Extends
             case WorkType.Kitchen:
                 return InteractPermission.KitchenEmployee;
         }
+
         return InteractPermission.None;
     }
 }

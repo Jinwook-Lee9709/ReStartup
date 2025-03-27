@@ -1,41 +1,33 @@
-using Newtonsoft.Json;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
+using Newtonsoft.Json;
 using UnityEngine;
 using SaveDataVC = SaveDataV1;
 
 public static class LocalSaveLoadManager
 {
-    public static int SaveDataVersion { get; private set; } = 1;
+    private static readonly JsonSerializerSettings settings = new()
+    {
+        Formatting = Formatting.Indented,
+        TypeNameHandling = TypeNameHandling.All
+    };
+
+    public static int SaveDataVersion { get; } = 1;
 
     public static SaveDataVC Data { get; set; }
 
     private static string LocalSaveFileName => "LocalSave.json";
-    private static string LocalSaveDirectory
-    {
-        get
-        {
-            return $"{Application.persistentDataPath}/LocalSave";
-        }
-    }
-
-
-    private static JsonSerializerSettings settings = new JsonSerializerSettings
-    {
-        Formatting = Formatting.Indented,
-        TypeNameHandling = TypeNameHandling.All,
-    };
+    private static string LocalSaveDirectory => $"{Application.persistentDataPath}/LocalSave";
 
     public static void GameSettingInit()
     {
         if (!Load())
-            Data = new();
-        //TODO : ÀÎ°ÔÀÓ ¼¼ÆÃ (»ç¿îµå, ¾ð¾î µî) ¼¼ÆÃ
+            Data = new SaveDataVC();
+        //TODO : ï¿½Î°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½
     }
+
     public static void UpdateSaveData()
     {
-        //TODO : ÀÎ°ÔÀÓ ¼¼ÆÃ (»ç¿îµå, ¾ð¾î µî) ÀÎ°ÔÀÓ ¼³Á¤ °ªµé °¡Á®¿Í¼­ Data °»½Å
+        //TODO : ï¿½Î°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ ï¿½ï¿½) ï¿½Î°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ Data ï¿½ï¿½ï¿½ï¿½
     }
 
     public static bool Save()
@@ -43,10 +35,7 @@ public static class LocalSaveLoadManager
         if (Data == null)
             return false;
 
-        if (!Directory.Exists(LocalSaveDirectory))
-        {
-            Directory.CreateDirectory(LocalSaveDirectory);
-        }
+        if (!Directory.Exists(LocalSaveDirectory)) Directory.CreateDirectory(LocalSaveDirectory);
 
         UpdateSaveData();
 
@@ -61,18 +50,12 @@ public static class LocalSaveLoadManager
     public static bool Load()
     {
         var path = Path.Combine(LocalSaveDirectory, LocalSaveFileName);
-        if (!File.Exists(path))
-        {
-            return false;
-        }
+        if (!File.Exists(path)) return false;
 
         var data = File.ReadAllText(path);
         var saveData = JsonConvert.DeserializeObject<SaveData>(data, settings);
 
-        while (saveData.Version < SaveDataVersion)
-        {
-            saveData = saveData.VersionUp();
-        }
+        while (saveData.Version < SaveDataVersion) saveData = saveData.VersionUp();
         Data = saveData as SaveDataVC;
         return true;
     }

@@ -3,8 +3,8 @@ using UnityEngine;
 public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
     private static T _instance;
-    private static readonly object _lock = new object();
-    private static bool applicationIsQuitting = false;
+    private static readonly object _lock = new();
+    private static bool applicationIsQuitting;
 
     public static T Instance
     {
@@ -15,15 +15,14 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
                 Debug.LogWarning($"[Singleton] Instance of {typeof(T)} is null because application is quitting.");
                 return null;
             }
-            
-            
+
 
             lock (_lock)
             {
                 if (_instance == null)
                 {
                     _instance = FindObjectOfType<T>();
-                    
+
                     if (FindObjectsOfType<T>().Length > 1)
                     {
                         Debug.LogError($"[Singleton] Multiple instances of {typeof(T)} found!");
@@ -32,7 +31,7 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 
                     if (_instance == null)
                     {
-                        GameObject singleton = new GameObject($"(singleton) {typeof(T)}");
+                        var singleton = new GameObject($"(singleton) {typeof(T)}");
                         _instance = singleton.AddComponent<T>();
                         DontDestroyOnLoad(singleton);
 

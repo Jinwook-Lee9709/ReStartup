@@ -1,15 +1,11 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using AYellowpaper.SerializedCollections;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class ServiceLocator : Singleton<ServiceLocator>
 {
-    private Dictionary<Type, object> globalServices = new();
-    private Dictionary<Type, object> sceneServices = new();
+    private readonly Dictionary<Type, object> globalServices = new();
+    private readonly Dictionary<Type, object> sceneServices = new();
 
     public void Awake()
     {
@@ -22,9 +18,11 @@ public class ServiceLocator : Singleton<ServiceLocator>
             Debug.LogWarning("GameManager object not found in the scene!");
             return;
         }
+
         Instance.RegisterSceneService(obj.GetComponent<GameManager>());
         //ForTest
     }
+
     public void RegisterGlobalService<T>(T service)
     {
         var type = typeof(T);

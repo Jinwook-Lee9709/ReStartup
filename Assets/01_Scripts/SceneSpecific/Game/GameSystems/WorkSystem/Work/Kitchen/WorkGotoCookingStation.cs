@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -8,27 +6,29 @@ public class WorkGotoCookingStation : InteractWorkBase
 {
     private MainLoopWorkContext context;
     private FoodPickupCounter counter;
-    private ITransportable transformer;
-    
+
     private FoodObject foodObject;
     private Sprite foodSprite;
+    private ITransportable transformer;
+
     public WorkGotoCookingStation(WorkManager workManager, WorkType workType) : base(workManager, workType)
     {
     }
-    
+
     public void SetContext(MainLoopWorkContext context, FoodPickupCounter counter)
     {
         this.context = context;
         this.counter = counter;
     }
+
     protected override void HandlePostInteraction()
     {
         worker.ClearWork();
-        
-        CookingStation station = target as CookingStation;
+
+        var station = target as CookingStation;
         context.WorkFlowController.ReturnCookingStation(target as CookingStation);
-        
-        WorkFoodToHall work = new WorkFoodToHall(workManager, WorkType.Kitchen);
+
+        var work = new WorkFoodToHall(workManager, WorkType.Kitchen);
         work.SetContext(context, counter);
         work.SetInteractable(counter);
         counter.SetWork(work);
@@ -39,7 +39,6 @@ public class WorkGotoCookingStation : InteractWorkBase
         transformer = worker as ITransportable;
         Addressables.InstantiateAsync("FoodObject").Completed += OnFoodObjectInstantiated;
         Addressables.LoadAssetAsync<Sprite>(context.Consumer.needFood.IconID).Completed += OnSpriteLoaded;
-        
     }
 
     private void OnFoodObjectInstantiated(AsyncOperationHandle<GameObject> handle)
@@ -51,7 +50,6 @@ public class WorkGotoCookingStation : InteractWorkBase
             foodObject.SetSprite(foodSprite);
             transformer.LiftPackage(obj);
         }
-
     }
 
     private void OnSpriteLoaded(AsyncOperationHandle<Sprite> handle)
@@ -66,6 +64,5 @@ public class WorkGotoCookingStation : InteractWorkBase
 
     public override void OnWorkCanceled()
     {
-        
     }
 }

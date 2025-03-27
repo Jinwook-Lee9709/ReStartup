@@ -1,16 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class ConsumerData
 {
     public enum ConsumerType
     {
-        Normal,         //�Ϲ�
-        Regular,        //�ܰ�
-        Influencer,     //���÷��
-        Obnoxious       //������
+        Normal, //�Ϲ�
+        Regular, //�ܰ�
+        Influencer, //���÷��
+        Obnoxious //������
     }
+
     public ConsumerType Type { get; set; } = ConsumerType.Obnoxious;
     public float OrderWaitTimer { get; set; }
     public float MaxOrderWaitLimit { get; set; } = 100f;
@@ -23,6 +20,5 @@ public class ConsumerData
     public void Init()
     {
         OrderWaitTimer = MaxOrderWaitLimit;
-
     }
 }

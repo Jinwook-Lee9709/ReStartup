@@ -1,11 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class WorkPayment : InteractWorkBase
 {
     private MainLoopWorkContext context;
-    
+
     public WorkPayment(WorkManager workManager, WorkType workType) : base(workManager, workType)
     {
     }
@@ -14,11 +10,10 @@ public class WorkPayment : InteractWorkBase
     {
         this.context = context;
     }
-    
+
     protected override void HandlePostInteraction()
     {
         worker.ClearWork();
         context.WorkFlowController.OnCashierFinished();
     }
-    
 }

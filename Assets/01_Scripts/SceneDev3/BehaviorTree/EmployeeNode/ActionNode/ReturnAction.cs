@@ -1,30 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ReturnAction : ActionNode<NPCController>
 {
-    NPCController other;
+    private readonly NPCController other;
+
     public ReturnAction(NPCController context) : base(context)
     {
         other = context.GetComponent<NPCController>();
     }
+
     protected override void OnStart()
     {
-        //¾Ö´Ï¸ÞÀÌ¼Ç º¯°æ
+        //ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½
     }
+
     protected override NodeStatus OnUpdate()
     {
-
-        if (other.CanVisit)
-        {
-            return NodeStatus.Success;
-        }
-        if (other.WorkTakenAway)
-        {
-            return NodeStatus.Failure;
-        }
-        Vector3 direction = (other.idlePos - other.transform.position).normalized;
+        if (other.CanVisit) return NodeStatus.Success;
+        if (other.WorkTakenAway) return NodeStatus.Failure;
+        var direction = (other.idlePos - other.transform.position).normalized;
         other.transform.position += direction * other.speed * Time.deltaTime;
         return NodeStatus.Running;
     }

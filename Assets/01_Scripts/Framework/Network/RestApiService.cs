@@ -1,17 +1,15 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using UnityEngine;
+using Newtonsoft.Json;
 using UnityEngine.Networking;
 
 public static class RestApiService
 {
     public static UnityWebRequest CreateGetRequest(string url)
     {
-        UnityWebRequest request = new UnityWebRequest(url, "GET");
+        var request = new UnityWebRequest(url, "GET");
         string jsonPayload;
 
         request.downloadHandler = new DownloadHandlerBuffer();
@@ -21,9 +19,9 @@ public static class RestApiService
 
     public static UnityWebRequest CreatePostRequest(string url, List<KeyValuePair<string, string>> data)
     {
-        UnityWebRequest request = new UnityWebRequest(url, "POST");
-        string jsonPayLoad = Newtonsoft.Json.JsonConvert.SerializeObject(data);
-        byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonPayLoad);
+        var request = new UnityWebRequest(url, "POST");
+        var jsonPayLoad = JsonConvert.SerializeObject(data);
+        var bodyRaw = Encoding.UTF8.GetBytes(jsonPayLoad);
         request.uploadHandler = new UploadHandlerRaw(bodyRaw);
         request.downloadHandler = new DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
@@ -33,8 +31,8 @@ public static class RestApiService
 
     public static UnityWebRequest CreatePostRequest(string url, string jsonPayLoad)
     {
-        UnityWebRequest request = new UnityWebRequest(url, "POST");
-        byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonPayLoad);
+        var request = new UnityWebRequest(url, "POST");
+        var bodyRaw = Encoding.UTF8.GetBytes(jsonPayLoad);
         request.uploadHandler = new UploadHandlerRaw(bodyRaw);
         request.downloadHandler = new DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
@@ -44,7 +42,7 @@ public static class RestApiService
 
     public static async Task<T> GetAsync<T>(string url)
     {
-        using (UnityWebRequest request = CreateGetRequest(url))
+        using (var request = CreateGetRequest(url))
         {
             return await SendRequestAsync<T>(request);
         }
@@ -52,15 +50,15 @@ public static class RestApiService
 
     public static async Task<T> PostAsync<T>(string url, List<KeyValuePair<string, string>> data)
     {
-        using (UnityWebRequest request = CreatePostRequest(url, data))
+        using (var request = CreatePostRequest(url, data))
         {
             return await SendRequestAsync<T>(request);
         }
     }
-    
+
     public static async Task<T> PostAsync<T>(string url, string jsonPayLoad)
     {
-        using (UnityWebRequest request = CreatePostRequest(url, jsonPayLoad))
+        using (var request = CreatePostRequest(url, jsonPayLoad))
         {
             return await SendRequestAsync<T>(request);
         }
@@ -72,25 +70,19 @@ public static class RestApiService
         using (request)
         {
             request.SendWebRequest();
-            while (!request.isDone)
-            {
-                await Task.Yield();
-            }
-        
+            while (!request.isDone) await Task.Yield();
+
             if (request.result == UnityWebRequest.Result.Success)
             {
-                
-                Newtonsoft.Json.JsonSerializerSettings settings = new Newtonsoft.Json.JsonSerializerSettings();
-                settings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
-                return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(request.downloadHandler.text, settings);
+                var settings = new JsonSerializerSettings();
+                settings.NullValueHandling = NullValueHandling.Ignore;
+                return JsonConvert.DeserializeObject<T>(request.downloadHandler.text, settings);
             }
-            else
-            {
-                throw new Exception($"Request failed: {request.error}");
-            }
+
+            throw new Exception($"Request failed: {request.error}");
         }
     }
-    
+
     private class BypassCertificateHandler : CertificateHandler
     {
         protected override bool ValidateCertificate(byte[] certificateData)

@@ -1,28 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EmployeeManager : MonoBehaviour
 {
     public EmployeeListUi employeeListUi;
+    [SerializeField] private GameManager gameManager;
+    
     public void Awake()
     {
-
     }
+
     public void Start()
     {
         var data = DataTableManager.Get<EmployeeDataTable>("Employee").Data;
         foreach (var item in data.Values)
-        {
-            if(item.Theme == (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme)
+            if (item.Theme == (int)gameManager.CurrentTheme)
                 employeeListUi.AddUpgrade(item);
-        }
         foreach (var item in data.Values)
-        {
-            if(item.upgradeCount > 0)
+            if (item.upgradeCount > 0)
             {
-
             }
-        }
     }
 }

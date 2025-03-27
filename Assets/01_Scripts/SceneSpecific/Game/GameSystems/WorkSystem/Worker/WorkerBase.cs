@@ -1,23 +1,16 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.PlayerLoop;
 
 public class WorkerBase : MonoBehaviour
-{ 
-    protected Transform idleArea;
-    protected WorkBase currentWork;
-    
-    protected WorkerManager workerManager;
+{
     protected NavMeshAgent agent;
-    
-    public void Init(WorkerManager manager, Transform idleArea)
-    {
-        workerManager = manager; 
-        this.idleArea = idleArea;
-    }
+    protected WorkBase currentWork;
+    protected Transform idleArea;
+
+    protected WorkerManager workerManager;
+
+    private bool IsBusy => currentWork != null;
+
     protected virtual void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -25,8 +18,12 @@ public class WorkerBase : MonoBehaviour
         agent.updateUpAxis = false;
     }
 
-    bool IsBusy => currentWork != null;
-    
+    public void Init(WorkerManager manager, Transform idleArea)
+    {
+        workerManager = manager;
+        this.idleArea = idleArea;
+    }
+
     public virtual void AssignWork(WorkBase work)
     {
         if (IsBusy)
@@ -47,9 +44,9 @@ public class WorkerBase : MonoBehaviour
     public virtual void OnWorkFinished()
     {
         currentWork = null;
-        workerManager.ReturnWorker(this);   
+        workerManager.ReturnWorker(this);
     }
-    
+
     public virtual void StopWork()
     {
         if (currentWork != null)

@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 
 public static class DataTableManager
@@ -13,7 +10,7 @@ public static class DataTableManager
         var employeeDataTabletable = new EmployeeDataTable();
         employeeDataTabletable.Load();
         tables.Add(DataTableIds.Employee.ToString(), employeeDataTabletable);
-        
+
         var foodDataTabletable = new FoodDataTable();
         foodDataTabletable.Load();
         tables.Add(DataTableIds.Food.ToString(), foodDataTabletable);
@@ -26,6 +23,7 @@ public static class DataTableManager
             Debug.LogError($"Not found table with id: {id}");
             return null;
         }
+
         return tables[id] as T;
     }
 }

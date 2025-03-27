@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using NavMeshPlus.Components;
 using UnityEngine;
 
@@ -13,7 +11,7 @@ public class Test : MonoBehaviour
         ServiceLocator.Instance.GetSceneService<GameManager>();
     }
 
-    [ContextMenu( "Test" )]
+    [ContextMenu("Test")]
     public void Test2()
     {
         surface.UpdateNavMesh(surface.navMeshData);
