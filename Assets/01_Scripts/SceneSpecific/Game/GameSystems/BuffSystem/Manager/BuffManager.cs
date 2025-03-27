@@ -35,7 +35,7 @@ public class BuffManager : MonoBehaviour
     {
         InfluencerBuff buff = new();
         buff.IsOnBuff = true;
-        buff.RemainBuffTime = 20f;
+        buff.RemainBuffTime = 5f;
         StartBuff(buff);
         Debug.Log("Buff On");
     }
@@ -53,6 +53,7 @@ public class BuffManager : MonoBehaviour
                 buff.IsOnBuff = false;
                 buffs.Remove(buff.Type);
                 Debug.Log("Buff Off");
+                return;
             }
         }
     }
