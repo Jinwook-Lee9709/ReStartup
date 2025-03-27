@@ -15,7 +15,6 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
         get => employeeData;
         set => employeeData = value;
     }
-    public EmployeeManager employeeManager;
     private float upgradeWorkSpeedValue = 0.02f;
     public enum EnployedState
     {
@@ -45,6 +44,7 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
 
     private void Update()
     {
+        Debug.Log(Enum.Parse<WorkType>(employeeData.StaffType.ToString()));
         switch (currentStatus)
         {
             case EnployedState.Idle:
@@ -115,7 +115,6 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     }
     private void Start()
     {
-        //employeeManager.AddEmployee(this);
         employeeData.OnUpgradeEvent += () =>
         {
             employeeData.MoveSpeed = employeeData.MoveSpeed + (employeeData.upgradeSpeed);

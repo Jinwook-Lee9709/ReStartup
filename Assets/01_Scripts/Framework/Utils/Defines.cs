@@ -8,7 +8,7 @@ public enum DataTableIds
 
 public enum ThemeIds
 {
-    Theme1,
+    Theme1 = 1,
     Theme2,
     Theme3
 }

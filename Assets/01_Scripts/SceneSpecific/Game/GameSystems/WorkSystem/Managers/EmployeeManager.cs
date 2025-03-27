@@ -14,7 +14,8 @@ public class EmployeeManager : MonoBehaviour
         var data = DataTableManager.Get<EmployeeDataTable>("Employee").Data;
         foreach (var item in data.Values)
         {
-            employeeListUi.AddUpgrade(item);
+            if(item.Theme == (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme)
+                employeeListUi.AddUpgrade(item);
         }
         foreach (var item in data.Values)
         {
