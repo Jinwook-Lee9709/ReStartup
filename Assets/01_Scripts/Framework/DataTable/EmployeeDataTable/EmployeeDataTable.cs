@@ -23,7 +23,6 @@ public class EmployeeDataTable : DataTable
                 continue;
             }
             Data.Add(row.StaffID, row);
-            Debug.Log(row.StaffID);
         }
     }
 }

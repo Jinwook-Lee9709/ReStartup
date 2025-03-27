@@ -55,6 +55,7 @@ public class ConsumerFSM : MonoBehaviour
                 case ConsumerState.Waiting:
                     break;
                 case ConsumerState.BeforeOrder:
+                    consumerManager.OnChangeConsumerState(consumer, ConsumerState.AfterOrder);
                     consumerManager.OnWaitingLineUpdate(consumer);
                     agent.SetDestination(consumer.currentTable.InteractablePoints[1].position);
                     break;
@@ -66,7 +67,7 @@ public class ConsumerFSM : MonoBehaviour
                     StartCoroutine(EattingCoroutine());
                     break;
                 case ConsumerState.BeforePay:
-
+                    
                     consumerManager.OnChangeConsumerState(consumer, ConsumerState.BeforePay);
                     consumerManager.OnEndMeal(consumer);
                     break;
@@ -110,7 +111,6 @@ public class ConsumerFSM : MonoBehaviour
             eattingTimer += Time.deltaTime;
             yield return null;
         }
-        consumerManager.workFlowController.ReturnTable(consumer.currentTable);
         CurrentStatus = ConsumerState.BeforePay;
     }
 
@@ -173,7 +173,7 @@ public class ConsumerFSM : MonoBehaviour
     {
         //���ڸ��� ���� ���ڸ��� �̵� �� �ֹ�.
         //������ �ֹ��� �޾ư��� �������� ����.
-        if (agent.remainingDistance < 0.1f)
+        if (agent.IsArrive(consumer.currentTable.InteractablePoints[1]))
         {
             OnSeatEvent?.Invoke(consumer);
         }

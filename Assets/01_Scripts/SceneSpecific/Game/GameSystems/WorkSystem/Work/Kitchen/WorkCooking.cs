@@ -29,7 +29,6 @@ public class WorkCooking : InteractWorkBase
         if (!HandleIfCounterUnavailable(workFlowController))
             return;
         CookingStation station = target as CookingStation;
-        station.ClearWork();
         workFlowController.ReturnCookingStation(target as CookingStation);
         
         SetNextWork(workFlowController);
@@ -59,7 +58,7 @@ public class WorkCooking : InteractWorkBase
         
         transformer = worker as ITransportable;
         Addressables.InstantiateAsync("FoodObject").Completed += OnFoodObjectInstantiated;
-        Addressables.LoadAssetAsync<Sprite>(context.Consumer.needFood.spriteId).Completed += OnSpriteLoaded;
+        Addressables.LoadAssetAsync<Sprite>(context.Consumer.needFood.IconID).Completed += OnSpriteLoaded;
     }
     
 

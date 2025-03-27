@@ -26,7 +26,6 @@ public class WorkGotoCookingStation : InteractWorkBase
         worker.ClearWork();
         
         CookingStation station = target as CookingStation;
-        station.ClearWork();
         context.WorkFlowController.ReturnCookingStation(target as CookingStation);
         
         WorkFoodToHall work = new WorkFoodToHall(workManager, WorkType.Kitchen);
@@ -39,7 +38,7 @@ public class WorkGotoCookingStation : InteractWorkBase
 
         transformer = worker as ITransportable;
         Addressables.InstantiateAsync("FoodObject").Completed += OnFoodObjectInstantiated;
-        Addressables.LoadAssetAsync<Sprite>(context.Consumer.needFood.spriteId).Completed += OnSpriteLoaded;
+        Addressables.LoadAssetAsync<Sprite>(context.Consumer.needFood.IconID).Completed += OnSpriteLoaded;
         
     }
 

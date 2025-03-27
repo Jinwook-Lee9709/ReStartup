@@ -63,13 +63,15 @@ public class WorkFlowController : MonoBehaviour
         if (customerQueue.Count > 0)
         {
             var consumer = customerQueue.Dequeue();
+            consumer.SetTable(tableManager.GetAvailableObject());
+            consumer.OnTableVacated();
             //TODO:Assign이 아니라 손님을 이동
         }
     }
 
     public void AssignGetOrderWork(Consumer consumer)
     {
-        var table = consumer.currentTable; //Customer의 테이블 받아오기
+        var table = consumer.currentTable;
         WorkGetOrder work = new WorkGetOrder(workManager, WorkType.Hall);
         MainLoopWorkContext context = new MainLoopWorkContext(consumer, this);
         table.SetWork(work);
@@ -160,9 +162,7 @@ public class WorkFlowController : MonoBehaviour
     
     
     #endregion
-
-
-
+    
     #region CashierLogic
 
     public int AssignCashier(Consumer consumer)
@@ -212,8 +212,22 @@ public class WorkFlowController : MonoBehaviour
     }
 
     #endregion
-    
-    
+
+    #region TableCleanLogic()
+
+    public void OnEatComplete(Table table)
+    {
+        WorkCleanTable work = new WorkCleanTable(workManager, WorkType.Hall);
+        work.SetInteractable(table);
+        work.SetContext(this);
+        table.SetWork(work);
+        var food = table.GetFood();
+        var sprite = food.GetComponent<SpriteRenderer>();
+        sprite.color = Color.red;
+        workManager.AddWork(work);
+    }
+
+    #endregion
     //손님 대기열
     //Table에 자리가 나면 손님할당
     //주문 대기

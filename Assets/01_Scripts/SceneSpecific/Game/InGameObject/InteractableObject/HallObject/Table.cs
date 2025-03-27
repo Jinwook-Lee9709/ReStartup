@@ -9,11 +9,18 @@ public class Table : InteractableObjectBase
     public Transform FoodPlacePivot => foodPlacePivot;
     public override void OnInteractCompleted()
     {
+        base.OnInteractCompleted();
         Debug.Log("Job's Done");
     }
-    
 
-    public Table()
+    public GameObject GetFood()
     {
+        var food = foodPlacePivot.GetChild(0).gameObject;
+        return food;
+    }
+
+    public void OnCleaned()
+    {
+        Destroy(foodPlacePivot.GetChild(0).gameObject);
     }
 }

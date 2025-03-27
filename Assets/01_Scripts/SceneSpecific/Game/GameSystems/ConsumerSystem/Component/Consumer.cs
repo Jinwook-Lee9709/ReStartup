@@ -14,7 +14,7 @@ public class Consumer : MonoBehaviour
     private NavMeshAgent agent;
     //TODO : �ֹ��� ����, ���� ���̺�
     public Table currentTable = null;
-    public FoodData needFood = new();
+    public FoodData needFood;
     private Transform nextTargetTransform;
     public Transform NextTargetTransform
     {
@@ -29,6 +29,11 @@ public class Consumer : MonoBehaviour
         }
     }
 
+    public void OnTableVacated()
+    {
+        FSM.CurrentStatus = ConsumerFSM.ConsumerState.BeforeOrder;
+    }
+
     private void OnTargetTransformChanged(Transform transform)
     {
         agent.SetDestination(transform.position);
@@ -40,6 +45,7 @@ public class Consumer : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = false;
         agent.updateUpAxis = false;
+        needFood = DataTableManager.Get<FoodDataTable>("Food").GetFoodData(301001);
     }
 
     public void SetTable(Table table)

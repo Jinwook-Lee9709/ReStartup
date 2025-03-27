@@ -1,4 +1,11 @@
-using System;public enum WorkType
+public enum DataTableIds
+{
+    Employee,
+    Food
+}
+
+
+public enum WorkType
 {
     Payment,
     Clean,
@@ -11,7 +18,6 @@ public enum WorkStatus
     Waiting,
     Assigned,
 }
-
 
 public enum InteractStatus
 {

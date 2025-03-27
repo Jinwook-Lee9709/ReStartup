@@ -127,7 +127,6 @@ public abstract class InteractWorkBase : WorkBase
     
     private void CompleteInteraction()
     {
-        target.OnInteractCompleted();
         HandlePostInteraction();
         OnWorkFinished();
     }
