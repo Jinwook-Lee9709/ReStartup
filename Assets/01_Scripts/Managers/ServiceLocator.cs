@@ -19,7 +19,7 @@ public class ServiceLocator : Singleton<ServiceLocator>
         var obj = GameObject.FindWithTag(Strings.GameManagerTag);
         if (obj == null)
         {
-            Debug.LogError("GameManager object not found in the scene!");
+            Debug.LogWarning("GameManager object not found in the scene!");
             return;
         }
         Instance.RegisterSceneService(obj.GetComponent<GameManager>());

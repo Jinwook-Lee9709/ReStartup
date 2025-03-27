@@ -31,6 +31,17 @@ public static class RestApiService
         return request;
     }
 
+    public static UnityWebRequest CreatePostRequest(string url, string jsonPayLoad)
+    {
+        UnityWebRequest request = new UnityWebRequest(url, "POST");
+        byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonPayLoad);
+        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+        request.certificateHandler = new BypassCertificateHandler();
+        return request;
+    }
+
     public static async Task<T> GetAsync<T>(string url)
     {
         using (UnityWebRequest request = CreateGetRequest(url))
@@ -46,6 +57,15 @@ public static class RestApiService
             return await SendRequestAsync<T>(request);
         }
     }
+    
+    public static async Task<T> PostAsync<T>(string url, string jsonPayLoad)
+    {
+        using (UnityWebRequest request = CreatePostRequest(url, jsonPayLoad))
+        {
+            return await SendRequestAsync<T>(request);
+        }
+    }
+
 
     public static async Task<T> SendRequestAsync<T>(UnityWebRequest request)
     {

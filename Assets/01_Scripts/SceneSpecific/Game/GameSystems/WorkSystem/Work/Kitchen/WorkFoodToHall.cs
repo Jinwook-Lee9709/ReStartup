@@ -28,4 +28,8 @@ public class WorkFoodToHall : InteractWorkBase
         counter.SetWork(work);
         nextWork = work;
     }
+
+    public override void OnWorkCanceled()
+    {
+    }
 }

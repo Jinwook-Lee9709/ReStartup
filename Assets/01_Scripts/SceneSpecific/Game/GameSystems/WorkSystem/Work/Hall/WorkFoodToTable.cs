@@ -20,4 +20,8 @@ public class WorkFoodToTable : InteractWorkBase
         porter.DropPackage(context.Consumer.currentTable.FoodPlacePivot);
         context.Consumer.FSM.OnGetFood();
     }
+
+    public override void OnWorkCanceled()
+    {
+    }
 }

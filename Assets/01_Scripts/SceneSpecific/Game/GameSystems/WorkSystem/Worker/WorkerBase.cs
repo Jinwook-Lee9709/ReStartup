@@ -49,7 +49,7 @@ public class WorkerBase : MonoBehaviour
         workerManager.ReturnWorker(this);   
     }
     
-    public virtual void CancelWork()
+    public virtual void StopWork()
     {
         if (currentWork != null)
         {

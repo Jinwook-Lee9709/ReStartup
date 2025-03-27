@@ -10,13 +10,13 @@ public class WorkManager : MonoBehaviour
     [SerializeField] private WorkerManager workerManager;
     
     private Dictionary<WorkType, PriorityQueue<WorkBase, float>> workQueues;
-    private Dictionary<WorkType, PriorityQueue<WorkBase, float>> canceledWorkQueues;
+    private Dictionary<WorkType, PriorityQueue<WorkBase, float>> stoppedWorkQueues;
 
     private Dictionary<WorkType, List<WorkBase>> assignedWorks;
     private void Awake()
     {
         workQueues = new Dictionary<WorkType, PriorityQueue<WorkBase, float>>();
-        canceledWorkQueues = new Dictionary<WorkType, PriorityQueue<WorkBase, float>>();
+        stoppedWorkQueues = new Dictionary<WorkType, PriorityQueue<WorkBase, float>>();
         assignedWorks = new Dictionary<WorkType, List<WorkBase>>();
         
         foreach (WorkType taskType in System.Enum.GetValues(typeof(WorkType)))
@@ -25,7 +25,7 @@ public class WorkManager : MonoBehaviour
         }
         foreach (WorkType taskType in System.Enum.GetValues(typeof(WorkType)))
         {
-            canceledWorkQueues[taskType] = new PriorityQueue<WorkBase, float>();
+            stoppedWorkQueues[taskType] = new PriorityQueue<WorkBase, float>();
         }
         foreach (WorkType taskType in System.Enum.GetValues(typeof(WorkType)))
         {
@@ -51,16 +51,21 @@ public class WorkManager : MonoBehaviour
         }
     }
 
-    public void AddCanceledWork(WorkType type, WorkBase work)
+    public void AddAssignedWork(WorkBase work)
     {
-        canceledWorkQueues[type].Enqueue(work, Time.time);
+        assignedWorks[work.workType].Add(work);
+    }
+
+    public void AddStoppedWork(WorkType type, WorkBase work)
+    {
+        stoppedWorkQueues[type].Enqueue(work, Time.time);
     }
 
     private void OnWorkerReturned(WorkType type)
     {
-        if (canceledWorkQueues[type].Count > 0 && workerManager.IsWorkerAvailable(type))
+        if (stoppedWorkQueues[type].Count > 0 && workerManager.IsWorkerAvailable(type))
         {
-            WorkBase work = canceledWorkQueues[type].Peek();
+            WorkBase work = stoppedWorkQueues[type].Peek();
             workerManager.AssignWork(work);
             assignedWorks[work.workType].Add(work);
         }

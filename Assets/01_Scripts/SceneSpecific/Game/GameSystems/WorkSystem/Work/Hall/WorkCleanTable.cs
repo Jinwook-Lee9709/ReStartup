@@ -6,6 +6,8 @@ using UnityEngine;
 public class WorkCleanTable : InteractWorkBase
 {
     private WorkFlowController controller;
+    private FoodObject foodObject; 
+    
     public WorkCleanTable(WorkManager workManager, WorkType workType) : base(workManager, workType)
     {
     }
@@ -14,6 +16,11 @@ public class WorkCleanTable : InteractWorkBase
     {
         this.controller = controller;
     }
+
+    public void SetFood(FoodObject foodObject)
+    {
+        this.foodObject = foodObject;
+    }
     
     protected override void HandlePostInteraction()
     {
@@ -21,4 +28,5 @@ public class WorkCleanTable : InteractWorkBase
         table.OnCleaned();
         controller.ReturnTable(table);
     }
+
 }

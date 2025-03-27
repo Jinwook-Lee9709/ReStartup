@@ -2,22 +2,26 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 /// <summary>
-/// DB¿¡ ÀúÀåµÉ À¯ÀúÀÇ Á¤º¸ Å¬·¡½º
+/// DBï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½
 /// </summary>
 [Serializable]
 public class UserData
 {
-    public string UID { get; set; }                                  //À¯Àú UID
-    public string Name { get; set; }                                 //À¯Àú ÀÌ¸§
-    public int? Gold { get; set; }                                   //ÀÎ°ÔÀÓ ÀçÈ­
-    public int? CurrentRankPoint { get; set; }                       //ÇöÀç ·©Å· Æ÷ÀÎÆ®
-    public int? PositiveCnt { get; set; }                            //¸Å¿ì¸¸Á· ¼Õ´Ô Ä«¿îÆ®
-    public int? NegativeCnt { get; set; }                            //ºÒ¸¸Á· ¼Õ´Ô Ä«¿îÆ®
+    public string UID { get; set; }                                  //ï¿½ï¿½ï¿½ï¿½ UID
+    public string Name { get; set; }                                 //ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½
+    public int? Gold { get; set; }                                   //ï¿½Î°ï¿½ï¿½ï¿½ ï¿½ï¿½È­
+    public int? CurrentRankPoint { get; set; }                       //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å· ï¿½ï¿½ï¿½ï¿½Æ®
+    public int? PositiveCnt { get; set; }                            //ï¿½Å¿ì¸¸ï¿½ï¿½ ï¿½Õ´ï¿½ Ä«ï¿½ï¿½Æ®
+    public int? NegativeCnt { get; set; }                            //ï¿½Ò¸ï¿½ï¿½ï¿½ ï¿½Õ´ï¿½ Ä«ï¿½ï¿½Æ®
                                                                     
-    public Dictionary<string, int> FoodSalesVolume { get; set; }     //Key : À½½ÄID
-                                                                     //Value : ÇØ´ç À½½Ä ÆÇ¸Å·®
-    public Dictionary<string, int> EmployeeLevelValue { get; set; }  //Key : Á÷¿øID
-                                                                     //Value : ÇØ´ç Á÷¿øÀÇ ·¹º§
+    public Dictionary<int, FoodSaveData> FoodSaveData { get; set; } = new Dictionary<int, FoodSaveData>
+    {
+        {301001, new FoodSaveData()},
+        {301002, new FoodSaveData()},
+        {301003, new FoodSaveData()},
+    };
+                                              
+    public Dictionary<string, int> EmployeeLevelValue { get; set; } 
 
 }
 

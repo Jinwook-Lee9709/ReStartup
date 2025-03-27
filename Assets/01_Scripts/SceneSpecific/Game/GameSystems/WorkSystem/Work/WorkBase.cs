@@ -28,6 +28,7 @@ public abstract class WorkBase
      public abstract void OnWorkAssigned();
      public abstract void OnAssignWorker(WorkerBase worker);
      public abstract void DoWork();
+     public abstract void OnWorkCanceled();
      public abstract void OnWorkStopped();
      public abstract void OnWorkFinished();
      

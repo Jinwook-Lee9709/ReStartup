@@ -15,7 +15,7 @@ public class WorkGetOrder : InteractWorkBase
     public void SetContext(MainLoopWorkContext context)
     {
         this.context = context;
-        interactTime = Constants.defaultOrderTime;
+        interactTime = Constants.DEFAULT_ORDER_TIME;
     }
 
     protected override void HandlePostInteraction()
@@ -23,4 +23,5 @@ public class WorkGetOrder : InteractWorkBase
         context.Consumer.FSM.OnOrderComplete();
         context.WorkFlowController.RegisterOrder(context);
     }
+
 }

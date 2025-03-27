@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 public class WorkGotoFoodPickupCounter : InteractWorkBase
 {
     private MainLoopWorkContext context;
+    private FoodObject foodObject;
     
     public WorkGotoFoodPickupCounter(WorkManager workManager, WorkType workType) : base(workManager, workType)
     {
@@ -35,5 +36,9 @@ public class WorkGotoFoodPickupCounter : InteractWorkBase
         
         nextWork = work;
         nextWorker = worker;
+    }
+
+    public override void OnWorkCanceled()
+    {
     }
 }

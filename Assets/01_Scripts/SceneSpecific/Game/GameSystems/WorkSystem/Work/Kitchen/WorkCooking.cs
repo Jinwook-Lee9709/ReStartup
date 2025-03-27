@@ -19,7 +19,7 @@ public class WorkCooking : InteractWorkBase
     public void SetContext(MainLoopWorkContext context)
     {
         this.context = context;
-        interactTime = Constants.defaultOrderTime;
+        interactTime = Constants.DEFAULT_ORDER_TIME;
     }
     
     protected override void HandlePostInteraction()
@@ -84,6 +84,8 @@ public class WorkCooking : InteractWorkBase
         }
     }
 
-    
-    
+
+    public override void OnWorkCanceled()
+    {
+    }
 }

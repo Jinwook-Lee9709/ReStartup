@@ -58,7 +58,8 @@ public static class Endpoints
 
 public static class Constants
 {
-    public static float defaultOrderTime = 0f;
+    public static float DEFAULT_ORDER_TIME = 0f;
+    public static int MAX_UPGRADE_LEVEL = 5;
 }
 
 public static class Strings

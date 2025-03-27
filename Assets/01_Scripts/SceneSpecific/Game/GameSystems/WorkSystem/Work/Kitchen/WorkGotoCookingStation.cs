@@ -63,4 +63,9 @@ public class WorkGotoCookingStation : InteractWorkBase
             transformer.LiftPackage(foodObject.gameObject);
         }
     }
+
+    public override void OnWorkCanceled()
+    {
+        
+    }
 }

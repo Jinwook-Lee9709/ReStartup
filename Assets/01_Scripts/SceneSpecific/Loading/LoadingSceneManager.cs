@@ -45,12 +45,6 @@ public class LoadingSceneManager : MonoBehaviour
             Debug.LogError($"[LoadTargetSceneAsync] Error while loading scene: {e.Message}");
             throw;
         }
-        finally
-        {
-            Addressables.Release(sceneHandle);
-        }
-        
-      
         
         int sceneIndex = (int)targetSceneId;
         if (sceneIndex >= (int)SceneIds.Theme1 && sceneIndex <= (int)SceneIds.Dev3)

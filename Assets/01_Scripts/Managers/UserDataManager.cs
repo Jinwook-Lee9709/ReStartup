@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class UserDataManager : Singleton<UserDataManager>
 {
-    private UserData currentUserData;
+    private UserData currentUserData = new UserData();
     public UserData CurrentUserData
     {
         get => currentUserData;
@@ -19,7 +19,7 @@ public class UserDataManager : Singleton<UserDataManager>
             currentUserData = value;
         }
     }
-
+    
     public bool SaveDB()
     {
         throw new System.NotImplementedException();
