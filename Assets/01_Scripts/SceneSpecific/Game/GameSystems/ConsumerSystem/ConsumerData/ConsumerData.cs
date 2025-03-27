@@ -6,17 +6,17 @@ public class ConsumerData
 {
     public enum ConsumerType
     {
-        Normal,         //ÀÏ¹Ý
-        Regular,        //´Ü°ñ
-        Influencer,     //ÀÎÇÃ·ç¾ð¼­
-        Obnoxious       //°³Áø»ó
+        Normal,         //ï¿½Ï¹ï¿½
+        Regular,        //ï¿½Ü°ï¿½
+        Influencer,     //ï¿½ï¿½ï¿½Ã·ï¿½ï¿½
+        Obnoxious       //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     }
     public ConsumerType Type { get; set; } = ConsumerType.Obnoxious;
     public float OrderWaitTimer { get; set; }
-    public float MaxOrderWaitLimit { get; set; } = 20f;
+    public float MaxOrderWaitLimit { get; set; } = 100f;
     public float MaxEattingLimit { get; set; } = 3f;
 
-    //ÀÓ½Ã ÆÁ È®·ü
+    //ï¿½Ó½ï¿½ ï¿½ï¿½ È®ï¿½ï¿½
     public float TempTipProb => 0.5f;
     public float SellTipPercent => 22f;
 

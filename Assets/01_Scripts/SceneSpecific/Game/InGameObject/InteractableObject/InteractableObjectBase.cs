@@ -13,11 +13,12 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
     
     //LocalVariables
     [SerializeField] private float interactProgress = 0;
+    private int id;
     private float interactionSpeed;
     private InteractStatus interactStatus;
     
     //Properties
-    public int Id { get; set; }
+    public int Id => id; 
     public float InteractProgress => interactProgress;
     public InteractStatus InteractStatus => interactStatus;
     public List<InteractPivot> InteractablePoints => interactablePoint;
@@ -28,6 +29,11 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
     public void SetWork(InteractWorkBase workBase)
     {
         currentWork = workBase;
+    }
+
+    public virtual void SetId(int id)
+    {
+        this.id = id;
     }
 
     public void ClearWork()

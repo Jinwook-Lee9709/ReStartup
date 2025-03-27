@@ -42,6 +42,11 @@ public class WorkFlowController : MonoBehaviour
         foodPickupCounterManager.ObjectAvailableEvent += OnCookingStationVacated;
     }
 
+    public void AddTable(Table table)
+    {
+        tableManager.InsertObject(table);
+    }
+
     #region CustomerLogic
     
     public bool RegisterCustomer(Consumer consumer)
@@ -184,27 +189,27 @@ public class WorkFlowController : MonoBehaviour
             return 0;
         }
     }
-
     public int OnCashierFinished()
     {
+        Debug.Log("Cashier Finished");
         var firstConsumer = cashierQueue.Dequeue();
         firstConsumer.FSM.OnEndPayment();
 
         if (cashierQueue.Count == 0)
             return 0;
+
         Transform buf = firstConsumer.transform;
         foreach (var consumer in cashierQueue)
         {
             consumer.NextTargetTransform = buf;
             buf = consumer.transform;
         }
-        RegisterPayment();
         return cashierQueue.Count;
     }
 
     public void RegisterPayment()
     {
-        WorkCashier work = new WorkCashier(workManager, WorkType.Payment);
+        WorkPayment work = new WorkPayment(workManager, WorkType.Payment);
         var context = new MainLoopWorkContext(cashierQueue.First(), this);
         work.SetContext(context);
         cashierCounter.SetWork(work);

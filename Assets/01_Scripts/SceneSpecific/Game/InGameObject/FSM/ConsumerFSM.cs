@@ -208,6 +208,7 @@ public class ConsumerFSM : MonoBehaviour
         //���ڸ��� ���� ����ϴ� ����.
         //�ջ���� ������� �ջ�� �ڸ��� �̵�.
     }
+    private bool isOnSeat = false;
     private void UpdateBeforeOrder()
     {
         //���ڸ��� ���� ���ڸ��� �̵� �� �ֹ�.
@@ -220,8 +221,9 @@ public class ConsumerFSM : MonoBehaviour
         //    }
         //    return;
         //}
-        if (agent.IsArrive(targetPivot))
+        if (agent.IsArrive(targetPivot) && !isOnSeat)
         {
+            isOnSeat = true;
             OnSeatEvent?.Invoke(consumer);
         }
     }
@@ -252,12 +254,15 @@ public class ConsumerFSM : MonoBehaviour
     {
         //�Ļ����� ����.
     }
+    
+    private bool isPaying = false;
     private void UpdateBeforePay()
     {
         //�Ļ簡 ���� �� ����� �̵��� ��, ����� �Ϸ�ɶ������� ����.
         //���⼭�� ��ٸ��� �������� ������ ��ġ�� ����.
-        if (agent.remainingDistance <= 0.1f)
+        if (agent.remainingDistance <= 0.1f && !isPaying)
         {
+            isPaying = true;
             consumerManager.OnPayStart(consumerData);
         }
     }

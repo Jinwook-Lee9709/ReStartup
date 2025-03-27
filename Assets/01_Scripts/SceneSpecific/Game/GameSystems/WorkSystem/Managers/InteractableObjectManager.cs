@@ -11,7 +11,15 @@ public class InteractableObjectManager<T> where T : class, IComparable<T>
     
     public bool IsAvailableObjectExist => availableObjects.Count > 0;
     
-    public event Action ObjectAvailableEvent; 
+    public event Action ObjectAvailableEvent;
+
+    public int Count => availableObjects.Count;
+    
+    public void InsertObject(T obj)
+    {
+        availableObjects.Add(obj);
+        ObjectAvailableEvent?.Invoke();
+    }
     
     public T GetAvailableObject()
     {

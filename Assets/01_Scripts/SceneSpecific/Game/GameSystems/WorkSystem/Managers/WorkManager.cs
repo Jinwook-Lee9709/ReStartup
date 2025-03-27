@@ -35,7 +35,7 @@ public class WorkManager : MonoBehaviour
 
     private void Start()
     {
-        workerManager.OnWorkFinished += OnWorkerReturned;
+        workerManager.OnWorkerFree += OnWorkerReturned;
     }
     
     public void AddWork(WorkBase work)
@@ -65,10 +65,19 @@ public class WorkManager : MonoBehaviour
     {
         if (stoppedWorkQueues[type].Count > 0 && workerManager.IsWorkerAvailable(type))
         {
-            WorkBase work = stoppedWorkQueues[type].Peek();
+            WorkBase work = stoppedWorkQueues[type].Dequeue();
+            workerManager.AssignWork(work);
+            assignedWorks[work.workType].Add(work);
+            return;
+        }
+
+        if (workQueues[type].Count > 0 && workerManager.IsWorkerAvailable(type))
+        {
+            WorkBase work = workQueues[type].Dequeue();
             workerManager.AssignWork(work);
             assignedWorks[work.workType].Add(work);
         }
+        
     }
 
     public void OnWorkFinished(WorkBase work)

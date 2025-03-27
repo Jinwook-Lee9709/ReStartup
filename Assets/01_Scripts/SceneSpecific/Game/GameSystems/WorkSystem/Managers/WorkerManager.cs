@@ -18,7 +18,7 @@ public class WorkerManager : MonoBehaviour
     private Dictionary<WorkType, List<WorkerBase>> workingWorkers;
 
     //Events
-    public event Action<WorkType> OnWorkFinished;
+    public event Action<WorkType> OnWorkerFree;
 
     private void Awake()
     {
@@ -37,6 +37,7 @@ public class WorkerManager : MonoBehaviour
     {
         worker.Init(this,idleArea[workType]);
         workers[workType].Add(worker);
+        OnWorkerFree?.Invoke(workType);
     }
     
     public bool AssignWork(WorkBase work)
@@ -63,6 +64,7 @@ public class WorkerManager : MonoBehaviour
             {
                 pair.Value.Remove(worker);
                 workers[pair.Key].Add(worker);
+                OnWorkerFree?.Invoke(pair.Key);
                 return;
             }
         }

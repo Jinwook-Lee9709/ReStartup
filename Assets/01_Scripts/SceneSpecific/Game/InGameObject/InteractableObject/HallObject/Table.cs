@@ -7,6 +7,8 @@ public class Table : InteractableObjectBase
 {
     [SerializeField] private Transform foodPlacePivot;
     public Transform FoodPlacePivot => foodPlacePivot;
+    
+    
     public override void OnInteractCompleted()
     {
         base.OnInteractCompleted();

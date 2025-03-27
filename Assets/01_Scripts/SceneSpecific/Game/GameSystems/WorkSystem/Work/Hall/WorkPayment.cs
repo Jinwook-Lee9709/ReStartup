@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WorkCashier : InteractWorkBase
+public class WorkPayment : InteractWorkBase
 {
     private MainLoopWorkContext context;
     
-    public WorkCashier(WorkManager workManager, WorkType workType) : base(workManager, workType)
+    public WorkPayment(WorkManager workManager, WorkType workType) : base(workManager, workType)
     {
     }
 
@@ -17,7 +17,6 @@ public class WorkCashier : InteractWorkBase
     
     protected override void HandlePostInteraction()
     {
-        var counter = target as CashierCounter;
         worker.ClearWork();
         context.WorkFlowController.OnCashierFinished();
     }

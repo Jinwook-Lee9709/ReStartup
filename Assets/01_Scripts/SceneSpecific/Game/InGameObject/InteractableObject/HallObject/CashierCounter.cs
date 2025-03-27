@@ -4,8 +4,5 @@ using UnityEngine;
 
 public class CashierCounter : InteractableObjectBase
 {
-    public override void OnInteractCompleted()
-    {
-    }
 
 }
