@@ -92,18 +92,22 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     }
 
 
-    public Transform handPivot { get; set; }
+    [SerializeField] private Transform handPivot;
 
-    public Transform HandPivot => throw new NotImplementedException();
-
-    public void LiftPackage(Sprite packageSprite)
+    public Transform HandPivot { get; }
+    public void LiftPackage(GameObject package)
     {
-        throw new System.NotImplementedException();
+        package.transform.SetParent(handPivot);
+        package.transform.localPosition = Vector3.zero;
     }
-
-    public void DropPackage()
+    public void DropPackage(Transform dropPoint)
     {
-        throw new System.NotImplementedException();
+        if (handPivot.childCount > 0)
+        {
+            var package = handPivot.GetChild(0).gameObject;
+            package.transform.SetParent(dropPoint);
+            package.transform.localPosition = Vector3.zero;
+        }
     }
     protected override void Awake()
     {
@@ -119,14 +123,5 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
             InteractionSpeed = employeeData.WorkSpeed - (upgradeWorkSpeedValue * employeeData.upgradeCount);
             Debug.Log($"{name} : {agent.speed} , {InteractionSpeed}");
         };
-    }
-    public void LiftPackage(GameObject package)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void DropPackage(Transform dropPoint)
-    {
-        throw new NotImplementedException();
     }
 }
