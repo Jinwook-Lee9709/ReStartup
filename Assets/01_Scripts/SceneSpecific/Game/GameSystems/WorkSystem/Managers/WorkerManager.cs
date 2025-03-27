@@ -2,12 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using AYellowpaper.SerializedCollections;
 using UnityEngine;
 
 public class WorkerManager : MonoBehaviour
 {
-
     //References
+    [SerializedDictionary,SerializeField] private SerializedDictionary<WorkType, List<Transform>> idleArea;
     private WorkManager workManager;
 
     //Containers
@@ -40,6 +41,12 @@ public class WorkerManager : MonoBehaviour
         workers[WorkType.Kitchen].Add(testKitchenWorker);
         workers[WorkType.Payment].Add(testCashier);
     }
+
+    public void RegisterWorker(WorkerBase worker, WorkType workType)
+    {
+        workers[workType].Add(worker);
+    }
+    
     public bool AssignWork(WorkBase work)
     {
         if (workers[work.workType].Count > 0)
@@ -73,9 +80,13 @@ public class WorkerManager : MonoBehaviour
 
     public bool IsWorkerAvailable(WorkType workType)
     {
-        return true;
+        return workers[workType].Count > 0;
     }
 
+    public int GetIdleWorkerCount(WorkType workType)
+    {
+        return workers[workType].Count;
+    }
 
     //WorkManager 에 Work가 추가됐을때
     //Worker가 작업이 끝났을때

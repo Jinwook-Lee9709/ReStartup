@@ -1,3 +1,5 @@
+using System;
+
 public enum DataTableIds
 {
     Employee,
@@ -14,8 +16,7 @@ public enum ThemeIds
 
 public enum WorkType
 {
-    Payment,
-    Clean,
+    Payment = 1,
     Hall,
     Kitchen,
 }
@@ -32,6 +33,19 @@ public enum InteractStatus
     Progressing,
     Success,
 }
+
+[Flags]
+public enum InteractPermission
+{
+    None = 0,
+    Consumer = 1 << 0,
+    PaymentEmployee = 1 << 1,
+    KitchenEmployee = 1 << 2,
+    HallEmployee = 1 << 3,
+    Player = 1 << 4,
+}
+
+
 public enum LanguageType
 {
     Korean,

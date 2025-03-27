@@ -344,6 +344,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   workManager: {fileID: 173956728}
+  cashierCounter: {fileID: 0}
   tempTable: {fileID: 595826895}
   tempStation: {fileID: 267479856}
   tempCounter: {fileID: 1810808506}
@@ -395,7 +396,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactablePoint:
   - {fileID: 1574215402}
-  interactionSpeed: 3
+  interactProgress: 0
 --- !u!212 &267479857
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -485,7 +486,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -251, y: -171}
+  m_AnchoredPosition: {x: -209.3, y: -124.8}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &267526928
@@ -989,7 +990,8 @@ MonoBehaviour:
   interactablePoint:
   - {fileID: 1380831186}
   - {fileID: 1510507125}
-  interactionSpeed: 3
+  interactProgress: 0
+  foodPlacePivot: {fileID: 0}
 --- !u!212 &595826896
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1212,6 +1214,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   workerManager: {fileID: 798374417}
   idleArea: {fileID: 1679726164}
+  employeeManager: {fileID: 0}
+  handPivot: {fileID: 0}
 --- !u!1 &733103867
 GameObject:
   m_ObjectHideFlags: 0
@@ -1339,6 +1343,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   testHallWorker: {fileID: 1853294421}
   testKitchenWorker: {fileID: 667552250}
+  testCashier: {fileID: 0}
 --- !u!1 &809720473
 GameObject:
   m_ObjectHideFlags: 0
@@ -2947,6 +2952,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   workerManager: {fileID: 0}
   idleArea: {fileID: 0}
+  employeeManager: {fileID: 0}
+  handPivot: {fileID: 0}
 --- !u!195 &1659515684
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -4763,7 +4770,8 @@ MonoBehaviour:
   interactablePoint:
   - {fileID: 580636269}
   - {fileID: 271090594}
-  interactionSpeed: 0
+  interactProgress: 0
+  foodPlacePivot: {fileID: 0}
 --- !u!1 &1853294416
 GameObject:
   m_ObjectHideFlags: 0
@@ -4886,6 +4894,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   workerManager: {fileID: 798374417}
   idleArea: {fileID: 576838046}
+  employeeManager: {fileID: 0}
+  handPivot: {fileID: 0}
 --- !u!1 &1941923292
 GameObject:
   m_ObjectHideFlags: 0
@@ -4930,11 +4940,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7943a9a1f3e6af44cb2e342135396aa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buffManager: {fileID: 0}
   workFlowController: {fileID: 253239273}
   maxConsumerCnt: 0
   maxWaitingSeatCnt: 0
   consumerPrefab: {fileID: 472866122340706396, guid: a6212104d403e254babfa5c38488a17d, type: 3}
   spawnPoint: {fileID: 145485729}
+  tempPairProb: 100
   waitingConsumerSeats:
   - {fileID: 1967738253}
   - {fileID: 900369476}
