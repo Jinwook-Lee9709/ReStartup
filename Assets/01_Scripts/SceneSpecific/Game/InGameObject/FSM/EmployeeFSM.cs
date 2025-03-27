@@ -42,7 +42,6 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
 
     private void Update()
     {
-        Debug.Log(Enum.Parse<WorkType>(employeeData.StaffType.ToString()));
         switch (currentStatus)
         {
             case EnployedState.Idle:
@@ -110,9 +109,17 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     protected override void Awake()
     {
         base.Awake();
+
+    }
+    private void OnEnable()
+    {
+      
     }
     private void Start()
     {
+        name = employeeData.StaffID.ToString();
+        agent.speed = employeeData.MoveSpeed;
+        InteractionSpeed = employeeData.WorkSpeed;
         employeeData.OnUpgradeEvent += () =>
         {
             employeeData.MoveSpeed = employeeData.MoveSpeed + (employeeData.upgradeSpeed);

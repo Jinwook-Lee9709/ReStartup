@@ -12,5 +12,7 @@ public class FoodData
     public int BasicCost { get; set; }
     public int GetRankPoints { get; set; }
     public int StringID { get; set; }
-    public string IconID { get; set;}
+    public string IconID { get; set; }
+
+    public int upgradeCount;
 }

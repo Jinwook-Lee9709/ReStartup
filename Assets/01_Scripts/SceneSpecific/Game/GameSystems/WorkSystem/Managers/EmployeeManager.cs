@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EmployeeManager : MonoBehaviour
 {
-    public EmployeeListUi employeeListUi;
+    public EmployeeUpgradeListUi upgradeListUi;
     public void Awake()
     {
 
@@ -15,14 +15,7 @@ public class EmployeeManager : MonoBehaviour
         foreach (var item in data.Values)
         {
             if(item.Theme == (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme)
-                employeeListUi.AddUpgrade(item);
-        }
-        foreach (var item in data.Values)
-        {
-            if(item.upgradeCount > 0)
-            {
-
-            }
+                upgradeListUi.AddEmployeeUpgradeItem(item);
         }
     }
 }
