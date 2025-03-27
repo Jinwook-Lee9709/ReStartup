@@ -16,6 +16,7 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
         set => employeeData = value;
     }
     public EmployeeManager employeeManager;
+    private float upgradeWorkSpeedValue = 0.02f;
     public enum EnployedState
     {
         Idle,
@@ -24,7 +25,7 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     }
 
     private float interactionSpeed = 1f;
-    public float InteractionSpeed { get; }
+    public float InteractionSpeed { get; set; }
 
     private EnployedState currentStatus;
 
@@ -111,13 +112,14 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     private void Start()
     {
         //employeeManager.AddEmployee(this);
+        employeeData.OnUpgradeEvent += () =>
+        {
+            employeeData.MoveSpeed = employeeData.MoveSpeed + (employeeData.upgradeSpeed);
+            agent.speed = employeeData.MoveSpeed;
+            InteractionSpeed = employeeData.WorkSpeed - (upgradeWorkSpeedValue * employeeData.upgradeCount);
+            Debug.Log($"{name} : {agent.speed} , {InteractionSpeed}");
+        };
     }
-    public void StatsUpdate()
-    {
-        agent.speed = employeeData.MoveSpeed;
-        Debug.Log(agent.speed);
-    }
-
     public void LiftPackage(GameObject package)
     {
         throw new NotImplementedException();

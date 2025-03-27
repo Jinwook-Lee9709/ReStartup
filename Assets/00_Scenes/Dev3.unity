@@ -4522,17 +4522,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 644745108}
   m_CullTransparentMesh: 1
---- !u!114 &667552246 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2740695228643792828, guid: cbeac89e187eea84c841d1acb81a681d, type: 3}
-  m_PrefabInstance: {fileID: 6657741048182242903}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb3fdee07ac824b7caa768c00f097b18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &704779651
 GameObject:
   m_ObjectHideFlags: 0
@@ -5406,8 +5395,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c294b5ed1a92643ac8735f93aae5179c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testHallWorker: {fileID: 1853294421}
-  testKitchenWorker: {fileID: 667552246}
+  testHallWorker: {fileID: 0}
+  testKitchenWorker: {fileID: 0}
   testCashier: {fileID: 0}
 --- !u!1 &812291847
 GameObject:
@@ -12116,7 +12105,6 @@ GameObject:
   - component: {fileID: 1853294420}
   - component: {fileID: 1853294419}
   - component: {fileID: 1853294418}
-  - component: {fileID: 1853294421}
   - component: {fileID: 1853294422}
   m_Layer: 0
   m_Name: HallAgent
@@ -12214,19 +12202,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1853294421
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1853294416}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb3fdee07ac824b7caa768c00f097b18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  workerManager: {fileID: 798374417}
 --- !u!114 &1853294422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13646,10 +13621,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2740695228643792828, guid: cbeac89e187eea84c841d1acb81a681d, type: 3}
-      propertyPath: workerManager
-      value: 
-      objectReference: {fileID: 798374417}
     - target: {fileID: 4464424400551313785, guid: cbeac89e187eea84c841d1acb81a681d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 5.19

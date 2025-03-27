@@ -16,5 +16,12 @@ public class EmployeeManager : MonoBehaviour
         {
             employeeListUi.AddUpgrade(item);
         }
+        foreach (var item in data.Values)
+        {
+            if(item.upgradeCount > 0)
+            {
+
+            }
+        }
     }
 }

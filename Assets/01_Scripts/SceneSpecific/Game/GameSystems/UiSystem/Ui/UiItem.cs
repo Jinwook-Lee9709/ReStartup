@@ -26,7 +26,6 @@ public class UiItem : MonoBehaviour
         employeeNameText.text = $"{employeeData.StaffID}";
         EmployeeUpgradeCostText.text = $"{employeeData.Cost}";
         var button = GetComponentInChildren<Button>();
-        var userData = new UserDataManager().CurrentUserData;
         button.onClick.AddListener((UnityEngine.Events.UnityAction)(() =>
         {
             //if (userData.Gold < employeeData.Cost * employeeData.upgradeCount)
@@ -42,8 +41,7 @@ public class UiItem : MonoBehaviour
             employeeNameText.text = $"{this.employeeData.StaffID} : {employeeData.upgradeCount}";
             EmployeeUpgradeCostText.text = $"{employeeData.Cost * employeeData.upgradeCount}";
 
-            employeeData.MoveSpeed = employeeData.MoveSpeed + (employeeData.upgradeSpeed * employeeData.upgradeCount);
-            Debug.Log(employeeData.upgradeCount);
+            employeeData.OnUpgrade();
         }));
     }
     private IEnumerator LoadSpriteCoroutine(string iconAddress)

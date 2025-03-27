@@ -1,7 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EmployeeTableGetData
 {
@@ -20,4 +21,11 @@ public class EmployeeTableGetData
 
     public int upgradeCount = 0;
     public float upgradeSpeed = 0.5f;
+
+    public event Action OnUpgradeEvent;
+
+    public void OnUpgrade()
+    {
+        OnUpgradeEvent?.Invoke();
+    }
 }
