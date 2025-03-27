@@ -12,7 +12,6 @@ public class Table : InteractableObjectBase
     public override void OnInteractCompleted()
     {
         base.OnInteractCompleted();
-        Debug.Log("Job's Done");
     }
 
     public GameObject GetFood()

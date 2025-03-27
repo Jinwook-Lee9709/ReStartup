@@ -1,9 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
-using static UnityEditor.PlayerSettings;
 
 public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
 {
@@ -42,7 +38,6 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
 
     private void Update()
     {
-        Debug.Log(Enum.Parse<WorkType>(employeeData.StaffType.ToString()));
         switch (currentStatus)
         {
             case EnployedState.Idle:

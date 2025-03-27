@@ -90,7 +90,6 @@ public abstract class InteractWorkBase : WorkBase
             case WorkPhase.Working:
             {
                 var interactStatus = target.OnInteract(interactor);
-                Debug.Log(interactStatus);
                 if (interactStatus == InteractStatus.Success)
                 {
                     CompleteInteraction();

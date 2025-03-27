@@ -84,6 +84,7 @@ public class ConsumerManager : MonoBehaviour
         consumer.pairData = null;
         consumer.FSM.consumerManager = this;
         consumer.FSM.SetCashierCounter(workFlowController.GetCashierCounter());
+        consumer.FSM.OnSeatEvent -= workFlowController.AssignGetOrderWork;
         consumer.FSM.OnSeatEvent += workFlowController.AssignGetOrderWork;
     }
 
@@ -190,7 +191,7 @@ public class ConsumerManager : MonoBehaviour
         {
             consumer.GetComponent<NavMeshAgent>().SetDestination(
                 workFlowController.GetCashierCounter().GetInteractablePoints(InteractPermission.Consumer)[0].transform
-                    .position + new Vector3(-1, 0, 0) * cnt);
+                    .position + new Vector3(-2, 0, 0) * cnt);
         }
     }
 

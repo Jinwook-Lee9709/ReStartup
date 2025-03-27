@@ -39,7 +39,7 @@ public class WorkFlowController : MonoBehaviour
     {
         tableManager.ObjectAvailableEvent += OnTableVacated;
         cookingStationManager.ObjectAvailableEvent += OnCookingStationVacated;
-        foodPickupCounterManager.ObjectAvailableEvent += OnCookingStationVacated;
+        foodPickupCounterManager.ObjectAvailableEvent += OnFoodPickupCounterVacated;
     }
 
     public void AddTable(Table table)
@@ -123,6 +123,7 @@ public class WorkFlowController : MonoBehaviour
 
     private void AssignOrderWork(MainLoopWorkContext context)
     {
+        Debug.Log("AssignOrderWork");
         var cookingStation = cookingStationManager.GetAvailableObject();
         WorkCooking work = new WorkCooking(workManager, WorkType.Kitchen);
         cookingStation.SetWork(work);
@@ -164,6 +165,7 @@ public class WorkFlowController : MonoBehaviour
             target.SetWork(work);
             work.SetInteractable(target);
             work.SetContext(context, counter);
+            workManager.AddWork(work);
         }
     }
     public void ReturnFoodPickupCounter(FoodPickupCounter counter)
@@ -185,19 +187,21 @@ public class WorkFlowController : MonoBehaviour
         }
         else
         {
-            consumer.NextTargetTransform = cashierCounter.transform;
+            consumer.NextTargetTransform = cashierCounter.GetInteractablePoints(InteractPermission.Consumer).First().transform;
+            consumer.FSM.OnStartPayment();
             return 0;
         }
     }
     public int OnCashierFinished()
     {
-        Debug.Log("Cashier Finished");
         var firstConsumer = cashierQueue.Dequeue();
         firstConsumer.FSM.OnEndPayment();
 
         if (cashierQueue.Count == 0)
             return 0;
-
+        var nextConsumer = cashierQueue.Peek();
+        nextConsumer.FSM.OnStartPayment();
+        
         Transform buf = firstConsumer.transform;
         foreach (var consumer in cashierQueue)
         {
@@ -211,8 +215,8 @@ public class WorkFlowController : MonoBehaviour
     {
         WorkPayment work = new WorkPayment(workManager, WorkType.Payment);
         var context = new MainLoopWorkContext(cashierQueue.First(), this);
-        work.SetContext(context);
         cashierCounter.SetWork(work);
+        work.SetContext(context);
         work.SetInteractable(cashierCounter);
         workManager.AddWork(work);
     }

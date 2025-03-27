@@ -18,7 +18,8 @@ public class ConsumerFSM : MonoBehaviour
         BeforeOrder,
         AfterOrder,
         Eatting,
-        BeforePay,
+        WaitForPay,
+        Paying,
         Exit,
 
         Disappointed,
@@ -102,9 +103,8 @@ public class ConsumerFSM : MonoBehaviour
                     consumerManager.OnChangeConsumerState(consumer, ConsumerState.Eatting);
                     StartCoroutine(EattingCoroutine());
                     break;
-                case ConsumerState.BeforePay:
-
-                    consumerManager.OnChangeConsumerState(consumer, ConsumerState.BeforePay);
+                case ConsumerState.WaitForPay:
+                    consumerManager.OnChangeConsumerState(consumer, ConsumerState.WaitForPay);
                     consumerManager.OnEndMeal(consumer);
                     break;
                 case ConsumerState.Exit:
@@ -125,12 +125,16 @@ public class ConsumerFSM : MonoBehaviour
 
                     break;
             }
-            currentStatus = value;
+            if(currentStatus == prevStatus)
+                currentStatus = value;
         }
     }
 
 
-
+    public void OnStartPayment()
+    {
+        CurrentStatus = ConsumerState.Paying;
+    }
     public void OnEndPayment()
     {
         ///TODO : If End Payment
@@ -153,7 +157,7 @@ public class ConsumerFSM : MonoBehaviour
             eattingTimer += Time.deltaTime;
             yield return null;
         }
-        CurrentStatus = ConsumerState.BeforePay;
+        CurrentStatus = ConsumerState.WaitForPay;
     }
 
     public void OnOrderComplete()
@@ -176,10 +180,13 @@ public class ConsumerFSM : MonoBehaviour
     {
         currentSatisfaction = Satisfaction.High;
         consumerData.Init();
+        isPaying = false;
+        isOnSeat = false;
     }
 
     private void Update()
     {
+        Debug.Log(agent.destination);
         switch (currentStatus)
         {
             case ConsumerState.Waiting:
@@ -194,8 +201,8 @@ public class ConsumerFSM : MonoBehaviour
             case ConsumerState.Eatting:
                 UpdateEatting();
                 break;
-            case ConsumerState.BeforePay:
-                UpdateBeforePay();
+            case ConsumerState.Paying:
+                UpdatePaying();
                 break;
             case ConsumerState.Exit:
                 UpdateExit();
@@ -255,17 +262,22 @@ public class ConsumerFSM : MonoBehaviour
         //�Ļ����� ����.
     }
     
-    private bool isPaying = false;
+
     private void UpdateBeforePay()
     {
-        //�Ļ簡 ���� �� ����� �̵��� ��, ����� �Ϸ�ɶ������� ����.
-        //���⼭�� ��ٸ��� �������� ������ ��ġ�� ����.
+        
+    }
+
+    private bool isPaying = false;
+    private void UpdatePaying()
+    {
         if (agent.remainingDistance <= 0.1f && !isPaying)
         {
             isPaying = true;
             consumerManager.OnPayStart(consumerData);
         }
     }
+    
     private void UpdateExit()
     {
         //��� �� �����ϴ� ����.
