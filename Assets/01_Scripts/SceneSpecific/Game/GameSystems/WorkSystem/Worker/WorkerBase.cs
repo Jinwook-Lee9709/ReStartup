@@ -7,16 +7,17 @@ using UnityEngine.PlayerLoop;
 
 public class WorkerBase : MonoBehaviour
 { 
+    protected Transform idleArea;
     protected WorkBase currentWork;
     
-    [SerializeField]protected WorkerManager workerManager;
+    protected WorkerManager workerManager;
     protected NavMeshAgent agent;
     
-    public void Init(WorkerManager manager)
+    public void Init(WorkerManager manager, Transform idleArea)
     {
-        workerManager = manager;
+        workerManager = manager; 
+        this.idleArea = idleArea;
     }
-
     protected virtual void Awake()
     {
         agent = GetComponent<NavMeshAgent>();

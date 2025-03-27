@@ -7,8 +7,6 @@ using static UnityEditor.PlayerSettings;
 
 public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
 {
-    [SerializeField]
-    private Transform idleArea;
     private EmployeeTableGetData employeeData = new();
     public EmployeeTableGetData EmployeeData
     {

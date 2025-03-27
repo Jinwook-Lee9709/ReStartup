@@ -1,12 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, IComparable<InteractableObjectBase>
 {
     //References
-    [SerializeField] private List<Transform> interactablePoint;
+    [SerializeField] private List<InteractPivot> interactablePoint;
     private InteractWorkBase currentWork;
     
     //LocalVariables
@@ -18,7 +20,7 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
     public int Id { get; set; }
     public float InteractProgress => interactProgress;
     public InteractStatus InteractStatus => interactStatus;
-    public List<Transform> InteractablePoints => interactablePoint;
+    public List<InteractPivot> InteractablePoints => interactablePoint;
 
     public event Action<float> OnInteractedEvent;
     public event Action OnInteractFinishedEvent;
@@ -33,7 +35,18 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
         currentWork = null;
         interactProgress = 0f;
     }
-    
+
+    public List<InteractPivot> GetInteractablePoints(InteractPermission permission)
+    {
+        List<InteractPivot> interactablePoints = new List<InteractPivot>();
+        foreach(var pivot in interactablePoint)
+        {
+            if (pivot.CanAccess(permission))
+                interactablePoints.Add(pivot);
+        }
+        return interactablePoints;
+    }
+
     public void OnInteractStarted(IInteractor interactor)
     {
         interactionSpeed = CalculateInteractionSpeed(interactor);

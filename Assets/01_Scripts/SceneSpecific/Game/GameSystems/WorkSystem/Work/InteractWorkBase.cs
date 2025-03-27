@@ -15,7 +15,7 @@ public abstract class InteractWorkBase : WorkBase
     private Transform targetTransform;
     private IInteractor interactor;
     private NavMeshAgent workerAgent;
-
+    
     //LocalVariables
     private WorkPhase workPhase;
     protected float interactTime;
@@ -144,8 +144,8 @@ public abstract class InteractWorkBase : WorkBase
     
     private Transform GetClosestInteractablePoint()
     {
-        return target.InteractablePoints
-            .OrderBy(x => Vector3.Distance(workerAgent.transform.position, x.position))
-            .First();
+        return target.GetInteractablePoints(workType.WorkTypeToPermission())
+            .OrderBy(x => Vector3.Distance(workerAgent.transform.position, x.transform.position))
+            .First().transform;
     }
 }

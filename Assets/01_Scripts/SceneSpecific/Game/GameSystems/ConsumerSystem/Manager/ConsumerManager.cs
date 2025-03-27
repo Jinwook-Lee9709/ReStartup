@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Android;
 using UnityEngine.Pool;
 
 public class ConsumerManager : MonoBehaviour
@@ -179,7 +180,7 @@ public class ConsumerManager : MonoBehaviour
         int cnt = workFlowController.AssignCashier(consumer);
         if (cnt != 0)
         {
-            consumer.transform.position = workFlowController.GetCashierCounter().InteractablePoints[0].position + new Vector3(-1, 0, 0) * cnt;
+            consumer.transform.position = workFlowController.GetCashierCounter().GetInteractablePoints(InteractPermission.Consumer)[0].transform.position + new Vector3(-1, 0, 0) * cnt;
         }
 
 

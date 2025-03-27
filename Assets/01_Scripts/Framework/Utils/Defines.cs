@@ -16,6 +16,7 @@ public enum ThemeIds
 
 public enum WorkType
 {
+    All,
     Payment = 1,
     Hall,
     Kitchen,

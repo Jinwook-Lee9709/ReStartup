@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -36,8 +37,10 @@ public class UiItem : MonoBehaviour
             if (employeeData.upgradeCount < 1)
             {
                 var newEmployee = Instantiate(employee).GetComponent<EmployeeFSM>();
-                newEmployee.Init(ServiceLocator.Instance.GetSceneService<GameManager>().WorkerManager);
                 newEmployee.EmployeeData = employeeData;
+                WorkerManager workerManager = ServiceLocator.Instance.GetSceneService<GameManager>().WorkerManager;
+                workerManager.RegisterWorker(newEmployee, (WorkType)newEmployee.EmployeeData.StaffType);
+
             }
             employeeData.upgradeCount++;
             employeeNameText.text = $"{this.employeeData.StaffID} : {employeeData.upgradeCount}";

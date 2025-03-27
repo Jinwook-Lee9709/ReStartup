@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Android;
 
 public class ConsumerFSM : MonoBehaviour
 {
@@ -90,7 +91,8 @@ public class ConsumerFSM : MonoBehaviour
                     //    consumer.pairData.partner.GetComponent<NavMeshAgent>().SetDestination(targetPivot);
                     //}
                     //targetPivot = consumer.pairData.pairTable.InteractablePoints[1].position;
-                    targetPivot = consumer.currentTable.InteractablePoints[1].position;
+                    InteractPermission permission = InteractPermission.Consumer;
+                    targetPivot = consumer.currentTable.GetInteractablePoints(permission)[0].transform.position;
                     agent.SetDestination(targetPivot);
                     break;
                 case ConsumerState.AfterOrder:

@@ -3,12 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using AYellowpaper.SerializedCollections;
+using UnityEditor;
 using UnityEngine;
 
+[CustomPropertyDrawer(typeof(SerializedDictionary<,>), true)]
 public class WorkerManager : MonoBehaviour
 {
     //References
-    [SerializedDictionary,SerializeField] private SerializedDictionary<WorkType, List<Transform>> idleArea;
+    [SerializedDictionary,SerializeField] private SerializedDictionary<WorkType, Transform> idleArea;
     private WorkManager workManager;
 
     //Containers
@@ -17,9 +19,6 @@ public class WorkerManager : MonoBehaviour
 
     //Events
     public event Action<WorkType> OnWorkFinished;
-    [SerializeField] private WorkerBase testHallWorker;
-    [SerializeField] private WorkerBase testKitchenWorker;
-    [SerializeField] private WorkerBase testCashier;
 
     private void Awake()
     {
@@ -34,16 +33,9 @@ public class WorkerManager : MonoBehaviour
             workingWorkers.Add(workType, new List<WorkerBase>());
         }
     }
-
-    private void Start()
-    {
-        workers[WorkType.Hall].Add(testHallWorker);
-        workers[WorkType.Kitchen].Add(testKitchenWorker);
-        workers[WorkType.Payment].Add(testCashier);
-    }
-
     public void RegisterWorker(WorkerBase worker, WorkType workType)
     {
+        worker.Init(this,idleArea[workType]);
         workers[workType].Add(worker);
     }
     
