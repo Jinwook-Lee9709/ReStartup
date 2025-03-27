@@ -100,6 +100,12 @@ public class ConsumerManager : MonoBehaviour
                 list.Remove(consumer.GetComponent<Consumer>());
             }
         }
+        if(consumer.GetComponent<ConsumerFSM>().consumerData.Type == ConsumerData.ConsumerType.Influencer)
+        {
+            InfluencerBuff buff = new();
+            //TODO : Make InfluencerBuff on consumerData based
+            buffManager.TempBuffOn();
+        }
         consumer.SetActive(false);
     }
     private void OnDestroyConsumer(GameObject consumer)

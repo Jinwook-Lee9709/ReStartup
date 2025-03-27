@@ -3,13 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class UserDataManager : Singleton<UserDataManager>
 {
     private UserData currentUserData;
     public UserData CurrentUserData
     {
-        get => currentUserData;
+        get
+        {
+            if(currentUserData == null)
+                currentUserData = new UserData();
+            return currentUserData;
+        }
         set
         {
             if (value == null)
@@ -52,6 +58,19 @@ public class UserDataManager : Singleton<UserDataManager>
         else
         {
             Debug.Log("Load DB Fail");
+        }
+    }
+
+    public IEnumerator OnGoldUp(Consumer consumer)
+    {
+        CurrentUserData.Gold += consumer.needFood.SellingCost;
+
+        yield return new WaitForSeconds(0.5f);
+
+        if (consumer.FSM.consumerData.TempTipProb < Random.Range(0f, 1f))
+        {
+            //TODO : Play Tip PopUp
+            CurrentUserData.Gold += Mathf.CeilToInt(consumer.needFood.SellingCost * (consumer.FSM.consumerData.SellTipPercent / 100));
         }
     }
 }

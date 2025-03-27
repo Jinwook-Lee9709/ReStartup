@@ -18,7 +18,9 @@ public class ConsumerFSM : MonoBehaviour
         AfterOrder,
         Eatting,
         BeforePay,
-        AfterPay,
+        Exit,
+
+        Disappointed,
     }
 
 
@@ -41,6 +43,27 @@ public class ConsumerFSM : MonoBehaviour
 
     [SerializeField] public ConsumerState currentStatus = ConsumerState.Waiting;
     [SerializeField] private Satisfaction currentSatisfaction = Satisfaction.High;
+    public Satisfaction CurrentSatisfaction
+    {
+        get => currentSatisfaction;
+        set
+        {
+            Satisfaction prevSatisfaction = currentSatisfaction;
+            switch (value)
+            {
+                case Satisfaction.High:
+                    break;
+                case Satisfaction.Middle:
+                    // TODO : Serving Delay Script Play
+                    Debug.Log("늦네에.. \n저, 할아버지가 되어버려요?");
+                    UnityEditor.EditorApplication.isPaused = true;
+                    break;
+                case Satisfaction.Low:
+                    break;
+            }
+            currentSatisfaction = value;
+        }
+    }
 
     public ConsumerState CurrentStatus
     {
@@ -82,8 +105,8 @@ public class ConsumerFSM : MonoBehaviour
                     consumerManager.OnChangeConsumerState(consumer, ConsumerState.BeforePay);
                     consumerManager.OnEndMeal(consumer);
                     break;
-                case ConsumerState.AfterPay:
-                    consumerManager.OnChangeConsumerState(consumer, ConsumerState.AfterPay);
+                case ConsumerState.Exit:
+                    consumerManager.OnChangeConsumerState(consumer, ConsumerState.Exit);
                     switch (currentSatisfaction)
                     {
                         case Satisfaction.High:
@@ -91,9 +114,13 @@ public class ConsumerFSM : MonoBehaviour
                             break;
                         case Satisfaction.Low:
                             UserDataManager.Instance.CurrentUserData.NegativeCnt++;
+                            //TODO : For ConsumerManager -> WorkFlowController -> Work Return
                             break;
                     }
                     agent.SetDestination(consumerManager.spawnPoint.position);
+                    break;
+                case ConsumerState.Disappointed:
+
                     break;
             }
             currentStatus = value;
@@ -105,13 +132,10 @@ public class ConsumerFSM : MonoBehaviour
     public void OnEndPayment()
     {
         ///TODO : If End Payment
-        ///if(IsTip)
-        ///{
-        ///     StartCoroutiner(UserDataManager.Instance.GoldUp(this);
-        ///}
+         StartCoroutine(UserDataManager.Instance.OnGoldUp(consumer));
         ///And Play Tip PopUp
 
-        CurrentStatus = ConsumerState.AfterPay;
+        CurrentStatus = ConsumerState.Exit;
     }
 
     public void SetCashierCounter(CashierCounter cashierCounter)
@@ -149,7 +173,7 @@ public class ConsumerFSM : MonoBehaviour
     private void OnEnable()
     {
         currentSatisfaction = Satisfaction.High;
-        consumerData.OrderWaitTimer = consumerData.MaxOrderWaitLimit;
+        consumerData.Init();
     }
 
     private void Update()
@@ -171,8 +195,8 @@ public class ConsumerFSM : MonoBehaviour
             case ConsumerState.BeforePay:
                 UpdateBeforePay();
                 break;
-            case ConsumerState.AfterPay:
-                UpdateAfterPay();
+            case ConsumerState.Exit:
+                UpdateExit();
                 break;
         }
     }
@@ -210,12 +234,15 @@ public class ConsumerFSM : MonoBehaviour
         // Debug.Log(orderWaitTimer);
         switch (consumerData.OrderWaitTimer)
         {
-            case var t when t < satisfactionChangeLimit[0]:
-                currentSatisfaction = Satisfaction.Middle;
+            case var t when t < satisfactionChangeLimit[0] && t > satisfactionChangeLimit[1]:
+                CurrentSatisfaction = Satisfaction.High;
                 break;
-            case var t when t < satisfactionChangeLimit[1]:
-                currentSatisfaction = Satisfaction.Low;
-                CurrentStatus = ConsumerState.AfterPay;
+            case var t when t < satisfactionChangeLimit[1] && t > satisfactionChangeLimit[2] && CurrentSatisfaction != Satisfaction.Middle:
+                CurrentSatisfaction = Satisfaction.Middle;
+                break;
+            case var t when t < satisfactionChangeLimit[2]:
+                CurrentSatisfaction = Satisfaction.Low;
+                CurrentStatus = ConsumerState.Exit;
                 break;
         }
     }
@@ -232,7 +259,7 @@ public class ConsumerFSM : MonoBehaviour
             consumerManager.OnPayStart(consumerData);
         }
     }
-    private void UpdateAfterPay()
+    private void UpdateExit()
     {
         //��� �� �����ϴ� ����.
         //���� ������ƮǮ�� ��ȯ��.
