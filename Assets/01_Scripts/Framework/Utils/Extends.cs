@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -11,5 +12,9 @@ public static class Extends
         Vector2 targetPosition = target.position;
         return Vector2.SqrMagnitude(agentPosition - targetPosition) <= Mathf.Sqrt(agent.stoppingDistance);
     }
-
+    public static bool IsArrive(this NavMeshAgent agent, Vector2 target)
+    {
+        Vector2 agentPosition = agent.transform.position;
+        return Vector2.SqrMagnitude(agentPosition - target) <= Mathf.Sqrt(agent.stoppingDistance);
+    }
 }

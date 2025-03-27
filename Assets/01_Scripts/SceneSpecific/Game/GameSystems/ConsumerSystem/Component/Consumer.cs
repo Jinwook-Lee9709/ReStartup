@@ -6,6 +6,7 @@ using UnityEngine.AI;
 public class Consumer : MonoBehaviour
 {
     public ConsumerManager consumerManager;
+    public ConsumerPairData pairData = null;
     public ConsumerFSM FSM
     {
         get => GetComponent<ConsumerFSM>();

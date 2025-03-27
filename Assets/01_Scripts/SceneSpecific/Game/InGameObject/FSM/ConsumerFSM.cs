@@ -10,6 +10,7 @@ public class ConsumerFSM : MonoBehaviour
     public ConsumerManager consumerManager;
     private Consumer consumer;
     private CashierCounter cashierCounter;
+    private Vector2 targetPivot;
     public enum ConsumerState
     {
         Waiting,
@@ -17,9 +18,9 @@ public class ConsumerFSM : MonoBehaviour
         AfterOrder,
         Eatting,
         BeforePay,
-        AfterPay,
+        Exit,
 
-        Disappoint,
+        Disappointed,
     }
 
 
@@ -40,8 +41,29 @@ public class ConsumerFSM : MonoBehaviour
     public event Action<Consumer> OnSeatEvent;
 
 
-    [SerializeField] private ConsumerState currentStatus = ConsumerState.Waiting;
-    private Satisfaction currentSatisfaction = Satisfaction.High;
+    [SerializeField] public ConsumerState currentStatus = ConsumerState.Waiting;
+    [SerializeField] private Satisfaction currentSatisfaction = Satisfaction.High;
+    public Satisfaction CurrentSatisfaction
+    {
+        get => currentSatisfaction;
+        set
+        {
+            Satisfaction prevSatisfaction = currentSatisfaction;
+            switch (value)
+            {
+                case Satisfaction.High:
+                    break;
+                case Satisfaction.Middle:
+                    // TODO : Serving Delay Script Play
+                    Debug.Log("늦네에.. \n저, 할아버지가 되어버려요?");
+                    UnityEditor.EditorApplication.isPaused = true;
+                    break;
+                case Satisfaction.Low:
+                    break;
+            }
+            currentSatisfaction = value;
+        }
+    }
 
     public ConsumerState CurrentStatus
     {
@@ -55,9 +77,21 @@ public class ConsumerFSM : MonoBehaviour
                 case ConsumerState.Waiting:
                     break;
                 case ConsumerState.BeforeOrder:
-                    consumerManager.OnChangeConsumerState(consumer, ConsumerState.AfterOrder);
+                    consumerManager.OnChangeConsumerState(consumer, ConsumerState.BeforeOrder);
                     consumerManager.OnWaitingLineUpdate(consumer);
-                    agent.SetDestination(consumer.currentTable.InteractablePoints[1].position);
+                    //if (consumer.pairData?.partner == consumer)
+                    //{
+                    //    break;
+                    //}
+                    //if (consumer.pairData?.owner == consumer)
+                    //{
+                    //    consumer.pairData.partner.FSM.CurrentStatus = ConsumerState.BeforeOrder;
+                    //    targetPivot = consumer.pairData.pairTable.InteractablePoints[2].position;
+                    //    consumer.pairData.partner.GetComponent<NavMeshAgent>().SetDestination(targetPivot);
+                    //}
+                    //targetPivot = consumer.pairData.pairTable.InteractablePoints[1].position;
+                    targetPivot = consumer.currentTable.InteractablePoints[1].position;
+                    agent.SetDestination(targetPivot);
                     break;
                 case ConsumerState.AfterOrder:
                     consumerManager.OnChangeConsumerState(consumer, ConsumerState.AfterOrder);
@@ -67,12 +101,12 @@ public class ConsumerFSM : MonoBehaviour
                     StartCoroutine(EattingCoroutine());
                     break;
                 case ConsumerState.BeforePay:
-                    
+
                     consumerManager.OnChangeConsumerState(consumer, ConsumerState.BeforePay);
                     consumerManager.OnEndMeal(consumer);
                     break;
-                case ConsumerState.AfterPay:
-                    consumerManager.OnChangeConsumerState(consumer, ConsumerState.AfterPay);
+                case ConsumerState.Exit:
+                    consumerManager.OnChangeConsumerState(consumer, ConsumerState.Exit);
                     switch (currentSatisfaction)
                     {
                         case Satisfaction.High:
@@ -80,22 +114,28 @@ public class ConsumerFSM : MonoBehaviour
                             break;
                         case Satisfaction.Low:
                             UserDataManager.Instance.CurrentUserData.NegativeCnt++;
+                            //TODO : For ConsumerManager -> WorkFlowController -> Work Return
                             break;
                     }
                     agent.SetDestination(consumerManager.spawnPoint.position);
                     break;
-                case ConsumerState.Disappoint:
-                    consumerManager.OnChangeConsumerState(consumer, ConsumerState.Disappoint);
-                    agent.SetDestination(consumerManager.spawnPoint.position);
+                case ConsumerState.Disappointed:
+
                     break;
             }
             currentStatus = value;
         }
     }
 
+
+
     public void OnEndPayment()
     {
-        CurrentStatus = ConsumerState.AfterPay;
+        ///TODO : If End Payment
+         StartCoroutine(UserDataManager.Instance.OnGoldUp(consumer));
+        ///And Play Tip PopUp
+
+        CurrentStatus = ConsumerState.Exit;
     }
 
     public void SetCashierCounter(CashierCounter cashierCounter)
@@ -133,7 +173,7 @@ public class ConsumerFSM : MonoBehaviour
     private void OnEnable()
     {
         currentSatisfaction = Satisfaction.High;
-        consumerData.OrderWaitTimer = consumerData.MaxOrderWaitLimit;
+        consumerData.Init();
     }
 
     private void Update()
@@ -155,11 +195,8 @@ public class ConsumerFSM : MonoBehaviour
             case ConsumerState.BeforePay:
                 UpdateBeforePay();
                 break;
-            case ConsumerState.AfterPay:
-                UpdateAfterPay();
-                break;
-            case ConsumerState.Disappoint:
-                UpdateDisappoint();
+            case ConsumerState.Exit:
+                UpdateExit();
                 break;
         }
     }
@@ -173,7 +210,15 @@ public class ConsumerFSM : MonoBehaviour
     {
         //���ڸ��� ���� ���ڸ��� �̵� �� �ֹ�.
         //������ �ֹ��� �޾ư��� �������� ����.
-        if (agent.IsArrive(consumer.currentTable.InteractablePoints[1]))
+        //if(consumer.pairData != null)
+        //{
+        //    if (agent.IsArrive(targetPivot))
+        //    {
+        //        OnSeatEvent?.Invoke(consumer);
+        //    }
+        //    return;
+        //}
+        if (agent.IsArrive(targetPivot))
         {
             OnSeatEvent?.Invoke(consumer);
         }
@@ -183,15 +228,21 @@ public class ConsumerFSM : MonoBehaviour
         //�ֹ��� �޾ư� ��, ������ ����������� ����.
         //deltaTime�� �����Ͽ� ������ ���¸� ����.
         consumerData.OrderWaitTimer -= Time.deltaTime;
+        if (consumerData.Type == ConsumerData.ConsumerType.Obnoxious)
+            consumerData.OrderWaitTimer -= Time.deltaTime;
+
         // Debug.Log(orderWaitTimer);
         switch (consumerData.OrderWaitTimer)
         {
-            case var t when t < satisfactionChangeLimit[0]:
-                currentSatisfaction = Satisfaction.Middle;
+            case var t when t < satisfactionChangeLimit[0] && t > satisfactionChangeLimit[1]:
+                CurrentSatisfaction = Satisfaction.High;
                 break;
-            case var t when t < satisfactionChangeLimit[1]:
-                currentSatisfaction = Satisfaction.Low;
-                currentStatus = ConsumerState.Disappoint;
+            case var t when t < satisfactionChangeLimit[1] && t > satisfactionChangeLimit[2] && CurrentSatisfaction != Satisfaction.Middle:
+                CurrentSatisfaction = Satisfaction.Middle;
+                break;
+            case var t when t < satisfactionChangeLimit[2]:
+                CurrentSatisfaction = Satisfaction.Low;
+                CurrentStatus = ConsumerState.Exit;
                 break;
         }
     }
@@ -205,24 +256,14 @@ public class ConsumerFSM : MonoBehaviour
         //���⼭�� ��ٸ��� �������� ������ ��ġ�� ����.
         if (agent.remainingDistance <= 0.1f)
         {
-            consumerManager.OnPayStart();
+            consumerManager.OnPayStart(consumerData);
         }
     }
-    private void UpdateAfterPay()
+    private void UpdateExit()
     {
         //��� �� �����ϴ� ����.
         //���� ������ƮǮ�� ��ȯ��.
         if (agent.IsArrive(consumerManager.spawnPoint))
-        {
-            consumerManager.consumerPool.Release(gameObject);
-        }
-    }
-
-    private void UpdateDisappoint()
-    {
-        //�ֹ� �� 30�� ���� ������ ������ �ʾ� �Ҹ��� ���·� �����ϴ� ����.
-        //agent�� �������� �����ϸ� ������ƮǮ�� ��ȯ��
-        if (agent.remainingDistance <= 0.1f)
         {
             consumerManager.consumerPool.Release(gameObject);
         }

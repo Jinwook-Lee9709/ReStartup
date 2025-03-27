@@ -6,6 +6,6 @@ public class EmployeeData
 {
     public float Speed { get; set; }
     public float defultSpeed = 1f;
-    public int upgradeCount = 1;
+    public int upgradeCount = 0;
     public string name;
 }

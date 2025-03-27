@@ -1,16 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Pool;
 
 public class ConsumerManager : MonoBehaviour
 {
+    [SerializeField] private BuffManager buffManager;
     [SerializeField] public WorkFlowController workFlowController;
     [SerializeField] private int maxConsumerCnt;
     [SerializeField] private int maxWaitingSeatCnt;
     [SerializeField] private GameObject consumerPrefab;
     [SerializeField] public Transform spawnPoint;
+    [SerializeField] private int tempPairProb = 100;
 
     /// <summary>
     /// ���� ���ӽſ� �����Ǿ��ִ� �մԵ��� ���º��� �����ϴ� ��ųʸ�
@@ -77,22 +80,10 @@ public class ConsumerManager : MonoBehaviour
         //TODO : �մ��� ������ƮǮ���� ���� �� ���� (���ϴ� ����, �մ� Ÿ��, �ټ� �ڸ� ��)
         consumer.transform.position = spawnPoint.position;
         consumer.consumerManager = this;
+        consumer.pairData = null;
         consumer.FSM.consumerManager = this;
         consumer.FSM.SetCashierCounter(workFlowController.GetCashierCounter());
-
         consumer.FSM.OnSeatEvent += workFlowController.AssignGetOrderWork;
-
-        if (workFlowController.RegisterCustomer(consumer))
-        {
-            consumer.FSM.CurrentStatus = ConsumerFSM.ConsumerState.BeforeOrder;
-            currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.BeforeOrder].Add(consumer);
-        }
-        else
-        {
-            consumer.FSM.CurrentStatus = ConsumerFSM.ConsumerState.Waiting;
-            consumer.NextTargetTransform = waitingConsumerSeats[currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count];
-            currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Add(consumer);
-        }
     }
 
     private void OnTakeConsumer(GameObject consumer)
@@ -109,11 +100,31 @@ public class ConsumerManager : MonoBehaviour
                 list.Remove(consumer.GetComponent<Consumer>());
             }
         }
+        if(consumer.GetComponent<ConsumerFSM>().consumerData.Type == ConsumerData.ConsumerType.Influencer)
+        {
+            InfluencerBuff buff = new();
+            //TODO : Make InfluencerBuff on consumerData based
+            buffManager.TempBuffOn();
+        }
         consumer.SetActive(false);
     }
     private void OnDestroyConsumer(GameObject consumer)
     {
         Destroy(consumer);
+    }
+    private void AfterSpawnInit(Consumer consumer)
+    {
+        if (workFlowController.RegisterCustomer(consumer))
+        {
+            consumer.FSM.CurrentStatus = ConsumerFSM.ConsumerState.BeforeOrder;
+            currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.BeforeOrder].Add(consumer);
+        }
+        else
+        {
+            consumer.FSM.CurrentStatus = ConsumerFSM.ConsumerState.Waiting;
+            consumer.NextTargetTransform = waitingConsumerSeats[currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count];
+            currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Add(consumer);
+        }
     }
     #endregion
     [ContextMenu("Consumer Spawn")]
@@ -121,7 +132,18 @@ public class ConsumerManager : MonoBehaviour
     {
         if (currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count < maxWaitingSeatCnt)
         {
-            consumerPool.Get();
+            var consumer1 = consumerPool.Get().GetComponent<Consumer>();
+            //bool isPair = true;
+            //if (isPair)
+            //{
+            //    var consumer2 = consumerPool.Get().GetComponent<Consumer>();
+            //    SetPairData(consumer1, consumer2);
+            //    AfterSpawnInit(consumer1);
+            //}
+            //else
+            //{
+                AfterSpawnInit(consumer1);
+            //}
             Debug.Log(currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count);
         }
         else
@@ -130,12 +152,24 @@ public class ConsumerManager : MonoBehaviour
         }
     }
 
+    private void SetPairData(Consumer owner, Consumer partner)
+    {
+        owner.pairData = new();
+        owner.pairData.owner = owner;
+        owner.pairData.partner = partner;
+
+        partner.pairData = owner.pairData;
+    }
+
     private IEnumerator SpawnCoroutine()
     {
         while (true)
         {
             SpawnConsumer();
-            yield return new WaitForSeconds(5f);
+            var buff = buffManager.GetBuff<InfluencerBuff>(BuffType.Influencer);
+            float basicTime = 5f;
+            basicTime *= buff?.AccelValue ?? 1f;
+            yield return new WaitForSeconds(basicTime);
         }
     }
 
@@ -151,7 +185,7 @@ public class ConsumerManager : MonoBehaviour
 
     }
 
-    public void OnPayStart()
+    public void OnPayStart(ConsumerData consumerData)
     {
         workFlowController.RegisterPayment();
     }

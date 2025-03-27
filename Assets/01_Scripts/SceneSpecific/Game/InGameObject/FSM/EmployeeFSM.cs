@@ -9,12 +9,14 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
 {
     [SerializeField]
     private Transform idleArea;
-    private EmployeeData employeeData = new();
-    public EmployeeData EmployeeData
+    private EmployeeTableGetData employeeData = new();
+    public EmployeeTableGetData EmployeeData
     {
         get => employeeData;
+        set => employeeData = value;
     }
     public EmployeeManager employeeManager;
+    private float upgradeWorkSpeedValue = 0.02f;
     public enum EnployedState
     {
         Idle,
@@ -23,7 +25,7 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     }
 
     private float interactionSpeed = 1f;
-    public float InteractionSpeed { get; }
+    public float InteractionSpeed { get; set; }
 
     private EnployedState currentStatus;
 
@@ -90,38 +92,41 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     }
 
 
-    [SerializeField] private Transform handPivot;
+    public Transform handPivot { get; set; }
 
-    public Transform HandPivot { get; }
-    public void LiftPackage(GameObject package)
+    public Transform HandPivot => throw new NotImplementedException();
+
+    public void LiftPackage(Sprite packageSprite)
     {
-        package.transform.SetParent(handPivot);
-        package.transform.localPosition = Vector3.zero;
-    }
-    public void DropPackage(Transform dropPoint)
-    {
-        if (handPivot.childCount > 0)
-        {
-            var package = handPivot.GetChild(0).gameObject;
-            package.transform.SetParent(dropPoint);
-            package.transform.localPosition = Vector3.zero;
-        }
+        throw new System.NotImplementedException();
     }
 
+    public void DropPackage()
+    {
+        throw new System.NotImplementedException();
+    }
     protected override void Awake()
     {
         base.Awake();
-        DataTableManager.Get<EmployeeDataTable>("Employee");
     }
     private void Start()
     {
-        employeeData.name = name;
-        employeeManager.AddEmployee(this);
+        //employeeManager.AddEmployee(this);
+        employeeData.OnUpgradeEvent += () =>
+        {
+            employeeData.MoveSpeed = employeeData.MoveSpeed + (employeeData.upgradeSpeed);
+            agent.speed = employeeData.MoveSpeed;
+            InteractionSpeed = employeeData.WorkSpeed - (upgradeWorkSpeedValue * employeeData.upgradeCount);
+            Debug.Log($"{name} : {agent.speed} , {InteractionSpeed}");
+        };
     }
-    public void StatsUpdate()
+    public void LiftPackage(GameObject package)
     {
-        agent.speed = employeeData.Speed;
-        Debug.Log(agent.speed);
+        throw new NotImplementedException();
     }
 
+    public void DropPackage(Transform dropPoint)
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -50,6 +50,11 @@ public enum SceneIds
     Dev3,
 }
 
+public enum BuffType
+{
+    Influencer,
+}
+
 public static class Endpoints
 {
     private static string BaseUrl = "127.0.0.1:3000";

@@ -11,9 +11,9 @@ public class EmployeeListUi : MonoBehaviour
     void Start()
     {
     }
-    public void AddUpgradeList(EmployeeFSM data)
+    public void AddUpgrade(EmployeeTableGetData data)
     {
-        var ui = Instantiate(upgradeObject, transform).GetComponent<testUi>();
+        var ui = Instantiate(upgradeObject, transform).GetComponent<UiItem>();
         ui.Init(data);
     }
 }
