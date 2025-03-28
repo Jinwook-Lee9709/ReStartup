@@ -11,19 +11,17 @@ public class UiItem : MonoBehaviour
 
     [SerializeField] private Image image;
 
-    [SerializeField] private TextMeshProUGUI employeeNameText;
+    [SerializeField] private TextMeshProUGUI uiNameText;
 
-    [SerializeField] private TextMeshProUGUI EmployeeUpgradeCostText;
+    [SerializeField] private TextMeshProUGUI uiUpgradeCostText;
+
+    [SerializeField] private TextMeshProUGUI upgradeButtonText;
 
     //Fortest
     public EmployeeTableGetData employeeData;
-    public GameObject employee;
-    [SerializeField]
-    private Image image;
-    [SerializeField]
-    private TextMeshProUGUI employeeNameText;
-    [SerializeField]
-    private TextMeshProUGUI EmployeeUpgradeCostText;
+
+    public FoodData foodData;
+
     private void Start()
     {
         if (employeeData != null)
@@ -42,7 +40,7 @@ public class UiItem : MonoBehaviour
         uiNameText.text = $"{employeeData.StaffID}";
         uiUpgradeCostText.text = $"{employeeData.Cost}";
         var button = GetComponentInChildren<Button>();
-        buttonText.text = "고용하기";
+        upgradeButtonText.text = "고용하기";
         button.onClick.AddListener((UnityEngine.Events.UnityAction)(() =>
         {
             //if (userData.Gold < employeeData.Cost * employeeData.upgradeCount)
@@ -55,18 +53,17 @@ public class UiItem : MonoBehaviour
                 newEmployee.EmployeeData = employeeData;
                 var workerManager = ServiceLocator.Instance.GetSceneService<GameManager>().WorkerManager;
                 workerManager.RegisterWorker(newEmployee, (WorkType)newEmployee.EmployeeData.StaffType);
-                buttonText.text = "업그레이드";
+            }
+            upgradeButtonText.text = "업그레이드";
             employeeData.upgradeCount++;
-            employeeNameText.text = $"{employeeData.StaffID} : {employeeData.upgradeCount}";
-            EmployeeUpgradeCostText.text = $"{employeeData.Cost * employeeData.upgradeCount}";
-
             employeeData.OnUpgrade();
-
+            uiNameText.text = $"{employeeData.StaffID} : {employeeData.upgradeCount}";
+            uiUpgradeCostText.text = $"{employeeData.Cost * employeeData.upgradeCount}";
             if (employeeData.upgradeCount >= 5)
             {
                 button.interactable = false;
             }
-        });
+        }));
     }
     public void Init(FoodData data)
     {
@@ -74,12 +71,12 @@ public class UiItem : MonoBehaviour
         uiNameText.text = $"{foodData.FoodID}";
         uiUpgradeCostText.text = $"{foodData.BasicCost}";
         var button = GetComponentInChildren<Button>();
-        buttonText.text = "연구하기";
+        upgradeButtonText.text = "연구하기";
         button.onClick.AddListener((UnityEngine.Events.UnityAction)(() =>
         {
             if (foodData.upgradeCount < 1)
             {
-                buttonText.text = "업그레이드";
+                upgradeButtonText.text = "업그레이드";
             }
             foodData.upgradeCount++;
             uiNameText.text = $"{foodData.FoodID}";
