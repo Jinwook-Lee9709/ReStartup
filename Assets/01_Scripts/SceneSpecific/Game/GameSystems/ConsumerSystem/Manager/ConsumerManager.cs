@@ -64,7 +64,15 @@ public class ConsumerManager : MonoBehaviour
     {
         while (true)
         {
-            SpawnConsumer();
+            int cnt = 0;
+            foreach (var consumers in currentSpawnedConsumerDictionary.Values)
+            {
+                cnt += consumers.Count;
+            }
+            if (cnt <= 9)
+                SpawnConsumer();
+
+
             var buff = buffManager.GetBuff<InfluencerBuff>(BuffType.Influencer);
             var basicTime = 5f;
             basicTime *= buff?.AccelValue ?? 1f;
@@ -79,7 +87,7 @@ public class ConsumerManager : MonoBehaviour
         if (cnt != 0)
             consumer.GetComponent<NavMeshAgent>().SetDestination(
                 workFlowController.GetCashierCounter().GetInteractablePoints(InteractPermission.Consumer)[0].transform
-                    .position + new Vector3(-2, 0, 0) * cnt);
+                    .position + new Vector3(-0.5f, 0, 0) * cnt);
     }
 
     public void OnPayStart(ConsumerData consumerData)
