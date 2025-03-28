@@ -10,7 +10,7 @@ public class ConsumerData
 
     public ConsumerType Type { get; set; } = ConsumerType.Obnoxious;
     public float OrderWaitTimer { get; set; }
-    public float MaxOrderWaitLimit { get; set; } = 100f;
+    public float MaxOrderWaitLimit { get; set; } = float.PositiveInfinity;
     public float MaxEattingLimit { get; set; } = 3f;
 
     //�ӽ� �� Ȯ��
