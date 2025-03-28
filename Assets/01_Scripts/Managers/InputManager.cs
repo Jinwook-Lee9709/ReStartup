@@ -27,9 +27,17 @@ public class InputManager : MonoBehaviour
     private Vector2 startPos;
     private InputAction touchAction;
 
+    [SerializeField][Range(0f, 1f)] private float swipeDistanceCalcParam = 0.05f;
+
+    [ContextMenu("SwipeTest")]
+    public void SwipeTest()
+    {
+        minSwipeDistance = Screen.width * swipeDistanceCalcParam;
+    }
+
     private void Start()
     {
-        minSwipeDistance = Screen.width * 0.5f;
+        minSwipeDistance = Screen.width * swipeDistanceCalcParam;
         slowTouchAction = InputSystem.actions.FindAction("SlowTouchAction");
         slowTouchAction.started += ctx => { isPressed = true; };
 
