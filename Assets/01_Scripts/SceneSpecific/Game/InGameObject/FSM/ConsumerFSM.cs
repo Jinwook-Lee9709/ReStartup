@@ -144,7 +144,6 @@ public class ConsumerFSM : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(agent.destination);
         switch (currentStatus)
         {
             case ConsumerState.Waiting:

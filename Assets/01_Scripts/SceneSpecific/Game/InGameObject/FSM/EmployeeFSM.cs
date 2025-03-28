@@ -58,6 +58,7 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
                 UpdateReturnidleArea();
                 break;
             case EnployedState.Working:
+
                 UpdateWorking();
                 break;
             default:
@@ -88,6 +89,7 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     public override void AssignWork(WorkBase work)
     {
         base.AssignWork(work);
+        //택스트 넣어주기
         CurrentStatus = EnployedState.Working;
     }
 
@@ -106,9 +108,10 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
         if (currentWork == null)
         {
             CurrentStatus = EnployedState.ReturnidleArea;
+            //택스트 지워주기
             return;
         }
-
+      
         currentWork.DoWork();
     }
 }
