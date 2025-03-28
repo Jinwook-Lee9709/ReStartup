@@ -9,8 +9,9 @@ public class WorkerBase : MonoBehaviour
 
     protected WorkerManager workerManager;
 
-    private bool IsBusy => currentWork != null;
-
+    public bool IsBusy => currentWork != null;
+    public WorkBase CurrentWork => currentWork;
+    
     protected virtual void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
