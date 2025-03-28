@@ -1,9 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Android;
 using UnityEngine.Pool;
 
 public class ConsumerManager : MonoBehaviour
@@ -16,22 +15,91 @@ public class ConsumerManager : MonoBehaviour
     [SerializeField] public Transform spawnPoint;
     [SerializeField] private int tempPairProb = 100;
 
-    /// <summary>
-    /// ���� ���ӽſ� �����Ǿ��ִ� �մԵ��� ���º��� �����ϴ� ��ųʸ�
-    /// </summary>
-    private Dictionary<ConsumerFSM.ConsumerState, List<Consumer>> currentSpawnedConsumerDictionary = new();
-
 
     /// <summary>
-    /// ��⿭ �ڸ�
+    ///     ��⿭ �ڸ�
     /// </summary>
     [SerializeField] private List<Transform> waitingConsumerSeats;
+
+    /// <summary>
+    ///     ���� ���ӽſ� �����Ǿ��ִ� �մԵ��� ���º��� �����ϴ� ��ųʸ�
+    /// </summary>
+    private readonly Dictionary<ConsumerFSM.ConsumerState, List<Consumer>> currentSpawnedConsumerDictionary = new();
+
+    [ContextMenu("Consumer Spawn")]
+    public void SpawnConsumer()
+    {
+        if (currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count < maxWaitingSeatCnt)
+        {
+            var consumer1 = consumerPool.Get().GetComponent<Consumer>();
+            //bool isPair = true;
+            //if (isPair)
+            //{
+            //    var consumer2 = consumerPool.Get().GetComponent<Consumer>();
+            //    SetPairData(consumer1, consumer2);
+            //    AfterSpawnInit(consumer1);
+            //}
+            //else
+            //{
+            AfterSpawnInit(consumer1);
+            //}
+            Debug.Log(currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count);
+        }
+        else
+        {
+            Debug.Log("No More WaitingSeat");
+        }
+    }
+
+    private void SetPairData(Consumer owner, Consumer partner)
+    {
+        owner.pairData = new ConsumerPairData();
+        owner.pairData.owner = owner;
+        owner.pairData.partner = partner;
+
+        partner.pairData = owner.pairData;
+    }
+
+    private IEnumerator SpawnCoroutine()
+    {
+        while (true)
+        {
+            int cnt = 0;
+            foreach (var consumers in currentSpawnedConsumerDictionary.Values)
+            {
+                cnt += consumers.Count;
+            }
+            if (cnt <= 9)
+                SpawnConsumer();
+
+
+            var buff = buffManager.GetBuff<InfluencerBuff>(BuffType.Influencer);
+            var basicTime = 5f;
+            basicTime *= buff?.AccelValue ?? 1f;
+            yield return new WaitForSeconds(basicTime);
+        }
+    }
+
+    public void OnEndMeal(Consumer consumer)
+    {
+        workFlowController.OnEatComplete(consumer.currentTable);
+        var cnt = workFlowController.AssignCashier(consumer);
+        if (cnt != 0)
+            consumer.GetComponent<NavMeshAgent>().SetDestination(
+                workFlowController.GetCashierCounter().GetInteractablePoints(InteractPermission.Consumer)[0].transform
+                    .position + new Vector3(-0.5f, 0, 0) * cnt);
+    }
+
+    public void OnPayStart(ConsumerData consumerData)
+    {
+        workFlowController.RegisterPayment();
+    }
 
 
     #region ConsumerObjPoolling
 
     /// <summary>
-    /// �մ� ������Ʈ Ǯ
+    ///     �մ� ������Ʈ Ǯ
     /// </summary>
     public IObjectPool<GameObject> consumerPool;
 
@@ -43,10 +111,8 @@ public class ConsumerManager : MonoBehaviour
             , OnReturnConsumer
             , OnDestroyConsumer
             , false);
-        foreach (ConsumerFSM.ConsumerState consumerState in System.Enum.GetValues(typeof(ConsumerFSM.ConsumerState)))
-        {
-            currentSpawnedConsumerDictionary[consumerState] = new();
-        }
+        foreach (ConsumerFSM.ConsumerState consumerState in Enum.GetValues(typeof(ConsumerFSM.ConsumerState)))
+            currentSpawnedConsumerDictionary[consumerState] = new List<Consumer>();
 
         StartCoroutine(SpawnCoroutine());
     }
@@ -61,13 +127,9 @@ public class ConsumerManager : MonoBehaviour
     public void OnWaitingLineUpdate(Consumer consumer)
     {
         if (currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count > 0)
-        {
-            for (int i = 0; i < currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count; i++)
-            {
+            for (var i = 0; i < currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count; i++)
                 currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting][i].NextTargetTransform =
                     waitingConsumerSeats[i];
-            }
-        }
     }
 
     private GameObject OnCreateConsumer()
@@ -84,6 +146,7 @@ public class ConsumerManager : MonoBehaviour
         consumer.pairData = null;
         consumer.FSM.consumerManager = this;
         consumer.FSM.SetCashierCounter(workFlowController.GetCashierCounter());
+        consumer.FSM.OnSeatEvent -= workFlowController.AssignGetOrderWork;
         consumer.FSM.OnSeatEvent += workFlowController.AssignGetOrderWork;
     }
 
@@ -96,12 +159,8 @@ public class ConsumerManager : MonoBehaviour
     private void OnReturnConsumer(GameObject consumer)
     {
         foreach (var list in currentSpawnedConsumerDictionary.Values)
-        {
             if (list.Contains(consumer.GetComponent<Consumer>()))
-            {
                 list.Remove(consumer.GetComponent<Consumer>());
-            }
-        }
 
         if (consumer.GetComponent<ConsumerFSM>().consumerData.Type == ConsumerData.ConsumerType.Influencer)
         {
@@ -135,67 +194,4 @@ public class ConsumerManager : MonoBehaviour
     }
 
     #endregion
-
-    [ContextMenu("Consumer Spawn")]
-    public void SpawnConsumer()
-    {
-        if (currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count < maxWaitingSeatCnt)
-        {
-            var consumer1 = consumerPool.Get().GetComponent<Consumer>();
-            //bool isPair = true;
-            //if (isPair)
-            //{
-            //    var consumer2 = consumerPool.Get().GetComponent<Consumer>();
-            //    SetPairData(consumer1, consumer2);
-            //    AfterSpawnInit(consumer1);
-            //}
-            //else
-            //{
-            AfterSpawnInit(consumer1);
-            //}
-            Debug.Log(currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count);
-        }
-        else
-        {
-            Debug.Log("No More WaitingSeat");
-        }
-    }
-
-    private void SetPairData(Consumer owner, Consumer partner)
-    {
-        owner.pairData = new();
-        owner.pairData.owner = owner;
-        owner.pairData.partner = partner;
-
-        partner.pairData = owner.pairData;
-    }
-
-    private IEnumerator SpawnCoroutine()
-    {
-        while (true)
-        {
-            SpawnConsumer();
-            var buff = buffManager.GetBuff<InfluencerBuff>(BuffType.Influencer);
-            float basicTime = 5f;
-            basicTime *= buff?.AccelValue ?? 1f;
-            yield return new WaitForSeconds(basicTime);
-        }
-    }
-
-    public void OnEndMeal(Consumer consumer)
-    {
-        workFlowController.OnEatComplete(consumer.currentTable);
-        int cnt = workFlowController.AssignCashier(consumer);
-        if (cnt != 0)
-        {
-            consumer.GetComponent<NavMeshAgent>().SetDestination(
-                workFlowController.GetCashierCounter().GetInteractablePoints(InteractPermission.Consumer)[0].transform
-                    .position + new Vector3(-1, 0, 0) * cnt);
-        }
-    }
-
-    public void OnPayStart(ConsumerData consumerData)
-    {
-        workFlowController.RegisterPayment();
-    }
 }

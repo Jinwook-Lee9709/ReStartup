@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class ConsumerPairData
 {
-    ///2ÀÎ ¼Õ´ÔÀÏ¶§ ÇÊ¿äÇÑ Á¤º¸
-    public Table pairTable;
     public Consumer owner;
+
+    ///2ï¿½ï¿½ ï¿½Õ´ï¿½ï¿½Ï¶ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    public Table pairTable;
+
     public Consumer partner;
 }

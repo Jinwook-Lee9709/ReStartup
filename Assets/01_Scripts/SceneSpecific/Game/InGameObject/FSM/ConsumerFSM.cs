@@ -3,53 +3,57 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Android;
 
 public class ConsumerFSM : MonoBehaviour
 {
-    public ConsumerData consumerData = new();
-    public ConsumerManager consumerManager;
-    private Consumer consumer;
-    private CashierCounter cashierCounter;
-    private Vector2 targetPivot;
     public enum ConsumerState
     {
         Waiting,
         BeforeOrder,
         AfterOrder,
         Eatting,
-        BeforePay,
+        WaitForPay,
+        Paying,
         Exit,
 
-        Disappointed,
+        Disappointed
     }
 
-
-    private NavMeshAgent agent;
-    [SerializeField]
-    private List<float> satisfactionChangeLimit = new List<float>
-    {
-        15f,
-        0f
-    };
     public enum Satisfaction
     {
         High,
         Middle,
-        Low,
+        Low
     }
 
-    public event Action<Consumer> OnSeatEvent;
+    public ConsumerManager consumerManager;
+
+    [SerializeField] private List<float> satisfactionChangeLimit = new()
+    {
+        15f,
+        0f
+    };
 
 
     [SerializeField] public ConsumerState currentStatus = ConsumerState.Waiting;
     [SerializeField] private Satisfaction currentSatisfaction = Satisfaction.High;
+
+
+    private NavMeshAgent agent;
+    private CashierCounter cashierCounter;
+    private Consumer consumer;
+    public ConsumerData consumerData = new();
+    private bool isOnSeat;
+
+    private bool isPaying;
+    private Vector2 targetPivot;
+
     public Satisfaction CurrentSatisfaction
     {
         get => currentSatisfaction;
         set
         {
-            Satisfaction prevSatisfaction = currentSatisfaction;
+            var prevSatisfaction = currentSatisfaction;
             switch (value)
             {
                 case Satisfaction.High:
@@ -62,16 +66,17 @@ public class ConsumerFSM : MonoBehaviour
                 case Satisfaction.Low:
                     break;
             }
+
             currentSatisfaction = value;
         }
     }
 
     public ConsumerState CurrentStatus
     {
-        get { return currentStatus; }
+        get => currentStatus;
         set
         {
-            ConsumerState prevStatus = currentStatus;
+            var prevStatus = currentStatus;
 
             switch (value)
             {
@@ -91,7 +96,7 @@ public class ConsumerFSM : MonoBehaviour
                     //    consumer.pairData.partner.GetComponent<NavMeshAgent>().SetDestination(targetPivot);
                     //}
                     //targetPivot = consumer.pairData.pairTable.InteractablePoints[1].position;
-                    InteractPermission permission = InteractPermission.Consumer;
+                    var permission = InteractPermission.Consumer;
                     targetPivot = consumer.currentTable.GetInteractablePoints(permission)[0].transform.position;
                     agent.SetDestination(targetPivot);
                     break;
@@ -102,9 +107,8 @@ public class ConsumerFSM : MonoBehaviour
                     consumerManager.OnChangeConsumerState(consumer, ConsumerState.Eatting);
                     StartCoroutine(EattingCoroutine());
                     break;
-                case ConsumerState.BeforePay:
-
-                    consumerManager.OnChangeConsumerState(consumer, ConsumerState.BeforePay);
+                case ConsumerState.WaitForPay:
+                    consumerManager.OnChangeConsumerState(consumer, ConsumerState.WaitForPay);
                     consumerManager.OnEndMeal(consumer);
                     break;
                 case ConsumerState.Exit:
@@ -119,51 +123,17 @@ public class ConsumerFSM : MonoBehaviour
                             //TODO : For ConsumerManager -> WorkFlowController -> Work Return
                             break;
                     }
+
                     agent.SetDestination(consumerManager.spawnPoint.position);
                     break;
                 case ConsumerState.Disappointed:
 
                     break;
             }
-            currentStatus = value;
+
+            if (currentStatus == prevStatus)
+                currentStatus = value;
         }
-    }
-
-
-
-    public void OnEndPayment()
-    {
-        ///TODO : If End Payment
-         StartCoroutine(UserDataManager.Instance.OnGoldUp(consumer));
-        ///And Play Tip PopUp
-
-        CurrentStatus = ConsumerState.Exit;
-    }
-
-    public void SetCashierCounter(CashierCounter cashierCounter)
-    {
-        this.cashierCounter = cashierCounter;
-    }
-
-    private IEnumerator EattingCoroutine()
-    {
-        float eattingTimer = 0f;
-        while (eattingTimer < consumerData.MaxEattingLimit)
-        {
-            eattingTimer += Time.deltaTime;
-            yield return null;
-        }
-        CurrentStatus = ConsumerState.BeforePay;
-    }
-
-    public void OnOrderComplete()
-    {
-        CurrentStatus = ConsumerState.AfterOrder;
-    }
-
-    public void OnGetFood()
-    {
-        CurrentStatus = ConsumerState.Eatting;
     }
 
     private void Awake()
@@ -172,14 +142,9 @@ public class ConsumerFSM : MonoBehaviour
         consumer = GetComponent<Consumer>();
     }
 
-    private void OnEnable()
-    {
-        currentSatisfaction = Satisfaction.High;
-        consumerData.Init();
-    }
-
     private void Update()
     {
+        Debug.Log(agent.destination);
         switch (currentStatus)
         {
             case ConsumerState.Waiting:
@@ -194,8 +159,8 @@ public class ConsumerFSM : MonoBehaviour
             case ConsumerState.Eatting:
                 UpdateEatting();
                 break;
-            case ConsumerState.BeforePay:
-                UpdateBeforePay();
+            case ConsumerState.Paying:
+                UpdatePaying();
                 break;
             case ConsumerState.Exit:
                 UpdateExit();
@@ -203,11 +168,64 @@ public class ConsumerFSM : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        currentSatisfaction = Satisfaction.High;
+        consumerData.Init();
+        isPaying = false;
+        isOnSeat = false;
+    }
+
+    public event Action<Consumer> OnSeatEvent;
+
+
+    public void OnStartPayment()
+    {
+        CurrentStatus = ConsumerState.Paying;
+    }
+
+    public void OnEndPayment()
+    {
+        ///TODO : If End Payment
+        StartCoroutine(UserDataManager.Instance.OnGoldUp(consumer));
+        ///And Play Tip PopUp
+
+        CurrentStatus = ConsumerState.Exit;
+    }
+
+    public void SetCashierCounter(CashierCounter cashierCounter)
+    {
+        this.cashierCounter = cashierCounter;
+    }
+
+    private IEnumerator EattingCoroutine()
+    {
+        var eattingTimer = 0f;
+        while (eattingTimer < consumerData.MaxEattingLimit)
+        {
+            eattingTimer += Time.deltaTime;
+            yield return null;
+        }
+
+        CurrentStatus = ConsumerState.WaitForPay;
+    }
+
+    public void OnOrderComplete()
+    {
+        CurrentStatus = ConsumerState.AfterOrder;
+    }
+
+    public void OnGetFood()
+    {
+        CurrentStatus = ConsumerState.Eatting;
+    }
+
     private void UpdateWaiting()
     {
         //���ڸ��� ���� ����ϴ� ����.
         //�ջ���� ������� �ջ�� �ڸ��� �̵�.
     }
+
     private void UpdateBeforeOrder()
     {
         //���ڸ��� ���� ���ڸ��� �̵� �� �ֹ�.
@@ -220,11 +238,13 @@ public class ConsumerFSM : MonoBehaviour
         //    }
         //    return;
         //}
-        if (agent.IsArrive(targetPivot))
+        if (agent.IsArrive(targetPivot) && !isOnSeat)
         {
+            isOnSeat = true;
             OnSeatEvent?.Invoke(consumer);
         }
     }
+
     private void UpdateAfterOrder()
     {
         //�ֹ��� �޾ư� ��, ������ ����������� ����.
@@ -239,7 +259,8 @@ public class ConsumerFSM : MonoBehaviour
             case var t when t < satisfactionChangeLimit[0] && t > satisfactionChangeLimit[1]:
                 CurrentSatisfaction = Satisfaction.High;
                 break;
-            case var t when t < satisfactionChangeLimit[1] && t > satisfactionChangeLimit[2] && CurrentSatisfaction != Satisfaction.Middle:
+            case var t when t < satisfactionChangeLimit[1] && t > satisfactionChangeLimit[2] &&
+                            CurrentSatisfaction != Satisfaction.Middle:
                 CurrentSatisfaction = Satisfaction.Middle;
                 break;
             case var t when t < satisfactionChangeLimit[2]:
@@ -248,26 +269,30 @@ public class ConsumerFSM : MonoBehaviour
                 break;
         }
     }
+
     private void UpdateEatting()
     {
         //�Ļ����� ����.
     }
+
+
     private void UpdateBeforePay()
     {
-        //�Ļ簡 ���� �� ����� �̵��� ��, ����� �Ϸ�ɶ������� ����.
-        //���⼭�� ��ٸ��� �������� ������ ��ġ�� ����.
-        if (agent.remainingDistance <= 0.1f)
+    }
+
+    private void UpdatePaying()
+    {
+        if (agent.remainingDistance <= 0.1f && !isPaying)
         {
+            isPaying = true;
             consumerManager.OnPayStart(consumerData);
         }
     }
+
     private void UpdateExit()
     {
         //��� �� �����ϴ� ����.
         //���� ������ƮǮ�� ��ȯ��.
-        if (agent.IsArrive(consumerManager.spawnPoint))
-        {
-            consumerManager.consumerPool.Release(gameObject);
-        }
+        if (agent.IsArrive(consumerManager.spawnPoint)) consumerManager.consumerPool.Release(gameObject);
     }
 }

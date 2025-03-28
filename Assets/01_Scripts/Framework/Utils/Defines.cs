@@ -19,20 +19,20 @@ public enum WorkType
     All,
     Payment = 1,
     Hall,
-    Kitchen,
+    Kitchen
 }
 
 public enum WorkStatus
 {
     Waiting,
-    Assigned,
+    Assigned
 }
 
 public enum InteractStatus
 {
     Pending,
     Progressing,
-    Success,
+    Success
 }
 
 [Flags]
@@ -43,13 +43,13 @@ public enum InteractPermission
     PaymentEmployee = 1 << 1,
     KitchenEmployee = 1 << 2,
     HallEmployee = 1 << 3,
-    Player = 1 << 4,
+    Player = 1 << 4
 }
 
 
 public enum LanguageType
 {
-    Korean,
+    Korean
 }
 
 public enum SceneIds
@@ -62,17 +62,17 @@ public enum SceneIds
     Theme3,
     Dev1,
     Dev2,
-    Dev3,
+    Dev3
 }
 
 public enum BuffType
 {
-    Influencer,
+    Influencer
 }
 
 public static class Endpoints
 {
-    private static string BaseUrl = "127.0.0.1:3000";
+    private static readonly string BaseUrl = "127.0.0.1:3000";
     public static string UserUrl = BaseUrl + "/users";
 }
 

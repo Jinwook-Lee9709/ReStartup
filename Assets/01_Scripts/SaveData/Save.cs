@@ -1,28 +1,27 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+
 /// <summary>
-/// DB�� ����� ������ ���� Ŭ����
+///     DB�� ����� ������ ���� Ŭ����
 /// </summary>
 [Serializable]
 public class UserData
 {
-    public string UID { get; set; }                                  //���� UID
-    public string Name { get; set; }                                 //���� �̸�
-    public int? Gold { get; set; }                                   //�ΰ��� ��ȭ
-    public int? CurrentRankPoint { get; set; }                       //���� ��ŷ ����Ʈ
-    public int? PositiveCnt { get; set; }                            //�ſ츸�� �մ� ī��Ʈ
-    public int? NegativeCnt { get; set; }                            //�Ҹ��� �մ� ī��Ʈ
-                                                                    
-    public Dictionary<int, FoodSaveData> FoodSaveData { get; set; } = new Dictionary<int, FoodSaveData>
-    {
-        {301001, new FoodSaveData()},
-        {301002, new FoodSaveData()},
-        {301003, new FoodSaveData()},
-    };
-                                              
-    public Dictionary<string, int> EmployeeLevelValue { get; set; } 
+    public string UID { get; set; } //���� UID
+    public string Name { get; set; } //���� �̸�
+    public int? Gold { get; set; } //�ΰ��� ��ȭ
+    public int? CurrentRankPoint { get; set; } //���� ��ŷ ����Ʈ
+    public int? PositiveCnt { get; set; } //�ſ츸�� �մ� ī��Ʈ
+    public int? NegativeCnt { get; set; } //�Ҹ��� �մ� ī��Ʈ
 
+    public Dictionary<int, FoodSaveData> FoodSaveData { get; set; } = new()
+    {
+        { 301001, new FoodSaveData() },
+        { 301002, new FoodSaveData() },
+        { 301003, new FoodSaveData() }
+    };
+
+    public Dictionary<string, int> EmployeeLevelValue { get; set; }
 }
 
 public abstract class SaveData
@@ -34,17 +33,19 @@ public abstract class SaveData
 
 public class SaveDataV1 : SaveData
 {
+    public SaveDataV1()
+    {
+        Version = 1;
+    }
+
     public float MasterVolume { get; set; } = 1f;
     public float BackGroundVolume { get; set; } = 1f;
     public float SFXVolume { get; set; } = 1f;
     public string UserToken { get; set; }
     public LanguageType LanguageType { get; set; } = LanguageType.Korean;
-    public SaveDataV1()
-    {
-        Version = 1;
-    }
+
     public override SaveData VersionUp()
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 }

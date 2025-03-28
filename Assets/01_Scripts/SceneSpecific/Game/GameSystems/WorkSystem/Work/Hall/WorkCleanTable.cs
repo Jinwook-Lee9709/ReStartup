@@ -1,13 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Timeline;
-using UnityEngine;
-
 public class WorkCleanTable : InteractWorkBase
 {
     private WorkFlowController controller;
-    private FoodObject foodObject; 
-    
+    private FoodObject foodObject;
+
     public WorkCleanTable(WorkManager workManager, WorkType workType) : base(workManager, workType)
     {
     }
@@ -21,12 +16,11 @@ public class WorkCleanTable : InteractWorkBase
     {
         this.foodObject = foodObject;
     }
-    
+
     protected override void HandlePostInteraction()
     {
-        Table table = target as Table;
+        var table = target as Table;
         table.OnCleaned();
         controller.ReturnTable(table);
     }
-
 }

@@ -1,39 +1,38 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class NavmeshTest : MonoBehaviour, IInteractor
 {
-    public bool IsBusy => currentWork != null;
-    
-    private WorkBase currentWork;
-    
     private NavMeshAgent agent;
+
+    private WorkBase currentWork;
+
+    private float interactionSpeed = 10f;
+    public bool IsBusy => currentWork != null;
 
     private void Awake()
     {
-        this.agent = GetComponent<NavMeshAgent>();
+        agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = false;
         agent.updateUpAxis = false;
     }
 
     private void Update()
     {
-        
     }
+
+    public float InteractionSpeed { get; }
 
     private void SetTargetPosition()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Vector3 target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            var target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             agent.SetDestination(target);
         }
     }
 
-    private float interactionSpeed = 10f;
-    public float InteractionSpeed { get; }
     public void InteractWithObject(IInteractable interactable)
     {
         interactable.OnInteract(this);
@@ -41,10 +40,10 @@ public class NavmeshTest : MonoBehaviour, IInteractor
 
     public void OnInteractComplete(IInteractable interactable)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
-    
-    
+
+
     public void AssignWork(WorkBase work)
     {
         currentWork = work;
@@ -53,11 +52,10 @@ public class NavmeshTest : MonoBehaviour, IInteractor
     //나한테 Work가 있나
     //Work가 있다면 Dowork running success fail
     //행동트리 -> 
-    
-    
-    
+
+
     public void CancelTask()
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 }

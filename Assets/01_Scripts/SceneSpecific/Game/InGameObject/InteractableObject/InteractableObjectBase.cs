@@ -1,49 +1,36 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, IComparable<InteractableObjectBase>
 {
     //References
     [SerializeField] private List<InteractPivot> interactablePoint;
-    private InteractWorkBase currentWork;
-    
+
     //LocalVariables
-    [SerializeField] private float interactProgress = 0;
+    [SerializeField] private float interactProgress;
+    private InteractWorkBase currentWork;
     private float interactionSpeed;
-    private InteractStatus interactStatus;
-    
+
     //Properties
-    public int Id { get; set; }
+    public int Id { get; private set; }
+
+    public int CompareTo(InteractableObjectBase other)
+    {
+        return Id.CompareTo(other.Id);
+    }
+
     public float InteractProgress => interactProgress;
-    public InteractStatus InteractStatus => interactStatus;
+    public InteractStatus InteractStatus { get; private set; }
+
     public List<InteractPivot> InteractablePoints => interactablePoint;
-
-    public event Action<float> OnInteractedEvent;
-    public event Action OnInteractFinishedEvent;
-    
-    public void SetWork(InteractWorkBase workBase)
-    {
-        currentWork = workBase;
-    }
-
-    public void ClearWork()
-    {
-        currentWork = null;
-        interactProgress = 0f;
-    }
 
     public List<InteractPivot> GetInteractablePoints(InteractPermission permission)
     {
-        List<InteractPivot> interactablePoints = new List<InteractPivot>();
-        foreach(var pivot in interactablePoint)
-        {
+        var interactablePoints = new List<InteractPivot>();
+        foreach (var pivot in interactablePoint)
             if (pivot.CanAccess(permission))
                 interactablePoints.Add(pivot);
-        }
         return interactablePoints;
     }
 
@@ -54,23 +41,20 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
 
     public InteractStatus OnInteract(IInteractor interactor)
     {
-        bool interactionResult = IncreaseProgress(interactionSpeed);
-        
+        var interactionResult = IncreaseProgress(interactionSpeed);
+
         OnInteractedEvent?.Invoke(interactProgress);
 
-        interactStatus = interactionResult ? InteractStatus.Success : InteractStatus.Progressing;
+        InteractStatus = interactionResult ? InteractStatus.Success : InteractStatus.Progressing;
 
-        if (interactStatus == InteractStatus.Success)
-        {
-            OnInteractCompleted();
-        }
+        if (InteractStatus == InteractStatus.Success) OnInteractCompleted();
 
-        return interactStatus;
+        return InteractStatus;
     }
 
     public virtual void OnInteractCanceled()
     {
-        interactStatus = InteractStatus.Pending;
+        InteractStatus = InteractStatus.Pending;
     }
 
     public virtual void OnInteractCompleted()
@@ -78,7 +62,26 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
         OnInteractFinishedEvent?.Invoke();
         ClearWork();
     }
-    
+
+    public event Action<float> OnInteractedEvent;
+    public event Action OnInteractFinishedEvent;
+
+    public void SetWork(InteractWorkBase workBase)
+    {
+        currentWork = workBase;
+    }
+
+    public virtual void SetId(int id)
+    {
+        this.Id = id;
+    }
+
+    public void ClearWork()
+    {
+        currentWork = null;
+        interactProgress = 0f;
+    }
+
     private bool IncreaseProgress(float interactionSpeed)
     {
         interactProgress += interactionSpeed * Time.deltaTime;
@@ -92,12 +95,7 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
            
         if (currentWork.InteractTime == 0)
             return 1;
-        
-        return 1 / interactor.InteractionSpeed / currentWork.InteractTime;
-    }
 
-    public int CompareTo(InteractableObjectBase other)
-    {
-        return Id.CompareTo(other.Id);
+        return 1 / interactor.InteractionSpeed / currentWork.InteractTime;
     }
 }

@@ -1,34 +1,34 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class HeadsUpDisplayUi : MonoBehaviour
 {
     public GameObject smartPhoneButton;
     public GameObject smartPhoneIncludedButton;
-    
-    public bool includedUiSet = false;
+
+    public bool includedUiSet;
 
     private void OnEnable()
     {
     }
+
     public void OnClickButtonSmartPhoneButton()
     {
         if (!includedUiSet)
         {
-            //ÀÓ½Ã·Î µ¹·Á³õÀ½ ½ºÇÁ¶óÀÌÆ® ¹Ù²Ù´Â°Ô ³ª¾Æº¸ÀÓ
-            Vector3 currentRotation = smartPhoneButton.transform.rotation.eulerAngles;
+            //ï¿½Ó½Ã·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ù²Ù´Â°ï¿½ ï¿½ï¿½ï¿½Æºï¿½ï¿½ï¿½
+            var currentRotation = smartPhoneButton.transform.rotation.eulerAngles;
             currentRotation.z += 10f;
             smartPhoneButton.transform.rotation = Quaternion.Euler(currentRotation);
             smartPhoneIncludedButton.SetActive(true);
             includedUiSet = true;
         }
     }
+
     public void OnClickButtonCloseSmartPhoneButton()
     {
         includedUiSet = false;
         smartPhoneIncludedButton.SetActive(false);
-        Vector3 currentRotation = smartPhoneButton.transform.rotation.eulerAngles;
+        var currentRotation = smartPhoneButton.transform.rotation.eulerAngles;
         currentRotation.z -= 10f;
         smartPhoneButton.transform.rotation = Quaternion.Euler(currentRotation);
     }

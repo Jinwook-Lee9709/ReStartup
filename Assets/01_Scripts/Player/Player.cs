@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -19,13 +16,9 @@ public class Player : MonoBehaviour
     {
         Debug.Log(work);
         if (work)
-        {
             Debug.Log("InteractableObjects Touch");
-            //¿öÄ¿¿¡ ³Ö¾îÁà¾ßÇÔ.
-        }
+        //ï¿½ï¿½Ä¿ï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
         else
-        {
             agent.SetDestination(pos);
-        }
     }
 }

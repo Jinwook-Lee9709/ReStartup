@@ -1,42 +1,34 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.XR;
 
 public class SequenceNode<T> : ComPositeNode<T> where T : MonoBehaviour
 {
-    private int currentChild; // ·¯´×ÁßÀÎ ¿ÀºêÁ§Æ®¸¦ ¾Ë±â À§ÇØ 
+    private int currentChild; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ë±ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 
     public SequenceNode(T context) : base(context)
     {
-
     }
 
     protected override void OnStart()
     {
         base.OnStart();
         currentChild = 0;
-
     }
+
     protected override NodeStatus OnUpdate()
     {
-        if (children.Count == 0)
-        {
-            return NodeStatus.Success;
-        }
+        if (children.Count == 0) return NodeStatus.Success;
         while (currentChild < children.Count)
         {
-            NodeStatus status = children[currentChild].Execute();
+            var status = children[currentChild].Execute();
 
-            if (status != NodeStatus.Success)
-            {
-                return status;
-            }
+            if (status != NodeStatus.Success) return status;
 
             ++currentChild;
         }
+
         return NodeStatus.Success;
     }
+
     public override void Reset()
     {
         base.Reset();

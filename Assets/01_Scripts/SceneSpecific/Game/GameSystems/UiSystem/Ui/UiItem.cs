@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -8,20 +7,23 @@ using UnityEngine.UI;
 
 public class UiItem : MonoBehaviour
 {
+    public GameObject employee;
+
+    [SerializeField] private Image image;
+
+    [SerializeField] private TextMeshProUGUI employeeNameText;
+
+    [SerializeField] private TextMeshProUGUI EmployeeUpgradeCostText;
+
     //Fortest
     public EmployeeTableGetData employeeData;
-
-    public FoodData foodData;
-
     public GameObject employee;
     [SerializeField]
     private Image image;
     [SerializeField]
-    private TextMeshProUGUI uiNameText;
+    private TextMeshProUGUI employeeNameText;
     [SerializeField]
-    private TextMeshProUGUI uiUpgradeCostText;
-    [SerializeField]
-    private TextMeshProUGUI buttonText;
+    private TextMeshProUGUI EmployeeUpgradeCostText;
     private void Start()
     {
         if (employeeData != null)
@@ -51,16 +53,20 @@ public class UiItem : MonoBehaviour
             {
                 var newEmployee = Instantiate(employee).GetComponent<EmployeeFSM>();
                 newEmployee.EmployeeData = employeeData;
-                WorkerManager workerManager = ServiceLocator.Instance.GetSceneService<GameManager>().WorkerManager;
+                var workerManager = ServiceLocator.Instance.GetSceneService<GameManager>().WorkerManager;
                 workerManager.RegisterWorker(newEmployee, (WorkType)newEmployee.EmployeeData.StaffType);
                 buttonText.text = "업그레이드";
-            }
             employeeData.upgradeCount++;
-            uiNameText.text = $"{this.employeeData.StaffID} : {employeeData.upgradeCount}";
-            uiUpgradeCostText.text = $"{employeeData.Cost * employeeData.upgradeCount}";
+            employeeNameText.text = $"{employeeData.StaffID} : {employeeData.upgradeCount}";
+            EmployeeUpgradeCostText.text = $"{employeeData.Cost * employeeData.upgradeCount}";
 
             employeeData.OnUpgrade();
-        }));
+
+            if (employeeData.upgradeCount >= 5)
+            {
+                button.interactable = false;
+            }
+        });
     }
     public void Init(FoodData data)
     {
@@ -87,12 +93,8 @@ public class UiItem : MonoBehaviour
         yield return handle;
 
         if (handle.Status == AsyncOperationStatus.Succeeded)
-        {
             image.sprite = handle.Result;
-        }
         else
-        {
             Debug.LogError($"Failed to load sprite: {iconAddress}");
-        }
     }
 }

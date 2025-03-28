@@ -1,8 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using UnityEngine;
-
 public class WorkGetOrder : InteractWorkBase
 {
     private MainLoopWorkContext context;
@@ -11,7 +6,7 @@ public class WorkGetOrder : InteractWorkBase
         : base(workManager, workType)
     {
     }
-    
+
     public void SetContext(MainLoopWorkContext context)
     {
         this.context = context;
@@ -23,5 +18,4 @@ public class WorkGetOrder : InteractWorkBase
         context.Consumer.FSM.OnOrderComplete();
         context.WorkFlowController.RegisterOrder(context);
     }
-
 }

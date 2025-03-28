@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ReviewUi : MonoBehaviour
@@ -14,12 +12,14 @@ public class ReviewUi : MonoBehaviour
         rankUpScrollView.SetActive(false);
         informationScrollView.SetActive(false);
     }
+
     public void OnClickRankUpButton()
     {
         reviewScrollView.SetActive(false);
         rankUpScrollView.SetActive(true);
         informationScrollView.SetActive(false);
     }
+
     public void OnClickInformationButton()
     {
         reviewScrollView.SetActive(false);

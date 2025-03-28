@@ -1,7 +1,3 @@
-using JetBrains.Annotations;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 
 public class BehaviorTree<T> where T : MonoBehaviour
@@ -13,23 +9,20 @@ public class BehaviorTree<T> where T : MonoBehaviour
     {
         this.context = context;
     }
+
     public void SetRoot(BehaviorNode<T> node)
     {
         rootNode = node;
     }
+
     public NodeStatus UpDate()
     {
-        if (rootNode == null)
-        {
-            return NodeStatus.Failure;
-        }
+        if (rootNode == null) return NodeStatus.Failure;
         return rootNode.Execute();
     }
+
     public void Reset()
     {
-        if (rootNode != null)
-        {
-            rootNode.Reset();
-        }
+        if (rootNode != null) rootNode.Reset();
     }
 }

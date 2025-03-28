@@ -1,13 +1,11 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class FailText : MonoBehaviour
 {
     public TextMeshProUGUI failText;
-    private float fadeDuration = 2f;
+    private readonly float fadeDuration = 2f;
     private Color defultColor;
 
     private void Start()
@@ -17,6 +15,7 @@ public class FailText : MonoBehaviour
             failText = GetComponent<TextMeshProUGUI>();
             defultColor = failText.color;
         }
+
         failText.color = defultColor;
         StartFadeOut();
     }
@@ -28,12 +27,12 @@ public class FailText : MonoBehaviour
 
     private IEnumerator FadeOutCoroutine()
     {
-        Color originalColor = failText.color;
-        float elapsedTime = 0f;
+        var originalColor = failText.color;
+        var elapsedTime = 0f;
 
         while (elapsedTime < fadeDuration)
         {
-            float alpha = Mathf.Lerp(1f, 0f, elapsedTime / fadeDuration);
+            var alpha = Mathf.Lerp(1f, 0f, elapsedTime / fadeDuration);
             failText.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
             elapsedTime += Time.deltaTime;
             yield return null;

@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class FoodSaveData
 {
     public int UpgradeLevel { get; set; } = 1;
