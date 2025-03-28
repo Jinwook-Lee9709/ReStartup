@@ -8,5 +8,7 @@ public class GameInitializer : MonoBehaviour
     private void Awake()
     {
         LocalSaveLoadManager.GameSettingInit();
+        Application.targetFrameRate = 120;
+        QualitySettings.vSyncCount = 0;
     }
 }
