@@ -51,6 +51,7 @@ public class UiItem : MonoBehaviour
             {
                 var newEmployee = Instantiate(employee).GetComponent<EmployeeFSM>();
                 newEmployee.EmployeeData = employeeData;
+                newEmployee.GetComponent<SpriteRenderer>().sprite = Addressables.LoadAssetAsync<Sprite>(employeeData.Icon).Result;
                 var workerManager = ServiceLocator.Instance.GetSceneService<GameManager>().WorkerManager;
                 workerManager.RegisterWorker(newEmployee, (WorkType)newEmployee.EmployeeData.StaffType);
             }
