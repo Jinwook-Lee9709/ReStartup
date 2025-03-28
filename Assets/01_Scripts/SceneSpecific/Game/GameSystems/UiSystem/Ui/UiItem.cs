@@ -37,7 +37,20 @@ public class UiItem : MonoBehaviour
     public void Init(EmployeeTableGetData data)
     {
         employeeData = data;
-        uiNameText.text = $"{employeeData.StaffID}";
+        switch ((WorkType)employeeData.StaffType)
+        {
+            case WorkType.All:
+                break;
+            case WorkType.Payment:
+                uiNameText.text = $"Cashier : {employeeData.StaffID}";
+                break;
+            case WorkType.Hall:
+                uiNameText.text = $"HallStaff : {employeeData.StaffID}";
+                break;
+            case WorkType.Kitchen:
+                uiNameText.text = $"KitchenStaff : {employeeData.StaffID}";
+                break;
+        }
         uiUpgradeCostText.text = $"{employeeData.Cost}";
         var button = GetComponentInChildren<Button>();
         upgradeButtonText.text = "고용하기";

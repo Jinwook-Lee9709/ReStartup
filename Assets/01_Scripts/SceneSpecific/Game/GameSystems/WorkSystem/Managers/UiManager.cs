@@ -29,7 +29,7 @@ public class UiManager : MonoBehaviour
         uiUpgrade.SetActive(true);
     }
 
-    public void OnClickButtonUnSetUiUpgrade()
+    public void OnClickButtonExitUiUpgrade()
     {
         uiUpgrade.SetActive(false);
     }
