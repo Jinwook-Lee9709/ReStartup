@@ -48,6 +48,11 @@ public class UiItem : MonoBehaviour
             EmployeeUpgradeCostText.text = $"{employeeData.Cost * employeeData.upgradeCount}";
 
             employeeData.OnUpgrade();
+
+            if (employeeData.upgradeCount >= 5)
+            {
+                button.interactable = false;
+            }
         });
     }
 
