@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -17,21 +18,35 @@ public class InputManager : MonoBehaviour
     private Vector2 endPos;
 
     private bool isPressed;
-    private bool isReleased;
 
     private Vector2 pos;
 
     private InputAction slowTouchAction;
 
     private bool slowTouchDetected;
+    private bool isSwipe;
     private Vector2 startPos;
     private InputAction touchAction;
 
+    [SerializeField][Range(0f, 1f)] private float swipeDistanceCalcParam = 0.05f;
+
+    [ContextMenu("SwipeTest")]
+    public void SwipeTest()
+    {
+        minSwipeDistance = Screen.width * swipeDistanceCalcParam;
+    }
+
     private void Start()
     {
-        minSwipeDistance = Screen.width * 0.5f;
+        minSwipeDistance = Screen.width * swipeDistanceCalcParam;
         slowTouchAction = InputSystem.actions.FindAction("SlowTouchAction");
-        slowTouchAction.started += ctx => { isPressed = true; };
+        slowTouchAction.started += ctx =>
+        {
+            if (IsPointerOverUI())
+                return;
+
+            isPressed = true;
+        };
 
         slowTouchAction.performed += ctx =>
         {
@@ -40,10 +55,10 @@ public class InputManager : MonoBehaviour
             var distance = endPos.x - startPos.x;
             if (MathF.Abs(distance) < minSwipeDistance)
             {
-                Vector2 worldPoint = Camera.main.ScreenToWorldPoint(pos); // ���콺 ��ǥ�� ���� ��ǥ�� ��ȯ
+                Vector2 worldPoint = Camera.main.ScreenToWorldPoint(pos);
                 var hit = Physics2D.RaycastAll(worldPoint, Vector2.zero);
 
-                if (EventSystem.current.IsPointerOverGameObject()) return;
+                if (IsPointerOverUI()) return;
                 var cheakWork = false;
                 for (var i = 0; i < hit.Length; i++)
                     if (hit[i].collider != null)
@@ -53,6 +68,12 @@ public class InputManager : MonoBehaviour
                 player.OnMoveOrWork(cheakWork, worldPoint);
                 return;
             }
+            if (!isSwipe)
+            {
+                isSwipe = false;
+                return;
+            }
+
 
             hollCamera.SetActive(distance > 0);
         };
@@ -63,14 +84,18 @@ public class InputManager : MonoBehaviour
         {
             if (slowTouchDetected)
             {
-                slowTouchDetected = false; // ���ο� ��ġ�� ����Ǿ����� �Ϲ� ��ġ ����
+                slowTouchDetected = false;
                 return;
             }
 
-            Vector2 worldPoint = Camera.main.ScreenToWorldPoint(pos); // ���콺 ��ǥ�� ���� ��ǥ�� ��ȯ
+            Vector2 worldPoint = Camera.main.ScreenToWorldPoint(pos);
             var hit = Physics2D.RaycastAll(worldPoint, Vector2.zero);
 
-            if (EventSystem.current.IsPointerOverGameObject()) return;
+            if (IsPointerOverUI())
+            {
+
+                return;
+            }
             var cheakWork = false;
             for (var i = 0; i < hit.Length; i++)
                 if (hit[i].collider != null)
@@ -87,8 +112,22 @@ public class InputManager : MonoBehaviour
 
         if (isPressed)
         {
+            isSwipe = true;
             isPressed = false;
             startPos = pos;
+            Debug.Log(startPos);
         }
+    }
+    private bool IsPointerOverUI()
+    {
+        PointerEventData eventData = new PointerEventData(EventSystem.current)
+        {
+            position = Pointer.current.position.ReadValue() // 현재 포인터 위치 가져오기
+        };
+
+        var results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, results);
+
+        return results.Count > 0; // UI 요소를 감지했으면 true 반환
     }
 }

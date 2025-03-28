@@ -40,7 +40,8 @@ public class Consumer : MonoBehaviour
 
     private void OnTargetTransformChanged(Transform transform)
     {
-        agent.SetDestination(transform.position);
+        if(transform != null)
+            agent.SetDestination(transform.position);
     }
 
     public void SetTable(Table table)

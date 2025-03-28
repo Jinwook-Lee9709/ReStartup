@@ -143,6 +143,7 @@ public class ConsumerManager : MonoBehaviour
         //TODO : �մ��� ������ƮǮ���� ���� �� ���� (���ϴ� ����, �մ� Ÿ��, �ټ� �ڸ� ��)
         consumer.transform.position = spawnPoint.position;
         consumer.consumerManager = this;
+        consumer.NextTargetTransform = null;
         consumer.pairData = null;
         consumer.FSM.consumerManager = this;
         consumer.FSM.SetCashierCounter(workFlowController.GetCashierCounter());
