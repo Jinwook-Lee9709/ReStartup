@@ -4,10 +4,6 @@ public class EmployeeManager : MonoBehaviour
 {
     public EmployeeListUi employeeListUi;
     [SerializeField] private GameManager gameManager;
-    
-    public void Awake()
-    {
-    }
 
     public void Start()
     {

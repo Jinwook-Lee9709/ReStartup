@@ -282,9 +282,11 @@ public class ConsumerFSM : MonoBehaviour
 
     private void UpdatePaying()
     {
-        if (agent.remainingDistance <= 0.1f && !isPaying)
+        var destination = agent.destination;
+        if (agent.IsArrive(destination) && !isPaying)
         {
             isPaying = true;
+            Debug.LogError($"Paying:{destination}");
             consumerManager.OnPayStart(consumerData);
         }
     }
