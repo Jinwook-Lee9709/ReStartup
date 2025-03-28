@@ -13,6 +13,7 @@ public class UiManager : MonoBehaviour
         if (uiSetChack)
         {
             uiHUD.SetActive(false);
+            uiUpgrade.SetActive(false);
             uiApps.SetActive(true);
         }
     }
@@ -32,6 +33,12 @@ public class UiManager : MonoBehaviour
     public void OnClickButtonExitUiUpgrade()
     {
         uiUpgrade.SetActive(false);
+    }
+
+    public void OnClickButtonExitUiApps()
+    {
+        uiApps.SetActive(false);
+        uiHUD.SetActive(true);
     }
 
     public void OnClickButtonExitReviewUi()

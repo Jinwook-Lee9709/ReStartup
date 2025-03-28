@@ -42,13 +42,13 @@ public class UiItem : MonoBehaviour
             case WorkType.All:
                 break;
             case WorkType.Payment:
-                uiNameText.text = $"Cashier : {employeeData.StaffID}";
+                uiNameText.text = $"계산원 :\n{employeeData.StaffID}";
                 break;
             case WorkType.Hall:
-                uiNameText.text = $"HallStaff : {employeeData.StaffID}";
+                uiNameText.text = $"홀직원 :\n{employeeData.StaffID}";
                 break;
             case WorkType.Kitchen:
-                uiNameText.text = $"KitchenStaff : {employeeData.StaffID}";
+                uiNameText.text = $"주방직원 :\n{employeeData.StaffID}";
                 break;
         }
         uiUpgradeCostText.text = $"{employeeData.Cost}";
@@ -79,7 +79,7 @@ public class UiItem : MonoBehaviour
                         newEmployee.GetComponent<SpriteRenderer>().color = Color.red;
                         break;
                 }
-                newEmployee.GetComponentInChildren<TextMeshPro>().text = ((WorkType)employeeData.StaffType).ToString();
+                newEmployee.GetComponentInChildren<TextMeshPro>().text = $"{((WorkType)employeeData.StaffType).ToString()}직원";
                 var workerManager = ServiceLocator.Instance.GetSceneService<GameManager>().WorkerManager;
                 workerManager.RegisterWorker(newEmployee, (WorkType)newEmployee.EmployeeData.StaffType);
             }
@@ -91,13 +91,13 @@ public class UiItem : MonoBehaviour
                 case WorkType.All:
                     break;
                 case WorkType.Payment:
-                    uiNameText.text = $"Cashier   : {employeeData.StaffID}:{employeeData.upgradeCount}";
+                    uiNameText.text = $"계산원 :\n{employeeData.StaffID}:{employeeData.upgradeCount}";
                     break;
                 case WorkType.Hall:
-                    uiNameText.text = $"HallStaff   : {employeeData.StaffID}:{employeeData.upgradeCount}";
+                    uiNameText.text = $"홀직원 :\n{employeeData.StaffID}:{employeeData.upgradeCount}";
                     break;
                 case WorkType.Kitchen:
-                    uiNameText.text = $"KitchenStaff : {employeeData.StaffID}:{employeeData.upgradeCount}";
+                    uiNameText.text = $"주방직원 :\n{employeeData.StaffID}:{employeeData.upgradeCount}";
                     break;
             }
             uiUpgradeCostText.text = $"{employeeData.Cost * employeeData.upgradeCount}";
