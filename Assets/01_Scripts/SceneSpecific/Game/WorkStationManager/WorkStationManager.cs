@@ -12,11 +12,13 @@ public class WorkStationManager : MonoBehaviour
     [SerializeField] private List<Transform> tablePivots;
     [SerializeField] private NavMeshSurface surface2D;
 
-    public int currentTableCount = 1;
+    public int currentTableCount = 0;
 
     private void Start()
     {
         button.onClick.AddListener(OnTableAdd);
+        int excludeLayer = LayerMask.NameToLayer("InGameText");
+        surface2D.layerMask = ~(1 << excludeLayer);
         surface2D.BuildNavMesh();
     }
 

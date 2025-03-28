@@ -22,7 +22,6 @@ public class WorkFlowController : MonoBehaviour
         customerQueue = new Queue<Consumer>();
         cookingStationManager.InsertObject(tempStation);
         foodPickupCounterManager.InsertObject(tempCounter);
-        tableManager.InsertObject(tempTable);
     }
 
     private void Start()
@@ -52,10 +51,7 @@ public class WorkFlowController : MonoBehaviour
     }
 
     #endregion
-
-
-
-    public Table tempTable;
+    
     public CookingStation tempStation;
     public FoodPickupCounter tempCounter;
 

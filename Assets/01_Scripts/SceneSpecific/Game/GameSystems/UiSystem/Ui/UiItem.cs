@@ -64,14 +64,42 @@ public class UiItem : MonoBehaviour
             {
                 var newEmployee = Instantiate(employee).GetComponent<EmployeeFSM>();
                 newEmployee.EmployeeData = employeeData;
-                newEmployee.GetComponent<SpriteRenderer>().sprite = Addressables.LoadAssetAsync<Sprite>(employeeData.Icon).Result;
+                
+                switch ((WorkType)employeeData.StaffType)
+                {
+                    case WorkType.All:
+                        break;
+                    case WorkType.Payment:
+                        newEmployee.GetComponent<SpriteRenderer>().color = Color.yellow;
+                        break;
+                    case WorkType.Hall:
+                        newEmployee.GetComponent<SpriteRenderer>().color = Color.blue;
+                        break;
+                    case WorkType.Kitchen:
+                        newEmployee.GetComponent<SpriteRenderer>().color = Color.red;
+                        break;
+                }
+                newEmployee.GetComponentInChildren<TextMeshPro>().text = ((WorkType)employeeData.StaffType).ToString();
                 var workerManager = ServiceLocator.Instance.GetSceneService<GameManager>().WorkerManager;
                 workerManager.RegisterWorker(newEmployee, (WorkType)newEmployee.EmployeeData.StaffType);
             }
             upgradeButtonText.text = "업그레이드";
             employeeData.upgradeCount++;
             employeeData.OnUpgrade();
-            uiNameText.text = $"{employeeData.StaffID} : {employeeData.upgradeCount}";
+            switch ((WorkType)employeeData.StaffType)
+            {
+                case WorkType.All:
+                    break;
+                case WorkType.Payment:
+                    uiNameText.text = $"Cashier   : {employeeData.StaffID}:{employeeData.upgradeCount}";
+                    break;
+                case WorkType.Hall:
+                    uiNameText.text = $"HallStaff   : {employeeData.StaffID}:{employeeData.upgradeCount}";
+                    break;
+                case WorkType.Kitchen:
+                    uiNameText.text = $"KitchenStaff : {employeeData.StaffID}:{employeeData.upgradeCount}";
+                    break;
+            }
             uiUpgradeCostText.text = $"{employeeData.Cost * employeeData.upgradeCount}";
             if (employeeData.upgradeCount >= 5)
             {
