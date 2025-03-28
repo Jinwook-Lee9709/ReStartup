@@ -1,5 +1,12 @@
 using System;
 
+[Flags]
+public enum DebugFlags
+{
+    FrameRate = 1 << 0,
+    WorkSystem = 1 << 1,
+}
+
 public enum DataTableIds
 {
     Employee,
