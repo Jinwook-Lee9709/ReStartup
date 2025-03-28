@@ -3,6 +3,7 @@ using System;
 [Flags]
 public enum DebugFlags
 {
+    None = 0,
     FrameRate = 1 << 0,
     WorkSystem = 1 << 1,
 }
@@ -85,9 +86,30 @@ public static class Endpoints
 
 public static class Constants
 {
-    public static float DEFAULT_ORDER_TIME = 0f;
-    public static int MAX_UPGRADE_LEVEL = 5;
+    public static readonly float DEFAULT_ORDER_TIME = 0f;
+    public static readonly int MAX_UPGRADE_LEVEL = 5;
 }
+
+public static class Variables
+{
+    private static DebugFlags debugFlags = DebugFlags.WorkSystem;
+    public static event Action<DebugFlags> OnDebugFlagsChanged;
+    public static DebugFlags DebugFlags
+    {
+        get => debugFlags;
+        set
+        {
+            if (debugFlags != value) // 값이 변경되었을 때만 이벤트 발생
+            {
+                debugFlags = value;
+                OnDebugFlagsChanged?.Invoke(debugFlags); // 이벤트 호출
+            }
+        }
+    }
+    
+    
+}
+
 
 public static class Strings
 {

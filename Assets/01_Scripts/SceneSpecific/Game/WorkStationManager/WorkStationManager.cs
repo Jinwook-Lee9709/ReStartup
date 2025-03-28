@@ -43,5 +43,10 @@ public class WorkStationManager : MonoBehaviour
         workFlowController.AddTable(table);
 
         surface2D.UpdateNavMesh(surface2D.navMeshData);
+
+        if (currentTableCount == tablePivots.Count)
+        {
+            button.interactable = false;
+        }
     }
 }

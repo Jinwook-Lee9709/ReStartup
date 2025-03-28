@@ -285,7 +285,6 @@ public class ConsumerFSM : MonoBehaviour
         if (agent.IsArrive(destination) && !isPaying)
         {
             isPaying = true;
-            Debug.LogError($"Paying:{destination}");
             consumerManager.OnPayStart(consumerData);
         }
     }
