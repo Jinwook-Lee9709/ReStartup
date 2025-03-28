@@ -17,7 +17,6 @@ public class Player : MonoBehaviour
         Debug.Log(work);
         if (work)
             Debug.Log("InteractableObjects Touch");
-        //��Ŀ�� �־������.
         else
             agent.SetDestination(pos);
     }

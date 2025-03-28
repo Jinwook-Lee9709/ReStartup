@@ -73,14 +73,13 @@ public class UiItem : MonoBehaviour
                         newEmployee.GetComponent<SpriteRenderer>().color = Color.yellow;
                         break;
                     case WorkType.Hall:
-                        newEmployee.GetComponent<SpriteRenderer>().color = Color.green;
+                        newEmployee.GetComponent<SpriteRenderer>().color = Color.blue;
                         break;
                     case WorkType.Kitchen:
                         newEmployee.GetComponent<SpriteRenderer>().color = Color.red;
                         break;
                 }
-
-
+                newEmployee.GetComponentInChildren<TextMeshPro>().text = ((WorkType)employeeData.StaffType).ToString();
                 var workerManager = ServiceLocator.Instance.GetSceneService<GameManager>().WorkerManager;
                 workerManager.RegisterWorker(newEmployee, (WorkType)newEmployee.EmployeeData.StaffType);
             }
@@ -92,10 +91,10 @@ public class UiItem : MonoBehaviour
                 case WorkType.All:
                     break;
                 case WorkType.Payment:
-                    uiNameText.text = $"Cashier : {employeeData.StaffID}:{employeeData.upgradeCount}";
+                    uiNameText.text = $"Cashier   : {employeeData.StaffID}:{employeeData.upgradeCount}";
                     break;
                 case WorkType.Hall:
-                    uiNameText.text = $"HallStaff : {employeeData.StaffID}:{employeeData.upgradeCount}";
+                    uiNameText.text = $"HallStaff   : {employeeData.StaffID}:{employeeData.upgradeCount}";
                     break;
                 case WorkType.Kitchen:
                     uiNameText.text = $"KitchenStaff : {employeeData.StaffID}:{employeeData.upgradeCount}";
