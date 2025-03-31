@@ -20,5 +20,15 @@ public class WorkFoodToTable : InteractWorkBase
 
     public override void OnWorkCanceled()
     {
+        base.OnWorkCanceled();
+        var table = target as Table;
+        context.WorkFlowController.ReturnTable(table);
+        table.ClearWork();
+        if (worker == null)
+            return;
+        var transporter = worker as ITransportable;
+        var food = transporter.HandPivot.GetChild(0).GetComponent<FoodObject>();
+        if(food != null)
+            food.Release();
     }
 }

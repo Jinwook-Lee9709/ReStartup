@@ -31,6 +31,11 @@ public class WorkFoodToHall : InteractWorkBase
         base.OnWorkCanceled();
         context.WorkFlowController.ReturnFoodPickupCounter(counter);
         counter.ClearWork();
-        
+        if (worker is null)
+            return;
+        var transporter = worker as ITransportable;
+        var food = transporter.HandPivot.GetChild(0).GetComponent<FoodObject>();
+        if(food != null)
+            food.Release();
     }
 }

@@ -1,7 +1,6 @@
 public class WorkGotoFoodPickupCounter : InteractWorkBase
 {
     private MainLoopWorkContext context;
-    private FoodObject foodObject;
 
     public WorkGotoFoodPickupCounter(WorkManager workManager, WorkType workType, float interactionTime = 0) : base(workManager, workType, interactionTime)
     {
@@ -35,5 +34,12 @@ public class WorkGotoFoodPickupCounter : InteractWorkBase
 
     public override void OnWorkCanceled()
     {
+        base.OnWorkCanceled();
+        var counter = target as FoodPickupCounter;
+        context.WorkFlowController.ReturnFoodPickupCounter(counter);
+        counter.ClearWork();
+        var food = counter.FoodPlacePivot.GetChild(0).GetComponent<FoodObject>();
+        if(food != null)
+            food.Release();
     }
 }
