@@ -22,8 +22,13 @@ public class UiItem : MonoBehaviour
 
     public FoodData foodData;
 
+    public EmployeeUpgradeListUi employeeUpgradeData;
+
+    private Button button;
+
     private void Start()
     {
+
         if (employeeData != null)
         {
             StartCoroutine(LoadSpriteCoroutine(employeeData.Icon));
@@ -32,10 +37,18 @@ public class UiItem : MonoBehaviour
         {
             StartCoroutine(LoadSpriteCoroutine(foodData.IconID));
         }
+        employeeUpgradeData = GetComponentInParent<EmployeeUpgradeListUi>();
+        if (employeeUpgradeData == null)
+        {
+            Debug.LogError($"{gameObject.name}의 부모 중 EmployeeUpgradeListUi를 찾을 수 없습니다.");
+            return;  // Null이면 실행 중단
+        }
+        employeeUpgradeData.AddButtonList(button);
     }
 
     public void Init(EmployeeTableGetData data)
     {
+
         employeeData = data;
         switch ((WorkType)employeeData.StaffType)
         {
@@ -52,7 +65,7 @@ public class UiItem : MonoBehaviour
                 break;
         }
         uiUpgradeCostText.text = $"{employeeData.Cost}";
-        var button = GetComponentInChildren<Button>();
+        button = GetComponentInChildren<Button>();
         upgradeButtonText.text = "고용하기";
         button.onClick.AddListener((UnityEngine.Events.UnityAction)(() =>
         {
@@ -64,7 +77,7 @@ public class UiItem : MonoBehaviour
             {
                 var newEmployee = Instantiate(employee).GetComponent<EmployeeFSM>();
                 newEmployee.EmployeeData = employeeData;
-                
+
                 switch ((WorkType)employeeData.StaffType)
                 {
                     case WorkType.All:
@@ -106,6 +119,7 @@ public class UiItem : MonoBehaviour
                 button.interactable = false;
             }
         }));
+
     }
     public void Init(FoodData data)
     {
