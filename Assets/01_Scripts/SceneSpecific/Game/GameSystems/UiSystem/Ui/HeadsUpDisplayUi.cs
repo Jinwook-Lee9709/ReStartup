@@ -5,22 +5,18 @@ public class HeadsUpDisplayUi : MonoBehaviour
     public GameObject smartPhoneButton;
     public GameObject smartPhoneIncludedButton;
 
-    public bool includedUiSet;
-
-    private void OnEnable()
-    {
-    }
+    public bool includedUiSet = false;
 
     public void OnClickButtonSmartPhoneButton()
     {
         if (!includedUiSet)
         {
-            //�ӽ÷� �������� ��������Ʈ �ٲٴ°� ���ƺ���
             var currentRotation = smartPhoneButton.transform.rotation.eulerAngles;
             currentRotation.z += 10f;
             smartPhoneButton.transform.rotation = Quaternion.Euler(currentRotation);
             smartPhoneIncludedButton.SetActive(true);
             includedUiSet = true;
+            Debug.Log(includedUiSet);
         }
     }
 
