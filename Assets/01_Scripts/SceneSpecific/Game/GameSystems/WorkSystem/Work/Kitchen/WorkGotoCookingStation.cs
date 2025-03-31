@@ -11,7 +11,7 @@ public class WorkGotoCookingStation : InteractWorkBase
     private Sprite foodSprite;
     private ITransportable transformer;
 
-    public WorkGotoCookingStation(WorkManager workManager, WorkType workType) : base(workManager, workType)
+    public WorkGotoCookingStation(WorkManager workManager, WorkType workType, float interactionTime = 1) : base(workManager, workType, interactionTime)
     {
     }
 
@@ -26,7 +26,7 @@ public class WorkGotoCookingStation : InteractWorkBase
         worker.ClearWork();
 
         var station = target as CookingStation;
-        context.WorkFlowController.ReturnCookingStation(target as CookingStation);
+        context.WorkFlowController.ReturnCookingStation(station);
 
         var work = new WorkFoodToHall(workManager, WorkType.Kitchen);
         work.SetContext(context, counter);
@@ -64,5 +64,9 @@ public class WorkGotoCookingStation : InteractWorkBase
 
     public override void OnWorkCanceled()
     {
+        base.OnWorkCanceled();
+        var station = target as CookingStation;
+        context.WorkFlowController.ReturnCookingStation(station);
+        station.ClearWork();
     }
 }

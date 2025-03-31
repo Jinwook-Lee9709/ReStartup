@@ -2,7 +2,7 @@ public class WorkFoodToTable : InteractWorkBase
 {
     private MainLoopWorkContext context;
 
-    public WorkFoodToTable(WorkManager workManager, WorkType workType) : base(workManager, workType)
+    public WorkFoodToTable(WorkManager workManager, WorkType workType, float interactionTime = 1) : base(workManager, workType, interactionTime)
     {
     }
 

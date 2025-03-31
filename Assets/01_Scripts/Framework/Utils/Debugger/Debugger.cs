@@ -5,7 +5,7 @@ using UnityEngine;
 
 public abstract class Debugger : MonoBehaviour
 {
-    protected DebugFlags DebugType;
+    [SerializeField] protected DebugFlags DebugType;
     protected bool IsAvailable;
 
     protected void Start()

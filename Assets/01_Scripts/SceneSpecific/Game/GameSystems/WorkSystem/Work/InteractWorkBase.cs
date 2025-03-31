@@ -7,7 +7,7 @@ public abstract class InteractWorkBase : WorkBase
 {
     public Func<Transform> customTarget;
     private IInteractor interactor;
-    protected float interactTime;
+    protected float interactTime = 1;
     protected IInteractable target;
 
     private Transform targetTransform;
@@ -20,8 +20,9 @@ public abstract class InteractWorkBase : WorkBase
     private WorkPhase workPhase;
 
 
-    public InteractWorkBase(WorkManager workManager, WorkType workType) : base(workManager, workType)
+    public InteractWorkBase(WorkManager workManager, WorkType workType, float interactTime = 1) : base(workManager, workType)
     {
+        this.interactTime = interactTime;
     }
 
     //Properties
@@ -89,12 +90,13 @@ public abstract class InteractWorkBase : WorkBase
 
     public override void OnWorkCanceled()
     {
-        workManager.AddStoppedWork(workType, this);
-        if (workPhase == WorkPhase.Working) target.OnInteractCanceled();
+        OnWorkFinished();
     }
 
     public override void OnWorkStopped()
     {
+        workManager.AddStoppedWork(workType, this);
+        if (workPhase == WorkPhase.Working) target.OnInteractCanceled();
     }
 
     public override void OnWorkFinished()

@@ -2,7 +2,7 @@ public class WorkPayment : InteractWorkBase
 {
     private MainLoopWorkContext context;
 
-    public WorkPayment(WorkManager workManager, WorkType workType) : base(workManager, workType)
+    public WorkPayment(WorkManager workManager, WorkType workType, float interactionTime = 1) : base(workManager, workType, interactionTime)
     {
     }
 

@@ -92,9 +92,6 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
     {
         if (interactor == null)
             return 0;
-           
-        if (currentWork.InteractTime == 0)
-            return 1;
 
         return 1 / interactor.InteractionSpeed / currentWork.InteractTime;
     }
