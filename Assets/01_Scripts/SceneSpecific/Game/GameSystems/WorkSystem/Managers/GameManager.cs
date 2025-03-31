@@ -11,9 +11,7 @@ public class GameManager : MonoBehaviour
 
     public ThemeIds CurrentTheme => currentTheme;
     public FoodUpgradeDataManager FoodUpgradeData { get; private set; }
-
     public ObjectPoolManager ObjectPoolManager { get; private set; }
-
     public WorkerManager WorkerManager { get; private set; }
 
     private void Awake()

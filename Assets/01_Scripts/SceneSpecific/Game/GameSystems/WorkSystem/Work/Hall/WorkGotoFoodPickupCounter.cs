@@ -3,7 +3,7 @@ public class WorkGotoFoodPickupCounter : InteractWorkBase
     private MainLoopWorkContext context;
     private FoodObject foodObject;
 
-    public WorkGotoFoodPickupCounter(WorkManager workManager, WorkType workType, float interactionTime = 1) : base(workManager, workType, interactionTime)
+    public WorkGotoFoodPickupCounter(WorkManager workManager, WorkType workType, float interactionTime = 0) : base(workManager, workType, interactionTime)
     {
     }
 
