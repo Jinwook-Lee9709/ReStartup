@@ -8,6 +8,8 @@ public class UserDataManager : Singleton<UserDataManager>
 {
     private UserData currentUserData = new();
 
+    public Action<int?> action;
+
     public UserData CurrentUserData
     {
         get
@@ -53,6 +55,7 @@ public class UserDataManager : Singleton<UserDataManager>
     public IEnumerator OnGoldUp(Consumer consumer)
     {
         CurrentUserData.Gold += consumer.needFood.SellingCost;
+        action.Invoke(CurrentUserData.Gold);
 
         yield return new WaitForSeconds(0.5f);
 
