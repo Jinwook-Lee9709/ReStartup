@@ -22,8 +22,13 @@ public class UiItem : MonoBehaviour
 
     public FoodData foodData;
 
+    public EmployeeUpgradeListUi employeeUpgradeData;
+
+    private Button button;
+
     private void Start()
     {
+
         if (employeeData != null)
         {
             StartCoroutine(LoadSpriteCoroutine(employeeData.Icon));
@@ -32,27 +37,35 @@ public class UiItem : MonoBehaviour
         {
             StartCoroutine(LoadSpriteCoroutine(foodData.IconID));
         }
+        employeeUpgradeData = GetComponentInParent<EmployeeUpgradeListUi>();
+        if (employeeUpgradeData == null)
+        {
+            Debug.LogError($"{gameObject.name}의 부모 중 EmployeeUpgradeListUi를 찾을 수 없습니다.");
+            return;  // Null이면 실행 중단
+        }
+        employeeUpgradeData.AddButtonList(button);
     }
 
     public void Init(EmployeeTableGetData data)
     {
+
         employeeData = data;
         switch ((WorkType)employeeData.StaffType)
         {
             case WorkType.All:
                 break;
             case WorkType.Payment:
-                uiNameText.text = $"Cashier : {employeeData.StaffID}";
+                uiNameText.text = $"계산원 :\n{employeeData.StaffID}";
                 break;
             case WorkType.Hall:
-                uiNameText.text = $"HallStaff : {employeeData.StaffID}";
+                uiNameText.text = $"홀직원 :\n{employeeData.StaffID}";
                 break;
             case WorkType.Kitchen:
-                uiNameText.text = $"KitchenStaff : {employeeData.StaffID}";
+                uiNameText.text = $"주방직원 :\n{employeeData.StaffID}";
                 break;
         }
         uiUpgradeCostText.text = $"{employeeData.Cost}";
-        var button = GetComponentInChildren<Button>();
+        button = GetComponentInChildren<Button>();
         upgradeButtonText.text = "고용하기";
         button.onClick.AddListener((UnityEngine.Events.UnityAction)(() =>
         {
@@ -64,7 +77,7 @@ public class UiItem : MonoBehaviour
             {
                 var newEmployee = Instantiate(employee).GetComponent<EmployeeFSM>();
                 newEmployee.EmployeeData = employeeData;
-                
+
                 switch ((WorkType)employeeData.StaffType)
                 {
                     case WorkType.All:
@@ -79,7 +92,7 @@ public class UiItem : MonoBehaviour
                         newEmployee.GetComponent<SpriteRenderer>().color = Color.red;
                         break;
                 }
-                newEmployee.GetComponentInChildren<TextMeshPro>().text = ((WorkType)employeeData.StaffType).ToString();
+                newEmployee.GetComponentInChildren<TextMeshPro>().text = $"{((WorkType)employeeData.StaffType).ToString()}직원";
                 var workerManager = ServiceLocator.Instance.GetSceneService<GameManager>().WorkerManager;
                 workerManager.RegisterWorker(newEmployee, (WorkType)newEmployee.EmployeeData.StaffType);
             }
@@ -91,13 +104,13 @@ public class UiItem : MonoBehaviour
                 case WorkType.All:
                     break;
                 case WorkType.Payment:
-                    uiNameText.text = $"Cashier   : {employeeData.StaffID}:{employeeData.upgradeCount}";
+                    uiNameText.text = $"계산원 :\n{employeeData.StaffID}:{employeeData.upgradeCount}";
                     break;
                 case WorkType.Hall:
-                    uiNameText.text = $"HallStaff   : {employeeData.StaffID}:{employeeData.upgradeCount}";
+                    uiNameText.text = $"홀직원 :\n{employeeData.StaffID}:{employeeData.upgradeCount}";
                     break;
                 case WorkType.Kitchen:
-                    uiNameText.text = $"KitchenStaff : {employeeData.StaffID}:{employeeData.upgradeCount}";
+                    uiNameText.text = $"주방직원 :\n{employeeData.StaffID}:{employeeData.upgradeCount}";
                     break;
             }
             uiUpgradeCostText.text = $"{employeeData.Cost * employeeData.upgradeCount}";
@@ -106,6 +119,7 @@ public class UiItem : MonoBehaviour
                 button.interactable = false;
             }
         }));
+
     }
     public void Init(FoodData data)
     {
