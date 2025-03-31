@@ -2,8 +2,7 @@ public class WorkGetOrder : InteractWorkBase
 {
     private MainLoopWorkContext context;
 
-    public WorkGetOrder(WorkManager workManager, WorkType workType)
-        : base(workManager, workType)
+    public WorkGetOrder(WorkManager workManager, WorkType workType, float interactionTime = 1) : base(workManager, workType, interactionTime)
     {
     }
 

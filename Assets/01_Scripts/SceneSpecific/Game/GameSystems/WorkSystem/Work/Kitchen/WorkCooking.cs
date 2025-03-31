@@ -10,7 +10,7 @@ public class WorkCooking : InteractWorkBase
 
     private ITransportable transformer;
 
-    public WorkCooking(WorkManager workManager, WorkType workType) : base(workManager, workType)
+    public WorkCooking(WorkManager workManager, WorkType workType, float interactionTime = 1) : base(workManager, workType, interactionTime)
     {
     }
 

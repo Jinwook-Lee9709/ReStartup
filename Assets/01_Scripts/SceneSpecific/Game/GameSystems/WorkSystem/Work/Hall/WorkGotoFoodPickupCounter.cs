@@ -3,7 +3,7 @@ public class WorkGotoFoodPickupCounter : InteractWorkBase
     private MainLoopWorkContext context;
     private FoodObject foodObject;
 
-    public WorkGotoFoodPickupCounter(WorkManager workManager, WorkType workType) : base(workManager, workType)
+    public WorkGotoFoodPickupCounter(WorkManager workManager, WorkType workType, float interactionTime = 1) : base(workManager, workType, interactionTime)
     {
     }
 
@@ -19,7 +19,7 @@ public class WorkGotoFoodPickupCounter : InteractWorkBase
         var counter = target as FoodPickupCounter;
         context.WorkFlowController.ReturnFoodPickupCounter(target as FoodPickupCounter);
 
-        var work = new WorkFoodToTable(workManager, WorkType.Hall);
+        var work = new WorkFoodToTable(workManager, WorkType.Hall, 0);
         work.SetContext(context);
         work.SetInteractable(context.Consumer.currentTable);
         context.Consumer.currentTable.SetWork(work);

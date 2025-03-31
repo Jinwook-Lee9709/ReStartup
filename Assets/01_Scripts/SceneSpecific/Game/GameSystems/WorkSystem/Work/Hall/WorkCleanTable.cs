@@ -3,7 +3,7 @@ public class WorkCleanTable : InteractWorkBase
     private WorkFlowController controller;
     private FoodObject foodObject;
 
-    public WorkCleanTable(WorkManager workManager, WorkType workType) : base(workManager, workType)
+    public WorkCleanTable(WorkManager workManager, WorkType workType, float interactionTime = 1) : base(workManager, workType, interactionTime)
     {
     }
 

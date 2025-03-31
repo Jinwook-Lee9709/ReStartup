@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class ObjectPoolManager
+public class ObjectPoolManager : MonoBehaviour
 {
     private readonly Dictionary<Type, ObjectPool<GameObject>> pools = new();
 
-    public void CreatePool(Component component)
+    public void CreatePool<T>(T component) where T : Component, IPoolable
     {
-        var type = component.GetType();
+        var type = typeof(T);
         if (pools.ContainsKey(type))
         {
             Debug.LogWarning("Pool already exists");
@@ -17,11 +17,17 @@ public class ObjectPoolManager
         }
 
         var original = component.gameObject;
-
-        var newPool = new ObjectPool<GameObject>(
+        
+        ObjectPool<GameObject> newPool = null;
+        
+        newPool = new ObjectPool<GameObject>(
             () =>
             {
-                var instance = GameObject.Instantiate(original);
+                var instance = Instantiate(original);
+                if (instance.TryGetComponent<IPoolable>(out var pooledObject))
+                {
+                    pooledObject.SetPool(newPool);
+                }
                 instance.SetActive(false);
                 return instance;
             },
@@ -32,5 +38,26 @@ public class ObjectPoolManager
             10,
             100);
         pools.Add(type, newPool);
+    }
+
+    public GameObject GetObjectFromPool<T>() where T : Component, IPoolable
+    {
+        var type = typeof(T);
+        if (!pools.TryGetValue(type, out var pool))
+        {
+            Debug.LogError($"Can't find {type.Name} Pool");
+            return null;
+        }
+
+        return pool.Get();
+    }
+
+
+    public void ClearPool()
+    {
+        foreach (var pool in pools)
+        {
+            pool.Value.Clear();
+        }
     }
 }
