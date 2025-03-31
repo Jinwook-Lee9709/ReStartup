@@ -73,6 +73,10 @@ public class UiItem : MonoBehaviour
             //{
             //  return;
             //}
+            if (employeeData.upgradeCount >= 5)
+            {
+                return;
+            }
             if (employeeData.upgradeCount < 1)
             {
                 var newEmployee = Instantiate(employee).GetComponent<EmployeeFSM>();
