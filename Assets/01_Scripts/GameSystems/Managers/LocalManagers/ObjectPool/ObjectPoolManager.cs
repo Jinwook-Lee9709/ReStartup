@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Pool;
 
-public class ObjectPoolManager : MonoBehaviour
+public class ObjectPoolManager
 {
     private readonly Dictionary<Type, ObjectPool<GameObject>> pools = new();
 
@@ -23,7 +24,9 @@ public class ObjectPoolManager : MonoBehaviour
         newPool = new ObjectPool<GameObject>(
             () =>
             {
-                var instance = Instantiate(original);
+                var handle = Addressables.InstantiateAsync(original);
+                handle.WaitForCompletion();
+                var instance = handle.Result;
                 if (instance.TryGetComponent<IPoolable>(out var pooledObject))
                 {
                     pooledObject.SetPool(newPool);

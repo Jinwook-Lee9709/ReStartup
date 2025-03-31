@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 public class WorkFlowController : MonoBehaviour
 {
+    [SerializeField] private AssetReference foodPrefab;
     [SerializeField] private WorkManager workManager;
     [SerializeField] private CashierCounter cashierCounter;
     private readonly Queue<Consumer> cashierQueue = new();
@@ -19,9 +21,20 @@ public class WorkFlowController : MonoBehaviour
 
     private void Awake()
     {
+        CreateFoodObjectPool();
         customerQueue = new Queue<Consumer>();
         cookingStationManager.InsertObject(tempStation);
         foodPickupCounterManager.InsertObject(tempCounter);
+    }
+
+    private void CreateFoodObjectPool()
+    {
+        var handle = foodPrefab.LoadAssetAsync<GameObject>();
+        handle.WaitForCompletion();
+        GameManager gameManager = ServiceLocator.Instance.GetSceneService<GameManager>();
+        var foodGameObject = handle.Result;
+        var foodObject = foodGameObject.GetComponent<FoodObject>();
+        gameManager.ObjectPoolManager.CreatePool(foodObject);
     }
 
     private void Start()
