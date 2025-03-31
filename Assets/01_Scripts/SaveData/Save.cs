@@ -9,7 +9,7 @@ public class UserData
 {
     public string UID { get; set; } //���� UID
     public string Name { get; set; } //���� �̸�
-    public int? Gold { get; set; } //�ΰ��� ��ȭ
+    public int? Gold { get; set; } = new(); //�ΰ��� ��ȭ
     public int? CurrentRankPoint { get; set; } //���� ��ŷ ����Ʈ
     public int? PositiveCnt { get; set; } //�ſ츸�� �մ� ī��Ʈ
     public int? NegativeCnt { get; set; } //�Ҹ��� �մ� ī��Ʈ

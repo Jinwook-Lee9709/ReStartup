@@ -9,6 +9,8 @@ using UnityEngine.Pool;
 
 public class ConsumerManager : MonoBehaviour
 {
+    private readonly string consumerDataTableFileName = "guesttable";
+    private readonly string consumerSpawnPercentCsvFileName = "guestspawnratetable";
     [SerializeField] private BuffManager buffManager;
     [SerializeField] public WorkFlowController workFlowController;
     [SerializeField] private int maxConsumerCnt;
@@ -18,6 +20,7 @@ public class ConsumerManager : MonoBehaviour
     [SerializeField] private int tempPairProb = 100;
     [SerializeField] private TextMeshPro waitingText;
 
+    private ConsumerDataTable consumerDataTable;
     private Dictionary<int, List<int>> consumerSpawnPercent;
 
     /// <summary>
@@ -126,6 +129,10 @@ public class ConsumerManager : MonoBehaviour
         foreach (ConsumerFSM.ConsumerState consumerState in Enum.GetValues(typeof(ConsumerFSM.ConsumerState)))
             currentSpawnedConsumerDictionary[consumerState] = new List<Consumer>();
 
+        consumerDataTable = DataTableManager.Get<ConsumerDataTable>(DataTableIds.Consumer.ToString());
+        consumerSpawnPercent = CsvToDictionaryLoader.LoadCsvToDictionary(consumerSpawnPercentCsvFileName);
+
+
         StartCoroutine(SpawnCoroutine());
     }
 
@@ -169,6 +176,7 @@ public class ConsumerManager : MonoBehaviour
         consumer.NextTargetTransform = null;
         consumer.pairData = null;
         consumer.FSM.consumerManager = this;
+        consumer.FSM.consumerData = consumerDataTable.GetConsumerData(consumerSpawnPercent[14]);
         consumer.FSM.SetCashierCounter(workFlowController.GetCashierCounter());
         consumer.FSM.OnSeatEvent -= workFlowController.AssignGetOrderWork;
         consumer.FSM.OnSeatEvent += workFlowController.AssignGetOrderWork;

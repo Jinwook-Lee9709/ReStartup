@@ -38,6 +38,10 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
 
     private void Start()
     {
+        EmployeeData.MoveSpeed = EmployeeData.MoveSpeed + EmployeeData.upgradeSpeed;
+        agent.speed = EmployeeData.MoveSpeed;
+        InteractionSpeed = EmployeeData.WorkSpeed - upgradeWorkSpeedValue * EmployeeData.upgradeCount;
+
         EmployeeData.OnUpgradeEvent += () =>
         {
             EmployeeData.MoveSpeed = EmployeeData.MoveSpeed + EmployeeData.upgradeSpeed;

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public enum GuestType
@@ -7,8 +8,10 @@ public enum GuestType
     Regular2, //�ܰ�
     Regular3, //�ܰ�
     Influencer, //���÷��
-    BadGuest //������
+    BadGuest, //������
+    PromotionGuest,
 }
+[Serializable]
 public class ConsumerData
 {
     public int GuestId { get; set; }
@@ -17,10 +20,10 @@ public class ConsumerData
     public GuestType GuestType {  get; set; }
     public int SellTipPercent { get; set; }
     public BuffType BuffType { get; set; }
-    public int BuffId { get; set; }
+    //public int BuffID { get; set; }
     public int LoveFoodId { get; set; }
-    public Sprite GuestPrefab { get; set; }
-    public ParticleSystem GuestEffect {  get; set; }
+    public string GuestPrefab { get; set; }
+    //public string GuestEffect {  get; set; }
 
     public float orderWaitTimer;
     public readonly float MaxOrderWaitLimit = 18f;
