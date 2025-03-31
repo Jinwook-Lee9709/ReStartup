@@ -3,7 +3,7 @@ public class WorkFoodToHall : InteractWorkBase
     private MainLoopWorkContext context;
     private FoodPickupCounter counter;
 
-    public WorkFoodToHall(WorkManager workManager, WorkType workType, float interactionTime = 1) : base(workManager, workType, interactionTime)
+    public WorkFoodToHall(WorkManager workManager, WorkType workType, float interactionTime = 0) : base(workManager, workType, interactionTime)
     {
     }
 
@@ -29,5 +29,13 @@ public class WorkFoodToHall : InteractWorkBase
     public override void OnWorkCanceled()
     {
         base.OnWorkCanceled();
+        context.WorkFlowController.ReturnFoodPickupCounter(counter);
+        counter.ClearWork();
+        if (worker is null)
+            return;
+        var transporter = worker as ITransportable;
+        var food = transporter.HandPivot.GetChild(0).GetComponent<FoodObject>();
+        if(food != null)
+            food.Release();
     }
 }

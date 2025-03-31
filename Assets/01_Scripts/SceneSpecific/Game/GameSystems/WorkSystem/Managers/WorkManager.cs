@@ -8,7 +8,6 @@ public class WorkManager : MonoBehaviour
 
     private Dictionary<WorkType, List<WorkBase>> assignedWorks;
     private Dictionary<WorkType, PriorityQueue<WorkBase, float>> stoppedWorkQueues;
-
     private Dictionary<WorkType, PriorityQueue<WorkBase, float>> workQueues;
 
     private void Awake()
@@ -46,6 +45,11 @@ public class WorkManager : MonoBehaviour
     public void AddStoppedWork(WorkType type, WorkBase work)
     {
         stoppedWorkQueues[type].Enqueue(work, Time.time);
+    }
+
+    public void OnWorkCanceled(Consumer consumer)
+    {
+        
     }
 
     private void OnWorkerReturned(WorkType type)

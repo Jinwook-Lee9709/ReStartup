@@ -101,7 +101,7 @@ public abstract class InteractWorkBase : WorkBase
 
     public override void OnWorkFinished()
     {
-        if (nextWorker != worker)
+        if (nextWorker != worker && worker is not null)
             worker.OnWorkFinished();
         workManager.OnWorkFinished(this);
     }

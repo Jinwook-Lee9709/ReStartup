@@ -17,7 +17,6 @@ public class WorkCooking : InteractWorkBase
     public void SetContext(MainLoopWorkContext context)
     {
         this.context = context;
-        interactTime = Constants.DEFAULT_ORDER_TIME;
     }
 
     protected override void HandlePostInteraction()
@@ -85,5 +84,9 @@ public class WorkCooking : InteractWorkBase
 
     public override void OnWorkCanceled()
     {
+        base.OnWorkCanceled();
+        var station = target as CookingStation;
+        context.WorkFlowController.ReturnCookingStation(station);
+        station.ClearWork();
     }
 }

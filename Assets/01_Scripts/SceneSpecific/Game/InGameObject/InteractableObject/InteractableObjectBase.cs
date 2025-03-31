@@ -84,13 +84,18 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
 
     private bool IncreaseProgress(float interactionSpeed)
     {
+        if (interactionSpeed == 0)
+        {
+            interactProgress = 1;
+            return true;
+        }
         interactProgress += interactionSpeed * Time.deltaTime;
         return interactProgress >= 1;
     }
 
     private float CalculateInteractionSpeed(IInteractor interactor)
     {
-        if (interactor == null)
+        if (interactor == null || currentWork.InteractTime == 0)
             return 0;
 
         return 1 / interactor.InteractionSpeed / currentWork.InteractTime;

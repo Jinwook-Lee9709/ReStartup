@@ -9,7 +9,6 @@ public class WorkGetOrder : InteractWorkBase
     public void SetContext(MainLoopWorkContext context)
     {
         this.context = context;
-        interactTime = Constants.DEFAULT_ORDER_TIME;
     }
 
     protected override void HandlePostInteraction()

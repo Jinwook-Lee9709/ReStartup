@@ -11,7 +11,7 @@ public class WorkGotoCookingStation : InteractWorkBase
     private Sprite foodSprite;
     private ITransportable transformer;
 
-    public WorkGotoCookingStation(WorkManager workManager, WorkType workType, float interactionTime = 1) : base(workManager, workType, interactionTime)
+    public WorkGotoCookingStation(WorkManager workManager, WorkType workType, float interactionTime = 0) : base(workManager, workType, interactionTime)
     {
     }
 
