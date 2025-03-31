@@ -120,7 +120,8 @@ public class ConsumerFSM : MonoBehaviour
                             break;
                         case Satisfaction.Low:
                             UserDataManager.Instance.CurrentUserData.NegativeCnt++;
-                            //TODO : For ConsumerManager -> WorkFlowController -> Work Return
+                            consumerManager.workFlowController.CancelOrder(consumer);
+                            consumerManager.workFlowController.ReturnTable(consumer.currentTable);
                             break;
                     }
 

@@ -24,18 +24,20 @@ public class WorkFoodToHall : InteractWorkBase
         transporter.DropPackage(counter.FoodPlacePivot);
         counter.SetWork(work);
         nextWork = work;
+        
+        workManager.RegisterConsumerWork(context.Consumer, work);
     }
 
     public override void OnWorkCanceled()
     {
-        base.OnWorkCanceled();
-        context.WorkFlowController.ReturnFoodPickupCounter(counter);
         counter.ClearWork();
+        context.WorkFlowController.ReturnFoodPickupCounter(counter);
         if (worker is null)
             return;
         var transporter = worker as ITransportable;
         var food = transporter.HandPivot.GetChild(0).GetComponent<FoodObject>();
         if(food != null)
             food.Release();
+        base.OnWorkCanceled();
     }
 }

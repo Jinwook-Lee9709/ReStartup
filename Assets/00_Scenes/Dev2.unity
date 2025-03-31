@@ -2163,11 +2163,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddab7efd065a049ba91525f6ced359c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  foodPrefab:
-    m_AssetGUID: b6d5451454923412eb206ab53469ec2c
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
   workManager: {fileID: 173956728}
   cashierCounter: {fileID: 1318060531}
   tempStation: {fileID: 410943703}
@@ -10938,6 +10933,58 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1394537780}
   m_CullTransparentMesh: 1
+--- !u!1 &1427500036
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1427500038}
+  - component: {fileID: 1427500037}
+  m_Layer: 0
+  m_Name: PoolObjects
+  m_TagString: Untagged
+  m_Icon: {fileID: 2800000, guid: 4445790c252970d45ae069bd9011b484, type: 3}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1427500037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1427500036}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1816795d2838f643acc6f6f815cfff9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flattenFolder: 1
+  flattenEvent: 1
+  OnFlattenEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnFolderDestroy:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!4 &1427500038
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1427500036}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1428941825
 GameObject:
   m_ObjectHideFlags: 0
@@ -12432,6 +12479,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentTheme: 1
+  poolParent: {fileID: 1427500038}
 --- !u!1 &1747130790
 GameObject:
   m_ObjectHideFlags: 0
@@ -19677,3 +19725,4 @@ SceneRoots:
   - {fileID: 566584993}
   - {fileID: 407297522}
   - {fileID: 812206592}
+  - {fileID: 1427500038}

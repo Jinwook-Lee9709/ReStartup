@@ -68,7 +68,7 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
 
     public float InteractionSpeed { get; set; }
 
-    public Transform HandPivot { get; }
+    public Transform HandPivot => handPivot;
 
     public void LiftPackage(GameObject package)
     {

@@ -13,6 +13,6 @@ public class TitleSceneManager : MonoBehaviour
     private void OnButtonClick()
     {
         var sceneManager = ServiceLocator.Instance.GetGlobalService<SceneController>();
-        sceneManager.LoadSceneWithLoading(SceneIds.Dev0);
+        sceneManager.LoadSceneWithLoading(SceneIds.Dev2);
     }
 }

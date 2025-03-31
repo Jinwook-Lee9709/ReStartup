@@ -19,6 +19,7 @@ public class Table : InteractableObjectBase
 
     public void OnCleaned()
     {
-        Destroy(foodPlacePivot.GetChild(0).gameObject);
+        var obj = foodPlacePivot.GetChild(0).GetComponent<FoodObject>();
+        obj.Release();
     }
 }

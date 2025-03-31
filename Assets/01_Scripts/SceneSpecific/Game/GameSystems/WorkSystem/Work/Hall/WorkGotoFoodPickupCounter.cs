@@ -23,6 +23,8 @@ public class WorkGotoFoodPickupCounter : InteractWorkBase
         work.SetInteractable(context.Consumer.currentTable);
         context.Consumer.currentTable.SetWork(work);
         worker.AssignWork(work);
+        
+        workManager.RegisterConsumerWork(context.Consumer, work);
 
         var transporter = worker as ITransportable;
         var package = counter.LiftFood();
@@ -34,12 +36,13 @@ public class WorkGotoFoodPickupCounter : InteractWorkBase
 
     public override void OnWorkCanceled()
     {
-        base.OnWorkCanceled();
         var counter = target as FoodPickupCounter;
-        context.WorkFlowController.ReturnFoodPickupCounter(counter);
         counter.ClearWork();
+        context.WorkFlowController.ReturnFoodPickupCounter(counter);
+
         var food = counter.FoodPlacePivot.GetChild(0).GetComponent<FoodObject>();
         if(food != null)
             food.Release();
+        base.OnWorkCanceled();
     }
 }
