@@ -154,4 +154,5 @@ public class UiItem : MonoBehaviour
         else
             Debug.LogError($"Failed to load sprite: {iconAddress}");
     }
+    
 }

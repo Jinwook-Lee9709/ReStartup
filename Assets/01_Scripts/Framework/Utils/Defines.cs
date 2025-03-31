@@ -11,7 +11,8 @@ public enum DebugFlags
 public enum DataTableIds
 {
     Employee,
-    Food
+    Food,
+    Ranking
 }
 
 public enum ThemeIds
