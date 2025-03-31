@@ -56,9 +56,10 @@ public class UserDataManager : Singleton<UserDataManager>
 
         yield return new WaitForSeconds(0.5f);
 
-        if (consumer.FSM.consumerData.TempTipProb < Random.Range(0f, 1f))
-            //TODO : Play Tip PopUp
+        if (consumer.needFood.FoodID == consumer.FSM.consumerData.LoveFoodId && 0.25f < Random.Range(0f, 1f))
+        {    //TODO : Play Tip PopUp
             CurrentUserData.Gold +=
                 Mathf.CeilToInt(consumer.needFood.SellingCost * (consumer.FSM.consumerData.SellTipPercent / 100));
+        }
     }
 }

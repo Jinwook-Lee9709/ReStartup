@@ -248,12 +248,12 @@ public class ConsumerFSM : MonoBehaviour
     {
         //�ֹ��� �޾ư� ��, ������ ����������� ����.
         //deltaTime�� �����Ͽ� ������ ���¸� ����.
-        consumerData.OrderWaitTimer -= Time.deltaTime;
-        if (consumerData.Type == ConsumerData.ConsumerType.Obnoxious)
-            consumerData.OrderWaitTimer -= Time.deltaTime;
+        consumerData.orderWaitTimer -= Time.deltaTime;
+        if (consumerData.GuestType == GuestType.BadGuest)
+            consumerData.orderWaitTimer -= Time.deltaTime;
 
         // Debug.Log(orderWaitTimer);
-        switch (consumerData.OrderWaitTimer)
+        switch (consumerData.orderWaitTimer)
         {
             case var t when t < satisfactionChangeLimit[0] && t > satisfactionChangeLimit[1]:
                 CurrentSatisfaction = Satisfaction.High;
