@@ -146,7 +146,7 @@ public class UiItem : MonoBehaviour
             foodData.upgradeCount++;
             uiNameText.text = $"{foodData.FoodID}";
             uiUpgradeCostText.text = $"{foodData.BasicCost * foodData.upgradeCount}";
-            button.GetComponent<TextMeshProUGUI>().text = "구매함";
+            button.GetComponentInChildren<TextMeshProUGUI>().text = "구매함";
         }));
     }
     private IEnumerator LoadSpriteCoroutine(string iconAddress)
