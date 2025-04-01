@@ -60,7 +60,6 @@ public class ConsumerFSM : MonoBehaviour
                     break;
                 case Satisfaction.Middle:
                     // TODO : Serving Delay Script Play
-                    Debug.Log("늦네에.. \n저, 할아버지가 되어버려요?");
                     // UnityEditor.EditorApplication.isPaused = true;
                     break;
                 case Satisfaction.Low:
@@ -120,7 +119,8 @@ public class ConsumerFSM : MonoBehaviour
                             break;
                         case Satisfaction.Low:
                             UserDataManager.Instance.CurrentUserData.NegativeCnt++;
-                            //TODO : For ConsumerManager -> WorkFlowController -> Work Return
+                            consumerManager.workFlowController.CancelOrder(consumer);
+                            consumerManager.workFlowController.ReturnTable(consumer.currentTable);
                             break;
                     }
 
@@ -252,7 +252,7 @@ public class ConsumerFSM : MonoBehaviour
         if (consumerData.GuestType == GuestType.BadGuest)
             consumerData.orderWaitTimer -= Time.deltaTime;
 
-        // Debug.Log(orderWaitTimer);
+        // Debug.Log(consumerData.orderWaitTimer);
         switch (consumerData.orderWaitTimer)
         {
             case var t when t < satisfactionChangeLimit[0] && t > satisfactionChangeLimit[1]:

@@ -13,7 +13,6 @@ public abstract class InteractWorkBase : WorkBase
     private Transform targetTransform;
 
     //References
-    protected WorkerBase worker;
     private NavMeshAgent workerAgent;
 
     //LocalVariables

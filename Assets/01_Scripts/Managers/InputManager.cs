@@ -85,9 +85,8 @@ public class InputManager : MonoBehaviour
             Vector2 worldPoint = Camera.main.ScreenToWorldPoint(pos);
             var hit = Physics2D.RaycastAll(worldPoint, Vector2.zero);
 
-            
-
             var cheakWork = false;
+
             for (var i = 0; i < hit.Length; i++)
                 if (hit[i].collider != null)
                     if (hit[i].collider.CompareTag("Work"))
@@ -95,7 +94,6 @@ public class InputManager : MonoBehaviour
 
 
             player.OnMoveOrWork(cheakWork, worldPoint);
-
         };
     }
 

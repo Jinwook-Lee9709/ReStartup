@@ -1,27 +1,36 @@
 using System;
 using System.Collections.Generic;
 using AYellowpaper.SerializedCollections;
-using UnityEditor;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class WorkerManager : MonoBehaviour
 {
+    
     //References
     [SerializedDictionary] [SerializeField]
     private SerializedDictionary<WorkType, Transform> idleArea;
 
+    //Prefab
+    [SerializeField] private Player player;
+    
     //Containers
     private Dictionary<WorkType, List<WorkerBase>> workers;
-    private Dictionary<WorkType, List<WorkerBase>> workingWorkers;
+    private List<WorkerBase> workingWorkers;
     private WorkManager workManager;
 
     private void Awake()
     {
+        InitContaineres();
+        GameObject.FindWithTag(Strings.PlayerTag);
+    }
+
+    private void InitContaineres()
+    {
         workers = new Dictionary<WorkType, List<WorkerBase>>();
         foreach (WorkType workType in Enum.GetValues(typeof(WorkType))) workers.Add(workType, new List<WorkerBase>());
-        workingWorkers = new Dictionary<WorkType, List<WorkerBase>>();
-        foreach (WorkType workType in Enum.GetValues(typeof(WorkType)))
-            workingWorkers.Add(workType, new List<WorkerBase>());
+        workingWorkers = new List<WorkerBase>();
     }
 
     //Events
@@ -29,7 +38,7 @@ public class WorkerManager : MonoBehaviour
 
     public void RegisterWorker(WorkerBase worker, WorkType workType)
     {
-        worker.Init(this, idleArea[workType]);
+        worker.Init(this, idleArea[workType], workType);
         workers[workType].Add(worker);
         OnWorkerFree?.Invoke(workType);
     }
@@ -42,7 +51,7 @@ public class WorkerManager : MonoBehaviour
             var worker = list[0];
             list[0].AssignWork(work);
             list.RemoveAt(0);
-            workingWorkers[work.workType].Add(worker);
+            workingWorkers.Add(worker);
             return true;
         }
 
@@ -51,16 +60,11 @@ public class WorkerManager : MonoBehaviour
 
     public void ReturnWorker(WorkerBase worker)
     {
-        foreach (var pair in workingWorkers)
-            if (pair.Value.Contains(worker))
-            {
-                pair.Value.Remove(worker);
-                workers[pair.Key].Add(worker);
-                OnWorkerFree?.Invoke(pair.Key);
-                return;
-            }
-
-        Debug.LogError("Worker not found");
+        if (worker.WorkType == WorkType.All)
+            return;
+        workingWorkers.Remove(worker);
+        workers[worker.WorkType].Add(worker);
+        OnWorkerFree?.Invoke(worker.WorkType);
     }
 
     public bool IsWorkerAvailable(WorkType workType)

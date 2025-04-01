@@ -9,6 +9,8 @@ using UnityEngine.Pool;
 
 public class ConsumerManager : MonoBehaviour
 {
+    private readonly string consumerDataTableFileName = "guesttable";
+    private readonly string consumerSpawnPercentCsvFileName = "guestspawnratetable";
     [SerializeField] private BuffManager buffManager;
     [SerializeField] public WorkFlowController workFlowController;
     [SerializeField] private int maxConsumerCnt;
@@ -18,6 +20,7 @@ public class ConsumerManager : MonoBehaviour
     [SerializeField] private int tempPairProb = 100;
     [SerializeField] private TextMeshPro waitingText;
 
+    private ConsumerDataTable consumerDataTable;
     private Dictionary<int, List<int>> consumerSpawnPercent;
 
     /// <summary>
@@ -70,14 +73,7 @@ public class ConsumerManager : MonoBehaviour
         {
             if (currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count < maxWaitingSeatCnt)
             {
-                int cnt = 0;
-                foreach (var consumers in currentSpawnedConsumerDictionary.Values)
-                {
-                    cnt += consumers.Count;
-                }
-                if (cnt <= 9)
-                    SpawnConsumer();
-
+                SpawnConsumer();
             }
             else if (waitOutsideConsumerCnt < 99)
             {
@@ -126,6 +122,10 @@ public class ConsumerManager : MonoBehaviour
         foreach (ConsumerFSM.ConsumerState consumerState in Enum.GetValues(typeof(ConsumerFSM.ConsumerState)))
             currentSpawnedConsumerDictionary[consumerState] = new List<Consumer>();
 
+        consumerDataTable = DataTableManager.Get<ConsumerDataTable>(DataTableIds.Consumer.ToString());
+        consumerSpawnPercent = CsvToDictionaryLoader.LoadCsvToDictionary(consumerSpawnPercentCsvFileName);
+
+
         StartCoroutine(SpawnCoroutine());
     }
 
@@ -169,9 +169,32 @@ public class ConsumerManager : MonoBehaviour
         consumer.NextTargetTransform = null;
         consumer.pairData = null;
         consumer.FSM.consumerManager = this;
+        consumer.FSM.consumerData = consumerDataTable.GetConsumerData(consumerSpawnPercent[14]);
+        consumer.FSM.consumerData.Init();
         consumer.FSM.SetCashierCounter(workFlowController.GetCashierCounter());
         consumer.FSM.OnSeatEvent -= workFlowController.AssignGetOrderWork;
         consumer.FSM.OnSeatEvent += workFlowController.AssignGetOrderWork;
+        switch (consumer.FSM.consumerData.GuestType)
+        {
+            case GuestType.Guest:
+                consumer.GetComponent<SpriteRenderer>().color = Color.green;
+                break;
+            case GuestType.Regular1:
+                consumer.GetComponent<SpriteRenderer>().color = Color.white;
+                break;
+            case GuestType.Regular2:
+                consumer.GetComponent<SpriteRenderer>().color = Color.cyan;
+                break;
+            case GuestType.Regular3:
+                consumer.GetComponent<SpriteRenderer>().color = Color.yellow;
+                break;
+            case GuestType.Influencer:
+                consumer.GetComponent<SpriteRenderer>().color = Color.magenta;
+                break;
+            case GuestType.BadGuest:
+                consumer.GetComponent<SpriteRenderer>().color = Color.gray;
+                break;
+        }
     }
 
     private void OnTakeConsumer(GameObject consumer)

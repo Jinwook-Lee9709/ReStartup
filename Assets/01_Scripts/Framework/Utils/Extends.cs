@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -36,4 +37,5 @@ public static class Extends
 
         return InteractPermission.None;
     }
+    
 }

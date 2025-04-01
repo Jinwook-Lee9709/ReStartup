@@ -53,22 +53,14 @@ public class WorkCooking : InteractWorkBase
         worker.AssignWork(work);
         nextWork = work;
         nextWorker = worker;
+        
+        workManager.RegisterConsumerWork(context.Consumer, work);
 
         transformer = worker as ITransportable;
-        Addressables.InstantiateAsync("FoodObject").Completed += OnFoodObjectInstantiated;
+        foodObject = ServiceLocator.Instance.GetSceneService<GameManager>().ObjectPoolManager
+            .GetObjectFromPool<FoodObject>();
+
         Addressables.LoadAssetAsync<Sprite>(context.Consumer.needFood.IconID).Completed += OnSpriteLoaded;
-    }
-
-
-    private void OnFoodObjectInstantiated(AsyncOperationHandle<GameObject> handle)
-    {
-        var obj = handle.Result;
-        foodObject = obj.GetComponent<FoodObject>();
-        if (foodSprite != null)
-        {
-            foodObject.SetSprite(foodSprite);
-            transformer.LiftPackage(obj);
-        }
     }
 
     private void OnSpriteLoaded(AsyncOperationHandle<Sprite> handle)
@@ -84,9 +76,10 @@ public class WorkCooking : InteractWorkBase
 
     public override void OnWorkCanceled()
     {
-        base.OnWorkCanceled();
         var station = target as CookingStation;
-        context.WorkFlowController.ReturnCookingStation(station);
         station.ClearWork();
+        context.WorkFlowController.ReturnCookingStation(station);
+
+        base.OnWorkCanceled();
     }
 }

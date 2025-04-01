@@ -5,9 +5,9 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static readonly string FoodObjectId = "";
-
-
+    
     [SerializeField] private ThemeIds currentTheme;
+    [SerializeField] private Transform poolParent;
 
     public ThemeIds CurrentTheme => currentTheme;
     public FoodUpgradeDataManager FoodUpgradeData { get; private set; }
@@ -17,11 +17,16 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         FoodUpgradeData = new FoodUpgradeDataManager();
+        FoodUpgradeData.Init();
+        
         ObjectPoolManager = new ObjectPoolManager();
+        if(poolParent == null)
+            poolParent = new GameObject("Pool").transform;
+        ObjectPoolManager.Init(poolParent);
 
         WorkerManager = FindObjectOfType<WorkerManager>();
 
-        FoodUpgradeData.Init();
+        
 
         InitGameScene();
     }
