@@ -7,8 +7,6 @@ using UnityEngine.UI;
 
 public class UiItem : MonoBehaviour
 {
-    public GameObject employee;
-
     [SerializeField] private Image image;
 
     [SerializeField] private TextMeshProUGUI uiNameText;
@@ -22,9 +20,11 @@ public class UiItem : MonoBehaviour
 
     public FoodData foodData;
 
-    public EmployeeUpgradeListUi employeeUpgradeData;
+    private EmployeeUpgradeListUi employeeUpgradeData;
 
     private Button button;
+
+    private readonly string employeePrefab = "Agent.prefab";
 
     private void Start()
     {
@@ -67,7 +67,7 @@ public class UiItem : MonoBehaviour
         uiUpgradeCostText.text = $"{employeeData.Cost}";
         button = GetComponentInChildren<Button>();
         upgradeButtonText.text = "고용하기";
-        button.onClick.AddListener((UnityEngine.Events.UnityAction)(() =>
+        button.onClick.AddListener((UnityEngine.Events.UnityAction)(async () =>
         {
             //if (userData.Gold < employeeData.Cost * employeeData.upgradeCount)
             //{
@@ -79,7 +79,10 @@ public class UiItem : MonoBehaviour
             }
             if (employeeData.upgradeCount < 1)
             {
-                var newEmployee = Instantiate(employee).GetComponent<EmployeeFSM>();
+                //Spwn Staff
+                var handle = Addressables.LoadAssetAsync<GameObject>(employeePrefab);
+                GameObject prefab = await handle.Task;
+                var newEmployee = Instantiate(prefab).GetComponent<EmployeeFSM>();
                 newEmployee.EmployeeData = employeeData;
 
                 switch ((WorkType)employeeData.StaffType)
@@ -154,4 +157,5 @@ public class UiItem : MonoBehaviour
         else
             Debug.LogError($"Failed to load sprite: {iconAddress}");
     }
+    
 }

@@ -13,6 +13,7 @@ public enum DataTableIds
     Employee,
     Food,
     Consumer,
+    Ranking
 }
 
 public enum ThemeIds

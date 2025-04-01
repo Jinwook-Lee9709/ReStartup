@@ -60,7 +60,6 @@ public class ConsumerFSM : MonoBehaviour
                     break;
                 case Satisfaction.Middle:
                     // TODO : Serving Delay Script Play
-                    Debug.Log("늦네에.. \n저, 할아버지가 되어버려요?");
                     // UnityEditor.EditorApplication.isPaused = true;
                     break;
                 case Satisfaction.Low:

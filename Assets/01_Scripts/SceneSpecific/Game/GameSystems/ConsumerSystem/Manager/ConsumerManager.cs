@@ -73,14 +73,7 @@ public class ConsumerManager : MonoBehaviour
         {
             if (currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count < maxWaitingSeatCnt)
             {
-                int cnt = 0;
-                foreach (var consumers in currentSpawnedConsumerDictionary.Values)
-                {
-                    cnt += consumers.Count;
-                }
-                if (cnt <= 9)
-                    SpawnConsumer();
-
+                SpawnConsumer();
             }
             else if (waitOutsideConsumerCnt < 99)
             {
@@ -181,6 +174,27 @@ public class ConsumerManager : MonoBehaviour
         consumer.FSM.SetCashierCounter(workFlowController.GetCashierCounter());
         consumer.FSM.OnSeatEvent -= workFlowController.AssignGetOrderWork;
         consumer.FSM.OnSeatEvent += workFlowController.AssignGetOrderWork;
+        switch (consumer.FSM.consumerData.GuestType)
+        {
+            case GuestType.Guest:
+                consumer.GetComponent<SpriteRenderer>().color = Color.green;
+                break;
+            case GuestType.Regular1:
+                consumer.GetComponent<SpriteRenderer>().color = Color.white;
+                break;
+            case GuestType.Regular2:
+                consumer.GetComponent<SpriteRenderer>().color = Color.cyan;
+                break;
+            case GuestType.Regular3:
+                consumer.GetComponent<SpriteRenderer>().color = Color.yellow;
+                break;
+            case GuestType.Influencer:
+                consumer.GetComponent<SpriteRenderer>().color = Color.magenta;
+                break;
+            case GuestType.BadGuest:
+                consumer.GetComponent<SpriteRenderer>().color = Color.gray;
+                break;
+        }
     }
 
     private void OnTakeConsumer(GameObject consumer)

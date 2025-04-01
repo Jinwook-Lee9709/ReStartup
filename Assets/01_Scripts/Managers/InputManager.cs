@@ -28,7 +28,7 @@ public class InputManager : MonoBehaviour
     private Vector2 startPos;
     private InputAction touchAction;
 
-    [SerializeField][Range(0f, 1f)] private float swipeDistanceCalcParam = 0.05f;
+    [SerializeField][Range(0f, 1f)] private float swipeDistanceCalcParam = 0.2f;
 
     [ContextMenu("SwipeTest")]
     public void SwipeTest()
@@ -42,25 +42,29 @@ public class InputManager : MonoBehaviour
         slowTouchAction = InputSystem.actions.FindAction("SlowTouchAction");
         slowTouchAction.started += ctx =>
         {
-            if (IsPointerOverUI())
-                return;
+            if (IsPointerOverUI()) return;
 
             isPressed = true;
         };
 
         slowTouchAction.performed += ctx =>
         {
+            if (IsPointerOverUI()) return;
             slowTouchDetected = true;
             endPos = pos;
             var distance = endPos.x - startPos.x;
             if (MathF.Abs(distance) < minSwipeDistance)
             {
-                player.OnTouch(pos);
-                return;
-            }
-            if (!isSwipe)
-            {
-                isSwipe = false;
+                Vector2 worldPoint = Camera.main.ScreenToWorldPoint(pos);
+                var hit = Physics2D.RaycastAll(worldPoint, Vector2.zero);
+
+                var cheakWork = false;
+                for (var i = 0; i < hit.Length; i++)
+                    if (hit[i].collider != null)
+                        if (hit[i].collider.CompareTag("Work"))
+                            cheakWork = true;
+
+                player.OnMoveOrWork(cheakWork, worldPoint);
                 return;
             }
             hollCamera.SetActive(distance > 0);
@@ -70,16 +74,26 @@ public class InputManager : MonoBehaviour
 
         touchAction.canceled += ctx =>
         {
+            if (IsPointerOverUI()) return;
+
             if (slowTouchDetected)
             {
                 slowTouchDetected = false;
                 return;
             }
-            if (IsPointerOverUI())
-            {
-                return;
-            }
-            player.OnTouch(pos);
+
+            Vector2 worldPoint = Camera.main.ScreenToWorldPoint(pos);
+            var hit = Physics2D.RaycastAll(worldPoint, Vector2.zero);
+
+            var cheakWork = false;
+
+            for (var i = 0; i < hit.Length; i++)
+                if (hit[i].collider != null)
+                    if (hit[i].collider.CompareTag("Work"))
+                        cheakWork = true;
+
+
+            player.OnMoveOrWork(cheakWork, worldPoint);
         };
     }
 
@@ -89,7 +103,6 @@ public class InputManager : MonoBehaviour
 
         if (isPressed)
         {
-            isSwipe = true;
             isPressed = false;
             startPos = pos;
             Debug.Log(startPos);
