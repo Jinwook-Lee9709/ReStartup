@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ReviewManager : MonoBehaviour
 {
-    public LinkedList<Review> reviews = new LinkedList<Review>();
+    public LinkedList<GameObject> reviews = new LinkedList<GameObject>();
+    public GameObject loadingDot;
     public GameObject reviewContent;
     public GameObject reviewPrefab;
 
@@ -15,82 +17,129 @@ public class ReviewManager : MonoBehaviour
     private void Awake()
     {
         DOTween.Init();
-        for (int i = 0; i < maxReviewCnt; i++)
-        {
-            AddBestReview();
-        }
+        //for (int i = 0; i < maxReviewCnt; i++)
+        //{
+        //    AddBestReview();
+        //}
     }
 
-    public void AddReview(bool isBest)
-    {
-        //ReviewData tempData = new();
-        //tempData.Init(isBest);
-        //var reviewObj = Instantiate(reviewPrefab).GetComponent<Review>();
-        //reviewObj.Init(tempData);
-
-        //reviews.Add(reviewObj);
-        //UpdateReviews();
-
-
-        if (isBest)
-            AddBestReview();
-        else
-            AddWorstReview();
-    }
 
     [ContextMenu("Add Best Review")]
-    public void AddBestReview()
+    public void TempFunc()
     {
-        ReviewData tempData = new();
-        tempData.Init(true);
-        var gameObj = Instantiate(reviewPrefab);
-        gameObj.transform.SetParent(reviewContent.transform);
-        gameObj.transform.localPosition = new Vector2(reviewContent.GetComponent<RectTransform>().sizeDelta.x * 0.5f, gameObj.GetComponent<RectTransform>().sizeDelta.y);
-        gameObj.transform.SetSiblingIndex(0);
-
-
-
-        var reviewObj = gameObj.GetComponent<Review>();
-        reviewObj.Init(tempData);
-
-        UserDataManager.Instance.CurrentUserData.CurrentRankPoint += 10;
-
-        reviews.AddFirst(reviewObj);
-
-        if (reviews.Count > maxReviewCnt)
-        {
-            RemoveAt(reviews.Last());
-        }
-
-        UpdateReviews();
+        StartCoroutine(AddReview(true));
     }
 
-    [ContextMenu("Add Worst Review")]
-    public void AddWorstReview()
+    public IEnumerator AddReview(bool isBest)
     {
-        ReviewData tempData = new();
-        tempData.Init(false);
-        var gameObj = Instantiate(reviewPrefab);
-        gameObj.transform.SetParent(reviewContent.transform);
-        gameObj.transform.localPosition = new Vector2(reviewContent.GetComponent<RectTransform>().sizeDelta.x * 0.5f, gameObj.GetComponent<RectTransform>().sizeDelta.y);
-        gameObj.transform.SetSiblingIndex(0);
-
-        var reviewObj = gameObj.GetComponent<Review>();
-        reviewObj.Init(tempData);
-
-        UserDataManager.Instance.CurrentUserData.CurrentRankPoint -= 10;
-
-        reviews.AddFirst(reviewObj);
-
-        if (reviews.Count > maxReviewCnt)
-        {
-            RemoveAt(reviews.Last());
-        }
-
+        var loadingObj = Instantiate(loadingDot);
+        
+        reviews.AddFirst(loadingObj);
+        loadingObj.transform.SetParent(reviewContent.transform);
+        loadingObj.transform.localPosition = Vector2.zero;
+        loadingObj.transform.SetSiblingIndex(0);
+        loadingDot.GetComponent<RectTransform>().sizeDelta = new Vector2(reviewContent.GetComponent<RectTransform>().sizeDelta.x, loadingObj.GetComponent<RectTransform>().sizeDelta.y);
         UpdateReviews();
+
+
+        yield return new WaitForSeconds(3f);
+
+        reviews.Remove(loadingObj);
+        loadingObj.transform.DOScale(0f, 0.5f).SetEase(Ease.InOutElastic).OnComplete(() =>
+        {
+            loadingObj.GetComponent<LoadingDot>().StopDoTween();
+            Destroy(loadingObj);
+            ReviewData tempData = new();
+            tempData.Init(true);
+            var gameObj = Instantiate(reviewPrefab);
+            gameObj.transform.SetParent(reviewContent.transform);
+            gameObj.transform.localPosition = Vector2.zero;
+            gameObj.transform.SetSiblingIndex(0);
+            gameObj.GetComponent<RectTransform>().sizeDelta = new Vector2(reviewContent.GetComponent<RectTransform>().sizeDelta.x, gameObj.GetComponent<RectTransform>().sizeDelta.y);
+            gameObj.transform.DORotate(Vector3.zero, 1f).SetEase(Ease.OutBounce);
+            gameObj.transform.localScale = Vector3.one;
+            var reviewObj = gameObj.GetComponent<Review>();
+            reviewObj.Init(tempData);
+
+            UserDataManager.Instance.CurrentUserData.CurrentRankPoint += 10;
+
+            reviews.AddFirst(reviewObj.gameObject);
+
+            if (reviews.Count > maxReviewCnt)
+            {
+                RemoveAt(reviews.Last());
+            }
+
+            UpdateReviews();
+        });
+
     }
 
-    public void RemoveAt(Review removeReview)
+    //public void AddReview(bool isBest)
+    //{
+    //    //ReviewData tempData = new();
+    //    //tempData.Init(isBest);
+    //    //var reviewObj = Instantiate(reviewPrefab).GetComponent<Review>();
+    //    //reviewObj.Init(tempData);
+
+    //    //reviews.Add(reviewObj);
+    //    //UpdateReviews();
+    //}
+
+    //[ContextMenu("Add Best Review")]
+    //public void AddBestReview()
+    //{
+    //    var loadingObj = Instantiate(loadingDot);
+
+
+    //    ReviewData tempData = new();
+    //    tempData.Init(true);
+    //    var gameObj = Instantiate(reviewPrefab);
+    //    gameObj.transform.SetParent(reviewContent.transform);
+    //    gameObj.transform.localPosition = new Vector2(reviewContent.GetComponent<RectTransform>().sizeDelta.x * 0.5f, gameObj.GetComponent<RectTransform>().sizeDelta.y);
+    //    gameObj.transform.SetSiblingIndex(0);
+
+    //    var reviewObj = gameObj.GetComponent<Review>();
+    //    reviewObj.Init(tempData);
+
+    //    UserDataManager.Instance.CurrentUserData.CurrentRankPoint += 10;
+
+    //    reviews.AddFirst(reviewObj.gameObject);
+
+    //    if (reviews.Count > maxReviewCnt)
+    //    {
+    //        RemoveAt(reviews.Last());
+    //    }
+
+    //    UpdateReviews();
+    //}
+
+    //[ContextMenu("Add Worst Review")]
+    //public void AddWorstReview()
+    //{
+    //    ReviewData tempData = new();
+    //    tempData.Init(false);
+    //    var gameObj = Instantiate(reviewPrefab);
+    //    gameObj.transform.SetParent(reviewContent.transform);
+    //    gameObj.transform.localPosition = new Vector2(reviewContent.GetComponent<RectTransform>().sizeDelta.x * 0.5f, gameObj.GetComponent<RectTransform>().sizeDelta.y);
+    //    gameObj.transform.SetSiblingIndex(0);
+
+    //    var reviewObj = gameObj.GetComponent<Review>();
+    //    reviewObj.Init(tempData);
+
+    //    UserDataManager.Instance.CurrentUserData.CurrentRankPoint -= 10;
+
+    //    reviews.AddFirst(reviewObj.gameObject);
+
+    //    if (reviews.Count > maxReviewCnt)
+    //    {
+    //        RemoveAt(reviews.Last());
+    //    }
+
+    //    UpdateReviews();
+    //}
+
+    public void RemoveAt(GameObject removeReview)
     {
         removeReview.GetComponent<RectTransform>().DOScale(0f, 1f).SetEase(Ease.InOutElastic).OnComplete(() =>
         {
@@ -105,7 +154,7 @@ public class ReviewManager : MonoBehaviour
         int idx = 0;
         foreach (var review in reviews)
         {
-            review.GetComponent<RectTransform>().DOAnchorPos(new Vector2(reviewContent.GetComponent<RectTransform>().sizeDelta.x * 0.5f, idx * -review.GetComponent<RectTransform>().sizeDelta.y), 1f).SetEase(Ease.InOutCubic);
+            review.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0f, idx * -review.GetComponent<RectTransform>().sizeDelta.y), 1f).SetEase(Ease.InOutCubic);
             idx++;
         }
         var contentSize = reviewContent.GetComponent<RectTransform>().sizeDelta;
