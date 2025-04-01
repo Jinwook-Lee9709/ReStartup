@@ -11,7 +11,8 @@ public abstract class WorkBase
         this.workManager = workManager;
         this.workType = workType;
     }
-
+    protected WorkerBase worker;
+    public WorkerBase Worker => worker;
     public WorkBase NextWork => nextWork;
     public WorkerBase NextWorker => nextWorker;
 

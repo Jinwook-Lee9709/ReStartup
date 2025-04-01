@@ -7,10 +7,19 @@ using UnityEngine.Pool;
 public class ObjectPoolManager
 {
     private readonly Dictionary<Type, ObjectPool<GameObject>> pools = new();
+    private Transform poolParent;
 
-    public void CreatePool<T>(T component) where T : Component, IPoolable
+    public void Init(Transform poolParent)
+    {
+        this.poolParent = poolParent;
+    }
+
+    public void CreatePool<T>(T component, Action<T>onGet = null, Action<T>onRelease = null) where T : Component, IPoolable
     {
         var type = typeof(T);
+        var localParent = new GameObject(type.ToString()).transform;
+        localParent.SetParent(poolParent);
+
         if (pools.ContainsKey(type))
         {
             Debug.LogWarning("Pool already exists");
@@ -24,9 +33,7 @@ public class ObjectPoolManager
         newPool = new ObjectPool<GameObject>(
             () =>
             {
-                var handle = Addressables.InstantiateAsync(original);
-                handle.WaitForCompletion();
-                var instance = handle.Result;
+                var instance = GameObject.Instantiate(original, localParent);
                 if (instance.TryGetComponent<IPoolable>(out var pooledObject))
                 {
                     pooledObject.SetPool(newPool);
@@ -34,8 +41,23 @@ public class ObjectPoolManager
                 instance.SetActive(false);
                 return instance;
             },
-            obj => obj.SetActive(true),
-            obj => obj.SetActive(false),
+            obj =>
+            {
+                if (onGet != null)
+                {
+                    onGet(obj.GetComponent<T>());
+                }
+                obj.SetActive(true);
+            },
+            obj =>
+            {
+                if (onRelease != null)
+                {
+                    onRelease(obj.GetComponent<T>());
+                }
+                obj.SetActive(false);
+                obj.transform.SetParent(localParent);
+            },
             obj => Debug.Log($"{type.Name} destroyed"),
             true,
             10,
@@ -43,7 +65,7 @@ public class ObjectPoolManager
         pools.Add(type, newPool);
     }
 
-    public GameObject GetObjectFromPool<T>() where T : Component, IPoolable
+    public T GetObjectFromPool<T>() where T : Component, IPoolable
     {
         var type = typeof(T);
         if (!pools.TryGetValue(type, out var pool))
@@ -52,7 +74,7 @@ public class ObjectPoolManager
             return null;
         }
 
-        return pool.Get();
+        return pool.Get().GetComponent<T>();
     }
 
 

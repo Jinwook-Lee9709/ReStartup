@@ -5,36 +5,40 @@ using UnityEngine.AddressableAssets;
 
 public class WorkFlowController : MonoBehaviour
 {
-    [SerializeField] private AssetReference foodPrefab;
+    static readonly string FoodObjectName = "FoodObject";
     [SerializeField] private WorkManager workManager;
     [SerializeField] private CashierCounter cashierCounter;
-    private readonly Queue<Consumer> cashierQueue = new();
+    private readonly LinkedList<Consumer> cashierQueue = new();
     private readonly InteractableObjectManager<CookingStation> cookingStationManager = new();
     private readonly InteractableObjectManager<FoodPickupCounter> foodPickupCounterManager = new();
-    private readonly Queue<(MainLoopWorkContext, CookingStation)> foodPickupCounterQueue = new();
-    private readonly Queue<MainLoopWorkContext> orderQueue = new();
+    private readonly LinkedList<(MainLoopWorkContext, CookingStation)> foodPickupCounterQueue = new();
+    private readonly LinkedList<MainLoopWorkContext> orderQueue = new();
 
     private readonly InteractableObjectManager<Table> tableManager = new();
 
 
-    private Queue<Consumer> customerQueue = new();
+    private LinkedList<Consumer> consumerQueue = new();
 
     private void Awake()
     {
         CreateFoodObjectPool();
-        customerQueue = new Queue<Consumer>();
         cookingStationManager.InsertObject(tempStation);
         foodPickupCounterManager.InsertObject(tempCounter);
     }
 
     private void CreateFoodObjectPool()
     {
-        var handle = foodPrefab.LoadAssetAsync<GameObject>();
+        var handle = Addressables.LoadAssetAsync<GameObject>(FoodObjectName);
         handle.WaitForCompletion();
         GameManager gameManager = ServiceLocator.Instance.GetSceneService<GameManager>();
         var foodGameObject = handle.Result;
         var foodObject = foodGameObject.GetComponent<FoodObject>();
-        gameManager.ObjectPoolManager.CreatePool(foodObject);
+        gameManager.ObjectPoolManager.CreatePool(foodObject,onRelease:OnReleaseFood);
+    }
+    
+    private void OnReleaseFood(FoodObject foodObject)
+    {
+        foodObject.GetComponent<SpriteRenderer>().color = Color.white;
     }
 
     private void Start()
@@ -85,18 +89,18 @@ public class WorkFlowController : MonoBehaviour
             return true;
         }
 
-        customerQueue.Enqueue(consumer);
+        consumerQueue.AddLast(consumer);
         return false;
     }
 
     private void OnTableVacated()
     {
-        if (customerQueue.Count > 0)
+        if (consumerQueue.Count > 0)
         {
-            var consumer = customerQueue.Dequeue();
+            var consumer = consumerQueue.First();
+            consumerQueue.RemoveFirst();
             consumer.SetTable(tableManager.GetAvailableObject());
             consumer.OnTableVacated();
-            //TODO:Assign이 아니라 손님을 이동
         }
     }
 
@@ -108,7 +112,21 @@ public class WorkFlowController : MonoBehaviour
         table.SetWork(work);
         work.SetContext(context);
         work.SetInteractable(table);
-        workManager.AddWork(work);
+        workManager.AddWork(work, consumer);
+    }
+
+    public void CancelOrder(Consumer consumer)
+    {
+        workManager.OnWorkCanceled(consumer);
+        var node1 = foodPickupCounterQueue.FirstOrDefault(x => x.Item1.Consumer == consumer);
+        if(node1 != default)
+            foodPickupCounterQueue.Remove(node1);
+        var node2 = orderQueue.FirstOrDefault(x => x.Consumer == consumer);
+        if(node2 != null)
+            orderQueue.Remove(node2);
+        var node3 = consumerQueue.FirstOrDefault(x => x == consumer);
+        if(node3 != null)
+            consumerQueue.Remove(node3);
     }
 
     public void ReturnTable(Table table)
@@ -125,14 +143,15 @@ public class WorkFlowController : MonoBehaviour
         if (cookingStationManager.IsAvailableObjectExist)
             AssignOrderWork(context);
         else
-            orderQueue.Enqueue(context);
+            orderQueue.AddLast(context);
     }
 
     private void OnCookingStationVacated()
     {
         if (orderQueue.Count > 0)
         {
-            var context = orderQueue.Dequeue();
+            var context = orderQueue.First();
+            orderQueue.RemoveFirst();
             AssignOrderWork(context);
         }
     }
@@ -145,7 +164,7 @@ public class WorkFlowController : MonoBehaviour
         cookingStation.SetWork(work);
         work.SetContext(context);
         work.SetInteractable(cookingStation);
-        workManager.AddWork(work);
+        workManager.AddWork(work,context.Consumer);
     }
 
     public void ReturnCookingStation(CookingStation station)
@@ -164,7 +183,7 @@ public class WorkFlowController : MonoBehaviour
 
     public void RegisterFoodToHall(MainLoopWorkContext context, CookingStation target)
     {
-        foodPickupCounterQueue.Enqueue((context, target));
+        foodPickupCounterQueue.AddLast((context, target));
     }
 
     public FoodPickupCounter GetEmptyFoodCounter()
@@ -177,12 +196,13 @@ public class WorkFlowController : MonoBehaviour
         if (foodPickupCounterQueue.Count > 0)
         {
             var counter = GetEmptyFoodCounter();
-            var (context, target) = foodPickupCounterQueue.Dequeue();
+            var (context, target) = foodPickupCounterQueue.First();
+            foodPickupCounterQueue.RemoveFirst();
             var work = new WorkGotoCookingStation(workManager, WorkType.Kitchen);
             target.SetWork(work);
             work.SetInteractable(target);
             work.SetContext(context, counter);
-            workManager.AddWork(work);
+            workManager.AddWork(work, context.Consumer);
         }
     }
 
@@ -197,7 +217,7 @@ public class WorkFlowController : MonoBehaviour
 
     public int AssignCashier(Consumer consumer)
     {
-        cashierQueue.Enqueue(consumer);
+        cashierQueue.AddLast(consumer);
         if (cashierQueue.Count > 1) return cashierQueue.Count - 1;
 
         consumer.NextTargetTransform =
@@ -208,12 +228,13 @@ public class WorkFlowController : MonoBehaviour
 
     public int OnCashierFinished()
     {
-        var firstConsumer = cashierQueue.Dequeue();
+        var firstConsumer = cashierQueue.First();
+        cashierQueue.RemoveFirst();
         firstConsumer.FSM.OnEndPayment();
 
         if (cashierQueue.Count == 0)
             return 0;
-        var nextConsumer = cashierQueue.Peek();
+        var nextConsumer = cashierQueue.First();
         nextConsumer.FSM.OnStartPayment();
 
         var buf = firstConsumer.transform;

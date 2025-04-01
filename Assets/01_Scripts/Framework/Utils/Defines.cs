@@ -91,6 +91,7 @@ public static class Constants
 {
     public static readonly float DEFAULT_ORDER_TIME = 0f;
     public static readonly int MAX_UPGRADE_LEVEL = 5;
+    public static readonly float PLAYER_INTERACTION_SPEED = 3f;
 }
 
 public static class Variables
@@ -116,5 +117,6 @@ public static class Variables
 
 public static class Strings
 {
+    public static readonly string PlayerTag = "Player";
     public static readonly string GameManagerTag = "GameManager";
 }

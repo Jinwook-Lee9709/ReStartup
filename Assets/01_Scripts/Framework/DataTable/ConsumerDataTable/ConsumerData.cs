@@ -26,7 +26,7 @@ public class ConsumerData
     //public string GuestEffect {  get; set; }
 
     public float orderWaitTimer;
-    public readonly float MaxOrderWaitLimit = float.PositiveInfinity;
+    public readonly float MaxOrderWaitLimit = 18f;
     public readonly float MaxEattingLimit = 8f;
     public void Init()
     {
