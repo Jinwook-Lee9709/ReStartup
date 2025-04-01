@@ -3,6 +3,14 @@ using UnityEngine.AI;
 
 public class WorkerBase : MonoBehaviour
 { 
+    public enum WorkerState
+    {
+        Idle,
+        ReturnidleArea,
+        Working
+    }
+    
+    
     protected WorkType workType;
     
     protected NavMeshAgent agent;

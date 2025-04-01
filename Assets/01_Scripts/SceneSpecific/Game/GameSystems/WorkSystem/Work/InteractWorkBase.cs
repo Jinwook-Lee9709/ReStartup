@@ -11,6 +11,7 @@ public abstract class InteractWorkBase : WorkBase
     protected IInteractable target;
 
     private Transform targetTransform;
+    private bool isInteruptable;
 
     //References
     private NavMeshAgent workerAgent;
@@ -18,10 +19,12 @@ public abstract class InteractWorkBase : WorkBase
     //LocalVariables
     private WorkPhase workPhase;
 
+    public bool IsInteruptable => true;
 
-    public InteractWorkBase(WorkManager workManager, WorkType workType, float interactTime = 1) : base(workManager, workType)
+    public InteractWorkBase(WorkManager workManager, WorkType workType, float interactTime = 1, bool isInteruptable = true) : base(workManager, workType)
     {
         this.interactTime = interactTime;
+        this.isInteruptable = isInteruptable;
     }
 
     //Properties

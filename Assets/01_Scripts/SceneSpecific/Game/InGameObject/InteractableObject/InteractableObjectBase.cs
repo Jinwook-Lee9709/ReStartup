@@ -22,6 +22,7 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
 
     public float InteractProgress => interactProgress;
     public InteractStatus InteractStatus { get; private set; }
+    public InteractWorkBase CurrentWork => currentWork;
     
     
     public event Action<float> OnInteractedEvent;

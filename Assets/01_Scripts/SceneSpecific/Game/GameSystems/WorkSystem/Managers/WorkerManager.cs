@@ -7,23 +7,32 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class WorkerManager : MonoBehaviour
 {
-    
     //References
     [SerializedDictionary] [SerializeField]
     private SerializedDictionary<WorkType, Transform> idleArea;
 
     //Prefab
-    [SerializeField] private Player player;
+    private Player player;
+    [SerializeField] private WorkManager workManager;
     
     //Containers
     private Dictionary<WorkType, List<WorkerBase>> workers;
     private List<WorkerBase> workingWorkers;
-    private WorkManager workManager;
 
     private void Awake()
     {
         InitContaineres();
-        GameObject.FindWithTag(Strings.PlayerTag);
+    }
+    private void Start()
+    {
+        InitPlayer();
+    }
+
+    private void InitPlayer()
+    {
+        player = GameObject.FindWithTag(Strings.PlayerTag).GetComponent<Player>();
+        player.Init(this, null, WorkType.All);
+        player.SetWorkManager(workManager);
     }
 
     private void InitContaineres()
@@ -76,12 +85,5 @@ public class WorkerManager : MonoBehaviour
     {
         return workers[workType].Count;
     }
-
-    //WorkManager 에 Work가 추가됐을때
-    //Worker가 작업이 끝났을때
-    //화구매니저가 WorkManager한테 -> 빈공간이 있으니, Work를 큐에 추가해라
-    //
-
-    //화구매니저 빈공간 있음 -> 일을 등록 -> WorkManager -> 지금 할 수 있는애가 없어 -> Worker가 작업이 끝났을떄 다시 물어봐
-    //화구매니저 -> 빈공간 생김 -> 일을 등록 -> WorkManager -> 지금 할 수 있는애가 없어 -> Worker가 작업이 끝났을떄 다시 물어봐
+    
 }

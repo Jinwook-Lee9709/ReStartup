@@ -3,18 +3,10 @@ using UnityEngine;
 
 public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
 {
-    public enum EmployeeState
-    {
-        Idle,
-        ReturnidleArea,
-        Working
-    }
-
-
     [SerializeField] private Transform handPivot;
     private readonly float upgradeWorkSpeedValue = 0.02f;
 
-    private EmployeeState currentStatus;
+    private WorkerState currentStatus;
 
     private float interactionSpeed = 1f;
 
@@ -23,14 +15,13 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     public Transform HandPivot => handPivot;
 
 
-    public EmployeeState CurrentStatus
+    public WorkerState CurrentStatus
     {
         get => currentStatus;
         set
         {
-            var prevStatus = currentStatus;
             currentStatus = value;
-            if (currentStatus == EmployeeState.ReturnidleArea) agent.SetDestination(idleArea.position);
+            if (currentStatus == WorkerState.ReturnidleArea) agent.SetDestination(idleArea.position);
         }
     }
 
@@ -58,13 +49,13 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     {
         switch (currentStatus)
         {
-            case EmployeeState.Idle:
+            case WorkerState.Idle:
                 UpdateIdle();
                 break;
-            case EmployeeState.ReturnidleArea:
+            case WorkerState.ReturnidleArea:
                 UpdateReturnidleArea();
                 break;
-            case EmployeeState.Working:
+            case WorkerState.Working:
 
                 UpdateWorking();
                 break;
@@ -92,7 +83,7 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     {
         base.AssignWork(work);
         //택스트 넣어주기
-        CurrentStatus = EmployeeState.Working;
+        CurrentStatus = WorkerState.Working;
     }
 
     private void UpdateIdle()
@@ -102,14 +93,14 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     private void UpdateReturnidleArea()
     {
         var distance = Vector3.Distance(transform.position, idleArea.position);
-        if (distance <= agent.stoppingDistance) CurrentStatus = EmployeeState.Idle;
+        if (distance <= agent.stoppingDistance) CurrentStatus = WorkerState.Idle;
     }
 
     private void UpdateWorking()
     {
         if (currentWork == null)
         {
-            CurrentStatus = EmployeeState.ReturnidleArea;
+            CurrentStatus = WorkerState.ReturnidleArea;
             //택스트 지워주기
             return;
         }

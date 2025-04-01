@@ -55,17 +55,7 @@ public class InputManager : MonoBehaviour
             var distance = endPos.x - startPos.x;
             if (MathF.Abs(distance) < minSwipeDistance)
             {
-                Vector2 worldPoint = Camera.main.ScreenToWorldPoint(pos);
-                var hit = Physics2D.RaycastAll(worldPoint, Vector2.zero);
-
-                if (IsPointerOverUI()) return;
-                var cheakWork = false;
-                for (var i = 0; i < hit.Length; i++)
-                    if (hit[i].collider != null)
-                        if (hit[i].collider.CompareTag("Work"))
-                            cheakWork = true;
-
-                player.OnMoveOrWork(cheakWork, worldPoint);
+                player.OnTouch(pos);
                 return;
             }
             if (!isSwipe)
@@ -73,8 +63,6 @@ public class InputManager : MonoBehaviour
                 isSwipe = false;
                 return;
             }
-
-
             hollCamera.SetActive(distance > 0);
         };
 
@@ -87,21 +75,11 @@ public class InputManager : MonoBehaviour
                 slowTouchDetected = false;
                 return;
             }
-
-            Vector2 worldPoint = Camera.main.ScreenToWorldPoint(pos);
-            var hit = Physics2D.RaycastAll(worldPoint, Vector2.zero);
-
             if (IsPointerOverUI())
             {
                 return;
             }
-            var checkWork = false;
-            for (var i = 0; i < hit.Length; i++)
-                if (hit[i].collider != null)
-                    if (hit[i].collider.CompareTag("Work"))
-                        checkWork = true;
-
-            player.OnMoveOrWork(checkWork, worldPoint);
+            player.OnTouch(pos);
         };
     }
 

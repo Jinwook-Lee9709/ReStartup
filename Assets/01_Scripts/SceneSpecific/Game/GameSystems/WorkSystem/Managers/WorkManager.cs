@@ -106,13 +106,12 @@ public class WorkManager : MonoBehaviour
         if (work.Worker is null)
         {
             AdjustQueue(work);
-
         }
         else
         {
             work.Worker.OnWorkFinished();
-            player.AssignWork(work);
         }
+        player.AssignWork(work);
     }
 
     private void AdjustQueue(WorkBase work)

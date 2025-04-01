@@ -109,8 +109,6 @@ public static class Variables
             }
         }
     }
-    
-    
 }
 
 
@@ -118,4 +116,5 @@ public static class Strings
 {
     public static readonly string PlayerTag = "Player";
     public static readonly string GameManagerTag = "GameManager";
+    public static readonly string InteractableObjectTag = "InteractableObject";
 }
