@@ -10,4 +10,6 @@ public class FoodData
     public string IconID { get; set; }
 
     public int upgradeCount;
+
+    public bool isUnlock = false;
 }
