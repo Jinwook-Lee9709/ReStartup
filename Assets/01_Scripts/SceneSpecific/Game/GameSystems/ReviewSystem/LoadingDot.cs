@@ -10,18 +10,19 @@ public class LoadingDot : MonoBehaviour
 
     private void Start()
     {
+        transform.DOScale(1f, 0.5f);
         for (int i = 0; i < dots.Count; i++)
         {
             StartCoroutine(FlashDot(i));
         }
-
-        StartCoroutine(OnStartCoroutine());
     }
 
-    private IEnumerator OnStartCoroutine()
+    public void StopDoTween()
     {
-        yield return new WaitForSeconds(3f);
-        Destroy(gameObject);
+        for (int i = 0; i < dots.Count; i++)
+        {
+            dots[i].GetComponent<Image>().DOKill();
+        }
     }
 
     private IEnumerator FlashDot(int idx)
