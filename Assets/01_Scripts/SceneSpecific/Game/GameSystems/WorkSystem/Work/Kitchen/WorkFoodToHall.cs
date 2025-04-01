@@ -3,7 +3,7 @@ public class WorkFoodToHall : InteractWorkBase
     private MainLoopWorkContext context;
     private FoodPickupCounter counter;
 
-    public WorkFoodToHall(WorkManager workManager, WorkType workType, float interactionTime = 0) : base(workManager, workType, interactionTime)
+    public WorkFoodToHall(WorkManager workManager, WorkType workType, float interactionTime = 0, bool isInteruptable = false) : base(workManager, workType, interactionTime,isInteruptable)
     {
     }
 

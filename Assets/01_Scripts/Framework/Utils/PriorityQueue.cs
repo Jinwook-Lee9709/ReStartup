@@ -149,9 +149,9 @@ internal class PriorityQueue<TElement, TPriority>
         return MakeSendBuf(out element, out priority);
     }
 
-    public bool TryRemoveAt(Predicate<TElement> condition,out TElement removedElement)
+    public bool TryRemove(Predicate<TElement> condition,out TElement removedElement)
     {
-        for (int i = 0; i < Count; i++)
+        for (int i = 1; i <= Count; i++)
         {
             if (condition(arr[i].Item2))
             {

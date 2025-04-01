@@ -117,7 +117,7 @@ public class WorkManager : MonoBehaviour
     private void AdjustQueue(WorkBase work)
     {
         var workType = work.workType;
-        workQueues[workType].TryRemoveAt((x) => (x == work), out _);
+        workQueues[workType].TryRemove((x) => (x == work), out _);
     }
     
 

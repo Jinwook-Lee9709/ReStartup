@@ -119,10 +119,6 @@ public class Player : WorkerBase, IInteractor, ITransportable
             {
                 if (interactableObject.CurrentWork.IsInteruptable)
                     workManager.OnPlayerStartWork(interactableObject.CurrentWork, this);
-                else
-                {
-                    agent.SetDestination(interactableObject.transform.position);
-                }
             }
         }
     }
