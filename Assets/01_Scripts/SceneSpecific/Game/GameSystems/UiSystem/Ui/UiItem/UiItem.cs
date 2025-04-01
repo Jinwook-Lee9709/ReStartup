@@ -32,18 +32,19 @@ public class UiItem : MonoBehaviour
         if (employeeData != null)
         {
             StartCoroutine(LoadSpriteCoroutine(employeeData.Icon));
+            employeeUpgradeData = GetComponentInParent<EmployeeUpgradeListUi>();
+            if (employeeUpgradeData == null)
+            {
+                Debug.LogError($"{gameObject.name}의 부모 중 EmployeeUpgradeListUi를 찾을 수 없습니다.");
+                return;  // Null이면 실행 중단
+            }
+            employeeUpgradeData.AddButtonList(button);
         }
         if (foodData != null)
         {
-            StartCoroutine(LoadSpriteCoroutine(foodData.IconID));
+            //StartCoroutine(LoadSpriteCoroutine(foodData.IconID));
         }
-        employeeUpgradeData = GetComponentInParent<EmployeeUpgradeListUi>();
-        if (employeeUpgradeData == null)
-        {
-            Debug.LogError($"{gameObject.name}의 부모 중 EmployeeUpgradeListUi를 찾을 수 없습니다.");
-            return;  // Null이면 실행 중단
-        }
-        employeeUpgradeData.AddButtonList(button);
+
     }
 
     public void Init(EmployeeTableGetData data)
@@ -139,6 +140,7 @@ public class UiItem : MonoBehaviour
         {
             if (foodData.upgradeCount < 1)
             {
+                foodData.isUnlock = true;
                 upgradeButtonText.text = "업그레이드";
             }
             foodData.upgradeCount++;
@@ -157,5 +159,5 @@ public class UiItem : MonoBehaviour
         else
             Debug.LogError($"Failed to load sprite: {iconAddress}");
     }
-    
+
 }
