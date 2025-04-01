@@ -3,7 +3,6 @@ using UnityEngine.AI;
 
 public class Player : WorkerBase, IInteractor, ITransportable
 {
-    protected WorkType workType = WorkType.All;
     private Transform handPivot;
     private float interactionSpeed = Constants.PLAYER_INTERACTION_SPEED;
     public float InteractionSpeed => interactionSpeed;

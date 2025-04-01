@@ -15,10 +15,10 @@ public class ReviewManager : MonoBehaviour
     private void Awake()
     {
         DOTween.Init();
-        //for (int i = 0; i < maxReviewCnt; i++)
-        //{
-        //    AddBestReview();
-        //}
+        for (int i = 0; i < maxReviewCnt; i++)
+        {
+            AddBestReview();
+        }
     }
 
     public void AddReview(bool isBest)
@@ -45,6 +45,7 @@ public class ReviewManager : MonoBehaviour
         tempData.Init(true);
         var gameObj = Instantiate(reviewPrefab);
         gameObj.transform.SetParent(reviewContent.transform);
+        gameObj.transform.localPosition = new Vector2(reviewContent.GetComponent<RectTransform>().sizeDelta.x * 0.5f, gameObj.GetComponent<RectTransform>().sizeDelta.y);
         gameObj.transform.SetSiblingIndex(0);
 
 
@@ -71,6 +72,7 @@ public class ReviewManager : MonoBehaviour
         tempData.Init(false);
         var gameObj = Instantiate(reviewPrefab);
         gameObj.transform.SetParent(reviewContent.transform);
+        gameObj.transform.localPosition = new Vector2(reviewContent.GetComponent<RectTransform>().sizeDelta.x * 0.5f, gameObj.GetComponent<RectTransform>().sizeDelta.y);
         gameObj.transform.SetSiblingIndex(0);
 
         var reviewObj = gameObj.GetComponent<Review>();
@@ -103,7 +105,7 @@ public class ReviewManager : MonoBehaviour
         int idx = 0;
         foreach (var review in reviews)
         {
-            review.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0, idx * -review.GetComponent<RectTransform>().sizeDelta.y), 1f).SetEase(Ease.InOutCubic);
+            review.GetComponent<RectTransform>().DOAnchorPos(new Vector2(reviewContent.GetComponent<RectTransform>().sizeDelta.x * 0.5f, idx * -review.GetComponent<RectTransform>().sizeDelta.y), 1f).SetEase(Ease.InOutCubic);
             idx++;
         }
         var contentSize = reviewContent.GetComponent<RectTransform>().sizeDelta;

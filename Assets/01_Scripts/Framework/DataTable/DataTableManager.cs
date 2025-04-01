@@ -14,6 +14,14 @@ public static class DataTableManager
         var foodDataTabletable = new FoodDataTable();
         foodDataTabletable.Load();
         tables.Add(DataTableIds.Food.ToString(), foodDataTabletable);
+
+        var consumerDataTable = new ConsumerDataTable();
+        consumerDataTable.Load();
+        tables.Add(DataTableIds.Consumer.ToString(), consumerDataTable);
+
+        var rankingDataTable = new RankingDataTable();
+        rankingDataTable.Load();
+        tables.Add(DataTableIds.Ranking.ToString(), rankingDataTable);
     }
 
     public static T Get<T>(string id) where T : DataTable
