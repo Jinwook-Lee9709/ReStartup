@@ -253,7 +253,7 @@ public class ConsumerFSM : MonoBehaviour
         if (consumerData.GuestType == GuestType.BadGuest)
             consumerData.orderWaitTimer -= Time.deltaTime;
 
-        // Debug.Log(orderWaitTimer);
+        // Debug.Log(consumerData.orderWaitTimer);
         switch (consumerData.orderWaitTimer)
         {
             case var t when t < satisfactionChangeLimit[0] && t > satisfactionChangeLimit[1]:

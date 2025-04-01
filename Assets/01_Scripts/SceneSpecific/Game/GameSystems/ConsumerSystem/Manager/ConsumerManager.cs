@@ -177,6 +177,7 @@ public class ConsumerManager : MonoBehaviour
         consumer.pairData = null;
         consumer.FSM.consumerManager = this;
         consumer.FSM.consumerData = consumerDataTable.GetConsumerData(consumerSpawnPercent[14]);
+        consumer.FSM.consumerData.Init();
         consumer.FSM.SetCashierCounter(workFlowController.GetCashierCounter());
         consumer.FSM.OnSeatEvent -= workFlowController.AssignGetOrderWork;
         consumer.FSM.OnSeatEvent += workFlowController.AssignGetOrderWork;

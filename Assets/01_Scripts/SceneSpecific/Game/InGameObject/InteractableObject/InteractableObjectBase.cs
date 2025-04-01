@@ -22,9 +22,14 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
 
     public float InteractProgress => interactProgress;
     public InteractStatus InteractStatus { get; private set; }
+    
+    
+    public event Action<float> OnInteractedEvent;
+    public event Action OnClearWorkEvent;
+    public event Action OnInteractFinishedEvent;
 
     public List<InteractPivot> InteractablePoints => interactablePoint;
-
+    
     public List<InteractPivot> GetInteractablePoints(InteractPermission permission)
     {
         var interactablePoints = new List<InteractPivot>();
@@ -63,9 +68,6 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
         ClearWork();
     }
 
-    public event Action<float> OnInteractedEvent;
-    public event Action OnInteractFinishedEvent;
-
     public void SetWork(InteractWorkBase workBase)
     {
         currentWork = workBase;
@@ -79,6 +81,7 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
     public void ClearWork()
     {
         currentWork = null;
+        OnClearWorkEvent?.Invoke();
         interactProgress = 0f;
     }
 

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
 {
-    public enum EnployedState
+    public enum EmployeeState
     {
         Idle,
         ReturnidleArea,
@@ -14,20 +14,23 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     [SerializeField] private Transform handPivot;
     private readonly float upgradeWorkSpeedValue = 0.02f;
 
-    private EnployedState currentStatus;
+    private EmployeeState currentStatus;
 
     private float interactionSpeed = 1f;
 
     public EmployeeTableGetData EmployeeData { get; set; } = new();
+    public float InteractionSpeed => interactionSpeed;
+    public Transform HandPivot => handPivot;
 
-    public EnployedState CurrentStatus
+
+    public EmployeeState CurrentStatus
     {
         get => currentStatus;
         set
         {
             var prevStatus = currentStatus;
             currentStatus = value;
-            if (currentStatus == EnployedState.ReturnidleArea) agent.SetDestination(idleArea.position);
+            if (currentStatus == EmployeeState.ReturnidleArea) agent.SetDestination(idleArea.position);
         }
     }
 
@@ -40,13 +43,13 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     {
         EmployeeData.MoveSpeed = EmployeeData.MoveSpeed + EmployeeData.upgradeSpeed;
         agent.speed = EmployeeData.MoveSpeed;
-        InteractionSpeed = EmployeeData.WorkSpeed - upgradeWorkSpeedValue * EmployeeData.upgradeCount;
+        interactionSpeed = EmployeeData.WorkSpeed - upgradeWorkSpeedValue * EmployeeData.upgradeCount;
 
         EmployeeData.OnUpgradeEvent += () =>
         {
             EmployeeData.MoveSpeed = EmployeeData.MoveSpeed + EmployeeData.upgradeSpeed;
             agent.speed = EmployeeData.MoveSpeed;
-            InteractionSpeed = EmployeeData.WorkSpeed - upgradeWorkSpeedValue * EmployeeData.upgradeCount;
+            interactionSpeed = EmployeeData.WorkSpeed - upgradeWorkSpeedValue * EmployeeData.upgradeCount;
             Debug.Log($"{name} : {agent.speed} , {InteractionSpeed}");
         };
     }
@@ -55,13 +58,13 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     {
         switch (currentStatus)
         {
-            case EnployedState.Idle:
+            case EmployeeState.Idle:
                 UpdateIdle();
                 break;
-            case EnployedState.ReturnidleArea:
+            case EmployeeState.ReturnidleArea:
                 UpdateReturnidleArea();
                 break;
-            case EnployedState.Working:
+            case EmployeeState.Working:
 
                 UpdateWorking();
                 break;
@@ -69,11 +72,6 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
                 throw new ArgumentOutOfRangeException();
         }
     }
-
-    public float InteractionSpeed { get; set; }
-
-    public Transform HandPivot => handPivot;
-
     public void LiftPackage(GameObject package)
     {
         package.transform.SetParent(handPivot);
@@ -94,7 +92,7 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     {
         base.AssignWork(work);
         //택스트 넣어주기
-        CurrentStatus = EnployedState.Working;
+        CurrentStatus = EmployeeState.Working;
     }
 
     private void UpdateIdle()
@@ -104,18 +102,18 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     private void UpdateReturnidleArea()
     {
         var distance = Vector3.Distance(transform.position, idleArea.position);
-        if (distance <= agent.stoppingDistance) CurrentStatus = EnployedState.Idle;
+        if (distance <= agent.stoppingDistance) CurrentStatus = EmployeeState.Idle;
     }
 
     private void UpdateWorking()
     {
         if (currentWork == null)
         {
-            CurrentStatus = EnployedState.ReturnidleArea;
+            CurrentStatus = EmployeeState.ReturnidleArea;
             //택스트 지워주기
             return;
         }
-      
+
         currentWork.DoWork();
     }
 }

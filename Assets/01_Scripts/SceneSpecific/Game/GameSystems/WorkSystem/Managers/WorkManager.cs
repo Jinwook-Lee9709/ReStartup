@@ -98,4 +98,29 @@ public class WorkManager : MonoBehaviour
                 AddWork(nextWork);
         }
     }
+
+    #region PlayerLogic
+
+    public void OnPlayerStartWork(WorkBase work, Player player)
+    {
+        if (work.Worker is null)
+        {
+            AdjustQueue(work);
+
+        }
+        else
+        {
+            work.Worker.OnWorkFinished();
+            player.AssignWork(work);
+        }
+    }
+
+    private void AdjustQueue(WorkBase work)
+    {
+        var workType = work.workType;
+        workQueues[workType].TryRemoveAt((x) => (x == work), out _);
+    }
+    
+
+    #endregion
 }

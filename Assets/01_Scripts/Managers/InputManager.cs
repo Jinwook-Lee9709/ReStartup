@@ -93,16 +93,15 @@ public class InputManager : MonoBehaviour
 
             if (IsPointerOverUI())
             {
-
                 return;
             }
-            var cheakWork = false;
+            var checkWork = false;
             for (var i = 0; i < hit.Length; i++)
                 if (hit[i].collider != null)
                     if (hit[i].collider.CompareTag("Work"))
-                        cheakWork = true;
+                        checkWork = true;
 
-            player.OnMoveOrWork(cheakWork, worldPoint);
+            player.OnMoveOrWork(checkWork, worldPoint);
         };
     }
 

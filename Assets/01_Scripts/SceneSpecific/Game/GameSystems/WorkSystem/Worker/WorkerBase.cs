@@ -2,15 +2,17 @@ using UnityEngine;
 using UnityEngine.AI;
 
 public class WorkerBase : MonoBehaviour
-{
+{ 
+    protected WorkType workType;
+    
     protected NavMeshAgent agent;
     protected WorkBase currentWork;
     protected Transform idleArea;
-
     protected WorkerManager workerManager;
 
     public bool IsBusy => currentWork != null;
     public WorkBase CurrentWork => currentWork;
+    public WorkType WorkType => workType;
     
     protected virtual void Awake()
     {
@@ -19,10 +21,11 @@ public class WorkerBase : MonoBehaviour
         agent.updateUpAxis = false;
     }
 
-    public void Init(WorkerManager manager, Transform idleArea)
+    public void Init(WorkerManager manager, Transform idleArea, WorkType workType)
     {
         workerManager = manager;
         this.idleArea = idleArea;
+        this.workType = workType;
     }
 
     public virtual void AssignWork(WorkBase work)
