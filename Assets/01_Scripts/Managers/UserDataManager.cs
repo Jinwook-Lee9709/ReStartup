@@ -2,13 +2,15 @@ using System;
 using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
+using static UnityEditor.Progress;
 using Random = UnityEngine.Random;
 
 public class UserDataManager : Singleton<UserDataManager>
 {
     private UserData currentUserData = new();
 
-    public Action<int?> action;
+    public event Action<int?> getGoldAction;
+    public event Action<int> setRankingPointAction;
 
     public UserData CurrentUserData
     {
@@ -55,7 +57,8 @@ public class UserDataManager : Singleton<UserDataManager>
     public IEnumerator OnGoldUp(Consumer consumer)
     {
         CurrentUserData.Gold += consumer.needFood.SellingCost;
-        action.Invoke(CurrentUserData.Gold);
+        getGoldAction.Invoke(CurrentUserData.Gold);
+        setRankingPointAction.Invoke(1000);
 
         yield return new WaitForSeconds(0.5f);
 

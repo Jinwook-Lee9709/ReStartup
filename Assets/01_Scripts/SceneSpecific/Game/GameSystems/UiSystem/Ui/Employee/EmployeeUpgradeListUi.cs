@@ -10,7 +10,6 @@ public class EmployeeUpgradeListUi : MonoBehaviour
     public EmployeeTableGetData employeeData;
     public List<Button> allBuyButton;
 
-
     void Start()
     {
     }

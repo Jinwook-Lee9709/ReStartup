@@ -8,7 +8,7 @@ public class IngameGoodsUi : MonoBehaviour
     public TextMeshProUGUI goldText;
     private void Start()
     {
-        UserDataManager.Instance.action += goldUiValueSet;
+        UserDataManager.Instance.getGoldAction += goldUiValueSet;
     }
     public void goldUiValueSet(int? gold)
     {
