@@ -3,21 +3,25 @@ using System.Collections.Generic;
 using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.AI;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class WorkerManager : MonoBehaviour
 {
     //References
     [SerializedDictionary] [SerializeField]
-    private SerializedDictionary<WorkType, Transform> idleArea;
+    private SerializedDictionary<WorkType, List<Transform>> idleArea;
 
     //Prefab
     private Player player;
     [SerializeField] private WorkManager workManager;
     
     //Containers
-    private Dictionary<WorkType, List<WorkerBase>> workers;
+    private Dictionary<WorkType, SortedSet<WorkerBase>> workers;
     private List<WorkerBase> workingWorkers;
+    
+    public int CurrentIdleHallWorkerCount => workers[WorkType.Hall].Count;
+    public int CurrentIdleKitchenWorkerCount => workers[WorkType.Hall].Count;
 
     private void Awake()
     {
@@ -37,17 +41,19 @@ public class WorkerManager : MonoBehaviour
 
     private void InitContaineres()
     {
-        workers = new Dictionary<WorkType, List<WorkerBase>>();
-        foreach (WorkType workType in Enum.GetValues(typeof(WorkType))) workers.Add(workType, new List<WorkerBase>());
+        workers = new Dictionary<WorkType, SortedSet<WorkerBase>>();
+        foreach (WorkType workType in Enum.GetValues(typeof(WorkType))) workers.Add(workType, new SortedSet<WorkerBase>());
         workingWorkers = new List<WorkerBase>();
     }
 
     //Events
     public event Action<WorkType> OnWorkerFree;
 
-    public void RegisterWorker(WorkerBase worker, WorkType workType)
+    public void RegisterWorker(WorkerBase worker, WorkType workType, int id)
     {
-        worker.Init(this, idleArea[workType], workType);
+        int pivotIndex = id % 10 - 1;
+        worker.Init(this, idleArea[workType][pivotIndex], workType, id);
+        worker.GetComponent<NavMeshAgent>().Warp(idleArea[workType][pivotIndex].position);
         workers[workType].Add(worker);
         OnWorkerFree?.Invoke(workType);
     }
@@ -56,10 +62,10 @@ public class WorkerManager : MonoBehaviour
     {
         if (workers[work.workType].Count > 0)
         {
-            var list = workers[work.workType];
-            var worker = list[0];
-            list[0].AssignWork(work);
-            list.RemoveAt(0);
+            var sortedSet = workers[work.workType];
+            var worker = sortedSet.Min;
+            worker.AssignWork(work);
+            sortedSet.Remove(worker);
             workingWorkers.Add(worker);
             return true;
         }

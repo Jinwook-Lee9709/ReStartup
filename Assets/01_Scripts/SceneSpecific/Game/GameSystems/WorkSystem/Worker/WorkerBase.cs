@@ -1,7 +1,8 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class WorkerBase : MonoBehaviour
+public class WorkerBase : MonoBehaviour, IComparable<WorkerBase>
 { 
     public enum WorkerState
     {
@@ -9,7 +10,8 @@ public class WorkerBase : MonoBehaviour
         ReturnidleArea,
         Working
     }
-    
+
+    private int id;
     
     protected WorkType workType;
     
@@ -29,11 +31,12 @@ public class WorkerBase : MonoBehaviour
         agent.updateUpAxis = false;
     }
 
-    public void Init(WorkerManager manager, Transform idleArea, WorkType workType)
+    public void Init(WorkerManager manager, Transform idleArea, WorkType workType, int id = 0)
     {
         workerManager = manager;
         this.idleArea = idleArea;
         this.workType = workType;
+        this.id = id;
     }
 
     public virtual void AssignWork(WorkBase work)
@@ -66,5 +69,14 @@ public class WorkerBase : MonoBehaviour
             currentWork.OnWorkStopped();
             OnWorkFinished();
         }
+    }
+
+    public int CompareTo(WorkerBase other)
+    {
+        if (ReferenceEquals(this, other)) return 0;
+        if (other is null) return 1;
+        var idComparison = id.CompareTo(other.id);
+        if (idComparison != 0) return idComparison;
+        return workType.CompareTo(other.workType);
     }
 }

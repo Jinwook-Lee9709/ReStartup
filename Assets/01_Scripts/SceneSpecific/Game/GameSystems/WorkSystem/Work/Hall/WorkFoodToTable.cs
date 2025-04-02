@@ -22,7 +22,6 @@ public class WorkFoodToTable : InteractWorkBase
     {
         var table = target as Table;
         table.ClearWork();
-        context.WorkFlowController.ReturnTable(table);
 
         if (worker == null)
             return;

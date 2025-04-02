@@ -102,7 +102,7 @@ public class UiItem : MonoBehaviour
                 }
                 newEmployee.GetComponentInChildren<TextMeshPro>().text = $"{((WorkType)employeeData.StaffType).ToString()}직원";
                 var workerManager = ServiceLocator.Instance.GetSceneService<GameManager>().WorkerManager;
-                workerManager.RegisterWorker(newEmployee, (WorkType)newEmployee.EmployeeData.StaffType);
+                workerManager.RegisterWorker(newEmployee, (WorkType)newEmployee.EmployeeData.StaffType, newEmployee.EmployeeData.StaffID);
             }
             upgradeButtonText.text = "업그레이드";
             employeeData.upgradeCount++;
