@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 public class FoodDataTable : DataTable
 {
@@ -8,6 +9,11 @@ public class FoodDataTable : DataTable
     {
         Data.TryGetValue(id, out var data);
         return data;
+    }
+
+    public List<KeyValuePair<int,FoodData>> GetSceneFoodDataList(ThemeIds themeId)
+    {
+        return Data.Where(x => x.Value.Type == (int)themeId).ToList();
     }
 
     public override void Load()

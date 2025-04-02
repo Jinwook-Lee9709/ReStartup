@@ -110,7 +110,7 @@ public static class Variables
     }
 }
 
-public enum CookingStationType
+public enum CookwareType
 {
     CoffeeMachine,
     DrinkingFountain,
@@ -137,4 +137,9 @@ public static class Strings
     public static readonly string PlayerTag = "Player";
     public static readonly string GameManagerTag = "GameManager";
     public static readonly string InteractableObjectTag = "InteractableObject";
+    
+    public static readonly string CounterName = "Counter";
+    public static readonly string FoodPickupCounterName = "FoodPickupCounter";
+    public static readonly string CookingStation = "CookingStation";
+    public static readonly string Table = "Table";
 }

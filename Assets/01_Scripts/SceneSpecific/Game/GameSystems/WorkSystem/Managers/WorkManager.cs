@@ -3,16 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class WorkManager : MonoBehaviour
+public class WorkManager
 {
-    [SerializeField] private WorkerManager workerManager;
-
+    private WorkerManager workerManager;
     private Dictionary<WorkType, List<WorkBase>> assignedWorks;
     private Dictionary<WorkType, PriorityQueue<WorkBase, float>> stoppedWorkQueues;
     private Dictionary<WorkType, PriorityQueue<WorkBase, float>> workQueues;
     private List<KeyValuePair<Consumer, WorkBase>> consumerWorkList;
 
-    private void Awake()
+    public void Init(WorkerManager workerManager)
+    {
+        SetWorkerManager(workerManager);
+        InitContainers();
+    }
+
+    private void SetWorkerManager(WorkerManager workerManager)
+    {
+        this.workerManager = workerManager;
+        workerManager.OnWorkerFree += OnWorkerReturned;
+    }
+
+    private void InitContainers()
     {
         workQueues = new Dictionary<WorkType, PriorityQueue<WorkBase, float>>();
         stoppedWorkQueues = new Dictionary<WorkType, PriorityQueue<WorkBase, float>>();
@@ -24,11 +35,6 @@ public class WorkManager : MonoBehaviour
         foreach (WorkType taskType in Enum.GetValues(typeof(WorkType)))
             stoppedWorkQueues[taskType] = new PriorityQueue<WorkBase, float>();
         foreach (WorkType taskType in Enum.GetValues(typeof(WorkType))) assignedWorks[taskType] = new List<WorkBase>();
-    }
-
-    private void Start()
-    {
-        workerManager.OnWorkerFree += OnWorkerReturned;
     }
 
     public void AddWork(WorkBase work, Consumer consumer = null)

@@ -37,5 +37,16 @@ public static class Extends
 
         return InteractPermission.None;
     }
-    
+
+    public static void InitializeLocalTransform(this Transform obj)
+    {
+        obj.transform.localPosition = Vector3.zero;
+        obj.transform.localScale = Vector3.one;
+    }
+    public static void SetParentAndInitialize(this Transform obj, Transform parent)
+    {
+        obj.transform.SetParent(parent);
+        obj.transform.localPosition = Vector3.zero;
+        obj.transform.localScale = Vector3.one;
+    }
 }
