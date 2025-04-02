@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
@@ -10,10 +11,15 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
 
     private float interactionSpeed = 1f;
 
+    private readonly float healthDecreaseTimer = 60f;
+
+    private float currentTimer = 0f;
+
     public EmployeeTableGetData EmployeeData { get; set; } = new();
     public float InteractionSpeed => interactionSpeed;
     public Transform HandPivot => handPivot;
 
+    public UiManager uiManager;
 
     public WorkerState CurrentStatus
     {
@@ -32,17 +38,21 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
 
     private void Start()
     {
+        EmployeeData.currentHealth = EmployeeData.Health;
         EmployeeData.MoveSpeed = EmployeeData.MoveSpeed + EmployeeData.upgradeSpeed;
         agent.speed = EmployeeData.MoveSpeed;
         interactionSpeed = EmployeeData.WorkSpeed - upgradeWorkSpeedValue * EmployeeData.upgradeCount;
+        //Added logic to change maximum health
 
         EmployeeData.OnUpgradeEvent += () =>
         {
             EmployeeData.MoveSpeed = EmployeeData.MoveSpeed + EmployeeData.upgradeSpeed;
             agent.speed = EmployeeData.MoveSpeed;
             interactionSpeed = EmployeeData.WorkSpeed - upgradeWorkSpeedValue * EmployeeData.upgradeCount;
-            Debug.Log($"{name} : {agent.speed} , {InteractionSpeed}");
+            //Added logic to change maximum health
         };
+        uiManager = GameObject.FindWithTag("UIManager").GetComponent<UiManager>();
+        uiManager.EmployeeHpUIItemSet(EmployeeData);
     }
 
     private void Update()
@@ -56,11 +66,17 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
                 UpdateReturnidleArea();
                 break;
             case WorkerState.Working:
-
                 UpdateWorking();
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
+        }
+        currentTimer += Time.deltaTime;
+        if (healthDecreaseTimer < currentTimer)
+        {
+            currentTimer = 0;
+            EmployeeData.currentHealth -= Constants.HEALTH_DECREASE_AMOUNT_ONTIMEFINISHED;
+            uiManager.EmployeeHpSet(this);
         }
     }
     public void LiftPackage(GameObject package)

@@ -6,6 +6,7 @@ public class UiManager : MonoBehaviour
     public GameObject uiApps;
     public GameObject uiReview;
     public GameObject uiUpgrade;
+    public GameObject uiEmployeeHp;
 
     public void OnClickButtonSetAppsUi()
     {
@@ -46,5 +47,21 @@ public class UiManager : MonoBehaviour
     {
         uiReview.SetActive(false);
         uiHUD.SetActive(true);
+    }
+    public void OnClickButtonOpenEmployeeHpUI()
+    {
+        uiEmployeeHp.SetActive(true);
+    }
+    public void OnClickButtonExitEmployeeHpUI()
+    {
+        uiEmployeeHp.SetActive(false);
+    }
+    public void EmployeeHpUIItemSet(EmployeeTableGetData data)
+    {
+        uiEmployeeHp.GetComponent<EmployeeHpUi>().SetEmployeeUIItem(data);
+    }
+    public void EmployeeHpSet(EmployeeFSM employee)
+    {
+        uiEmployeeHp.GetComponent<EmployeeHpUi>().EmployeeHpSet(employee);
     }
 }

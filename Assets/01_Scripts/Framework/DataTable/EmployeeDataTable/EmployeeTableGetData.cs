@@ -20,6 +20,7 @@ public class EmployeeTableGetData
     public string Resouces { get; set; }
 
     public event Action OnUpgradeEvent;
+    public int currentHealth;
 
     public void OnUpgrade()
     {

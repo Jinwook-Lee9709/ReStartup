@@ -2,6 +2,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.InputSystem.Composites;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.UI;
 
@@ -124,6 +125,7 @@ public class UiItem : MonoBehaviour
             uiUpgradeCostText.text = $"{employeeData.Cost * employeeData.upgradeCount}";
             if (employeeData.upgradeCount >= 5)
             {
+                upgradeButtonText.text = "완료됨";
                 button.interactable = false;
             }
         }));
@@ -146,7 +148,11 @@ public class UiItem : MonoBehaviour
             foodData.upgradeCount++;
             uiNameText.text = $"{foodData.FoodID}";
             uiUpgradeCostText.text = $"{foodData.BasicCost * foodData.upgradeCount}";
-            button.GetComponentInChildren<TextMeshProUGUI>().text = "구매함";
+            if (foodData.upgradeCount >= 5)
+            {
+                upgradeButtonText.text = "완료됨";
+                button.interactable = false;
+            }
         }));
     }
     private IEnumerator LoadSpriteCoroutine(string iconAddress)
