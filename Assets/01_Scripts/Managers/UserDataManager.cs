@@ -11,6 +11,7 @@ public class UserDataManager : Singleton<UserDataManager>
 
     public event Action<int?> getGoldAction;
     public event Action<int> setRankingPointAction;
+    public event Action<bool> OnReviewCntFullEvent;
 
     public UserData CurrentUserData
     {
@@ -66,6 +67,31 @@ public class UserDataManager : Singleton<UserDataManager>
         {    //TODO : Play Tip PopUp
             CurrentUserData.Gold +=
                 Mathf.CeilToInt(consumer.needFood.SellingCost * (consumer.FSM.consumerData.SellTipPercent / 100));
+        }
+    }
+
+    public void AddConsumerCnt(bool isPositive)
+    {
+        if (isPositive)
+        {
+            currentUserData.PositiveCnt++;
+            if (currentUserData.PositiveCnt >= 15)
+            {
+                OnReviewCntFullEvent?.Invoke(isPositive);
+                currentUserData.PositiveCnt = 0;
+            }
+        }
+        else
+        {
+            currentUserData.NegativeCnt++;
+            if (currentUserData.NegativeCnt >= 4)
+            {
+                if (Random.Range(0f, 1f) < 0.6f)
+                {
+                    OnReviewCntFullEvent?.Invoke(isPositive);
+                }
+                currentUserData.NegativeCnt = 0;
+            }
         }
     }
 }

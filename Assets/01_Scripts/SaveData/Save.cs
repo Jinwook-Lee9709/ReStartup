@@ -12,8 +12,8 @@ public class UserData
     public int? Gold { get; set; } = new(); //�ΰ��� ��ȭ
     public int? CurrentRankPoint { get; set; } = new();//���� ��ŷ ����Ʈ
     public int? CurrentRank { get; set; } = new();
-    public int? PositiveCnt { get; set; } //�ſ츸�� �մ� ī��Ʈ
-    public int? NegativeCnt { get; set; } //�Ҹ��� �մ� ī��Ʈ
+    public int? PositiveCnt { get; set; } = new(); //�ſ츸�� �մ� ī��Ʈ
+    public int? NegativeCnt { get; set; } = new(); //�Ҹ��� �մ� ī��Ʈ
 
     public Dictionary<int, FoodSaveData> FoodSaveData { get; set; } = new()
     {
