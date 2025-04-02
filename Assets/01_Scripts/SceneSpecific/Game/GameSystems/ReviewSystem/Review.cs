@@ -25,7 +25,7 @@ public class Review : MonoBehaviour
         dateText.text = data.date;
         rankPointText.text = $"{data.addPoint:▲0;▼0;0} 점";
 
-        removeButton.enabled = data.addPoint < 0;
+        removeButton.gameObject.SetActive(data.addPoint < 0);
         if(removeButton.enabled )
         {
             removeButton.onClick.AddListener(Remove);
