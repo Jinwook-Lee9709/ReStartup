@@ -47,11 +47,6 @@ public class WorkManager : MonoBehaviour
         consumerWorkList.Add(new KeyValuePair<Consumer, WorkBase>(consumer, work));
     }
 
-    public void AddAssignedWork(WorkBase work)
-    {
-        assignedWorks[work.workType].Add(work);
-    }
-
     public void AddStoppedWork(WorkType type, WorkBase work)
     {
         stoppedWorkQueues[type].Enqueue(work, Time.time);
