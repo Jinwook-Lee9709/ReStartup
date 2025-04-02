@@ -42,7 +42,7 @@ public class UiItem : MonoBehaviour
         }
         if (foodData != null)
         {
-            //StartCoroutine(LoadSpriteCoroutine(foodData.IconID));
+            StartCoroutine(LoadSpriteCoroutine(foodData.IconID));
         }
 
     }
