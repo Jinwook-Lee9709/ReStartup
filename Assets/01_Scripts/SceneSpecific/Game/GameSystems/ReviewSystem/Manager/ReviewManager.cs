@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class ReviewManager : MonoBehaviour
 {
+    [SerializeField] private ReviewRemoveAcceptPopup popup;
+    [SerializeField] private ReviewUi popupParent;
+    [SerializeField] private GameObject adPanel;
     public LinkedList<GameObject> reviews = new LinkedList<GameObject>();
     public GameObject loadingDot;
     public GameObject reviewContent;
@@ -18,6 +20,7 @@ public class ReviewManager : MonoBehaviour
     {
         AdvertisementManager.Instance.Init();
         UserDataManager.Instance.OnReviewCntFullEvent += AddReview;
+        //AdvertisementManager.Instance.CreateBannerAd();
     }
 
     private void AddReview(bool isBest)
@@ -80,6 +83,13 @@ public class ReviewManager : MonoBehaviour
             UpdateReviews();
         });
 
+    }
+
+    public void OnRemoveButtonClick(Review review)
+    {
+        var removePopup = Instantiate(popup, popupParent.transform,false);
+        removePopup.reviewManager = this;
+        removePopup.Init(review);
     }
 
     public void RemoveAt(GameObject removeReview)

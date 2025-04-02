@@ -7,14 +7,18 @@ using UnityEngine;
 public class AdvertisementManager : Singleton<AdvertisementManager>
 {
     public RewardedAd rewarded;
+    public BannerView banner;
     private bool isInitialized = false;
 
 #if UNITY_ANDROID
     private string rewardTestADID = "ca-app-pub-3940256099942544/5224354917";
+    private string bannerTextADID = "ca-app-pub-3940256099942544/6300978111";
 #elif UNITY_IPHONE
-  private string rewardTestADID = "ca-app-pub-3940256099942544/1712485313";
+    private string rewardTestADID = "ca-app-pub-3940256099942544/1712485313";
+    private string bannerTextADID = "ca-app-pub-3940256099942544/2934735716";
 #else
-  private string rewardTestADID = "unused";
+    private string rewardTestADID = "unused";
+    private string bannerTextADID = "unused";
 #endif
     public void Init()
     {
@@ -56,6 +60,24 @@ public class AdvertisementManager : Singleton<AdvertisementManager>
             });
     }
 
+    public void CreateBannerAd()
+    {
+        if (banner != null)
+        {
+            DestroyAd();
+        }
+
+        banner = new BannerView(bannerTextADID, AdSize.GetCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(AdSize.FullWidth), 0, -380);
+        banner.LoadAd(new AdRequest());
+    }
+    public void DestroyAd()
+    {
+        if (banner != null)
+        {
+            banner.Destroy();
+            banner = null;
+        }
+    }
     public void ShowRewardedAd(Action adCallBack)
     {
         if (rewarded != null && rewarded.CanShowAd())
@@ -76,6 +98,10 @@ public class AdvertisementManager : Singleton<AdvertisementManager>
     private void RegisterEventHandlers(RewardedAd ad)
     {
         ad.OnAdFullScreenContentClosed += () =>
+        {
+            LoadRewardedAd();
+        };
+        ad.OnAdFullScreenContentFailed += (err) =>
         {
             LoadRewardedAd();
         };
