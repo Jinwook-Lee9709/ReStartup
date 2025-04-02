@@ -115,14 +115,15 @@ public class ConsumerFSM : MonoBehaviour
                     switch (currentSatisfaction)
                     {
                         case Satisfaction.High:
-                            UserDataManager.Instance.CurrentUserData.PositiveCnt++;
+                            UserDataManager.Instance.AddConsumerCnt(true);
                             break;
                         case Satisfaction.Low:
-                            UserDataManager.Instance.CurrentUserData.NegativeCnt++;
+                            UserDataManager.Instance.AddConsumerCnt(false);
                             consumerManager.workFlowController.CancelOrder(consumer);
                             consumerManager.workFlowController.ReturnTable(consumer.currentTable);
                             break;
                     }
+
 
                     agent.SetDestination(consumerManager.spawnPoint.position);
                     break;
