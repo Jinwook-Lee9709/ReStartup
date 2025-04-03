@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NavMeshPlus.Components;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -38,14 +39,15 @@ public class WorkStationManager
     {
         var pivot = objectPivotManager.GetCookwarePivots(cookwareType)[num];
         var handle = Addressables.InstantiateAsync(Strings.CookingStation, pivot);
-        handle.Completed += (handle) => OnCookingStationInstantiated(handle, cookwareType);
+        handle.Completed += (handle) => OnCookingStationInstantiated(handle, cookwareType, num);
     }
 
-    public void OnCookingStationInstantiated(AsyncOperationHandle<GameObject> handle, CookwareType cookwareType)
+    public void OnCookingStationInstantiated(AsyncOperationHandle<GameObject> handle, CookwareType cookwareType, int num)
     {
         var cookingStation = handle.Result.GetComponent<CookingStation>();
         cookingStation.transform.InitializeLocalTransform();
-        cookingStation.SetId(CurrentCookwareCount(cookwareType));
+        cookingStation.SetId(num);
+        cookingStation.GetComponentInChildren<TextMeshPro>().text = cookwareType.ToString();
         workFlowController.AddCookingStation(cookingStation);
 
         UpdateNavMesh();

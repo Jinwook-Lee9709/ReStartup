@@ -44,7 +44,7 @@ public class WorkerManager
         idleArea.Add(WorkType.Kitchen, pivotManager.GetIdleArea(WorkType.Kitchen));
         idleArea.Add(WorkType.Payment, pivotManager.GetIdleArea(WorkType.Payment));
     }
-    private void Start()
+    public void Start()
     {
         InitPlayer();
     }

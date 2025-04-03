@@ -1,8 +1,5 @@
 using System;
-using Cysharp.Threading.Tasks.Triggers;
 using NavMeshPlus.Components;
-using Unity.VisualScripting;
-using UnityEditor.Experimental;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -67,6 +64,7 @@ public class GameManager : MonoBehaviour
     public void Start()
     {
         WorkStationManager.BakeNavMesh();
+        WorkerManager.Start();
     }
     
     private void InitGameScene()
