@@ -90,6 +90,8 @@ public static class Constants
     public static readonly float DEFAULT_ORDER_TIME = 0f;
     public static readonly int MAX_UPGRADE_LEVEL = 5;
     public static readonly float PLAYER_INTERACTION_SPEED = 3f;
+    public static readonly int HEALTH_DECREASE_AMOUNT_ONWORKFINISHED = 2;
+    public static readonly int HEALTH_DECREASE_AMOUNT_ONTIMEFINISHED = 1;
 }
 
 public static class Variables
