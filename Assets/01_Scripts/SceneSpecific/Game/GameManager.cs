@@ -1,5 +1,6 @@
 using System;
 using NavMeshPlus.Components;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -25,6 +26,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         currentTheme = (ThemeIds)PlayerPrefs.GetInt("Theme", 1);
+        ServiceLocator.Instance.RegisterSceneService(this);
         
         InitFoodUpgradeDataManager();
         InitObjectPoolManager();
@@ -66,7 +68,9 @@ public class GameManager : MonoBehaviour
         WorkStationManager.BakeNavMesh();
         WorkerManager.Start();
     }
-    
+
+    #region InitGameScene
+
     private void InitGameScene()
     {
         InitInteractableObject();
@@ -76,6 +80,8 @@ public class GameManager : MonoBehaviour
     {
         InitCounter();
         InitFoodPickupCounter();
+        InitTrayReturnCounter();
+        InitSinkingStation();
     }
 
     private void InitCounter()
@@ -85,7 +91,7 @@ public class GameManager : MonoBehaviour
         handle.WaitForCompletion();
         var counter = handle.Result.GetComponent<CashierCounter>();
         counter.transform.SetParentAndInitialize(counterPivot);
-        WorkFlowController.AddCashierCounter(counter);
+        WorkFlowController.SetCashierCounter(counter);
     }
 
     private void InitFoodPickupCounter()
@@ -101,4 +107,27 @@ public class GameManager : MonoBehaviour
             WorkFlowController.AddFoodPickupCounter(counter);
         }
     }
+
+    private void InitTrayReturnCounter()
+    {
+        var trayReturnCounterPivot = ObjectPivotManager.GetTrayReturnPivot();
+        var handle = Addressables.InstantiateAsync(Strings.TrayReturnCounter);
+        handle.WaitForCompletion();
+        var counter = handle.Result.GetComponent<TrayReturnCounter>();
+        counter.transform.SetParentAndInitialize(trayReturnCounterPivot);
+        WorkFlowController.SetTrayReturnCounter(counter);
+    }
+
+    private void InitSinkingStation()
+    {
+        var sinkingStationPivot = ObjectPivotManager.GetSinkPivot();
+        var handle = Addressables.InstantiateAsync(Strings.SinkingStation);
+        handle.WaitForCompletion();
+        var station = handle.Result.GetComponent<SinkingStation>();
+        station.transform.SetParentAndInitialize(sinkingStationPivot);
+        WorkFlowController.SetSinkingStation(station);
+    }
+
+    #endregion
+    
 }

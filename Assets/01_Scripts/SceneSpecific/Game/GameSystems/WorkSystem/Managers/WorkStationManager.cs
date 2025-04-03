@@ -14,7 +14,10 @@ public class WorkStationManager
     private WorkFlowController workFlowController;
     private List<Transform> tablePivots;
     private NavMeshSurface surface2D;
+    private TrayReturnCounter _trayReturnCounter;
 
+    public TrayReturnCounter TrayReturnCounter => _trayReturnCounter;
+    
     public int CurrentCookwareCount(CookwareType type) =>
         objectPivotManager.GetCookwarePivots(type).Count(x => x.childCount > 0);
 

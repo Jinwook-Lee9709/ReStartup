@@ -12,6 +12,9 @@ public class PivotLocator : MonoBehaviour
     [SerializeField] private List<Transform> watingLinePivots;
     [SerializeField] private Transform consumerSpawnPivot;
     [SerializeField] private Transform counterPivot;
+    [SerializeField] private Transform trayReturnCounterPivot;
+    [SerializeField] private Transform sinkPivot;
+    
     
     public SerializedDictionary<WorkType, List<Transform>> IdleAreas => idleAreas;
     public SerializedDictionary<CookwareType, List<Transform>> CookWarePivots => cookWarePivots;
@@ -20,4 +23,6 @@ public class PivotLocator : MonoBehaviour
     public List<Transform> WatingLinePivots => watingLinePivots;
     public Transform ConsumerSpawnPivot => consumerSpawnPivot;
     public Transform CounterPivot => counterPivot;
+    public Transform TrayReturnCounterPivot => trayReturnCounterPivot;
+    public Transform SinkPivot => sinkPivot;
 }

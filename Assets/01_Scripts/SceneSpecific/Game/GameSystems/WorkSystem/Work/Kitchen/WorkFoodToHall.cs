@@ -3,7 +3,9 @@ public class WorkFoodToHall : InteractWorkBase
     private MainLoopWorkContext context;
     private FoodPickupCounter counter;
 
-    public WorkFoodToHall(WorkManager workManager, WorkType workType, float interactionTime = 0, bool isInteruptable = false) : base(workManager, workType, interactionTime,isInteruptable)
+    public WorkFoodToHall(WorkManager workManager, WorkType workType, float interactionTime = 0,
+        bool isInteruptible = false, bool isStoppable = false) : base(workManager, workType, interactionTime,
+        isInteruptible, isStoppable)
     {
     }
 
@@ -24,7 +26,7 @@ public class WorkFoodToHall : InteractWorkBase
         transporter.DropPackage(counter.FoodPlacePivot);
         counter.SetWork(work);
         nextWork = work;
-        
+
         workManager.RegisterConsumerWork(context.Consumer, work);
     }
 
@@ -36,7 +38,7 @@ public class WorkFoodToHall : InteractWorkBase
             return;
         var transporter = worker as ITransportable;
         var food = transporter.HandPivot.GetChild(0).GetComponent<FoodObject>();
-        if(food != null)
+        if (food != null)
             food.Release();
         base.OnWorkCanceled();
     }

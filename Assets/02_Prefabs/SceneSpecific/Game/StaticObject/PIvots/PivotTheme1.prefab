@@ -1,5 +1,67 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &307058363519635818
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 558339104692122353}
+  m_Layer: 0
+  m_Name: SInkPivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &558339104692122353
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 307058363519635818}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 7.46, y: -7.9, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4201695680272108604}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &805935585281689774
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5892852864749779226}
+  m_Layer: 0
+  m_Name: TrayReturnCounterPivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5892852864749779226
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 805935585281689774}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 5.71, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4201695680272108604}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1755111257760580917
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -60,12 +122,31 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2526442546026951410, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
+      propertyPath: sinkPivot
+      value: 
+      objectReference: {fileID: 558339104692122353}
+    - target: {fileID: 2526442546026951410, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
+      propertyPath: trayReturnCounterPivot
+      value: 
+      objectReference: {fileID: 5892852864749779226}
     - target: {fileID: 6462756526796696388, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
       propertyPath: m_Name
       value: PivotTheme1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 2455591641632885001, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5892852864749779226}
+    - targetCorrespondingSourceObject: {fileID: 2455591641632885001, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 558339104692122353}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
+--- !u!4 &4201695680272108604 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2455591641632885001, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
+  m_PrefabInstance: {fileID: 1755111257760580917}
+  m_PrefabAsset: {fileID: 0}

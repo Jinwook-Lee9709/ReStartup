@@ -42,7 +42,8 @@ public class InputManager : MonoBehaviour
         slowTouchAction = InputSystem.actions.FindAction("SlowTouchAction");
         slowTouchAction.started += ctx =>
         {
-            if (IsPointerOverUI()) return;
+            if (IsPointerOverUI()) 
+                return;
 
             isPressed = true;
         };

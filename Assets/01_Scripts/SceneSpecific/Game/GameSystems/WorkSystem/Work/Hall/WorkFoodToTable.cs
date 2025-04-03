@@ -2,7 +2,9 @@ public class WorkFoodToTable : InteractWorkBase
 {
     private MainLoopWorkContext context;
 
-    public WorkFoodToTable(WorkManager workManager, WorkType workType, float interactionTime = 0, bool isInteruptable = false) : base(workManager, workType, interactionTime, isInteruptable)
+    public WorkFoodToTable(WorkManager workManager, WorkType workType, float interactionTime = 0,
+        bool isInteruptable = false, bool isStoppable = false) : base(workManager, workType, interactionTime,
+        isInteruptable, isStoppable)
     {
     }
 
@@ -27,7 +29,7 @@ public class WorkFoodToTable : InteractWorkBase
             return;
         var transporter = worker as ITransportable;
         var food = transporter.HandPivot.GetChild(0).GetComponent<FoodObject>();
-        if(food != null)
+        if (food != null)
             food.Release();
         base.OnWorkCanceled();
     }

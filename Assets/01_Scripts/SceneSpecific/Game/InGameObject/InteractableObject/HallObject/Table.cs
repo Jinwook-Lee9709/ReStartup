@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 public class Table : InteractableObjectBase
 {
@@ -16,10 +18,13 @@ public class Table : InteractableObjectBase
         var food = foodPlacePivot.GetChild(0).gameObject;
         return food;
     }
-
-    public void OnCleaned()
+    
+    public void FoodToTray()
     {
+        var handle = Addressables.LoadAssetAsync<Sprite>(Strings.Tray);
+        handle.WaitForCompletion();
         var obj = foodPlacePivot.GetChild(0).GetComponent<FoodObject>();
-        obj.Release();
+        obj.SetSprite(handle.Result);
     }
+    
 }

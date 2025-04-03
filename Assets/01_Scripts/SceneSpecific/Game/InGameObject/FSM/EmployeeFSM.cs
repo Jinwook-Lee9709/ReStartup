@@ -52,7 +52,7 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
             //Added logic to change maximum health
         };
         uiManager = GameObject.FindWithTag("UIManager").GetComponent<UiManager>();
-        uiManager.EmployeeHpUIItemSet(EmployeeData);
+        uiManager.EmployeeHpUIItemSet(this);
     }
 
     private void Update()
@@ -75,7 +75,7 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
         if (healthDecreaseTimer < currentTimer)
         {
             currentTimer = 0;
-            EmployeeData.currentHealth -= Constants.HEALTH_DECREASE_AMOUNT_ONTIMEFINISHED;
+            DecreaseHp(Constants.HEALTH_DECREASE_AMOUNT_ONTIMEFINISHED);
             uiManager.EmployeeHpSet(this);
         }
     }
@@ -100,6 +100,26 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
         base.AssignWork(work);
         //택스트 넣어주기
         CurrentStatus = WorkerState.Working;
+    }
+
+    public void IncreaseHp(int amount)
+    {
+        if (EmployeeData.currentHealth == 0)
+        {
+            IsExhausted = false;
+            workerManager.ReturnRecoveredWorker(this);
+        }
+        EmployeeData.currentHealth += amount;
+    }
+
+    public void DecreaseHp(int amount)
+    {
+        EmployeeData.currentHealth -= amount;
+        EmployeeData.currentHealth = Mathf.Clamp(EmployeeData.currentHealth, 0, EmployeeData.Health);
+        if (EmployeeData.currentHealth == 0)
+        {
+            OnWorkerExhausted();
+        }
     }
 
     private void UpdateIdle()

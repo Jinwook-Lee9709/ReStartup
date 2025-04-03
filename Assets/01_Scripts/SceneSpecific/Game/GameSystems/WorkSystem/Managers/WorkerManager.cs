@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -17,7 +18,8 @@ public class WorkerManager
     
     //Containers
     private Dictionary<WorkType, SortedSet<WorkerBase>> workers;
-    private List<WorkerBase> workingWorkers;
+    private HashSet<WorkerBase> workingWorkers;
+    private HashSet<WorkerBase> exhaustedWorkers;
     
     public int CurrentIdleHallWorkerCount => workers[WorkType.Hall].Count;
     public int CurrentIdleKitchenWorkerCount => workers[WorkType.Hall].Count;
@@ -33,7 +35,8 @@ public class WorkerManager
     {
         workers = new Dictionary<WorkType, SortedSet<WorkerBase>>();
         foreach (WorkType workType in Enum.GetValues(typeof(WorkType))) workers.Add(workType, new SortedSet<WorkerBase>());
-        workingWorkers = new List<WorkerBase>();
+        workingWorkers = new HashSet<WorkerBase>();
+        exhaustedWorkers = new HashSet<WorkerBase>();
     }
 
     private void InitIdleArea()
@@ -88,6 +91,23 @@ public class WorkerManager
         if (worker.WorkType == WorkType.All)
             return;
         workingWorkers.Remove(worker);
+        workers[worker.WorkType].Add(worker);
+        OnWorkerFree?.Invoke(worker.WorkType);
+    }
+    public void ReturnExhaustedWorker(WorkerBase worker)
+    {
+        foreach (var pair in workers)
+        {
+            pair.Value.Remove(worker);
+        }
+        workingWorkers.Remove(worker);
+        
+        exhaustedWorkers.Add(worker);
+    }
+
+    public void ReturnRecoveredWorker(WorkerBase worker)
+    {
+        exhaustedWorkers.Remove(worker);
         workers[worker.WorkType].Add(worker);
         OnWorkerFree?.Invoke(worker.WorkType);
     }

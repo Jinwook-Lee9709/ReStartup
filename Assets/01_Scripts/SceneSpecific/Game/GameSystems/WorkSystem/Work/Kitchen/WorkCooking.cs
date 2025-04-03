@@ -60,7 +60,9 @@ public class WorkCooking : InteractWorkBase
         foodObject = ServiceLocator.Instance.GetSceneService<GameManager>().ObjectPoolManager
             .GetObjectFromPool<FoodObject>();
 
-        Addressables.LoadAssetAsync<Sprite>(context.Consumer.needFood.IconID).Completed += OnSpriteLoaded;
+        var handle = Addressables.LoadAssetAsync<Sprite>(context.Consumer.needFood.IconID);
+        handle.WaitForCompletion();
+        OnSpriteLoaded(handle);
     }
 
     private void OnSpriteLoaded(AsyncOperationHandle<Sprite> handle)

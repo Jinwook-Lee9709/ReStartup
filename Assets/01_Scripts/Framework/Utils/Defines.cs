@@ -144,4 +144,7 @@ public static class Strings
     public static readonly string FoodPickupCounterName = "FoodPickupCounter";
     public static readonly string CookingStation = "CookingStation";
     public static readonly string Table = "Table";
+    public static readonly string Tray = "Tray";
+    public static readonly string TrayReturnCounter = "TrayReturnCounter";
+    public static readonly string SinkingStation = "SinkingStation";
 }

@@ -13,7 +13,7 @@ public class WorkerBase : MonoBehaviour, IComparable<WorkerBase>
 
     private int id;
     
-    protected WorkType workType;
+    [SerializeField] protected WorkType workType;
     
     protected NavMeshAgent agent;
     protected WorkBase currentWork;
@@ -23,6 +23,8 @@ public class WorkerBase : MonoBehaviour, IComparable<WorkerBase>
     public bool IsBusy => currentWork != null;
     public WorkBase CurrentWork => currentWork;
     public WorkType WorkType => workType;
+    public bool IsExhausted { get; protected set; }
+
     
     protected virtual void Awake()
     {
@@ -59,16 +61,25 @@ public class WorkerBase : MonoBehaviour, IComparable<WorkerBase>
     public virtual void OnWorkFinished()
     {
         currentWork = null;
+        if (IsExhausted)
+        {
+            workerManager.ReturnExhaustedWorker(this);
+            return;
+        }
         workerManager.ReturnWorker(this);
     }
 
-    public virtual void StopWork()
+    public virtual void OnWorkerExhausted()
     {
+        IsExhausted = true;
+        if (currentWork is { IsStoppable: false })
+            return;
         if (currentWork != null)
-        {
+        { 
             currentWork.OnWorkStopped();
-            OnWorkFinished();
+            currentWork = null;
         }
+        workerManager.ReturnExhaustedWorker(this);
     }
 
     public int CompareTo(WorkerBase other)

@@ -11,7 +11,7 @@ public class WorkGotoCookingStation : InteractWorkBase
     private Sprite foodSprite;
     private ITransportable transformer;
 
-    public WorkGotoCookingStation(WorkManager workManager, WorkType workType, float interactionTime = 0) : base(workManager, workType, interactionTime)
+    public WorkGotoCookingStation(WorkManager workManager, WorkType workType, float interactionTime = 0, bool isInterptible = false) : base(workManager, workType, interactionTime, isInterptible)
     {
     }
 
@@ -41,8 +41,10 @@ public class WorkGotoCookingStation : InteractWorkBase
         transformer = worker as ITransportable;
         foodObject = ServiceLocator.Instance.GetSceneService<GameManager>().ObjectPoolManager
             .GetObjectFromPool<FoodObject>();
-        
-        Addressables.LoadAssetAsync<Sprite>(context.Consumer.needFood.IconID).Completed += OnSpriteLoaded;
+
+        var handle = Addressables.LoadAssetAsync<Sprite>(context.Consumer.needFood.IconID);
+        handle.WaitForCompletion();
+        OnSpriteLoaded(handle);
     }
 
     private void OnSpriteLoaded(AsyncOperationHandle<Sprite> handle)

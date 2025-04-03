@@ -8,17 +8,20 @@ public class WorkFlowController
     static readonly string FoodObjectName = "FoodObject";
     private GameManager gameManager;
     private WorkManager workManager;
-    [SerializeField] private CashierCounter cashierCounter;
+    private CashierCounter cashierCounter;
+    private TrayReturnCounter trayReturnCounter;
+    private SinkingStation sinkingStation;
     private readonly LinkedList<Consumer> cashierQueue = new();
     private readonly Dictionary<CookwareType, InteractableObjectManager<CookingStation>> cookingStationManagers = new();
     private readonly InteractableObjectManager<FoodPickupCounter> foodPickupCounterManager = new();
     private readonly LinkedList<(MainLoopWorkContext, CookingStation)> foodPickupCounterQueue = new();
-    private readonly LinkedList<MainLoopWorkContext> orderQueue = new();
+    private readonly Dictionary<CookwareType,LinkedList<MainLoopWorkContext>> orderQueue = new();
 
     private readonly InteractableObjectManager<Table> tableManager = new();
-
-
     private LinkedList<Consumer> waitingConsumerQueue = new();
+    
+    public TrayReturnCounter TrayReturnCounter => trayReturnCounter;
+    public SinkingStation SinkingStation => sinkingStation;
 
     public void Init(GameManager gameManager, WorkManager workManager)
     {
@@ -48,8 +51,9 @@ public class WorkFlowController
         {
             var cookingStationManager = new InteractableObjectManager<CookingStation>();
             cookingStationManagers.Add(cookwareType, cookingStationManager);
+            var list = new LinkedList<MainLoopWorkContext>();
+            orderQueue.Add(cookwareType, list);
         }
-
     }
     
 
@@ -84,11 +88,22 @@ public class WorkFlowController
         foodPickupCounterManager.InsertObject(counter);
     }
 
-    public void AddCashierCounter(CashierCounter counter)
+    public void SetCashierCounter(CashierCounter counter)
     {
         cashierCounter = counter;
     }
 
+    public void SetTrayReturnCounter(TrayReturnCounter counter)
+    {
+        trayReturnCounter = counter;
+    }
+
+    public void SetSinkingStation(SinkingStation station)
+    {
+        sinkingStation = station;
+        sinkingStation.OnSinkVacated += OnSinkVacated;
+    }
+    
     #region TableCleanLogic()
 
     public void OnEatComplete(Table table)
@@ -102,6 +117,7 @@ public class WorkFlowController
         work.SetInteractable(table);
         work.SetContext(this);
         table.SetWork(work);
+        table.FoodToTray();
         workManager.AddWork(work);
     }
     
@@ -168,9 +184,15 @@ public class WorkFlowController
         var node1 = foodPickupCounterQueue.FirstOrDefault(x => x.Item1.Consumer == consumer);
         if (node1 != default)
             foodPickupCounterQueue.Remove(node1);
-        var node2 = orderQueue.FirstOrDefault(x => x.Consumer == consumer);
-        if (node2 != null)
-            orderQueue.Remove(node2);
+        foreach (var pair in orderQueue)
+        {
+            var node2 = pair.Value.FirstOrDefault(x => x.Consumer == consumer);
+            if (node2 != null)
+            {
+                pair.Value.Remove(node2);
+                break;
+            }
+        }
         var node3 = waitingConsumerQueue.FirstOrDefault(x => x == consumer);
         if (node3 != null)
             waitingConsumerQueue.Remove(node3);
@@ -188,18 +210,24 @@ public class WorkFlowController
     public void RegisterOrder(MainLoopWorkContext context)
     {
         var food = context.Consumer.needFood;
-        if (cookingStationManagers[food.CookwareType].IsAvailableObjectExist)
+        bool isCookingStationAvailable = cookingStationManagers[food.CookwareType].IsAvailableObjectExist;
+        bool isSinkFull = sinkingStation.IsSinkFull;
+        if (isCookingStationAvailable && !isSinkFull)
             AssignOrderWork(context);
         else
-            orderQueue.AddLast(context);
+            orderQueue[food.CookwareType].AddLast(context);
     }
 
     private void OnCookingStationVacated(CookingStation availableStation)
     {
-        if (orderQueue.Count > 0)
+        if (orderQueue[availableStation.cookwareType].Count > 0)
         {
-            var context = orderQueue.First();
-            orderQueue.RemoveFirst();
+            if (sinkingStation.IsSinkFull)
+            {
+                return;
+            }
+            var context = orderQueue[availableStation.cookwareType].First();
+            orderQueue[availableStation.cookwareType].RemoveFirst();
             AssignOrderWork(context);
         }
     }
@@ -221,6 +249,23 @@ public class WorkFlowController
         cookingStationManagers[cookwareType].ReturnObject(station);
     }
 
+    public void OnSinkVacated()
+    {
+        foreach (var pair in cookingStationManagers)
+        {
+            while (orderQueue[pair.Key].Count > 0)
+            {
+                if (!pair.Value.IsAvailableObjectExist)
+                {
+                    break;
+                }
+                var context = orderQueue[pair.Key].First();
+                orderQueue[pair.Key].RemoveFirst();
+                AssignOrderWork(context);
+            }
+        }
+    }
+    
     #endregion
 
     #region FoodPickupLogic
@@ -247,14 +292,19 @@ public class WorkFlowController
             var counter = GetEmptyFoodCounter();
             var (context, target) = foodPickupCounterQueue.First();
             foodPickupCounterQueue.RemoveFirst();
-            var work = new WorkGotoCookingStation(workManager, WorkType.Kitchen);
-            target.SetWork(work);
-            work.SetInteractable(target);
-            work.SetContext(context, counter);
-            workManager.AddWork(work, context.Consumer);
+            AddDeliverFoodWork(target, context, counter);
+            
         }
     }
-
+    private void AddDeliverFoodWork(InteractableObjectBase target, MainLoopWorkContext context, FoodPickupCounter counter)
+    {
+        var work = new WorkGotoCookingStation(workManager, WorkType.Kitchen);
+        target.SetWork(work);
+        work.SetInteractable(target);
+        work.SetContext(context, counter);
+        workManager.AddWork(work, context.Consumer);
+    }
+    
     public void ReturnFoodPickupCounter(FoodPickupCounter counter)
     {
         foodPickupCounterManager.ReturnObject(counter);

@@ -7,11 +7,11 @@ public class EmployeeHpUi : MonoBehaviour
     public GameObject employeeHpItem;
     public Transform employeeHpItemParent;
     private List<EmployeeHpUIItem> items = new();
-    public void SetEmployeeUIItem(EmployeeTableGetData data)
+    public void SetEmployeeUIItem(EmployeeFSM employee)
     {
         var item = Instantiate(employeeHpItem, employeeHpItemParent).GetComponent<EmployeeHpUIItem>();
         items.Add(item);
-        item.SetEmployeeHpUiItem(data);
+        item.SetEmployeeHpUiItem(employee);
     }
     public void EmployeeHpSet(EmployeeFSM employee)
     {

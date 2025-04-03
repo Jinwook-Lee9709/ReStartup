@@ -56,9 +56,9 @@ public class UiManager : MonoBehaviour
     {
         uiEmployeeHp.SetActive(false);
     }
-    public void EmployeeHpUIItemSet(EmployeeTableGetData data)
+    public void EmployeeHpUIItemSet(EmployeeFSM employee)
     {
-        uiEmployeeHp.GetComponent<EmployeeHpUi>().SetEmployeeUIItem(data);
+        uiEmployeeHp.GetComponent<EmployeeHpUi>().SetEmployeeUIItem(employee);
     }
     public void EmployeeHpSet(EmployeeFSM employee)
     {

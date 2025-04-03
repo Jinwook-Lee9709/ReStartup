@@ -30,6 +30,16 @@ public class ObjectPivotManager
     {
         return pivotLocator.ConsumerSpawnPivot;
     }
+
+    public Transform GetTrayReturnPivot()
+    {
+        return pivotLocator.TrayReturnCounterPivot;
+    }
+
+    public Transform GetSinkPivot()
+    {
+        return pivotLocator.SinkPivot;
+    }
     
     public List<Transform> GetWatingLines()
     {

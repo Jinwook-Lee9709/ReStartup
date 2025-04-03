@@ -125,7 +125,7 @@ public class Player : WorkerBase, IInteractor, ITransportable
         {
             if (interactableObject.CurrentWork != null)
             {
-                if (interactableObject.CurrentWork.IsInteruptable)
+                if (interactableObject.CurrentWork.IsInteruptible)
                     workManager.OnPlayerStartWork(interactableObject.CurrentWork, this);
             }
         }

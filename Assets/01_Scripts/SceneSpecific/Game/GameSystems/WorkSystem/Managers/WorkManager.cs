@@ -7,8 +7,8 @@ public class WorkManager
 {
     private WorkerManager workerManager;
     private Dictionary<WorkType, List<WorkBase>> assignedWorks;
-    private Dictionary<WorkType, PriorityQueue<WorkBase, float>> stoppedWorkQueues;
-    private Dictionary<WorkType, PriorityQueue<WorkBase, float>> workQueues;
+    private Dictionary<WorkType, SortedSet<WorkBase>> stoppedWorkQueues;
+    private Dictionary<WorkType, SortedSet<WorkBase>> workQueues;
     private List<KeyValuePair<Consumer, WorkBase>> consumerWorkList;
 
     public void Init(WorkerManager workerManager)
@@ -25,15 +25,15 @@ public class WorkManager
 
     private void InitContainers()
     {
-        workQueues = new Dictionary<WorkType, PriorityQueue<WorkBase, float>>();
-        stoppedWorkQueues = new Dictionary<WorkType, PriorityQueue<WorkBase, float>>();
+        workQueues = new ();
+        stoppedWorkQueues = new ();
         assignedWorks = new Dictionary<WorkType, List<WorkBase>>();
         consumerWorkList = new List<KeyValuePair<Consumer, WorkBase>>();
 
         foreach (WorkType taskType in Enum.GetValues(typeof(WorkType)))
-            workQueues[taskType] = new PriorityQueue<WorkBase, float>();
+            workQueues[taskType] = new ();
         foreach (WorkType taskType in Enum.GetValues(typeof(WorkType)))
-            stoppedWorkQueues[taskType] = new PriorityQueue<WorkBase, float>();
+            stoppedWorkQueues[taskType] = new ();
         foreach (WorkType taskType in Enum.GetValues(typeof(WorkType))) assignedWorks[taskType] = new List<WorkBase>();
     }
 
@@ -43,7 +43,7 @@ public class WorkManager
         if (isAssigned)
             assignedWorks[work.workType].Add(work);
         else
-            workQueues[work.workType].Enqueue(work, Time.time);
+            workQueues[work.workType].Add(work);
         if(consumer is not null)
             consumerWorkList.Add(new KeyValuePair<Consumer, WorkBase>(consumer, work));
     }
@@ -55,7 +55,7 @@ public class WorkManager
 
     public void AddStoppedWork(WorkType type, WorkBase work)
     {
-        stoppedWorkQueues[type].Enqueue(work, Time.time);
+        stoppedWorkQueues[type].Add(work);
     }
 
     public void OnWorkCanceled(Consumer consumer)
@@ -64,13 +64,15 @@ public class WorkManager
             .Where(x => x.Key == consumer)
             .ToList()
             .ForEach(x => x.Value.OnWorkCanceled());
+        consumerWorkList.RemoveAll(x => x.Key == consumer);
     }
 
     private void OnWorkerReturned(WorkType type)
     {
         if (stoppedWorkQueues[type].Count > 0 && workerManager.IsWorkerAvailable(type))
         {
-            var work = stoppedWorkQueues[type].Dequeue();
+            var work = stoppedWorkQueues[type].Min;
+            stoppedWorkQueues[type].Remove(work);
             workerManager.AssignWork(work);
             assignedWorks[work.workType].Add(work);
             return;
@@ -78,7 +80,8 @@ public class WorkManager
 
         if (workQueues[type].Count > 0 && workerManager.IsWorkerAvailable(type))
         {
-            var work = workQueues[type].Dequeue();
+            var work = workQueues[type].Min();
+            workQueues[type].Remove(work);
             workerManager.AssignWork(work);
             assignedWorks[work.workType].Add(work);
         }
@@ -95,6 +98,7 @@ public class WorkManager
         if (work.NextWork != null)
         {
             var nextWork = work.NextWork;
+            assignedWorks[nextWork.workType].Add(nextWork);
             if (work.NextWorker == null)
                 AddWork(nextWork);
         }
@@ -118,7 +122,7 @@ public class WorkManager
     private void AdjustQueue(WorkBase work)
     {
         var workType = work.workType;
-        workQueues[workType].TryRemove((x) => (x == work), out _);
+        workQueues[workType].Remove(work);
     }
     
 

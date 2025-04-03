@@ -12,6 +12,7 @@ public class EmployeeHpUIItem : MonoBehaviour
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI hpText;
     public Slider hpbar;
+    public EmployeeFSM employee;
     public EmployeeTableGetData employeeData;
     private void Start()
     {
@@ -22,7 +23,7 @@ public class EmployeeHpUIItem : MonoBehaviour
             var button = GetComponentInChildren<Button>();
             button.onClick.AddListener(() =>
             {
-                employeeData.currentHealth += 20;
+                employee.IncreaseHp(20);
                 if (employeeData.currentHealth == employeeData.Health)
                 {
                     //currentHp max
@@ -36,9 +37,10 @@ public class EmployeeHpUIItem : MonoBehaviour
             });
         }
     }
-    public void SetEmployeeHpUiItem(EmployeeTableGetData data)
+    public void SetEmployeeHpUiItem(EmployeeFSM employee)
     {
-        employeeData = data;
+        this.employee = employee;
+        employeeData = employee.EmployeeData;
         nameText.text = employeeData.StaffID.ToString();
         HpSet();
     }
