@@ -13,7 +13,7 @@ public class WorkFlowController
     private readonly Dictionary<CookwareType, InteractableObjectManager<CookingStation>> cookingStationManagers = new();
     private readonly InteractableObjectManager<FoodPickupCounter> foodPickupCounterManager = new();
     private readonly LinkedList<(MainLoopWorkContext, CookingStation)> foodPickupCounterQueue = new();
-    private readonly LinkedList<MainLoopWorkContext> orderQueue = new();
+    private readonly Dictionary<CookwareType, LinkedList<MainLoopWorkContext>> orderQueue = new();
 
     private readonly InteractableObjectManager<Table> tableManager = new();
 
@@ -48,10 +48,11 @@ public class WorkFlowController
         {
             var cookingStationManager = new InteractableObjectManager<CookingStation>();
             cookingStationManagers.Add(cookwareType, cookingStationManager);
+            var list = new LinkedList<MainLoopWorkContext>();
+            orderQueue.Add(cookwareType, list);
         }
-
     }
-    
+
 
     private void InitEventListeners()
     {
@@ -62,12 +63,12 @@ public class WorkFlowController
             manager.Value.ObjectAvailableEvent += OnCookingStationVacated;
         }
     }
-    
+
     private void ResetFoodAppearance(FoodObject foodObject)
     {
         foodObject.GetComponent<SpriteRenderer>().color = Color.white;
     }
-    
+
     public void AddTable(Table table)
     {
         tableManager.InsertObject(table);
@@ -104,7 +105,7 @@ public class WorkFlowController
         table.SetWork(work);
         workManager.AddWork(work);
     }
-    
+
     private static void CreateDirtyOnTable(Table table)
     {
         var food = table.GetFood();
@@ -168,9 +169,15 @@ public class WorkFlowController
         var node1 = foodPickupCounterQueue.FirstOrDefault(x => x.Item1.Consumer == consumer);
         if (node1 != default)
             foodPickupCounterQueue.Remove(node1);
-        var node2 = orderQueue.FirstOrDefault(x => x.Consumer == consumer);
-        if (node2 != null)
-            orderQueue.Remove(node2);
+        foreach (var pair in orderQueue)
+        {
+            var node2 = pair.Value.FirstOrDefault(x => x.Consumer == consumer);
+            if (node2 != null)
+            {
+                pair.Value.Remove(node2);
+                break;
+            }
+        }
         var node3 = waitingConsumerQueue.FirstOrDefault(x => x == consumer);
         if (node3 != null)
             waitingConsumerQueue.Remove(node3);
@@ -191,15 +198,16 @@ public class WorkFlowController
         if (cookingStationManagers[food.CookwareType].IsAvailableObjectExist)
             AssignOrderWork(context);
         else
-            orderQueue.AddLast(context);
+            orderQueue[food.CookwareType].AddLast(context);
     }
 
     private void OnCookingStationVacated(CookingStation availableStation)
     {
-        if (orderQueue.Count > 0)
+
+        if (orderQueue[availableStation.cookwareType].Count > 0)
         {
-            var context = orderQueue.First();
-            orderQueue.RemoveFirst();
+            var context = orderQueue[availableStation.cookwareType].First();
+            orderQueue[availableStation.cookwareType].RemoveFirst();
             AssignOrderWork(context);
         }
     }
@@ -232,7 +240,19 @@ public class WorkFlowController
 
     public void RegisterFoodToHall(MainLoopWorkContext context, CookingStation target)
     {
-        foodPickupCounterQueue.AddLast((context, target));
+        if (!IsFoodCounterAvailable())
+        {
+            foodPickupCounterQueue.AddLast((context, target));
+        }
+        else
+        {
+            var counter = GetEmptyFoodCounter();
+            var work = new WorkGotoCookingStation(workManager, WorkType.Kitchen);
+            target.SetWork(work);
+            work.SetInteractable(target);
+            work.SetContext(context, counter);
+            workManager.AddWork(work, context.Consumer);
+        }
     }
 
     public FoodPickupCounter GetEmptyFoodCounter()

@@ -35,6 +35,11 @@ public class InputManager : MonoBehaviour
     {
         minSwipeDistance = Screen.width * swipeDistanceCalcParam;
     }
+    private void OnEnable()
+    {
+        slowTouchAction = InputSystem.actions.FindAction("SlowTouchAction");
+        slowTouchAction.Enable();
+    }
 
     private void Start()
     {
@@ -89,7 +94,6 @@ public class InputManager : MonoBehaviour
         {
             isPressed = false;
             startPos = pos;
-            Debug.Log(startPos);
         }
     }
     private bool IsPointerOverUI()

@@ -35,7 +35,7 @@ public class Consumer : MonoBehaviour
         agent.updateUpAxis = false;
         needFood = DataTableManager.Get<FoodDataTable>("Food").GetFoodData(301001);
     }
-    private void OnEnable()
+    private void OnEnable() // 박성민 만듬 ConsumerManager에 foodIds 필드 추가.
     {
         var gameManager = GameObject.FindWithTag("GameManager").gameObject;
         consumerManager = gameManager.GetComponent<GameManager>().consumerManager;
