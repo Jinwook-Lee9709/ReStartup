@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class ReviewUi : MonoBehaviour
@@ -5,6 +6,7 @@ public class ReviewUi : MonoBehaviour
     public GameObject reviewScrollView;
     public GameObject rankUpScrollView;
     public GameObject informationScrollView;
+
 
     public void OnClickReviewButton()
     {
