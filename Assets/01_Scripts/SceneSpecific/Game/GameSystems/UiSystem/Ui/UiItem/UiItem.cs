@@ -21,7 +21,8 @@ public class UiItem : MonoBehaviour
 
     public FoodData foodData;
 
-    private EmployeeUpgradeListUi employeeUpgradeData;
+    private EmployeeUpgradeListUi employeeUpgradeListUi;
+    private FoodUpgradeListUi foodUpgradeListUi;
 
     private Button button;
 
@@ -37,19 +38,25 @@ public class UiItem : MonoBehaviour
         if (employeeData != null)
         {
             StartCoroutine(LoadSpriteCoroutine(employeeData.Icon));
-            employeeUpgradeData = GetComponentInParent<EmployeeUpgradeListUi>();
-            if (employeeUpgradeData == null)
+            employeeUpgradeListUi = GetComponentInParent<EmployeeUpgradeListUi>();
+            if (employeeUpgradeListUi == null)
             {
                 Debug.LogError($"{gameObject.name}의 부모 중 EmployeeUpgradeListUi를 찾을 수 없습니다.");
                 return;  // Null이면 실행 중단
             }
-            employeeUpgradeData.AddButtonList(button);
+            employeeUpgradeListUi.AddButtonList(button);
         }
         if (foodData != null)
         {
             StartCoroutine(LoadSpriteCoroutine(foodData.IconID));
+            foodUpgradeListUi = GetComponentInParent<FoodUpgradeListUi>();
+            if (foodUpgradeListUi == null)
+            {
+                Debug.LogError($"{gameObject.name}의 부모 중 foodUpgradeListUi를 찾을 수 없습니다.");
+                return;  // Null이면 실행 중단
+            }
+            foodUpgradeListUi.AddButtonList(button);
         }
-
     }
 
     public void Init(EmployeeTableGetData data)
@@ -153,7 +160,7 @@ public class UiItem : MonoBehaviour
         foodData = data;
         uiNameText.text = $"{foodData.FoodID}";
         uiUpgradeCostText.text = $"{foodData.BasicCost}";
-        var button = GetComponentInChildren<Button>();
+        button = GetComponentInChildren<Button>();
         upgradeButtonText.text = "연구하기";
         consumerManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>().consumerManager;
         int buyCost;
@@ -165,6 +172,10 @@ public class UiItem : MonoBehaviour
         }
         button.onClick.AddListener((UnityEngine.Events.UnityAction)(() =>
         {
+            if (foodData.upgradeCount >= 5)
+            {
+                return;
+            }
             if (foodData.upgradeCount < 1 && userData.Gold > foodData.BasicCost)
             {
                 consumerManager.foodIds.Add(foodData.FoodID);

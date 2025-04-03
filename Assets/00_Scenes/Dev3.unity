@@ -4008,7 +4008,7 @@ Transform:
   m_GameObject: {fileID: 484832185}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: -4.62, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9439,6 +9439,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   upgradeItemObject: {fileID: 6619784049127644203, guid: c35328428c1d2bc42b9a65a0ede020e7, type: 3}
+  allBuyButton: []
 --- !u!114 &1123147782
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10836,6 +10837,18 @@ MonoBehaviour:
       - m_Target: {fileID: 1287098443}
         m_TargetAssemblyTypeName: EmployeeUpgradeListUi, Assembly-CSharp
         m_MethodName: EmployeeAllBuy
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1123147781}
+        m_TargetAssemblyTypeName: FoodUpgradeListUi, Assembly-CSharp
+        m_MethodName: FoodAllBuy
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

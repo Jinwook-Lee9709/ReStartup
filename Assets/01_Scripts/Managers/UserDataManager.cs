@@ -17,7 +17,7 @@ public class UserDataManager : Singleton<UserDataManager>
     {
         if (currentUserData.Gold == 0)
         {
-            currentUserData.Gold = 30000;
+            currentUserData.Gold = 1000000000;
         }
     }
     public UserData CurrentUserData
