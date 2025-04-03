@@ -6,15 +6,14 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.AI;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-public class WorkerManager : MonoBehaviour
+public class WorkerManager
 {
     //References
-    [SerializedDictionary] [SerializeField]
-    private SerializedDictionary<WorkType, List<Transform>> idleArea;
+    private Dictionary<WorkType, List<Transform>> idleArea = new();
 
     //Prefab
     private Player player;
-    [SerializeField] private WorkManager workManager;
+    private WorkManager workManager;
     
     //Containers
     private Dictionary<WorkType, SortedSet<WorkerBase>> workers;
@@ -23,11 +22,29 @@ public class WorkerManager : MonoBehaviour
     public int CurrentIdleHallWorkerCount => workers[WorkType.Hall].Count;
     public int CurrentIdleKitchenWorkerCount => workers[WorkType.Hall].Count;
 
-    private void Awake()
+    public void Init(WorkManager workManager)
     {
+        this.workManager = workManager;
         InitContaineres();
+        InitIdleArea();
     }
-    private void Start()
+    
+    private void InitContaineres()
+    {
+        workers = new Dictionary<WorkType, SortedSet<WorkerBase>>();
+        foreach (WorkType workType in Enum.GetValues(typeof(WorkType))) workers.Add(workType, new SortedSet<WorkerBase>());
+        workingWorkers = new List<WorkerBase>();
+    }
+
+    private void InitIdleArea()
+    {
+        ObjectPivotManager pivotManager = ServiceLocator.Instance.GetSceneService<GameManager>().ObjectPivotManager;
+        idleArea.Add(WorkType.All, pivotManager.GetIdleArea(WorkType.All));
+        idleArea.Add(WorkType.Hall, pivotManager.GetIdleArea(WorkType.Hall));
+        idleArea.Add(WorkType.Kitchen, pivotManager.GetIdleArea(WorkType.Kitchen));
+        idleArea.Add(WorkType.Payment, pivotManager.GetIdleArea(WorkType.Payment));
+    }
+    public void Start()
     {
         InitPlayer();
     }
@@ -37,13 +54,6 @@ public class WorkerManager : MonoBehaviour
         player = GameObject.FindWithTag(Strings.PlayerTag).GetComponent<Player>();
         player.Init(this, null, WorkType.All);
         player.SetWorkManager(workManager);
-    }
-
-    private void InitContaineres()
-    {
-        workers = new Dictionary<WorkType, SortedSet<WorkerBase>>();
-        foreach (WorkType workType in Enum.GetValues(typeof(WorkType))) workers.Add(workType, new SortedSet<WorkerBase>());
-        workingWorkers = new List<WorkerBase>();
     }
 
     //Events

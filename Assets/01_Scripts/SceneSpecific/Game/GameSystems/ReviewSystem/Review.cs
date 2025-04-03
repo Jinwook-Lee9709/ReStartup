@@ -15,7 +15,7 @@ public class Review : MonoBehaviour
     [SerializeField] private TextMeshProUGUI dateText;
     [SerializeField] private TextMeshProUGUI rankPointText;
 
-    private event Action OnRemoveAdEvent;
+    public event Action OnRemoveAdEvent;
 
     public void Init(ReviewData data)
     {
@@ -28,7 +28,7 @@ public class Review : MonoBehaviour
         removeButton.gameObject.SetActive(data.addPoint < 0);
         if(removeButton.enabled )
         {
-            removeButton.onClick.AddListener(Remove);
+            removeButton.onClick.AddListener(() => reviewManager.OnRemoveButtonClick(this));
         }
 
         OnRemoveAdEvent += () =>
@@ -38,7 +38,7 @@ public class Review : MonoBehaviour
         };
     }
 
-    private void Remove()
+    public void Remove()
     {
         AdvertisementManager.Instance.ShowRewardedAd(OnRemoveAdEvent);
     }

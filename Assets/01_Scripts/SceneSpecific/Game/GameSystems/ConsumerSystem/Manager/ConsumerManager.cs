@@ -12,13 +12,13 @@ public class ConsumerManager : MonoBehaviour
     private readonly string consumerDataTableFileName = "guesttable";
     private readonly string consumerSpawnPercentCsvFileName = "guestspawnratetable";
     [SerializeField] private BuffManager buffManager;
-    [SerializeField] public WorkFlowController workFlowController;
     [SerializeField] private int maxConsumerCnt;
     [SerializeField] private int maxWaitingSeatCnt;
     [SerializeField] private GameObject consumerPrefab;
     [SerializeField] public Transform spawnPoint;
     [SerializeField] private int tempPairProb = 100;
     [SerializeField] private TextMeshPro waitingText;
+    public WorkFlowController workFlowController;
 
     private ConsumerDataTable consumerDataTable;
     private Dictionary<int, List<int>> consumerSpawnPercent;
@@ -33,6 +33,14 @@ public class ConsumerManager : MonoBehaviour
     /// </summary>
     private readonly Dictionary<ConsumerFSM.ConsumerState, List<Consumer>> currentSpawnedConsumerDictionary = new();
     private int waitOutsideConsumerCnt = 0;
+
+    private void Awake()
+    {
+        workFlowController = ServiceLocator.Instance.GetSceneService<GameManager>().WorkFlowController;
+        var pivotManager = ServiceLocator.Instance.GetSceneService<GameManager>().ObjectPivotManager;
+        spawnPoint = pivotManager.GetConsumerSpawnPoint();
+        waitingConsumerSeats = pivotManager.GetWatingLines();
+    }
 
 
     private void UpdateWaitingText()

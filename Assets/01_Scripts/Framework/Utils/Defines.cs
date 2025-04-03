@@ -23,7 +23,6 @@ public enum ThemeIds
     Theme3
 }
 
-
 public enum WorkType
 {
     All,
@@ -55,7 +54,6 @@ public enum InteractPermission
     HallEmployee = 1 << 3,
     Player = 1 << 4
 }
-
 
 public enum LanguageType
 {
@@ -114,10 +112,36 @@ public static class Variables
     }
 }
 
+public enum CookwareType
+{
+    CoffeeMachine,
+    DrinkingFountain,
+    SparklingWaterMaker,
+    Blender,
+    Oven,
+    SushiCountertop,
+    Fryer,
+    CharcoalGrill,
+    GriddleGrill,
+    Pot,
+    Griddle,
+    KitchenTable,
+}
+
+public enum ObjectArea
+{
+    Hall,
+    Kitchen,
+}
 
 public static class Strings
 {
     public static readonly string PlayerTag = "Player";
     public static readonly string GameManagerTag = "GameManager";
     public static readonly string InteractableObjectTag = "InteractableObject";
+    
+    public static readonly string CounterName = "Counter";
+    public static readonly string FoodPickupCounterName = "FoodPickupCounter";
+    public static readonly string CookingStation = "CookingStation";
+    public static readonly string Table = "Table";
 }

@@ -11,12 +11,12 @@ public class InteractableObjectManager<T> where T : class, IComparable<T>
 
     public int Count => availableObjects.Count;
 
-    public event Action ObjectAvailableEvent;
+    public event Action<T> ObjectAvailableEvent;
 
     public void InsertObject(T obj)
     {
         availableObjects.Add(obj);
-        ObjectAvailableEvent?.Invoke();
+        ObjectAvailableEvent?.Invoke(obj);
     }
 
     public T GetAvailableObject()
@@ -36,7 +36,7 @@ public class InteractableObjectManager<T> where T : class, IComparable<T>
         }
 
         Enqueue(obj);
-        ObjectAvailableEvent?.Invoke();
+        ObjectAvailableEvent?.Invoke(obj);
         return true;
     }
 

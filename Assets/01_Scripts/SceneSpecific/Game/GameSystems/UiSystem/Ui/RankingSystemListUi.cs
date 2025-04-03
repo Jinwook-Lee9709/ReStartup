@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class RankingSystemListUi : MonoBehaviour
 {
+    public RankSystemManager rankSystemManager;
     public GameObject upgradeItemObject;
     public GameManager gameManager;
     public Transform parent;
@@ -43,5 +44,15 @@ public class RankingSystemListUi : MonoBehaviour
             player.rankingData.RankingPoint += points;
             RankUpdate();
         }
+    }
+
+    public RankingSystemUiItem GetPlayerUiItem()
+    {
+        var player = items.FirstOrDefault(i => i.rankingData.RestaurantName == UserDataManager.Instance.CurrentUserData.Name);
+        if (player != null)
+        {
+            return player;
+        }
+        return null;
     }
 }

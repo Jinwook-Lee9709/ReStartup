@@ -8,7 +8,7 @@ using System.Collections.Generic;
 public class UserData
 {
     public string UID { get; set; } //���� UID
-    public string Name { get; set; } //���� �̸�
+    public string Name { get; set; } = "Player"; //���� �̸�
     public int? Gold { get; set; } = new(); //�ΰ��� ��ȭ
     public int? CurrentRankPoint { get; set; } = new();//���� ��ŷ ����Ʈ
     public int? CurrentRank { get; set; } = new();

@@ -3,13 +3,14 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-public class WorkFlowController : MonoBehaviour
+public class WorkFlowController
 {
     static readonly string FoodObjectName = "FoodObject";
-    [SerializeField] private WorkManager workManager;
+    private GameManager gameManager;
+    private WorkManager workManager;
     [SerializeField] private CashierCounter cashierCounter;
     private readonly LinkedList<Consumer> cashierQueue = new();
-    private readonly InteractableObjectManager<CookingStation> cookingStationManager = new();
+    private readonly Dictionary<CookwareType, InteractableObjectManager<CookingStation>> cookingStationManagers = new();
     private readonly InteractableObjectManager<FoodPickupCounter> foodPickupCounterManager = new();
     private readonly LinkedList<(MainLoopWorkContext, CookingStation)> foodPickupCounterQueue = new();
     private readonly LinkedList<MainLoopWorkContext> orderQueue = new();
@@ -17,13 +18,15 @@ public class WorkFlowController : MonoBehaviour
     private readonly InteractableObjectManager<Table> tableManager = new();
 
 
-    private LinkedList<Consumer> consumerQueue = new();
+    private LinkedList<Consumer> waitingConsumerQueue = new();
 
-    private void Awake()
+    public void Init(GameManager gameManager, WorkManager workManager)
     {
+        this.gameManager = gameManager;
+        this.workManager = workManager;
         CreateFoodObjectPool();
-        cookingStationManager.InsertObject(tempStation);
-        foodPickupCounterManager.InsertObject(tempCounter);
+        InitCookingStation();
+        InitEventListeners();
     }
 
     private void CreateFoodObjectPool()
@@ -33,45 +36,84 @@ public class WorkFlowController : MonoBehaviour
         GameManager gameManager = ServiceLocator.Instance.GetSceneService<GameManager>();
         var foodGameObject = handle.Result;
         var foodObject = foodGameObject.GetComponent<FoodObject>();
-        gameManager.ObjectPoolManager.CreatePool(foodObject,onRelease:OnReleaseFood);
+        gameManager.ObjectPoolManager.CreatePool(foodObject, onRelease: ResetFoodAppearance);
+    }
+
+    private void InitCookingStation()
+    {
+        var table = DataTableManager.Get<FoodDataTable>(DataTableIds.Food.ToString());
+        var kvpList = table.GetSceneFoodDataList(gameManager.CurrentTheme);
+        var cookwareTypeList = kvpList.Select(pair => pair.Value.CookwareType).Distinct().ToList();
+        foreach (var cookwareType in cookwareTypeList)
+        {
+            var cookingStationManager = new InteractableObjectManager<CookingStation>();
+            cookingStationManagers.Add(cookwareType, cookingStationManager);
+        }
+
     }
     
-    private void OnReleaseFood(FoodObject foodObject)
+
+    private void InitEventListeners()
+    {
+        tableManager.ObjectAvailableEvent += OnTableVacated;
+        foodPickupCounterManager.ObjectAvailableEvent += OnFoodPickupCounterVacated;
+        foreach (var manager in cookingStationManagers)
+        {
+            manager.Value.ObjectAvailableEvent += OnCookingStationVacated;
+        }
+    }
+    
+    private void ResetFoodAppearance(FoodObject foodObject)
     {
         foodObject.GetComponent<SpriteRenderer>().color = Color.white;
     }
-
-    private void Start()
-    {
-        tableManager.ObjectAvailableEvent += OnTableVacated;
-        cookingStationManager.ObjectAvailableEvent += OnCookingStationVacated;
-        foodPickupCounterManager.ObjectAvailableEvent += OnFoodPickupCounterVacated;
-    }
-
+    
     public void AddTable(Table table)
     {
         tableManager.InsertObject(table);
+    }
+
+    public void AddCookingStation(CookingStation station)
+    {
+        var cookwareType = station.cookwareType;
+        cookingStationManagers[cookwareType].InsertObject(station);
+    }
+
+    public void AddFoodPickupCounter(FoodPickupCounter counter)
+    {
+        foodPickupCounterManager.InsertObject(counter);
+    }
+
+    public void AddCashierCounter(CashierCounter counter)
+    {
+        cashierCounter = counter;
     }
 
     #region TableCleanLogic()
 
     public void OnEatComplete(Table table)
     {
+        CreateCleanTableWork(table);
+        CreateDirtyOnTable(table);
+    }
+    private void CreateCleanTableWork(Table table)
+    {
         var work = new WorkCleanTable(workManager, WorkType.Hall);
         work.SetInteractable(table);
         work.SetContext(this);
         table.SetWork(work);
+        workManager.AddWork(work);
+    }
+    
+    private static void CreateDirtyOnTable(Table table)
+    {
         var food = table.GetFood();
         var sprite = food.GetComponent<SpriteRenderer>();
         sprite.color = Color.red;
-        workManager.AddWork(work);
     }
 
-    #endregion
-    
-    public CookingStation tempStation;
-    public FoodPickupCounter tempCounter;
 
+    #endregion
 
     #region CustomerLogic
 
@@ -89,16 +131,16 @@ public class WorkFlowController : MonoBehaviour
             return true;
         }
 
-        consumerQueue.AddLast(consumer);
+        waitingConsumerQueue.AddLast(consumer);
         return false;
     }
 
-    private void OnTableVacated()
+    private void OnTableVacated(Table availableTable)
     {
-        if (consumerQueue.Count > 0)
+        if (waitingConsumerQueue.Count > 0)
         {
-            var consumer = consumerQueue.First();
-            consumerQueue.RemoveFirst();
+            var consumer = waitingConsumerQueue.First();
+            waitingConsumerQueue.RemoveFirst();
             consumer.SetTable(tableManager.GetAvailableObject());
             consumer.OnTableVacated();
         }
@@ -118,15 +160,20 @@ public class WorkFlowController : MonoBehaviour
     public void CancelOrder(Consumer consumer)
     {
         workManager.OnWorkCanceled(consumer);
+        RemoveConsumerFromQueues(consumer);
+    }
+
+    private void RemoveConsumerFromQueues(Consumer consumer)
+    {
         var node1 = foodPickupCounterQueue.FirstOrDefault(x => x.Item1.Consumer == consumer);
-        if(node1 != default)
+        if (node1 != default)
             foodPickupCounterQueue.Remove(node1);
         var node2 = orderQueue.FirstOrDefault(x => x.Consumer == consumer);
-        if(node2 != null)
+        if (node2 != null)
             orderQueue.Remove(node2);
-        var node3 = consumerQueue.FirstOrDefault(x => x == consumer);
-        if(node3 != null)
-            consumerQueue.Remove(node3);
+        var node3 = waitingConsumerQueue.FirstOrDefault(x => x == consumer);
+        if (node3 != null)
+            waitingConsumerQueue.Remove(node3);
     }
 
     public void ReturnTable(Table table)
@@ -140,13 +187,14 @@ public class WorkFlowController : MonoBehaviour
 
     public void RegisterOrder(MainLoopWorkContext context)
     {
-        if (cookingStationManager.IsAvailableObjectExist)
+        var food = context.Consumer.needFood;
+        if (cookingStationManagers[food.CookwareType].IsAvailableObjectExist)
             AssignOrderWork(context);
         else
             orderQueue.AddLast(context);
     }
 
-    private void OnCookingStationVacated()
+    private void OnCookingStationVacated(CookingStation availableStation)
     {
         if (orderQueue.Count > 0)
         {
@@ -158,18 +206,19 @@ public class WorkFlowController : MonoBehaviour
 
     private void AssignOrderWork(MainLoopWorkContext context)
     {
-        Debug.Log("AssignOrderWork");
-        var cookingStation = cookingStationManager.GetAvailableObject();
+        var food = context.Consumer.needFood;
+        var cookingStation = cookingStationManagers[food.CookwareType].GetAvailableObject();
         var work = new WorkCooking(workManager, WorkType.Kitchen);
         cookingStation.SetWork(work);
         work.SetContext(context);
         work.SetInteractable(cookingStation);
-        workManager.AddWork(work,context.Consumer);
+        workManager.AddWork(work, context.Consumer);
     }
 
     public void ReturnCookingStation(CookingStation station)
     {
-        cookingStationManager.ReturnObject(station);
+        var cookwareType = station.cookwareType;
+        cookingStationManagers[cookwareType].ReturnObject(station);
     }
 
     #endregion
@@ -191,7 +240,7 @@ public class WorkFlowController : MonoBehaviour
         return foodPickupCounterManager.Dequeue();
     }
 
-    private void OnFoodPickupCounterVacated()
+    private void OnFoodPickupCounterVacated(FoodPickupCounter availableCounter)
     {
         if (foodPickupCounterQueue.Count > 0)
         {

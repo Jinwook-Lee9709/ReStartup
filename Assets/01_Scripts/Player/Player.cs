@@ -12,6 +12,14 @@ public class Player : WorkerBase, IInteractor, ITransportable
     public Transform HandPivot => handPivot;
     private bool isCameraOnHall;
 
+    private void Awake()
+    {
+        base.Awake();
+        var pivots = ServiceLocator.Instance.GetSceneService<GameManager>().ObjectPivotManager.GetIdleArea(WorkType.All);
+        hallIdleArea = pivots[0];
+        kitchenIdleArea = pivots[1];
+    }
+
     public void SetWorkManager(WorkManager workManager)
     {
         this.workManager = workManager;
