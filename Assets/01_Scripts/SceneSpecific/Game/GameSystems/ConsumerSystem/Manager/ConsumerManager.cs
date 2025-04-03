@@ -18,6 +18,7 @@ public class ConsumerManager : MonoBehaviour
     [SerializeField] public Transform spawnPoint;
     [SerializeField] private int tempPairProb = 100;
     [SerializeField] private TextMeshPro waitingText;
+
     public WorkFlowController workFlowController;
 
     private ConsumerDataTable consumerDataTable;

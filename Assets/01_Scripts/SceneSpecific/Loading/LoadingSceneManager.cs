@@ -48,14 +48,6 @@ public class LoadingSceneManager : MonoBehaviour
         if (sceneIndex >= (int)SceneIds.Theme1 && sceneIndex <= (int)SceneIds.Dev3)
         {
             await UniTask.WaitUntil(() => SceneManager.GetActiveScene().isLoaded);
-            var obj = GameObject.FindWithTag(Strings.GameManagerTag);
-            if (obj == null)
-            {
-                Debug.LogError("GameManager object not found in the scene!");
-                return;
-            }
-
-            ServiceLocator.Instance.RegisterSceneService(obj.GetComponent<GameManager>());
         }
     }
 }

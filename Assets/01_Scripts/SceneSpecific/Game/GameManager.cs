@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         currentTheme = (ThemeIds)PlayerPrefs.GetInt("Theme", 1);
-        
+        ServiceLocator.Instance.RegisterSceneService(this);
         InitFoodUpgradeDataManager();
         InitObjectPoolManager();
         InitWorkManagers();
@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour
 
     }
     #endregion
-    
+ 
     public void Start()
     {
         WorkStationManager.BakeNavMesh();
