@@ -27,6 +27,8 @@ public class UiItem : MonoBehaviour
 
     private readonly string employeePrefab = "Agent.prefab";
 
+    private ConsumerManager consumerManager;
+
     private void Start()
     {
 
@@ -138,10 +140,19 @@ public class UiItem : MonoBehaviour
         uiUpgradeCostText.text = $"{foodData.BasicCost}";
         var button = GetComponentInChildren<Button>();
         upgradeButtonText.text = "연구하기";
+        consumerManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>().consumerManager;
+
+        if (foodData.FoodID == 301001)
+        {
+            consumerManager.foodIds.Add(foodData.FoodID);
+            foodData.upgradeCount = 1;
+            upgradeButtonText.text = "업그레이드";
+        }
         button.onClick.AddListener((UnityEngine.Events.UnityAction)(() =>
         {
             if (foodData.upgradeCount < 1)
             {
+                consumerManager.foodIds.Add(foodData.FoodID);
                 foodData.isUnlock = true;
                 upgradeButtonText.text = "업그레이드";
             }

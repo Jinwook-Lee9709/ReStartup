@@ -34,6 +34,8 @@ public class ConsumerManager : MonoBehaviour
     private readonly Dictionary<ConsumerFSM.ConsumerState, List<Consumer>> currentSpawnedConsumerDictionary = new();
     private int waitOutsideConsumerCnt = 0;
 
+    public List<int> foodIds;
+
     private void Awake()
     {
         workFlowController = ServiceLocator.Instance.GetSceneService<GameManager>().WorkFlowController;

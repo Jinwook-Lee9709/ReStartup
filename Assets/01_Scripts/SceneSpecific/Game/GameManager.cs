@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     public WorkStationManager WorkStationManager { get; private set; }
     public ObjectPivotManager ObjectPivotManager { get; private set; }
 
+    public ConsumerManager consumerManager;
     #region InitializeClasses
     private void Awake()
     {

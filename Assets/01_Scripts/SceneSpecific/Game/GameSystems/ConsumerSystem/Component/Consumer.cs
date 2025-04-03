@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 public class Consumer : MonoBehaviour
 {
@@ -12,6 +14,7 @@ public class Consumer : MonoBehaviour
     public FoodData needFood;
     private Transform nextTargetTransform;
     public ConsumerPairData pairData = null;
+    public List<int> foodIds = new();
     public ConsumerFSM FSM => GetComponent<ConsumerFSM>();
 
     public Transform NextTargetTransform
@@ -32,6 +35,14 @@ public class Consumer : MonoBehaviour
         agent.updateUpAxis = false;
         needFood = DataTableManager.Get<FoodDataTable>("Food").GetFoodData(301001);
     }
+    private void OnEnable()
+    {
+        var gameManager = GameObject.FindWithTag("GameManager").gameObject;
+        consumerManager = gameManager.GetComponent<GameManager>().consumerManager;
+        foodIds = consumerManager.foodIds;
+        var ran = Random.Range(0, foodIds.Count-1);
+        needFood = DataTableManager.Get<FoodDataTable>("Food").GetFoodData(foodIds[ran]);
+    }
 
     public void OnTableVacated()
     {
@@ -40,7 +51,7 @@ public class Consumer : MonoBehaviour
 
     private void OnTargetTransformChanged(Transform transform)
     {
-        if(transform != null)
+        if (transform != null)
             agent.SetDestination(transform.position);
     }
 
