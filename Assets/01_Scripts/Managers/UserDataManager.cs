@@ -12,6 +12,13 @@ public class UserDataManager : Singleton<UserDataManager>
     public event Action<int> setRankingPointAction;
     public event Action<bool> OnReviewCntFullEvent;
 
+    UserDataManager()
+    {
+        if (currentUserData.Gold == 0)
+        {
+            currentUserData.Gold = 1000000000;
+        }
+    }
     public UserData CurrentUserData
     {
         get

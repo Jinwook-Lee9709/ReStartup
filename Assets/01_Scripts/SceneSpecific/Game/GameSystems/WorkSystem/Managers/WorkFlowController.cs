@@ -15,7 +15,8 @@ public class WorkFlowController
     private readonly Dictionary<CookwareType, InteractableObjectManager<CookingStation>> cookingStationManagers = new();
     private readonly InteractableObjectManager<FoodPickupCounter> foodPickupCounterManager = new();
     private readonly LinkedList<(MainLoopWorkContext, CookingStation)> foodPickupCounterQueue = new();
-    private readonly Dictionary<CookwareType,LinkedList<MainLoopWorkContext>> orderQueue = new();
+    private readonly Dictionary<CookwareType, LinkedList<MainLoopWorkContext>> orderQueue = new();
+
 
     private readonly InteractableObjectManager<Table> tableManager = new();
     private LinkedList<Consumer> waitingConsumerQueue = new();
@@ -55,7 +56,7 @@ public class WorkFlowController
             orderQueue.Add(cookwareType, list);
         }
     }
-    
+
 
     private void InitEventListeners()
     {
@@ -66,12 +67,12 @@ public class WorkFlowController
             manager.Value.ObjectAvailableEvent += OnCookingStationVacated;
         }
     }
-    
+
     private void ResetFoodAppearance(FoodObject foodObject)
     {
         foodObject.GetComponent<SpriteRenderer>().color = Color.white;
     }
-    
+
     public void AddTable(Table table)
     {
         tableManager.InsertObject(table);
@@ -120,7 +121,7 @@ public class WorkFlowController
         table.FoodToTray();
         workManager.AddWork(work);
     }
-    
+
     private static void CreateDirtyOnTable(Table table)
     {
         var food = table.GetFood();
@@ -277,7 +278,19 @@ public class WorkFlowController
 
     public void RegisterFoodToHall(MainLoopWorkContext context, CookingStation target)
     {
-        foodPickupCounterQueue.AddLast((context, target));
+        if (!IsFoodCounterAvailable())
+        {
+            foodPickupCounterQueue.AddLast((context, target));
+        }
+        else
+        {
+            var counter = GetEmptyFoodCounter();
+            var work = new WorkGotoCookingStation(workManager, WorkType.Kitchen);
+            target.SetWork(work);
+            work.SetInteractable(target);
+            work.SetContext(context, counter);
+            workManager.AddWork(work, context.Consumer);
+        }
     }
 
     public FoodPickupCounter GetEmptyFoodCounter()

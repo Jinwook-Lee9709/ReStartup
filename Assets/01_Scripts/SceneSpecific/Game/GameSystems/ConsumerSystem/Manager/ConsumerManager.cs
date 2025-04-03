@@ -18,6 +18,7 @@ public class ConsumerManager : MonoBehaviour
     [SerializeField] public Transform spawnPoint;
     [SerializeField] private int tempPairProb = 100;
     [SerializeField] private TextMeshPro waitingText;
+
     public WorkFlowController workFlowController;
 
     private ConsumerDataTable consumerDataTable;
@@ -33,6 +34,8 @@ public class ConsumerManager : MonoBehaviour
     /// </summary>
     private readonly Dictionary<ConsumerFSM.ConsumerState, List<Consumer>> currentSpawnedConsumerDictionary = new();
     private int waitOutsideConsumerCnt = 0;
+
+    public List<int> foodIds;
 
     private void Awake()
     {

@@ -7,6 +7,7 @@ public class UiManager : MonoBehaviour
     public GameObject uiReview;
     public GameObject uiUpgrade;
     public GameObject uiEmployeeHp;
+    public IngameGoodsUi inGameUi;
 
     public void OnClickButtonSetAppsUi()
     {

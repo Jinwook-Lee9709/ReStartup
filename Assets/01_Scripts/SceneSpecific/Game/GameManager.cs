@@ -22,12 +22,13 @@ public class GameManager : MonoBehaviour
     public WorkStationManager WorkStationManager { get; private set; }
     public ObjectPivotManager ObjectPivotManager { get; private set; }
 
+    public ConsumerManager consumerManager;
     #region InitializeClasses
     private void Awake()
     {
         currentTheme = (ThemeIds)PlayerPrefs.GetInt("Theme", 1);
         ServiceLocator.Instance.RegisterSceneService(this);
-        
+
         InitFoodUpgradeDataManager();
         InitObjectPoolManager();
         InitWorkManagers();
@@ -62,7 +63,7 @@ public class GameManager : MonoBehaviour
 
     }
     #endregion
-    
+ 
     public void Start()
     {
         WorkStationManager.BakeNavMesh();
