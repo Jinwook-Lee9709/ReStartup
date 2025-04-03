@@ -23,6 +23,30 @@ public class UserData
     };
 
     public Dictionary<string, int> EmployeeLevelValue { get; set; }
+
+    public Dictionary<ThemeIds, Dictionary<CookwareType, int>> CookWareUnlock { get; set; } = new()
+    {
+        {
+            ThemeIds.Theme1, new Dictionary<CookwareType, int>()
+            {
+                { CookwareType.CoffeeMachine, 0 },
+                { CookwareType.DrinkingFountain, 0 },
+                { CookwareType.SparklingWaterMaker, 0 },
+                { CookwareType.Blender, 0 },
+                { CookwareType.Oven, 0 },
+                { CookwareType.SushiCountertop, 0 },
+                { CookwareType.Fryer, 0 },
+                { CookwareType.CharcoalGrill, 0 },
+                { CookwareType.GriddleGrill, 0 },
+                { CookwareType.Pot, 0 },
+                { CookwareType.Griddle, 0 },
+                { CookwareType.KitchenTable, 0 },
+            }
+        },
+        { ThemeIds.Theme2, new Dictionary<CookwareType, int>() },
+        { ThemeIds.Theme3, new Dictionary<CookwareType, int>() }
+    };
+
 }
 
 public abstract class SaveData

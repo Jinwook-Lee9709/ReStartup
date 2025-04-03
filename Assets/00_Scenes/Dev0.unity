@@ -956,7 +956,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &133021460
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1148,7 +1148,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -3216,7 +3216,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &353633404
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9440,6 +9440,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   upgradeItemObject: {fileID: 6619784049127644203, guid: c35328428c1d2bc42b9a65a0ede020e7, type: 3}
+  allBuyButton: []
 --- !u!114 &1123147782
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10837,6 +10838,18 @@ MonoBehaviour:
       - m_Target: {fileID: 1287098443}
         m_TargetAssemblyTypeName: EmployeeUpgradeListUi, Assembly-CSharp
         m_MethodName: EmployeeAllBuy
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1123147781}
+        m_TargetAssemblyTypeName: FoodUpgradeListUi, Assembly-CSharp
+        m_MethodName: FoodAllBuy
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -13477,6 +13490,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poolParent: {fileID: 1397034241}
   surface2D: {fileID: 1528191182}
+  consumerManager: {fileID: 1941923294}
 --- !u!1 &1750508441
 GameObject:
   m_ObjectHideFlags: 0
@@ -19200,6 +19214,7 @@ MonoBehaviour:
   uiReview: {fileID: 1739559439}
   uiUpgrade: {fileID: 1007149829}
   uiEmployeeHp: {fileID: 1268672}
+  inGameUi: {fileID: 260870583}
 --- !u!4 &1886307182
 Transform:
   m_ObjectHideFlags: 0
@@ -19837,6 +19852,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  foodIds: 
 --- !u!1 &1952823040
 GameObject:
   m_ObjectHideFlags: 0

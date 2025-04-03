@@ -104,12 +104,14 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
 
     public void IncreaseHp(int amount)
     {
-        if (EmployeeData.currentHealth == 0)
+        int prevHealth = EmployeeData.currentHealth;
+        EmployeeData.currentHealth += amount;
+        if (prevHealth == 0)
         {
             IsExhausted = false;
             workerManager.ReturnRecoveredWorker(this);
         }
-        EmployeeData.currentHealth += amount;
+
     }
 
     public void DecreaseHp(int amount)

@@ -178,6 +178,12 @@ public class UiItem : MonoBehaviour
             }
             if (foodData.upgradeCount < 1 && userData.Gold > foodData.BasicCost)
             {
+                var cookwareType = foodData.CookwareType;
+                var currentTheme = ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme;
+                int currentCookwareAmount = UserDataManager.Instance.CurrentUserData.CookWareUnlock[currentTheme][cookwareType];
+                if(currentCookwareAmount < foodData.CookwareNB)
+                    return;
+                
                 consumerManager.foodIds.Add(foodData.FoodID);
                 foodData.isUnlock = true;
                 upgradeButtonText.text = "업그레이드";

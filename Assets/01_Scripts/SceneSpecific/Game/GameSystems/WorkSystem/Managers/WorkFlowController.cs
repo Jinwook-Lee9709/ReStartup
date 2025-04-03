@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -16,14 +17,15 @@ public class WorkFlowController
     private readonly InteractableObjectManager<FoodPickupCounter> foodPickupCounterManager = new();
     private readonly LinkedList<(MainLoopWorkContext, CookingStation)> foodPickupCounterQueue = new();
     private readonly Dictionary<CookwareType, LinkedList<MainLoopWorkContext>> orderQueue = new();
-
-
+    
     private readonly InteractableObjectManager<Table> tableManager = new();
     private LinkedList<Consumer> waitingConsumerQueue = new();
     
     public TrayReturnCounter TrayReturnCounter => trayReturnCounter;
     public SinkingStation SinkingStation => sinkingStation;
 
+    public event Action<CookwareType> OnCookingStationAdded;
+    
     public void Init(GameManager gameManager, WorkManager workManager)
     {
         this.gameManager = gameManager;
@@ -82,6 +84,8 @@ public class WorkFlowController
     {
         var cookwareType = station.cookwareType;
         cookingStationManagers[cookwareType].InsertObject(station);
+        UserDataManager.Instance.CurrentUserData.CookWareUnlock[gameManager.CurrentTheme][cookwareType]++;
+        OnCookingStationAdded?.Invoke(cookwareType);
     }
 
     public void AddFoodPickupCounter(FoodPickupCounter counter)
