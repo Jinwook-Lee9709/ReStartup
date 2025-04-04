@@ -17,7 +17,7 @@ public class ConsumerManager : MonoBehaviour
     [SerializeField] private GameObject consumerPrefab;
     [SerializeField] public Transform spawnPoint;
     [SerializeField] private int tempPairProb = 100;
-    [SerializeField] private TextMeshPro waitingText;
+    [SerializeField] private TextMeshProUGUI waitingText;
 
     public WorkFlowController workFlowController;
 
