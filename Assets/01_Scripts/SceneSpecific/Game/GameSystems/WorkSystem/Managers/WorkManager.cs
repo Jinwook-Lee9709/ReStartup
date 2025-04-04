@@ -44,7 +44,7 @@ public class WorkManager
             assignedWorks[work.workType].Add(work);
         else
             workQueues[work.workType].Add(work);
-        if(consumer is not null)
+        if(consumer !=null)
             consumerWorkList.Add(new KeyValuePair<Consumer, WorkBase>(consumer, work));
     }
 
@@ -55,16 +55,24 @@ public class WorkManager
 
     public void AddStoppedWork(WorkType type, WorkBase work)
     {
+        assignedWorks[type].Remove(work);
         stoppedWorkQueues[type].Add(work);
     }
 
     public void OnWorkCanceled(Consumer consumer)
     {
+        var workList = consumerWorkList
+            .Where(x => x.Key == consumer)
+            .Select(x => x.Value);
+        foreach (var work in workList)
+        {
+            stoppedWorkQueues[work.workType].Remove(work);
+        }
         consumerWorkList
             .Where(x => x.Key == consumer)
             .ToList()
             .ForEach(x => x.Value.OnWorkCanceled());
-        consumerWorkList.RemoveAll(x => x.Key == consumer);
+
     }
 
     private void OnWorkerReturned(WorkType type)
@@ -89,12 +97,10 @@ public class WorkManager
 
     public void OnWorkFinished(WorkBase work)
     {
-        if (assignedWorks[work.workType].Contains(work))
-            assignedWorks[work.workType].Remove(work);
-        if (consumerWorkList.Any(x => x.Value == work))
-        {
-            consumerWorkList.RemoveAll(x => x.Value == work);
-        }
+        assignedWorks[work.workType].Remove(work);
+        
+        consumerWorkList.RemoveAll(x => x.Value == work);
+
         if (work.NextWork != null)
         {
             var nextWork = work.NextWork;
