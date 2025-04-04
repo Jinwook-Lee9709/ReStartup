@@ -11,7 +11,7 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
 
     private float interactionSpeed = 1f;
 
-    private readonly float healthDecreaseTimer = 60f;
+    private readonly float healthDecreaseTimer = 0.3f;
 
     private float currentTimer = 0f;
 
@@ -104,14 +104,12 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
 
     public void IncreaseHp(int amount)
     {
-        int prevHealth = EmployeeData.currentHealth;
         EmployeeData.currentHealth += amount;
-        if (prevHealth == 0)
+        if (IsExhausted)
         {
             IsExhausted = false;
             workerManager.ReturnRecoveredWorker(this);
         }
-
     }
 
     public void DecreaseHp(int amount)

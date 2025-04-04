@@ -113,8 +113,8 @@ public class WorkFlowController
 
     public void OnEatComplete(Table table)
     {
-        CreateCleanTableWork(table);
         CreateDirtyOnTable(table);
+        CreateCleanTableWork(table);
     }
     private void CreateCleanTableWork(Table table)
     {
@@ -144,11 +144,6 @@ public class WorkFlowController
         {
             var table = tableManager.GetAvailableObject();
             consumer.SetTable(table);
-            //if (consumer.pairData != null)
-            //{
-            //    consumer.pairData.pairTable = consumer.currentTable;
-            //    consumer.pairData.partner.SetTable(consumer.currentTable);
-            //}
             return true;
         }
 
