@@ -23,7 +23,7 @@ public class EmployeeHpUIItem : MonoBehaviour
             var button = GetComponentInChildren<Button>();
             button.onClick.AddListener(() =>
             {
-                employee.IncreaseHp(20);
+                employee.IncreaseHp(100);
                 if (employeeData.currentHealth == employeeData.Health)
                 {
                     //currentHp max
@@ -35,6 +35,7 @@ public class EmployeeHpUIItem : MonoBehaviour
                 }
                 HpSet();
             });
+            GameObject.FindWithTag("UIManager").GetComponent<UiManager>().uiEmployeeHp.GetComponent<EmployeeHpUi>().buttons.Add(button);
         }
     }
     public void SetEmployeeHpUiItem(EmployeeFSM employee)

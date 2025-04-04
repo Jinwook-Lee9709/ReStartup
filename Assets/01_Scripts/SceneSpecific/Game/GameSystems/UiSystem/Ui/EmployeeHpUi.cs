@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EmployeeHpUi : MonoBehaviour
 {
     public GameObject employeeHpItem;
     public Transform employeeHpItemParent;
     private List<EmployeeHpUIItem> items = new();
+    public List<Button> buttons = new();
     public void SetEmployeeUIItem(EmployeeFSM employee)
     {
         var item = Instantiate(employeeHpItem, employeeHpItemParent).GetComponent<EmployeeHpUIItem>();
@@ -21,6 +23,13 @@ public class EmployeeHpUi : MonoBehaviour
             {
                 item.EmployeeHpSet();
             }
+        }
+    }
+    public void OnButtonClickEmployeeAll()
+    {
+        foreach(var item in buttons)
+        {
+            item.onClick.Invoke();
         }
     }
 }

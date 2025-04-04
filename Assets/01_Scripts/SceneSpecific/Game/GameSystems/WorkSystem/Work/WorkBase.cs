@@ -48,6 +48,9 @@ public abstract class WorkBase : IComparable<WorkBase>
 
     public int CompareTo(WorkBase other)
     {
+        const float epsilon = 0.0001f; // 허용 오차 값을 정의
+        if (Mathf.Abs(CreatedTime - other.CreatedTime) < epsilon)
+            return 0; // 두 값이 거의 같으면 동일한 것으로 평가
         return CreatedTime.CompareTo(other.CreatedTime);
     }
 }
