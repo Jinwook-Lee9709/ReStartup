@@ -110,6 +110,9 @@ public class ConsumerFSM : MonoBehaviour
                     consumerManager.OnChangeConsumerState(consumer, ConsumerState.WaitForPay);
                     consumerManager.OnEndMeal(consumer);
                     break;
+                case ConsumerState.Paying:
+                    consumerManager.OnChangeConsumerState(consumer, ConsumerState.Paying);
+                    break;
                 case ConsumerState.Exit:
                     consumerManager.OnChangeConsumerState(consumer, ConsumerState.Exit);
                     switch (currentSatisfaction)

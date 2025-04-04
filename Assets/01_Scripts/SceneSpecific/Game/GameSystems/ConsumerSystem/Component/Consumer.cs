@@ -22,7 +22,7 @@ public class Consumer : MonoBehaviour
         get => nextTargetTransform;
         set
         {
-            if (value != nextTargetTransform) OnTargetTransformChanged(value);
+            OnTargetTransformChanged(value);
             nextTargetTransform = value;
         }
     }
