@@ -8,14 +8,8 @@ public class RankingSystemListUi : MonoBehaviour
     public GameObject upgradeItemObject;
     public GameManager gameManager;
     public Transform parent;
+    public PlayerClone playerClone;
     public List<RankingSystemUiItem> items = new();
-    private void Awake()
-    {
-    }
-
-    private void Start()
-    { 
-    }
 
     public void AddRankingSystemItem(RankingData data)
     {
@@ -43,6 +37,7 @@ public class RankingSystemListUi : MonoBehaviour
         {
             player.rankingData.RankingPoint += points;
             RankUpdate();
+            playerClone.UpdatePlayerData(player.rankingData);
         }
     }
 

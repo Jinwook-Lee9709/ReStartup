@@ -11,6 +11,7 @@ public class RankSystemManager : MonoBehaviour
     private void Start()
     {
         rankingListUi.rankSystemManager = this;
+        rankingListUi.playerClone = playerClone.GetComponent<PlayerClone>();
         var data = DataTableManager.Get<RankingDataTable>("Ranking").Data;
         foreach (var item in data.Values)
         {
@@ -23,7 +24,7 @@ public class RankSystemManager : MonoBehaviour
         {
             RestaurantName = currentUserData.Name,
             Ranking = 0,
-            RankingPoint = 100000,
+            RankingPoint = 1000,
             Type = (int)gameManager.CurrentTheme
         };
         rankingListUi.AddRankingSystemItem(playerData);

@@ -16,7 +16,7 @@ public class PlayerClone : MonoBehaviour
 
     private bool isActive = true;
 
-    private void UpdatePlayerData(RankingData data)
+    public void UpdatePlayerData(RankingData data)
     {
         //playerImage.
         playerName.text = data.RestaurantName;
