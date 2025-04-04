@@ -55,7 +55,9 @@ public class ConsumerManager : MonoBehaviour
     [ContextMenu("Consumer Spawn")]
     public void SpawnConsumer()
     {
+
         var consumer1 = consumerPool.Get().GetComponent<Consumer>();
+
         //bool isPair = true;
         //if (isPair)
         //{
@@ -84,7 +86,16 @@ public class ConsumerManager : MonoBehaviour
         {
             if (currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count < maxWaitingSeatCnt)
             {
-                SpawnConsumer();
+                int cnt = 0;
+                foreach (var consumers in currentSpawnedConsumerDictionary.Values)
+                {
+                    foreach (var consumer in consumers)
+                    {
+                        cnt++;
+                    }
+                }
+                if (cnt < 9)
+                    SpawnConsumer();
             }
             else if (waitOutsideConsumerCnt < 99)
             {
@@ -143,6 +154,8 @@ public class ConsumerManager : MonoBehaviour
     public void OnChangeConsumerState(Consumer consumer, ConsumerFSM.ConsumerState state)
     {
         var prevState = consumer.FSM.CurrentStatus;
+        if (prevState == state)
+            return;
         currentSpawnedConsumerDictionary[state].Add(consumer);
         currentSpawnedConsumerDictionary[prevState].Remove(consumer);
     }
@@ -240,7 +253,6 @@ public class ConsumerManager : MonoBehaviour
         if (workFlowController.RegisterCustomer(consumer))
         {
             consumer.FSM.CurrentStatus = ConsumerFSM.ConsumerState.BeforeOrder;
-            currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.BeforeOrder].Add(consumer);
         }
         else
         {
