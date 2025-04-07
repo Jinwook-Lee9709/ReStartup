@@ -3,17 +3,21 @@ using UnityEngine;
 
 public abstract class WorkBase : IComparable<WorkBase>
 {
-    private float createdTime = 0f;
+    protected float createdTime = 0f;
     
     public readonly WorkType workType;
     protected WorkerBase worker;
     protected WorkBase nextWork;
     protected WorkerBase nextWorker;
     protected bool isStoppable;
+    protected bool isComplete;
+
 
     protected WorkManager workManager;
     
     public float CreatedTime => createdTime;
+    public bool IsComplete => isComplete;
+
 
     protected WorkBase(WorkManager workManager, WorkType workType, bool isStopable = true)
     {
