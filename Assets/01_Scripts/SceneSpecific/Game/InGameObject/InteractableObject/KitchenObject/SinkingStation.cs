@@ -10,6 +10,9 @@ public class SinkingStation : InteractableObjectBase
     [SerializeField] TextMeshPro countText;
     private int currentTrayCount = 0;
     private bool isWashWorkAssigned = false;
+
+    public SpriteRenderer backgroundRenderer;
+    public SpriteRenderer defaultIconRenderer;
     
     WorkManager workManager;
     WorkFlowController controller;
@@ -54,6 +57,26 @@ public class SinkingStation : InteractableObjectBase
         }
 
         UpdateCountText();
+    }
+
+    public override bool ShowIcon(IconPivots pivot, Sprite icon, Sprite background = null, bool flipBackground = false)
+    {
+        defaultIconRenderer.gameObject.SetActive(true);
+        defaultIconRenderer.sprite = icon;
+        if (background != null)
+        {
+            backgroundRenderer.gameObject.SetActive(true);
+            backgroundRenderer.sprite = background;   
+            backgroundRenderer.flipX = flipBackground;
+        }
+        
+        return true;
+    }
+
+    public override void HideIcon()
+    {
+        defaultIconRenderer.gameObject.SetActive(false);
+        backgroundRenderer.gameObject.SetActive(false);
     }
 
     private void AssignTrayWashWork()

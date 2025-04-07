@@ -4,9 +4,10 @@ using UnityEngine;
 
 public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, IComparable<InteractableObjectBase>
 {
+    
     //References
     [SerializeField] private List<InteractPivot> interactablePoint;
-
+    
     //LocalVariables
     [SerializeField] private float interactProgress;
     private InteractWorkBase currentWork;
@@ -106,4 +107,8 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
 
         return 1 / interactor.InteractionSpeed / currentWork.InteractTime;
     }
+
+    public abstract bool ShowIcon(IconPivots pivot, Sprite icon, Sprite background = null, bool flipBackGround = false);
+    public abstract void HideIcon();
+    
 }

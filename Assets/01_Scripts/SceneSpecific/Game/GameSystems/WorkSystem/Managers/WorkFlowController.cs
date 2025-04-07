@@ -132,6 +132,7 @@ public class WorkFlowController
         var sprite = food.GetComponent<SpriteRenderer>();
         sprite.color = Color.red;
     }
+    
 
 
     #endregion

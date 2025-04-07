@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -14,10 +15,29 @@ public class WorkCleanTable : InteractWorkBase
     {
         this.controller = controller;
     }
+    
+    public override void OnWorkRegistered()
+    {
+        base.OnWorkRegistered();
+
+        var iconHandle = Addressables.LoadAssetAsync<Sprite>(Strings.Clean);
+        var backgroundHandle = Addressables.LoadAssetAsync<Sprite>(Strings.Bubble);
+
+        iconHandle.WaitForCompletion();
+        backgroundHandle.WaitForCompletion();
+        
+        Sprite iconSprite = iconHandle.Result;
+        Sprite backgroundSprite = backgroundHandle.Result;
+        
+        var table = target as Table;
+        table.ShowIcon(IconPivots.Default, iconSprite, backgroundSprite, true);
+    }
+    
 
     protected override void HandlePostInteraction()
     {
         var table = target as Table;
+        table.HideIcon();
         SetNextWork(table);
         controller.ReturnTable(table);
     }

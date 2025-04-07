@@ -11,7 +11,7 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
 
     private float interactionSpeed = 1f;
 
-    private readonly float healthDecreaseTimer = 0.3f;
+    private readonly float healthDecreaseTimer = 60f;
 
     private float currentTimer = 0f;
 

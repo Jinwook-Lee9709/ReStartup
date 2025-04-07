@@ -22,6 +22,14 @@ public static class DataTableManager
         var rankingDataTable = new RankingDataTable();
         rankingDataTable.Load();
         tables.Add(DataTableIds.Ranking.ToString(), rankingDataTable);
+
+        var interiorDataTable = new InteriorDataTable();
+        interiorDataTable.Load();
+        tables.Add(DataTableIds.Interior.ToString(), interiorDataTable);
+        
+        var cookwareDataTable = new CookwareDataTable();
+        cookwareDataTable.Load();
+        tables.Add(DataTableIds.Cookware.ToString(), cookwareDataTable);
     }
 
     public static T Get<T>(string id) where T : DataTable

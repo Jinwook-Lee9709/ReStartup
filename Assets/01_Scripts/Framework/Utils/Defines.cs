@@ -13,7 +13,15 @@ public enum DataTableIds
     Employee,
     Food,
     Consumer,
-    Ranking
+    Ranking,
+    Interior,
+    Cookware,
+}
+
+public enum IconPivots
+{
+    Default,
+    Consumer,
 }
 
 public enum ThemeIds
@@ -124,13 +132,22 @@ public enum CookwareType
     CharcoalGrill,
     GriddleGrill,
     Pot,
-    Griddle,
     KitchenTable,
+}
+
+public enum InteriorEffectType
+{
+    None,
+    EatSpeedIncrease,
+    TipProbabilityIncrease,
+    RankPoints,
+    CapacityIncrease,
+    CraftTimeDecrease,
 }
 
 public enum ObjectArea
 {
-    Hall,
+    Hall = 1,
     Kitchen,
 }
 
@@ -147,4 +164,9 @@ public static class Strings
     public static readonly string Tray = "Tray";
     public static readonly string TrayReturnCounter = "TrayReturnCounter";
     public static readonly string SinkingStation = "SinkingStation";
+
+    public static readonly string Bubble = "Bubble";
+    public static readonly string Clean = "Clean";
+    public static readonly string WashDish = "WashDish";
+    public static readonly string Cash = "Cash";
 }
