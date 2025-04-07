@@ -95,15 +95,7 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
         }
 
         interactProgress += interactionSpeed * Time.deltaTime;
-        if (interactProgress >= 1)
-        {
-            if(currentWork.Worker.WorkType != WorkType.All)
-            {
-                var employee = currentWork.Worker as EmployeeFSM;
-                employee.DecreaseHp(Constants.HEALTH_DECREASE_AMOUNT_ONWORKFINISHED);
-                employee.uiManager.EmployeeHpSet(employee);
-            }
-        }
+
         return interactProgress >= 1;
     }
 
