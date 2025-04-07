@@ -68,11 +68,11 @@ public class WorkManager
         {
             stoppedWorkQueues[work.workType].Remove(work);
         }
+        workQueues.Values.ToList().ForEach(x => x.RemoveWhere(y => workList.Contains(y)));
         consumerWorkList
             .Where(x => x.Key == consumer)
             .ToList()
             .ForEach(x => x.Value.OnWorkCanceled());
-
     }
 
     private void OnWorkerReturned(WorkType type)

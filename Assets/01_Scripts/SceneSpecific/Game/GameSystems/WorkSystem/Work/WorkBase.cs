@@ -3,17 +3,19 @@ using UnityEngine;
 
 public abstract class WorkBase : IComparable<WorkBase>
 {
-    private float createdTime = 0f;
+    protected float createdTime = 0f;
     
     public readonly WorkType workType;
     protected WorkerBase worker;
     protected WorkBase nextWork;
     protected WorkerBase nextWorker;
     protected bool isStoppable;
+    protected bool isComplete;
 
     protected WorkManager workManager;
     
     public float CreatedTime => createdTime;
+    public bool IsComplete => isComplete;
 
     protected WorkBase(WorkManager workManager, WorkType workType, bool isStopable = true)
     {
@@ -47,7 +49,10 @@ public abstract class WorkBase : IComparable<WorkBase>
     }
 
     public int CompareTo(WorkBase other)
-    {
+    { 
+        const float epsilon = 0.0001f; // 허용 오차 값을 정의
+        if (Mathf.Abs(CreatedTime - other.CreatedTime) < epsilon)
+            return 0; // 두 값이 거의 같으면 동일한 것으로 평가
         return CreatedTime.CompareTo(other.CreatedTime);
     }
 }

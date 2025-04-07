@@ -44,7 +44,6 @@ public abstract class InteractWorkBase : WorkBase
         this.worker = worker;
         workerAgent = worker.GetComponent<NavMeshAgent>();
         interactor = worker as IInteractor;
-
         SetTarget();
         EvaluateWorkerArrival();
     }
@@ -104,7 +103,9 @@ public abstract class InteractWorkBase : WorkBase
     public override void OnWorkFinished()
     {
         if (nextWorker != worker && worker is not null)
+        {
             worker.OnWorkFinished();
+        }
         workManager.OnWorkFinished(this);
     }
 
@@ -119,6 +120,13 @@ public abstract class InteractWorkBase : WorkBase
 
     private void CompleteInteraction()
     {
+        isComplete = true;
+        if(Worker.WorkType != WorkType.All)
+        {
+            var employee = Worker as EmployeeFSM;
+            employee.DecreaseHp(Constants.HEALTH_DECREASE_AMOUNT_ONWORKFINISHED);
+            employee.uiManager.EmployeeHpSet(employee);
+        }
         HandlePostInteraction();
         OnWorkFinished();
     }

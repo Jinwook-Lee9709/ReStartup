@@ -74,8 +74,8 @@ public class WorkerBase : MonoBehaviour, IComparable<WorkerBase>
         IsExhausted = true;
         if (currentWork is { IsStoppable: false })
             return;
-        if (currentWork != null)
-        { 
+        if (currentWork != null && !currentWork.IsComplete)
+        {
             currentWork.OnWorkStopped();
             currentWork = null;
         }
