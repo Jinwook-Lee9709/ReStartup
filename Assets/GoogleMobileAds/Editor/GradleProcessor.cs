@@ -75,7 +75,15 @@ public class GradleProcessor : IPostGenerateGradleAndroidProject
         foreach (var gradlePath in unityLibraryGradle)
         {
             var contents = File.ReadAllText(gradlePath);
-            if (contents.Contains(validateGradleDependencies))
+            if (GoogleMobileAdsSettings.LoadInstance().ValidateGradleDependencies)
+            {
+                if (!contents.Contains(validateGradleDependencies))
+                {
+                    contents += Environment.NewLine + validateGradleDependencies;
+                    File.WriteAllText(gradlePath, contents);
+                }
+            }
+            else
             {
                 contents = DeleteLineContainingSubstring(contents, validateGradleDependencies);
                 File.WriteAllText(gradlePath, contents);
