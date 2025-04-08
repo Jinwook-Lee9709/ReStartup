@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NavMeshPlus.Components;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -28,7 +29,9 @@ public class WorkStationManager
         this.surface2D = surface2D;
         
         tablePivots = objectPivotManager.GetTablePivots();
+        
     }
+    
 
     public void BakeNavMesh()
     {
@@ -40,9 +43,9 @@ public class WorkStationManager
 
     public void AddCookingStation(CookwareType cookwareType, int num)
     {
-        var pivot = objectPivotManager.GetCookwarePivots(cookwareType)[num];
+        var pivot = objectPivotManager.GetCookwarePivots(cookwareType)[num - 1];
         var handle = Addressables.InstantiateAsync(Strings.CookingStation, pivot);
-        handle.Completed += (handle) => OnCookingStationInstantiated(handle, cookwareType, num);
+        handle.Completed += (handle) => OnCookingStationInstantiated(handle, cookwareType, num - 1);
     }
 
     public void OnCookingStationInstantiated(AsyncOperationHandle<GameObject> handle, CookwareType cookwareType, int num)
@@ -61,7 +64,7 @@ public class WorkStationManager
     {
         Addressables.InstantiateAsync(Strings.Table).Completed += (handle)=>
         {
-            OnTableInstantiated(handle, num);
+            OnTableInstantiated(handle, num - 1);
         };
 
     }

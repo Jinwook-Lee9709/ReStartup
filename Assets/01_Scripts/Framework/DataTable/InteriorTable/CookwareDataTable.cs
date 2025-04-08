@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CookwareDataTable : DataTable
+public class CookwareDataTable : DataTable, IEnumerable<CookwareData>
 {
     public static readonly string FileName = "CookingwareTable";
     
@@ -21,5 +21,16 @@ public class CookwareDataTable : DataTable
         {
             Data.TryAdd(row.InteriorID, row);
         }
+    }
+
+
+    public IEnumerator<CookwareData> GetEnumerator()
+    {
+        return Data.Values.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }

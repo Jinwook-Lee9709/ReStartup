@@ -19,8 +19,23 @@ public class InteriorData
     public string IconID { get; set; }
     public InteriorCategory Category { get; set; }
 
-    public int GetSellingCost(int upgradeLevel)
+    public int GetSellingCost()
     {
+        var userData = UserDataManager.Instance.CurrentUserData;
+        int upgradeLevel = userData.InteriorSaveData[InteriorID];
         return (int)Math.Round(SellingCost * (1.5f + 0.3f * (upgradeLevel - 1)));
     }
+
+    public bool CheckFirstRequirement()
+    {
+        return UserDataManager.Instance.CurrentUserData.CurrentRankPoint >= Requirements1;
+    }
+
+    public bool CheckSecondRequirement()
+    {
+        if (Requirements2 == 0)
+            return true;
+        return UserDataManager.Instance.CurrentUserData.InteriorSaveData[Requirements2] != 0;
+    }
+    
 }

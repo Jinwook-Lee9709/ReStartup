@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public static class Extends
 {
@@ -43,10 +46,37 @@ public static class Extends
         obj.transform.localPosition = Vector3.zero;
         obj.transform.localScale = Vector3.one;
     }
+
     public static void SetParentAndInitialize(this Transform obj, Transform parent)
     {
         obj.transform.SetParent(parent);
         obj.transform.localPosition = Vector3.zero;
         obj.transform.localScale = Vector3.one;
+    }
+
+    public static void PopupAnimation(this Transform transform, float scale = 1.0f, float duration = 0.5f)
+    {
+        transform.gameObject.SetActive(true);
+        transform.DOScale(scale, duration).SetEase(Ease.InOutElastic);
+    }
+
+    public static void PopdownAnimation(this Transform transform, float scale = 0f, float duration = 0.5f, Action onComplete = null)
+    {
+        transform.DOScale(scale, duration).SetEase(Ease.InOutElastic)
+            .OnComplete(() => transform.gameObject.SetActive(false))
+            .OnComplete(() => onComplete?.Invoke());
+    }
+
+    public static void FadeInAnimation(this Image image, float opacity = 0.5f, float duration = 0.5f)
+    {
+        image.gameObject.SetActive(true);
+        image.DOFade(opacity, duration).SetEase(Ease.InOutQuad);
+    }
+
+    public static void FadeOutAnimation(this Image image, float duration = 0.5f, Action onComplete = null)
+    {
+        image.DOFade(0f, duration).SetEase(Ease.InOutQuad)
+            .OnComplete(() => image.gameObject.SetActive(false))
+            .OnComplete(() => onComplete?.Invoke());
     }
 }
