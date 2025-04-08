@@ -22,7 +22,7 @@ public class UiItem : MonoBehaviour
     public FoodData foodData;
 
     private EmployeeUpgradeListUi employeeUpgradeListUi;
-    private FoodUpgradeListUi foodUpgradeListUi;
+    private FoodUpgradeListUI foodUpgradeListUi;
 
     private Button button;
 
@@ -49,7 +49,7 @@ public class UiItem : MonoBehaviour
         if (foodData != null)
         {
             StartCoroutine(LoadSpriteCoroutine(foodData.IconID));
-            foodUpgradeListUi = GetComponentInParent<FoodUpgradeListUi>();
+            foodUpgradeListUi = GetComponentInParent<FoodUpgradeListUI>();
             if (foodUpgradeListUi == null)
             {
                 Debug.LogError($"{gameObject.name}의 부모 중 foodUpgradeListUi를 찾을 수 없습니다.");
@@ -93,7 +93,7 @@ public class UiItem : MonoBehaviour
             }
             if (employeeData.upgradeCount < 1 && userData.Gold > employeeData.Cost)
             {
-                
+
                 var handle = Addressables.LoadAssetAsync<GameObject>(employeePrefab);
                 GameObject prefab = await handle.Task;
                 var newEmployee = Instantiate(prefab).GetComponent<EmployeeFSM>();
@@ -115,34 +115,14 @@ public class UiItem : MonoBehaviour
                 newEmployee.GetComponentInChildren<TextMeshPro>().text = $"{((WorkType)employeeData.StaffType).ToString()}직원";
                 var workerManager = gameManager.WorkerManager;
                 workerManager.RegisterWorker(newEmployee, (WorkType)newEmployee.EmployeeData.StaffType, newEmployee.EmployeeData.StaffID);
-                upgradeButtonText.text = "업그레이드";
-                employeeData.upgradeCount++;
-                uiUpgradeCostText.text = $"{employeeData.Cost * employeeData.upgradeCount}";
-                employeeData.OnUpgrade();
+
                 userData.Gold -= employeeData.Cost;
-                ingameGoodsUi.SetGoldUi();
+                OnUpgradeEmployee();
             }
             if (userData.Gold > employeeData.Cost * employeeData.upgradeCount)
             {
-                employeeData.upgradeCount++;
-                employeeData.OnUpgrade();
-                uiUpgradeCostText.text = $"{employeeData.Cost * employeeData.upgradeCount}";
+                OnUpgradeEmployee();
                 userData.Gold -= employeeData.Cost * employeeData.upgradeCount;
-                ingameGoodsUi.SetGoldUi();
-            }
-            switch ((WorkType)employeeData.StaffType)
-            {
-                case WorkType.All:
-                    break;
-                case WorkType.Payment:
-                    uiNameText.text = $"계산원 :\n{employeeData.StaffID}:{employeeData.upgradeCount}";
-                    break;
-                case WorkType.Hall:
-                    uiNameText.text = $"홀직원 :\n{employeeData.StaffID}:{employeeData.upgradeCount}";
-                    break;
-                case WorkType.Kitchen:
-                    uiNameText.text = $"주방직원 :\n{employeeData.StaffID}:{employeeData.upgradeCount}";
-                    break;
             }
             if (employeeData.upgradeCount >= 5)
             {
@@ -180,9 +160,9 @@ public class UiItem : MonoBehaviour
                 var cookwareType = foodData.CookwareType;
                 var currentTheme = gameManager.CurrentTheme;
                 int currentCookwareAmount = userData.CookWareUnlock[currentTheme][cookwareType];
-                if(currentCookwareAmount < foodData.CookwareNB)
+                if (currentCookwareAmount < foodData.CookwareNB)
                     return;
-                
+
                 consumerManager.foodIds.Add(foodData.FoodID);
                 foodData.isUnlock = true;
                 upgradeButtonText.text = "업그레이드";
@@ -222,5 +202,25 @@ public class UiItem : MonoBehaviour
         else
             Debug.LogError($"Failed to load sprite: {iconAddress}");
     }
-
+    private void OnUpgradeEmployee()
+    {
+        ingameGoodsUi.SetGoldUi();
+        upgradeButtonText.text = "업그레이드";
+        employeeData.upgradeCount++;
+        uiUpgradeCostText.text = $"{employeeData.Cost * employeeData.upgradeCount}";
+        switch ((WorkType)employeeData.StaffType)
+        {
+            case WorkType.All:
+                break;
+            case WorkType.Payment:
+                uiNameText.text = $"계산원 :\n{employeeData.StaffID}:{employeeData.upgradeCount}";
+                break;
+            case WorkType.Hall:
+                uiNameText.text = $"홀직원 :\n{employeeData.StaffID}:{employeeData.upgradeCount}";
+                break;
+            case WorkType.Kitchen:
+                uiNameText.text = $"주방직원 :\n{employeeData.StaffID}:{employeeData.upgradeCount}";
+                break;
+        }
+    }
 }

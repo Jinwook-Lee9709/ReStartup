@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FoodUpgradeListUi : MonoBehaviour
+public class FoodUpgradeListUI : MonoBehaviour
 {
     public GameObject upgradeItemObject;
     public List<Button> allBuyButton;
@@ -13,7 +13,7 @@ public class FoodUpgradeListUi : MonoBehaviour
     }
     public void AddFoodUpgradeItem(FoodData data)
     {
-        var ui = Instantiate(upgradeItemObject, transform).GetComponent<UiItem>();
+        var ui = Instantiate(upgradeItemObject, transform).GetComponent<FoodUpgradeUIItem>();
         ui.Init(data);
     }
     public void AddButtonList(Button button)
