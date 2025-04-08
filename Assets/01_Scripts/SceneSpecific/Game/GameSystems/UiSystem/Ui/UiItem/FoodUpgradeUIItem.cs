@@ -10,9 +10,8 @@ public class FoodUpgradeUIItem : MonoBehaviour
 {
 
     [SerializeField] private GameObject levelUpImage;
-
     [SerializeField] private Image image;
-
+    [SerializeField] private GameObject lockImage;
     [SerializeField] private TextMeshProUGUI levelText;
 
     //Fortest
@@ -57,6 +56,7 @@ public class FoodUpgradeUIItem : MonoBehaviour
         {
             consumerManager.foodIds.Add(foodData.FoodID);
             foodData.upgradeCount = 1;
+            lockImage.SetActive(false);
         }
         button.onClick.AddListener((UnityEngine.Events.UnityAction)(() =>
         {
@@ -78,6 +78,10 @@ public class FoodUpgradeUIItem : MonoBehaviour
                 button.interactable = false;
             }
         }));
+    }
+    public void UnlockFoodUpgrade()
+    {
+        lockImage.SetActive(false);
     }
     private IEnumerator LoadSpriteCoroutine(string iconAddress)
     {

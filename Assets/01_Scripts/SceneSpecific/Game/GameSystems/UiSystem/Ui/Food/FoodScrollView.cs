@@ -23,7 +23,11 @@ public class FoodScrollView : MonoBehaviour
 
     public void AddFoodUISet(FoodData data)
     {
-        foodUpgradeListUI.AddFoodUpgradeItem(data);
         foodResearchListUI.AddFoodResearchItem(data);
+        foodUpgradeListUI.AddFoodUpgradeItem(data);
+    }
+    public void UnlockFoodUpgrade(FoodData data)
+    {
+        foodUpgradeListUI.UnlockFood(data);
     }
 }

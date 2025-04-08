@@ -18,12 +18,8 @@ public class FoodManager: MonoBehaviour
                 scrollView.AddFoodUISet(item);
         }
     }
-    public void OnFoodResearch()
+    public void UnlockFoodUpgrade(FoodData data)
     {
-
-    }
-    public void OnFoodUpgrade()
-    {
-
+        scrollView.UnlockFoodUpgrade(data);
     }
 }

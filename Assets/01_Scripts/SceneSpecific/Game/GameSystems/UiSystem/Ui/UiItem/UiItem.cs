@@ -19,16 +19,11 @@ public class UiItem : MonoBehaviour
     //Fortest
     public EmployeeTableGetData employeeData;
 
-    public FoodData foodData;
-
     private EmployeeUpgradeListUi employeeUpgradeListUi;
-    private FoodUpgradeListUI foodUpgradeListUi;
 
     private Button button;
 
     private readonly string employeePrefab = "Agent.prefab";
-
-    private ConsumerManager consumerManager;
 
     private IngameGoodsUi ingameGoodsUi;
 
@@ -46,17 +41,7 @@ public class UiItem : MonoBehaviour
             }
             employeeUpgradeListUi.AddButtonList(button);
         }
-        if (foodData != null)
-        {
-            StartCoroutine(LoadSpriteCoroutine(foodData.IconID));
-            foodUpgradeListUi = GetComponentInParent<FoodUpgradeListUI>();
-            if (foodUpgradeListUi == null)
-            {
-                Debug.LogError($"{gameObject.name}의 부모 중 foodUpgradeListUi를 찾을 수 없습니다.");
-                return;
-            }
-            foodUpgradeListUi.AddButtonList(button);
-        }
+        
     }
 
     public void Init(EmployeeTableGetData data)
@@ -132,66 +117,7 @@ public class UiItem : MonoBehaviour
         }));
 
     }
-    public void Init(FoodData data)
-    {
-        var userData = UserDataManager.Instance.CurrentUserData;
-        foodData = data;
-        uiNameText.text = $"{foodData.FoodID}";
-        uiUpgradeCostText.text = $"{foodData.BasicCost}";
-        button = GetComponentInChildren<Button>();
-        upgradeButtonText.text = "연구하기";
-        var gameManager = ServiceLocator.Instance.GetSceneService<GameManager>();
-        consumerManager = gameManager.consumerManager;
-        if (foodData.FoodID == 301001)
-        {
-            consumerManager.foodIds.Add(foodData.FoodID);
-            foodData.upgradeCount = 1;
-            upgradeButtonText.text = "업그레이드";
-        }
-        button.onClick.AddListener((UnityEngine.Events.UnityAction)(() =>
-        {
-            if (foodData.upgradeCount >= 5)
-            {
-                return;
-            }
-            // add food unlock Requirements
-            if (foodData.upgradeCount < 1 && userData.Gold > foodData.BasicCost)
-            {
-                var cookwareType = foodData.CookwareType;
-                var currentTheme = gameManager.CurrentTheme;
-                int currentCookwareAmount = userData.CookWareUnlock[currentTheme][cookwareType];
-                if (currentCookwareAmount < foodData.CookwareNB)
-                    return;
-
-                consumerManager.foodIds.Add(foodData.FoodID);
-                foodData.isUnlock = true;
-                upgradeButtonText.text = "업그레이드";
-
-                foodData.upgradeCount++;
-                uiNameText.text = $"{foodData.FoodID}";
-                uiUpgradeCostText.text = $"{foodData.BasicCost * foodData.upgradeCount}";
-
-                userData.CurrentRankPoint += foodData.GetRankPoints;
-                userData.Gold -= foodData.BasicCost;
-                ingameGoodsUi.SetGoldUi();
-            }
-            if (userData.Gold > foodData.BasicCost * foodData.upgradeCount)
-            {
-                foodData.upgradeCount++;
-                uiNameText.text = $"{foodData.FoodID}";
-                uiUpgradeCostText.text = $"{foodData.BasicCost * foodData.upgradeCount}";
-
-                userData.Gold -= foodData.BasicCost * foodData.upgradeCount;
-                ingameGoodsUi.SetGoldUi();
-            }
-
-            if (foodData.upgradeCount >= 5)
-            {
-                upgradeButtonText.text = "완료됨";
-                button.interactable = false;
-            }
-        }));
-    }
+    
     private IEnumerator LoadSpriteCoroutine(string iconAddress)
     {
         var handle = Addressables.LoadAssetAsync<Sprite>(iconAddress);

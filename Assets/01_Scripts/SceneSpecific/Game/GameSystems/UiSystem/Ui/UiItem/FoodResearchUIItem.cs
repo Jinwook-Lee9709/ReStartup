@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class FoodResearchUIItem : MonoBehaviour
@@ -12,6 +13,7 @@ public class FoodResearchUIItem : MonoBehaviour
 
     [SerializeField] private GameObject newImage;
     [SerializeField] private Image image;
+    [SerializeField] private GameObject lockImage;
     [SerializeField] private TextMeshProUGUI NameText;
     [SerializeField] private TextMeshProUGUI CostText;
     [SerializeField] private TextMeshProUGUI RankPointText;
@@ -28,6 +30,8 @@ public class FoodResearchUIItem : MonoBehaviour
     private ConsumerManager consumerManager;
 
     private IngameGoodsUi ingameGoodsUi;
+
+    private UserData userData;
     private void Start()
     {
         ingameGoodsUi = GameObject.FindWithTag("UIManager").GetComponent<UiManager>().inGameUi;
@@ -47,7 +51,7 @@ public class FoodResearchUIItem : MonoBehaviour
     public void Init(FoodData data)
     {
 
-        var userData = UserDataManager.Instance.CurrentUserData;
+        userData = UserDataManager.Instance.CurrentUserData;
         foodData = data;
         RankPointText.text = data.GetRankPoints.ToString();
         CostText.text = data.BasicCost.ToString();
@@ -60,6 +64,15 @@ public class FoodResearchUIItem : MonoBehaviour
         {
             consumerManager.foodIds.Add(foodData.FoodID);
             foodData.upgradeCount = 1;
+            lockImage.SetActive(false);
+            button.interactable = false;
+        }
+        else
+        {
+            if (foodData.Requirements < userData.CurrentRankPoint)
+            {
+                lockImage.SetActive(false);
+            }
         }
         button.onClick.AddListener((UnityEngine.Events.UnityAction)(() =>
         {
@@ -78,11 +91,17 @@ public class FoodResearchUIItem : MonoBehaviour
                 userData.CurrentRankPoint += foodData.GetRankPoints;
                 userData.Gold -= foodData.BasicCost;
                 ingameGoodsUi.SetGoldUi();
-
+                gameManager.foodManager.UnlockFoodUpgrade(foodData);
                 button.interactable = false;
             }
         }));
     }
+    public void UnlockFood()
+    {
+        lockImage.SetActive(false);
+        userData.CurrentRankPoint += foodData.GetRankPoints;
+    }
+
     private IEnumerator LoadSpriteCoroutine(string iconAddress)
     {
         var handle = Addressables.LoadAssetAsync<Sprite>(iconAddress);
