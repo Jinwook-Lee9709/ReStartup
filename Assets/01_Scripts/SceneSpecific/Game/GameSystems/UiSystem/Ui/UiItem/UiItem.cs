@@ -42,7 +42,7 @@ public class UiItem : MonoBehaviour
             if (employeeUpgradeListUi == null)
             {
                 Debug.LogError($"{gameObject.name}의 부모 중 EmployeeUpgradeListUi를 찾을 수 없습니다.");
-                return;  // Null이면 실행 중단
+                return;
             }
             employeeUpgradeListUi.AddButtonList(button);
         }
@@ -53,7 +53,7 @@ public class UiItem : MonoBehaviour
             if (foodUpgradeListUi == null)
             {
                 Debug.LogError($"{gameObject.name}의 부모 중 foodUpgradeListUi를 찾을 수 없습니다.");
-                return;  // Null이면 실행 중단
+                return;
             }
             foodUpgradeListUi.AddButtonList(button);
         }
@@ -63,7 +63,7 @@ public class UiItem : MonoBehaviour
     {
         var userData = UserDataManager.Instance.CurrentUserData;
         employeeData = data;
-        int buyCost;
+        var gameManager = ServiceLocator.Instance.GetSceneService<GameManager>();
         switch ((WorkType)employeeData.StaffType)
         {
             case WorkType.All:
@@ -93,43 +93,41 @@ public class UiItem : MonoBehaviour
             }
             if (employeeData.upgradeCount < 1 && userData.Gold > employeeData.Cost)
             {
-                buyCost = employeeData.Cost;
+                
                 var handle = Addressables.LoadAssetAsync<GameObject>(employeePrefab);
                 GameObject prefab = await handle.Task;
                 var newEmployee = Instantiate(prefab).GetComponent<EmployeeFSM>();
                 newEmployee.EmployeeData = employeeData;
+                var spriteRenderer = newEmployee.GetComponent<SpriteRenderer>();
 
                 switch ((WorkType)employeeData.StaffType)
                 {
-                    case WorkType.All:
-                        break;
                     case WorkType.Payment:
-                        newEmployee.GetComponent<SpriteRenderer>().color = Color.yellow;
+                        spriteRenderer.color = Color.yellow;
                         break;
                     case WorkType.Hall:
-                        newEmployee.GetComponent<SpriteRenderer>().color = Color.blue;
+                        spriteRenderer.color = Color.blue;
                         break;
                     case WorkType.Kitchen:
-                        newEmployee.GetComponent<SpriteRenderer>().color = Color.red;
+                        spriteRenderer.color = Color.red;
                         break;
                 }
                 newEmployee.GetComponentInChildren<TextMeshPro>().text = $"{((WorkType)employeeData.StaffType).ToString()}직원";
-                var workerManager = ServiceLocator.Instance.GetSceneService<GameManager>().WorkerManager;
+                var workerManager = gameManager.WorkerManager;
                 workerManager.RegisterWorker(newEmployee, (WorkType)newEmployee.EmployeeData.StaffType, newEmployee.EmployeeData.StaffID);
                 upgradeButtonText.text = "업그레이드";
                 employeeData.upgradeCount++;
                 uiUpgradeCostText.text = $"{employeeData.Cost * employeeData.upgradeCount}";
                 employeeData.OnUpgrade();
-                userData.Gold -= buyCost;
+                userData.Gold -= employeeData.Cost;
                 ingameGoodsUi.SetGoldUi();
             }
             if (userData.Gold > employeeData.Cost * employeeData.upgradeCount)
             {
-                buyCost = employeeData.Cost * employeeData.upgradeCount;
                 employeeData.upgradeCount++;
                 employeeData.OnUpgrade();
                 uiUpgradeCostText.text = $"{employeeData.Cost * employeeData.upgradeCount}";
-                userData.Gold -= buyCost;
+                userData.Gold -= employeeData.Cost * employeeData.upgradeCount;
                 ingameGoodsUi.SetGoldUi();
             }
             switch ((WorkType)employeeData.StaffType)
@@ -162,8 +160,8 @@ public class UiItem : MonoBehaviour
         uiUpgradeCostText.text = $"{foodData.BasicCost}";
         button = GetComponentInChildren<Button>();
         upgradeButtonText.text = "연구하기";
-        consumerManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>().consumerManager;
-        int buyCost;
+        var gameManager = ServiceLocator.Instance.GetSceneService<GameManager>();
+        consumerManager = gameManager.consumerManager;
         if (foodData.FoodID == 301001)
         {
             consumerManager.foodIds.Add(foodData.FoodID);
@@ -176,31 +174,34 @@ public class UiItem : MonoBehaviour
             {
                 return;
             }
+            // add food unlock Requirements
             if (foodData.upgradeCount < 1 && userData.Gold > foodData.BasicCost)
             {
                 var cookwareType = foodData.CookwareType;
-                var currentTheme = ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme;
-                int currentCookwareAmount = UserDataManager.Instance.CurrentUserData.CookWareUnlock[currentTheme][cookwareType];
+                var currentTheme = gameManager.CurrentTheme;
+                int currentCookwareAmount = userData.CookWareUnlock[currentTheme][cookwareType];
                 if(currentCookwareAmount < foodData.CookwareNB)
                     return;
                 
                 consumerManager.foodIds.Add(foodData.FoodID);
                 foodData.isUnlock = true;
                 upgradeButtonText.text = "업그레이드";
-                buyCost = foodData.BasicCost;
+
                 foodData.upgradeCount++;
                 uiNameText.text = $"{foodData.FoodID}";
                 uiUpgradeCostText.text = $"{foodData.BasicCost * foodData.upgradeCount}";
-                userData.Gold -= buyCost;
+
+                userData.CurrentRankPoint += foodData.GetRankPoints;
+                userData.Gold -= foodData.BasicCost;
                 ingameGoodsUi.SetGoldUi();
             }
             if (userData.Gold > foodData.BasicCost * foodData.upgradeCount)
             {
-                buyCost = foodData.BasicCost * foodData.upgradeCount;
                 foodData.upgradeCount++;
                 uiNameText.text = $"{foodData.FoodID}";
                 uiUpgradeCostText.text = $"{foodData.BasicCost * foodData.upgradeCount}";
-                userData.Gold -= buyCost;
+
+                userData.Gold -= foodData.BasicCost * foodData.upgradeCount;
                 ingameGoodsUi.SetGoldUi();
             }
 
