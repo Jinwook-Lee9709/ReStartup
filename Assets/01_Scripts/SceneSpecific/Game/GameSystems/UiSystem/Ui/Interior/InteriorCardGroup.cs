@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -8,12 +9,16 @@ public class InteriorCardGroup : MonoBehaviour
 {
     [SerializeField] private Transform cardParent;
     [SerializeField] private AssetReference cardPrefab;
+    [SerializeField] private TextMeshProUGUI categoryText;
 
     private List<InteriorCard> cards = new();
+    private InteriorCategory category;
 
-    public void InitializeGroup(List<InteriorData> interiorDataList, Action<InteriorData> onBuy)
+    public void InitializeGroup(List<InteriorData> interiorDataList, InteriorCategory category, Action<InteriorData> onBuy)
     {
         ClearGroup();
+        this.category = category;
+        categoryText.text = category.ToString();
         foreach (var data in interiorDataList)
         {
             GameObject cardObject = Addressables.InstantiateAsync(cardPrefab, cardParent).WaitForCompletion();
@@ -22,9 +27,17 @@ public class InteriorCardGroup : MonoBehaviour
             cards.Add(card);
         }
     }
-    
-    
-    
+
+    public void UpdateCards()
+    {
+        foreach (var card in cards)
+        {
+            if (card.IsStateChanged)
+            {
+                card.UpdateInteractable();
+            }
+        }
+    }
     
     public void ClearGroup()
     {

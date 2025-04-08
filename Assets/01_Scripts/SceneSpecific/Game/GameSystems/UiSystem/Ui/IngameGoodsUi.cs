@@ -11,7 +11,7 @@ public class IngameGoodsUi : MonoBehaviour
     {
         userDataManager = UserDataManager.Instance;
         goldText.text = $"GOLD : {userDataManager.CurrentUserData.Gold}";
-        userDataManager.getGoldAction += goldUiValueSet;
+        userDataManager.ChangeGoldAction += goldUiValueSet;
     }
     public void goldUiValueSet(int? gold)
     {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,4 +17,10 @@ public class InteriorData
     public int EffectQuantity { get; set; }
     public int StringID { get; set; }
     public string IconID { get; set; }
+    public InteriorCategory Category { get; set; }
+
+    public int GetSellingCost(int upgradeLevel)
+    {
+        return (int)Math.Round(SellingCost * (1.5f + 0.3f * (upgradeLevel - 1)));
+    }
 }

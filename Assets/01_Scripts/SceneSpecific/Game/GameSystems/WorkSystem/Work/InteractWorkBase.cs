@@ -92,6 +92,7 @@ public abstract class InteractWorkBase : WorkBase
     public override void OnWorkCanceled()
     {
         OnWorkFinished();
+        Debug.Log($"OnWorkCanceled: {CreatedTime}");
     }
 
     public override void OnWorkStopped()

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,49 +9,74 @@ using UnityEngine.UI;
 
 public class InteriorUIManager : MonoBehaviour
 {
-    [SerializeField] private List<InteriorCardGroup> hallCardGroups;
-    [SerializeField] private List<InteriorCardGroup> kitchenCardGroups;
-
     [SerializeField] private Button hallButton;
     [SerializeField] private Button kitchenButton;
     
+    [SerializeField] private Transform cardGroupParent;
     [SerializeField] private AssetReference interiorCardGroupPrefab;
 
+    [SerializeField] private List<InteriorCardGroup> hallCardGroups;
+    [SerializeField] private List<InteriorCardGroup> kitchenCardGroups;
+    
     private void Start()
     {
-        List<InteriorData> hallList = new List<InteriorData>();
-        List<InteriorData> kitchenList = new List<InteriorData>();
-        
+        Dictionary<InteriorCategory, List<InteriorData>> hallList;
+        Dictionary<InteriorCategory, List<InteriorData>> kitchenList;
+
         var table = DataTableManager.Get<InteriorDataTable>(DataTableIds.Interior.ToString());
-        var list = table
+        var dataList = table
             .Where(x => x.RestaurantType == (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme)
             .ToList();
 
-        foreach (var item in list)
-        {
-            if (item.CookwareType == ObjectArea.Hall)
-            {
-                hallList.Add(item);
-            }
-            else
-            {
-                kitchenList.Add(item);
-            }
-        }
+        InitCardGroups(dataList, ObjectArea.Hall);
+        InitCardGroups(dataList, ObjectArea.Kitchen);
+        InitButtonEvent();
+
+        UserDataManager.Instance.ChangeGoldAction -= OnGoldChanged;
+        UserDataManager.Instance.ChangeGoldAction += OnGoldChanged;
     }
 
-    private void OnBuy()
+    private void InitCardGroups(List<InteriorData> dataList, ObjectArea area)
     {
+        var targetList = area == ObjectArea.Hall ? hallCardGroups : kitchenCardGroups;
+        var dict = dataList
+            .Where(x => x.CookwareType == area)
+            .GroupBy(x => x.Category)
+            .ToDictionary(group => group.Key, group => group.ToList());
+        foreach (var pair in dict)
+        {
+            var result = interiorCardGroupPrefab.InstantiateAsync(cardGroupParent).WaitForCompletion();
+            var interiorGroup = result.GetComponent<InteriorCardGroup>();
+            interiorGroup.InitializeGroup(pair.Value, pair.Key, OnBuy);
+            targetList.Add(interiorGroup);
+        }
     }
 
     private void InitButtonEvent()
     {
-        kitchenButton.onClick.RemoveAllListeners();
         hallButton.onClick.RemoveAllListeners();
-        kitchenButton.onClick.AddListener(() => ToggleCardGroups(kitchenCardGroups, hallCardGroups));
+        kitchenButton.onClick.RemoveAllListeners();
         hallButton.onClick.AddListener(() => ToggleCardGroups(hallCardGroups, kitchenCardGroups));
+        kitchenButton.onClick.AddListener(() => ToggleCardGroups(kitchenCardGroups, hallCardGroups));
+        ToggleCardGroups(hallCardGroups, kitchenCardGroups);
+    }
+    private void OnBuy(InteriorData data)
+    {
+        UserDataManager.Instance.UpgradeInterior(data.InteriorID);
+        UserDataManager.Instance.ModifyGold(-data.SellingCost);
     }
 
+    private void OnGoldChanged(int? gold)
+    {
+        foreach (var group in hallCardGroups)
+        {
+            group.UpdateCards();
+        }
+        foreach (var group in kitchenCardGroups)
+        {
+            group.UpdateCards();
+        }
+    }
 
     private void ToggleCardGroups(List<InteriorCardGroup> activeGroups, List<InteriorCardGroup> inactiveGroups)
     {
@@ -63,5 +89,10 @@ public class InteriorUIManager : MonoBehaviour
         {
             group.gameObject.SetActive(false);
         }
+    }
+
+    private void OnDestroy()
+    {
+        UserDataManager.Instance.ChangeGoldAction -= OnGoldChanged;
     }
 }
