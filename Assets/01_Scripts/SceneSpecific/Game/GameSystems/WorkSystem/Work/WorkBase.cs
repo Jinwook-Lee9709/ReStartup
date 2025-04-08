@@ -37,7 +37,7 @@ public abstract class WorkBase : IComparable<WorkBase>
     public WorkerBase NextWorker => nextWorker;
     public bool IsStoppable => isStoppable;
 
-    public abstract void OnWorkAssigned();
+    public abstract void OnWorkRegistered();
     public abstract void OnAssignWorker(WorkerBase worker);
     public abstract void DoWork();
     public abstract void OnWorkCanceled();

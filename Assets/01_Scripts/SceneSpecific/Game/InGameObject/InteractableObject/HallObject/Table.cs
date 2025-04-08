@@ -1,17 +1,15 @@
 using System;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.Serialization;
 
 public class Table : InteractableObjectBase
 {
     [SerializeField] private Transform foodPlacePivot;
+    [SerializeField] private SpriteRenderer iconBackgroundRenderer;
+    [SerializeField] private SpriteRenderer defaultIconRenderer;
+    [SerializeField] private SpriteRenderer consumerRenderer;
     public Transform FoodPlacePivot => foodPlacePivot;
-
-
-    public override void OnInteractCompleted()
-    {
-        base.OnInteractCompleted();
-    }
 
     public GameObject GetFood()
     {
@@ -26,5 +24,57 @@ public class Table : InteractableObjectBase
         var obj = foodPlacePivot.GetChild(0).GetComponent<FoodObject>();
         obj.SetSprite(handle.Result);
     }
+
+    public override bool ShowIcon(IconPivots pivot, Sprite icon, Sprite background = null, bool flipBackground = false)
+    {
+        Transform targetRendererTransform = null;
+        SpriteRenderer activeRenderer = null;
+        SpriteRenderer inactiveRenderer = null;
+        
+        switch (pivot)
+        {
+            case IconPivots.Default:
+                targetRendererTransform = defaultIconRenderer.transform;
+                activeRenderer = defaultIconRenderer;
+                inactiveRenderer = consumerRenderer;
+                break;
+            case IconPivots.Consumer:
+                targetRendererTransform = consumerRenderer.transform;
+                activeRenderer = consumerRenderer;
+                inactiveRenderer = defaultIconRenderer;
+                break;
+            default:
+                targetRendererTransform = defaultIconRenderer.transform;
+                activeRenderer = defaultIconRenderer;
+                inactiveRenderer = consumerRenderer;
+                break;
+        }
+
+        if (background != null)
+        {
+            iconBackgroundRenderer.gameObject.SetActive(true);
+            iconBackgroundRenderer.sprite = background;
+            iconBackgroundRenderer.flipX = flipBackground;
+            iconBackgroundRenderer.transform.position = targetRendererTransform.position;
+        }
+        if (activeRenderer != null)
+        {
+            activeRenderer.sprite = icon;
+            activeRenderer.gameObject.SetActive(true);
+        }
+
+        if (inactiveRenderer != null)
+        {
+            inactiveRenderer.gameObject.SetActive(false);
+        }
+
+        return true;
+    }
     
+    public override void HideIcon()
+    {
+        iconBackgroundRenderer.gameObject.SetActive(false);
+        defaultIconRenderer.gameObject.SetActive(false);
+        consumerRenderer.gameObject.SetActive(false);
+    }
 }

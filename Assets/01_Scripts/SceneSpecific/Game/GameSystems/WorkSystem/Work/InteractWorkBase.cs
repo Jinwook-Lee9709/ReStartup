@@ -35,7 +35,7 @@ public abstract class InteractWorkBase : WorkBase
         this.target = target;
     }
 
-    public override void OnWorkAssigned()
+    public override void OnWorkRegistered()
     {
     }
 

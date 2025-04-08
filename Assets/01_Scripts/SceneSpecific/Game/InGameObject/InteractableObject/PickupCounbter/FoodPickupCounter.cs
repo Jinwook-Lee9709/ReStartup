@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class FoodPickupCounter : InteractableObjectBase
@@ -9,5 +10,14 @@ public class FoodPickupCounter : InteractableObjectBase
     public GameObject LiftFood()
     {
         return foodPlacePivot.GetChild(0).gameObject;
+    }
+
+    public override bool ShowIcon(IconPivots pivot, Sprite icon, Sprite background = null, bool flipBackground = false )
+    {
+        return false;
+    }
+
+    public override void HideIcon()
+    {
     }
 }

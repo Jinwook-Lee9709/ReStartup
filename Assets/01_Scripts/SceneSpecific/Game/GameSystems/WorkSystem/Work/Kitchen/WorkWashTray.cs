@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 public class WorkWashTray : InteractWorkBase
 {
@@ -14,6 +15,24 @@ public class WorkWashTray : InteractWorkBase
     {
         this.controller = controller;
     }
+    
+    public override void OnWorkRegistered()
+    {
+        base.OnWorkRegistered();
+
+        var iconHandle = Addressables.LoadAssetAsync<Sprite>(Strings.WashDish);
+        var backgroundHandle = Addressables.LoadAssetAsync<Sprite>(Strings.Bubble);
+
+        iconHandle.WaitForCompletion();
+        backgroundHandle.WaitForCompletion();
+        
+        Sprite iconSprite = iconHandle.Result;
+        Sprite backgroundSprite = backgroundHandle.Result;
+        
+        var table = target as SinkingStation;
+        table.ShowIcon(IconPivots.Default, iconSprite, backgroundSprite, true);
+    }
+
     
     protected override void HandlePostInteraction()
     {
@@ -29,6 +48,9 @@ public class WorkWashTray : InteractWorkBase
             nextWork = work;
             nextWorker = worker;
         }
-        
+        else
+        {
+            sinkingStation.HideIcon();
+        }
     }
 }
