@@ -7,6 +7,7 @@ public class UiManager : MonoBehaviour
     public GameObject uiReview;
     public GameObject uiUpgrade;
     public GameObject uiEmployeeHp;
+    public GameObject uiInterior;
     public IngameGoodsUi inGameUi;
 
     public void OnClickButtonSetAppsUi()
@@ -21,14 +22,14 @@ public class UiManager : MonoBehaviour
         }
     }
 
-    public void OnCilckButtonSetUiReview()
+    public void OnCilckButtonOepnUiReview()
     {
         uiUpgrade.SetActive(false);
         uiApps.SetActive(false);
         uiReview.SetActive(true);
     }
 
-    public void OnClickButtonSetUiUpgrade()
+    public void OnClickButtonOepnUiUpgrade()
     {
         uiUpgrade.SetActive(true);
     }
@@ -64,5 +65,9 @@ public class UiManager : MonoBehaviour
     public void EmployeeHpSet(EmployeeFSM employee)
     {
         uiEmployeeHp.GetComponent<EmployeeHpUi>().EmployeeHpSet(employee);
+    }
+    public void OnClickButtonOpenInteriorUI()
+    {
+        uiInterior.SetActive(true);
     }
 }
