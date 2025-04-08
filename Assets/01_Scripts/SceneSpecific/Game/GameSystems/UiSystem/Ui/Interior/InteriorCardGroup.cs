@@ -14,7 +14,8 @@ public class InteriorCardGroup : MonoBehaviour
     private List<InteriorCard> cards = new();
     private InteriorCategory category;
 
-    public void InitializeGroup(List<InteriorData> interiorDataList, InteriorCategory category, Action<InteriorData> onBuy)
+    public void InitializeGroup(List<InteriorData> interiorDataList, InteriorCategory category,
+        InteriorUpgradePopup popup, InteriorUpgradeAuthorityNotifyPopup notifyPopup)
     {
         ClearGroup();
         this.category = category;
@@ -23,7 +24,7 @@ public class InteriorCardGroup : MonoBehaviour
         {
             GameObject cardObject = Addressables.InstantiateAsync(cardPrefab, cardParent).WaitForCompletion();
             var card = cardObject.GetComponent<InteriorCard>();
-            card.Init(data, onBuy);
+            card.Init(data, popup, notifyPopup);
             cards.Add(card);
         }
     }
@@ -38,14 +39,14 @@ public class InteriorCardGroup : MonoBehaviour
             }
         }
     }
-    
+
     public void ClearGroup()
     {
         foreach (Transform child in cardParent)
         {
             Destroy(child.gameObject);
         }
+
         cards.Clear();
     }
-
 }

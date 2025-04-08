@@ -17,6 +17,9 @@ public class InteriorUIManager : MonoBehaviour
 
     [SerializeField] private List<InteriorCardGroup> hallCardGroups;
     [SerializeField] private List<InteriorCardGroup> kitchenCardGroups;
+
+    [SerializeField] private InteriorUpgradePopup popup;
+    [SerializeField] private InteriorUpgradeAuthorityNotifyPopup authorityPopup;
     
     private void Start()
     {
@@ -47,7 +50,7 @@ public class InteriorUIManager : MonoBehaviour
         {
             var result = interiorCardGroupPrefab.InstantiateAsync(cardGroupParent).WaitForCompletion();
             var interiorGroup = result.GetComponent<InteriorCardGroup>();
-            interiorGroup.InitializeGroup(pair.Value, pair.Key, OnBuy);
+            interiorGroup.InitializeGroup(pair.Value, pair.Key, popup, authorityPopup);
             targetList.Add(interiorGroup);
         }
     }
@@ -59,11 +62,6 @@ public class InteriorUIManager : MonoBehaviour
         hallButton.onClick.AddListener(() => ToggleCardGroups(hallCardGroups, kitchenCardGroups));
         kitchenButton.onClick.AddListener(() => ToggleCardGroups(kitchenCardGroups, hallCardGroups));
         ToggleCardGroups(hallCardGroups, kitchenCardGroups);
-    }
-    private void OnBuy(InteriorData data)
-    {
-        UserDataManager.Instance.UpgradeInterior(data.InteriorID);
-        UserDataManager.Instance.ModifyGold(-data.SellingCost);
     }
 
     private void OnGoldChanged(int? gold)
@@ -93,6 +91,9 @@ public class InteriorUIManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        UserDataManager.Instance.ChangeGoldAction -= OnGoldChanged;
+        if (UserDataManager.Instance != null)
+        {
+            UserDataManager.Instance.ChangeGoldAction -= OnGoldChanged;
+        }
     }
 }

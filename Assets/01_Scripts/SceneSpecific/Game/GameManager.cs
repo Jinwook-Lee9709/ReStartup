@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     public WorkFlowController WorkFlowController { get; private set; }
     public WorkStationManager WorkStationManager { get; private set; }
     public ObjectPivotManager ObjectPivotManager { get; private set; }
+    public InteriorManager InteriorManager { get; private set; }
 
     public ConsumerManager consumerManager;
     #region InitializeClasses
@@ -29,10 +30,14 @@ public class GameManager : MonoBehaviour
     {
         currentTheme = (ThemeIds)PlayerPrefs.GetInt("Theme", 1);
         ServiceLocator.Instance.RegisterSceneService(this);
-
+        //Fortest
+        InitInteriorDictionary();
+        //Fortest
+        
         InitFoodUpgradeDataManager();
         InitObjectPoolManager();
         InitWorkManagers();
+        InitInteriorManager();
         
         InitGameScene();
     }
@@ -63,6 +68,12 @@ public class GameManager : MonoBehaviour
         WorkStationManager.Init(WorkFlowController, ObjectPivotManager, surface2D);
 
     }
+
+    private void InitInteriorManager()
+    {
+        InteriorManager = new InteriorManager();
+        InteriorManager.Init(this);
+    }
     #endregion
  
     public void Start()
@@ -80,9 +91,6 @@ public class GameManager : MonoBehaviour
 
     private void InitInteractableObject()
     {
-        //Fortest
-        InitInterior();
-        //Fortest
         InitCounter();
         InitFoodPickupCounter();
         InitTrayReturnCounter();
@@ -134,7 +142,7 @@ public class GameManager : MonoBehaviour
     }
 
     //ForTest
-    private void InitInterior()
+    private void InitInteriorDictionary()
     {
         var dictionary = UserDataManager.Instance.CurrentUserData.InteriorSaveData;
         var table = DataTableManager.Get<InteriorDataTable>(DataTableIds.Interior.ToString());

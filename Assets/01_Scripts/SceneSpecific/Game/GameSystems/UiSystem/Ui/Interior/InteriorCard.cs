@@ -15,19 +15,22 @@ public class InteriorCard : MonoBehaviour
     [SerializeField] private Image icon;
     [SerializeField] private Button buyButton;
     [SerializeField] private TextMeshProUGUI buyButtonText;
-    
-    [SerializeField] private GameObject authorizationCheckPanel;
     [SerializeField] private Button authorizationCheckButton;
-
+    [SerializeField] private GameObject authorityCheckPanel;
+    
+    
     private bool isGoldEnough;
     private bool isSatisfyRequirements;
+    private InteriorUpgradePopup upgradePopup;
+    private InteriorUpgradeAuthorityNotifyPopup upgradeAuthorityNotifyPopup;
+
     
     public bool IsStateChanged
     {
         get
         {
             var userData = UserDataManager.Instance.CurrentUserData;
-            bool isGoldConditionChanged = isGoldEnough != (userData.Gold >= data.SellingCost);
+            bool isGoldConditionChanged = isGoldEnough != (userData.Gold >= data.GetSellingCost());
             bool isRequirementsChanged = isSatisfyRequirements != 
                                          (userData.CurrentRankPoint >= data.Requirements1 && 
                                           (data.Requirements2 == 0 || userData.InteriorSaveData[data.Requirements2] != 0));
@@ -40,14 +43,15 @@ public class InteriorCard : MonoBehaviour
     public InteriorData Data => data;
     public bool IsInteractable => buyButton.interactable;
 
-    public void Init(InteriorData data, Action<InteriorData> onBuy)
+    public void Init(InteriorData data,InteriorUpgradePopup popup, InteriorUpgradeAuthorityNotifyPopup authorityNotifyPopup)
     {
         this.data = data;
+        this.upgradePopup = popup;
+        this.upgradeAuthorityNotifyPopup = authorityNotifyPopup;
         nameText.text = data.Name;
         
         buyButton.onClick.RemoveAllListeners();
-        buyButton.onClick.AddListener(() => onBuy(data));
-        buyButton.onClick.AddListener(UpdateInteractable);
+        buyButton.onClick.AddListener(OnButtonClick);
         authorizationCheckButton.onClick.RemoveAllListeners();
         authorizationCheckButton.onClick.AddListener(OnAuthorizationCheckButtonTouched);
         UpdateInteractable();
@@ -58,7 +62,7 @@ public class InteriorCard : MonoBehaviour
         var userData = UserDataManager.Instance.CurrentUserData;
         
         int upgradeLevel = userData.InteriorSaveData[data.InteriorID];
-        int cost = data.GetSellingCost(upgradeLevel);
+        int cost = data.GetSellingCost();
         
         costText.text = cost.ToString();
         isGoldEnough = userData.Gold >= cost;
@@ -69,6 +73,26 @@ public class InteriorCard : MonoBehaviour
         UpdateButtonAndText(upgradeLevel);
     }
 
+    private void OnButtonClick()
+    {
+        if (UserDataManager.Instance.CurrentUserData.InteriorSaveData[data.InteriorID] != 0)
+        {
+            upgradePopup.gameObject.SetActive(true);
+            upgradePopup.SetInfo(this);
+        }
+        else
+        {
+            OnBuy();
+        }
+    }
+
+    public void OnBuy()
+    {
+        UserDataManager.Instance.UpgradeInterior(data.InteriorID);
+        UserDataManager.Instance.ModifyGold(-data.SellingCost);
+        UpdateInteractable();
+    }
+    
     private bool CheckRequirements(UserData userData)
     {
         return userData.CurrentRankPoint >= data.Requirements1 &&
@@ -77,7 +101,7 @@ public class InteriorCard : MonoBehaviour
 
     private void UpdatePanels()
     {
-        authorizationCheckPanel.SetActive(!isSatisfyRequirements);
+        authorityCheckPanel.SetActive(!isSatisfyRequirements);
         costPanel.SetActive(isSatisfyRequirements);
     }
 
@@ -86,7 +110,7 @@ public class InteriorCard : MonoBehaviour
         if (isSatisfyRequirements)
         {
             //FIXME:스트링테이블로 분리
-            buyButtonText.text = upgradeLevel == 0 ? "구매" : "업그레이드";
+            buyButtonText.text = upgradeLevel == 0 ? "구매" : "신상품";
             //
             
             buyButton.interactable = isGoldEnough;
@@ -96,6 +120,7 @@ public class InteriorCard : MonoBehaviour
 
     public void OnAuthorizationCheckButtonTouched()
     {
-        
+        upgradeAuthorityNotifyPopup.SetRequirementText(data);
+        upgradeAuthorityNotifyPopup.gameObject.SetActive(true);
     }
 }

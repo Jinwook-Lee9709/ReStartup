@@ -97,6 +97,7 @@ public abstract class InteractWorkBase : WorkBase
 
     public override void OnWorkStopped()
     {
+        worker = null;
         workManager.AddStoppedWork(workType, this);
         if (workPhase == WorkPhase.Working) target.OnInteractCanceled();
     }
