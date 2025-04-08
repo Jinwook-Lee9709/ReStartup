@@ -18,14 +18,33 @@ public class WorkCooking : InteractWorkBase
     {
         this.context = context;
     }
+    
+    public override void OnWorkRegistered()
+    {
+        base.OnWorkRegistered();
 
+        var iconHandle = Addressables.LoadAssetAsync<Sprite>(context.Consumer.needFood.IconID);
+        var backgroundHandle = Addressables.LoadAssetAsync<Sprite>(Strings.Bubble);
+
+        iconHandle.WaitForCompletion();
+        backgroundHandle.WaitForCompletion();
+        
+        Sprite iconSprite = iconHandle.Result;
+        Sprite backgroundSprite = backgroundHandle.Result;
+        
+        var table = target as CookingStation;
+        table.ShowIcon(IconPivots.Consumer, iconSprite, backgroundSprite, true);
+    }
+    
     protected override void HandlePostInteraction()
     {
         var workFlowController = context.WorkFlowController;
 
         if (!HandleIfCounterUnavailable(workFlowController))
             return;
+        
         var station = target as CookingStation;
+        station.HideIcon();
         workFlowController.ReturnCookingStation(target as CookingStation);
 
         SetNextWork(workFlowController);
@@ -38,7 +57,6 @@ public class WorkCooking : InteractWorkBase
             workFlowController.RegisterFoodToHall(context, target as CookingStation);
             return false; // 더 이상 진행할 필요 없음
         }
-
         return true;
     }
 

@@ -39,6 +39,7 @@ public class WorkManager
 
     public void AddWork(WorkBase work, Consumer consumer = null)
     {
+        work.OnWorkRegistered();
         var isAssigned = workerManager.AssignWork(work);
         if (isAssigned)
             assignedWorks[work.workType].Add(work);

@@ -20,7 +20,6 @@ public class ReviewManager : MonoBehaviour
     {
         AdvertisementManager.Instance.Init();
         UserDataManager.Instance.OnReviewCntFullEvent += AddReview;
-        //AdvertisementManager.Instance.CreateBannerAd();
     }
 
     private void AddReview(bool isBest)

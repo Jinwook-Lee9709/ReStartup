@@ -106,16 +106,19 @@ public class Player : WorkerBase, IInteractor, ITransportable
         var hit = Physics2D.RaycastAll(worldPoint, Vector2.zero);
         for (var i = 0; i < hit.Length; i++)
             if (hit[i].collider != null)
+            {
                 if (hit[i].collider.CompareTag(Strings.InteractableObjectTag))
                 {
                     targetObject = hit[i].collider.gameObject;
                     break;
                 }
+            }
+              
 
         if (targetObject != null)
         {
-            var interactableObject = targetObject.GetComponent<InteractableObjectBase>();
-            InteractableObjectTouched(interactableObject);
+            var listener = targetObject.GetComponent<IconTouchListener>();
+            InteractableObjectTouched(listener.InteractableObject);
         }
     }
 

@@ -26,6 +26,7 @@ public class WorkGotoCookingStation : InteractWorkBase
         worker.ClearWork();
 
         var station = target as CookingStation;
+        station.HideIcon();
         context.WorkFlowController.ReturnCookingStation(station);
 
         var work = new WorkFoodToHall(workManager, WorkType.Kitchen);
