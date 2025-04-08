@@ -45,6 +45,8 @@ public class UserData
         { ThemeIds.Theme2, new Dictionary<CookwareType, int>() },
         { ThemeIds.Theme3, new Dictionary<CookwareType, int>() }
     };
+    
+    public Dictionary<int, int> InteriorSaveData { get; set; } = new();
 
 }
 

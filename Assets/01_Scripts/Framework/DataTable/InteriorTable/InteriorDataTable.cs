@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InteriorDataTable : DataTable
+public class InteriorDataTable : DataTable, IEnumerable<InteriorData>
 {
     public static readonly string FileName = "interiortable";
     
@@ -21,5 +21,15 @@ public class InteriorDataTable : DataTable
         {
             Data.TryAdd(row.InteriorID, row);
         }
+    }
+
+    public IEnumerator<InteriorData> GetEnumerator()
+    {
+        return Data.Values.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }
