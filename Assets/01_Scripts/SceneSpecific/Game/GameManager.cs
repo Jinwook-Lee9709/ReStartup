@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using NavMeshPlus.Components;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -79,6 +80,9 @@ public class GameManager : MonoBehaviour
 
     private void InitInteractableObject()
     {
+        //Fortest
+        InitInterior();
+        //Fortest
         InitCounter();
         InitFoodPickupCounter();
         InitTrayReturnCounter();
@@ -129,6 +133,24 @@ public class GameManager : MonoBehaviour
         WorkFlowController.SetSinkingStation(station);
     }
 
+    //ForTest
+    private void InitInterior()
+    {
+        var dictionary = UserDataManager.Instance.CurrentUserData.InteriorSaveData;
+        var table = DataTableManager.Get<InteriorDataTable>(DataTableIds.Interior.ToString());
+        var list = table.Where(x=>x.RestaurantType.Equals((int)currentTheme)).ToList();
+        foreach (var data in list)
+        {
+            dictionary.Add(data.InteriorID, 0);
+        }
+
+        dictionary[401101] = 1;
+        dictionary[401109] = 1;
+        dictionary[401201] = 1;
+        dictionary[401202] = 1;
+    }
+    //ForTest
+    
     #endregion
     
 }

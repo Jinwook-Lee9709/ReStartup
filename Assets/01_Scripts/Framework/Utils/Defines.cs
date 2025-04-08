@@ -135,6 +135,15 @@ public enum CookwareType
     KitchenTable,
 }
 
+public enum InteriorCategory
+{
+    테이블,
+    카운터,
+    인테리어,
+    조리대,
+    주방가구,
+}
+
 public enum InteriorEffectType
 {
     None,

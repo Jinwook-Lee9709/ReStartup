@@ -8,8 +8,9 @@ public class UserDataManager : Singleton<UserDataManager>
 {
     private UserData currentUserData = new();
 
-    public event Action<int?> getGoldAction;
-    public event Action<int> setRankingPointAction;
+    public event Action<int?> ChangeGoldAction;
+    public event Action<int, int> OnInteriorUpgradeEvent;
+    public event Action<int> SetRankingPointAction;
     public event Action<bool> OnReviewCntFullEvent;
 
     UserDataManager()
@@ -63,9 +64,8 @@ public class UserDataManager : Singleton<UserDataManager>
 
     public IEnumerator OnGoldUp(Consumer consumer)
     {
-        CurrentUserData.Gold += consumer.needFood.SellingCost;
-        getGoldAction.Invoke(CurrentUserData.Gold);
-        setRankingPointAction.Invoke(1000);
+        ModifyGold(consumer.needFood.SellingCost);
+        SetRankingPointAction?.Invoke(1000);
 
         yield return new WaitForSeconds(0.5f);
 
@@ -76,6 +76,19 @@ public class UserDataManager : Singleton<UserDataManager>
         }
     }
 
+    public void ModifyGold(int gold)
+    {
+        CurrentUserData.Gold += gold;
+        ChangeGoldAction?.Invoke(CurrentUserData.Gold);
+        
+    }
+
+    public void UpgradeInterior(int interiorId)
+    {
+        CurrentUserData.InteriorSaveData[interiorId]++;
+        int upgradeCount = CurrentUserData.InteriorSaveData[interiorId];
+        OnInteriorUpgradeEvent?.Invoke(interiorId, upgradeCount);
+    }
     public void AddConsumerCnt(bool isPositive)
     {
         if (isPositive)

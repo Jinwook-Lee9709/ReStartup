@@ -130,6 +130,7 @@ public class WorkManager
     {
         var workType = work.workType;
         workQueues[workType].Remove(work);
+        stoppedWorkQueues[workType].Remove(work);
     }
     
 
