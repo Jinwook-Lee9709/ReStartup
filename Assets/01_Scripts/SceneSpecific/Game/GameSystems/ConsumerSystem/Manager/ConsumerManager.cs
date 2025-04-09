@@ -88,6 +88,17 @@ public class ConsumerManager : MonoBehaviour
 
         partner.pairData = owner.pairData;
         partner.FSM.CurrentStatus = ConsumerFSM.ConsumerState.None;
+
+        if (owner.FSM.consumerData.GuestType == GuestType.BadGuest)
+        {
+            var withoutBadTypeList = DataTableManager.Get<ConsumerDataTable>(DataTableIds.Consumer.ToString()).GetConsumerWithoutBadType(ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme);
+            owner.FSM.consumerData = withoutBadTypeList[UnityEngine.Random.Range(0, withoutBadTypeList.Count)];
+        }
+        else if (partner.FSM.consumerData.GuestType == GuestType.BadGuest)
+        {
+            var withoutBadTypeList = DataTableManager.Get<ConsumerDataTable>(DataTableIds.Consumer.ToString()).GetConsumerWithoutBadType(ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme);
+            partner.FSM.consumerData = withoutBadTypeList[UnityEngine.Random.Range(0, withoutBadTypeList.Count)];
+        }
     }
 
     private IEnumerator SpawnCoroutine()
@@ -202,8 +213,17 @@ public class ConsumerManager : MonoBehaviour
             }
             if (waitOutsideConsumerCnt > 0)
             {
-                SpawnConsumer();
-                waitOutsideConsumerCnt--;
+                int pairProb = UnityEngine.Random.Range(0, 100);
+                if (pairProb > tempPairProb && waitOutsideConsumerCnt >= 2)
+                {
+                    SpawnPairConsumer();
+                    waitOutsideConsumerCnt -= 2;
+                }
+                else
+                {
+                    SpawnConsumer();
+                    waitOutsideConsumerCnt--;
+                }
                 UpdateWaitingText();
             }
         }
