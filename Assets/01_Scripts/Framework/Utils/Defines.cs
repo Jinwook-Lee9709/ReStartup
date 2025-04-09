@@ -166,6 +166,8 @@ public static class Strings
     public static readonly string GameManagerTag = "GameManager";
     public static readonly string InteractableObjectTag = "InteractableObject";
     
+    public static readonly string WorkDurationRatioSO = "WorkDurationRatioSO";
+    
     public static readonly string CounterName = "Counter";
     public static readonly string FoodPickupCounterName = "FoodPickupCounter";
     public static readonly string CookingStation = "CookingStation";

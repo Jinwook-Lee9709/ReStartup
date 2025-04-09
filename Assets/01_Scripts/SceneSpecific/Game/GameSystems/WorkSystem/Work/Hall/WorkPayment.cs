@@ -5,8 +5,9 @@ public class WorkPayment : InteractWorkBase
 {
     private MainLoopWorkContext context;
 
-    public WorkPayment(WorkManager workManager, WorkType workType, float interactionTime = 1) : base(workManager, workType, interactionTime)
+    public WorkPayment(WorkManager workManager, WorkType workType) : base(workManager, workType)
     {
+        interactTime = workManager.workDurationRatio.WorkDurationRatio[GetType().Name];
     }
     
     public override void OnWorkRegistered()

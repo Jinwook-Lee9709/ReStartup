@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 public class WorkManager
 {
+    public WorkDurationRatioSO workDurationRatio;
     private WorkerManager workerManager;
     private Dictionary<WorkType, List<WorkBase>> assignedWorks;
     private Dictionary<WorkType, SortedSet<WorkBase>> stoppedWorkQueues;
@@ -15,6 +17,7 @@ public class WorkManager
     {
         SetWorkerManager(workerManager);
         InitContainers();
+        workDurationRatio = Addressables.LoadAssetAsync<WorkDurationRatioSO>(Strings.WorkDurationRatioSO).WaitForCompletion();
     }
 
     private void SetWorkerManager(WorkerManager workerManager)

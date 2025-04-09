@@ -4,14 +4,14 @@ using UnityEngine;
 
 public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, IComparable<InteractableObjectBase>
 {
-    
     //References
     [SerializeField] private List<InteractPivot> interactablePoint;
     
     //LocalVariables
     [SerializeField] private float interactProgress;
     private InteractWorkBase currentWork;
-    private float interactionSpeed;
+    private float interactionSpeed = 1f;
+    private float calculatedInterationSpeed;
 
     //Properties
     public int Id { get; private set; }
@@ -43,12 +43,12 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
 
     public void OnInteractStarted(IInteractor interactor)
     {
-        interactionSpeed = CalculateInteractionSpeed(interactor);
+        calculatedInterationSpeed = CalculateInteractionSpeed(interactor);
     }
 
     public InteractStatus OnInteract(IInteractor interactor)
     {
-        var interactionResult = IncreaseProgress(interactionSpeed);
+        var interactionResult = IncreaseProgress();
 
         OnInteractedEvent?.Invoke(interactProgress);
 
@@ -80,6 +80,11 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
         this.Id = id;
     }
 
+    public void SetInteractionSpeed(float speed)
+    {
+        interactionSpeed = speed;
+    }
+
     public void ClearWork()
     {
         currentWork = null;
@@ -87,15 +92,15 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
         interactProgress = 0f;
     }
 
-    private bool IncreaseProgress(float interactionSpeed)
+    private bool IncreaseProgress()
     {
-        if (interactionSpeed == 0)
+        if (calculatedInterationSpeed == 0)
         {
             interactProgress = 1;
             return true;
         }
 
-        interactProgress += interactionSpeed * Time.deltaTime;
+        interactProgress += calculatedInterationSpeed * Time.deltaTime;
 
         return interactProgress >= 1;
     }
@@ -105,7 +110,7 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
         if (interactor == null || currentWork.InteractTime == 0)
             return 0;
 
-        return 1 / interactor.InteractionSpeed / currentWork.InteractTime;
+        return 1 / interactor.InteractionSpeed / currentWork.InteractTime / interactionSpeed;
     }
 
     public abstract bool ShowIcon(IconPivots pivot, Sprite icon, Sprite background = null, bool flipBackGround = false);

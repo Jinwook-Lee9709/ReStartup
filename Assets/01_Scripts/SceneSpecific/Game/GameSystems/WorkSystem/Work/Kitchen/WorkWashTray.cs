@@ -7,8 +7,9 @@ public class WorkWashTray : InteractWorkBase
 {
     private WorkFlowController controller;
     
-    public WorkWashTray(WorkManager workManager, WorkType workType, float interactTime = 1, bool isInteruptible = true, bool isStoppable = true) : base(workManager, workType, interactTime, isInteruptible, isStoppable)
+    public WorkWashTray(WorkManager workManager, WorkType workType, bool isInteruptible = true, bool isStoppable = true) : base(workManager, workType, isInteruptible: isInteruptible, isStoppable:isStoppable)
     {
+        interactTime = workManager.workDurationRatio.WorkDurationRatio[GetType().Name];
     }
     
     public void SetContext(WorkFlowController controller)

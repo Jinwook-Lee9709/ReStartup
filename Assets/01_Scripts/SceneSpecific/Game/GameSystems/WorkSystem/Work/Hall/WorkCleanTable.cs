@@ -7,8 +7,9 @@ public class WorkCleanTable : InteractWorkBase
 {
     private WorkFlowController controller;
 
-    public WorkCleanTable(WorkManager workManager, WorkType workType, float interactionTime = 1) : base(workManager, workType, interactionTime)
+    public WorkCleanTable(WorkManager workManager, WorkType workType) : base(workManager, workType)
     {
+        interactTime = workManager.workDurationRatio.WorkDurationRatio[GetType().Name];
     }
 
     public void SetContext(WorkFlowController controller)

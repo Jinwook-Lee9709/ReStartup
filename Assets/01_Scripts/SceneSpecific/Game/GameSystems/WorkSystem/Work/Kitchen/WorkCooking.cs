@@ -10,8 +10,9 @@ public class WorkCooking : InteractWorkBase
 
     private ITransportable transformer;
 
-    public WorkCooking(WorkManager workManager, WorkType workType, float interactionTime = 1) : base(workManager, workType, interactionTime)
+    public WorkCooking(WorkManager workManager, WorkType workType) : base(workManager, workType)
     {
+        interactTime = workManager.workDurationRatio.WorkDurationRatio[GetType().Name];
     }
 
     public void SetContext(MainLoopWorkContext context)

@@ -7,19 +7,26 @@ public class InteriorManager
 {
     private GameManager gameManager;
     private WorkStationManager workStationManager;
+    private InteriorDataTable interiorTable;
+    private CookwareDataTable cookwareTable;
 
     public void Init(GameManager gameManager)
     {
         this.gameManager = gameManager;
         this.workStationManager = gameManager.WorkStationManager;
+        UserDataManager.Instance.OnInteriorUpgradeEvent += OnInteriorUpgrade;
+    }
+
+    public void Start()
+    {
         InitTable();
         InitCookwares();
-        UserDataManager.Instance.OnInteriorUpgradeEvent += OnInteriorUpgrade;
     }
     
     public void InitTable()
     {
-        var interiorTable = DataTableManager.Get<InteriorDataTable>(DataTableIds.Interior.ToString());
+        interiorTable = DataTableManager.Get<InteriorDataTable>(DataTableIds.Interior.ToString());
+        cookwareTable = DataTableManager.Get<CookwareDataTable>(DataTableIds.Cookware.ToString());
         var tableQuery = interiorTable.Where(x => x.RestaurantType == (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme && x.Category == InteriorCategory.테이블);
         var interiorUpgradeDictionary = UserDataManager.Instance.CurrentUserData.InteriorSaveData;
         foreach (var item in tableQuery)
@@ -28,35 +35,33 @@ public class InteriorManager
             if (level != 0)
             {
                 workStationManager.AddTable(item.InteriorID % 10);
+                workStationManager.UpdateTable(item, level);
             }
         }
     }
     
     public void InitCookwares()
     {
-        var cookwareTable = DataTableManager.Get<CookwareDataTable>(DataTableIds.Cookware.ToString());
         var interiorUpgradeDictionary = UserDataManager.Instance.CurrentUserData.InteriorSaveData;
         var cookwareQuery = cookwareTable.Where(x => x.RestaurantType == (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme);
         
         foreach (var item in cookwareQuery)
         {
-            if (interiorUpgradeDictionary[item.InteriorID] != 0)
+            int upgradeLevel = interiorUpgradeDictionary[item.InteriorID];
+            if (upgradeLevel != 0)
             {
                 workStationManager.AddCookingStation(item.CookwareType, item.CookwareNB);
+                workStationManager.UpdateCookingStation(interiorTable.GetData(item.InteriorID), upgradeLevel);
             }
         }
     }
     
     private void OnInteriorUpgrade(int interiorId, int level)
     {
-        var cookwareTable = DataTableManager.Get<CookwareDataTable>(DataTableIds.Cookware.ToString());
-        var interiorTable = DataTableManager.Get<InteriorDataTable>(DataTableIds.Interior.ToString());
         bool isCurrentThemeCookware = cookwareTable
             .Where(x => x.RestaurantType == (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme)
             .Any(x => x.InteriorID == interiorId);
-        bool isCurrentThemeTable = interiorTable
-            .Where(x => x.RestaurantType == (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme)
-            .Any(x => x.InteriorID == interiorId && x.Category == InteriorCategory.테이블);
+
         if (isCurrentThemeCookware)
         {
             if (level == 1)
@@ -64,14 +69,29 @@ public class InteriorManager
                 var data = cookwareTable.GetData(interiorId);
                 workStationManager.AddCookingStation(data.CookwareType, data.CookwareNB);
             }
-        }
+            else
+            {
+                workStationManager.UpdateCookingStation(interiorTable.GetData(interiorId), level);
+            }
 
+            return;
+        }
+        
+        bool isCurrentThemeTable = interiorTable
+            .Where(x => x.RestaurantType == (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme)
+            .Any(x => x.InteriorID == interiorId && x.Category == InteriorCategory.테이블);
         if (isCurrentThemeTable)
         {
             if (level == 1)
             {
                 workStationManager.AddTable(interiorId % 10);
             }
+            else
+            {
+                workStationManager.UpdateTable(interiorTable.GetData(interiorId), level);
+            }
+
+            return;
         }
     }
 

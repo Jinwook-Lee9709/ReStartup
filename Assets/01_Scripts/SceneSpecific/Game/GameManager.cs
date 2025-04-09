@@ -79,7 +79,9 @@ public class GameManager : MonoBehaviour
     public void Start()
     {
         WorkStationManager.BakeNavMesh();
+        InteriorManager.Start();
         WorkerManager.Start();
+        
     }
 
     #region InitGameScene
