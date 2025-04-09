@@ -25,12 +25,14 @@ public class WorkFoodToTable : InteractWorkBase
         var table = target as Table;
         table.ClearWork();
 
-        if (worker == null)
-            return;
-        var transporter = worker as ITransportable;
-        var food = transporter.HandPivot.GetChild(0).GetComponent<FoodObject>();
-        if (food != null)
-            food.Release();
+        if (worker != null)
+        {
+            var transporter = worker as ITransportable;
+            var food = transporter.HandPivot.GetChild(0).GetComponent<FoodObject>();
+            if (food != null)
+                food.Release();
+        }
         base.OnWorkCanceled();
+    
     }
 }

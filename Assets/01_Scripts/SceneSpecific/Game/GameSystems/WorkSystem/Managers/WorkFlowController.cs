@@ -121,7 +121,6 @@ public class WorkFlowController
         work.SetInteractable(table);
         work.SetContext(this, isPair);
         table.SetWork(work);
-   
 
         workManager.AddWork(work);
     }
