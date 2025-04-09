@@ -8,6 +8,7 @@ public class UiManager : MonoBehaviour
     public GameObject uiUpgrade;
     public GameObject uiEmployeeHp;
     public GameObject uiInterior;
+    public GameObject uiPromotion;
     public IngameGoodsUi inGameUi;
 
     public void OnClickButtonSetAppsUi()
@@ -26,6 +27,7 @@ public class UiManager : MonoBehaviour
     {
         uiUpgrade.SetActive(false);
         uiApps.SetActive(false);
+        uiPromotion.SetActive(false);
         uiReview.SetActive(true);
     }
 
@@ -69,5 +71,13 @@ public class UiManager : MonoBehaviour
     public void OnClickButtonOpenInteriorUI()
     {
         uiInterior.SetActive(true);
+    }
+    public void OnClickButtonOpenPromotionUI()
+    {
+        uiPromotion.SetActive(true);
+    }  
+    public void OnClickButtonExitPromotionUI()
+    {
+        uiPromotion.SetActive(false);
     }
 }

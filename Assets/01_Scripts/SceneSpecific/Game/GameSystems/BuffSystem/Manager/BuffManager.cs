@@ -1,10 +1,12 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BuffManager : MonoBehaviour
 {
     private readonly Dictionary<BuffType, Buff> buffs = new();
-
+    [SerializeField] private GameObject buffPopupPrefab;
+    [SerializeField] private GameObject popupParent;
     private void Start()
     {
     }
@@ -16,39 +18,102 @@ public class BuffManager : MonoBehaviour
 
         foreach (var buff in buffs.Values)
         {
-            buff.RemainBuffTime -= Time.deltaTime;
-            if (buff.RemainBuffTime < 0)
+            buff.remainBuffTime -= Time.deltaTime;
+            if (buff.remainBuffTime < 0)
             {
-                buff.IsOnBuff = false;
-                buffs.Remove(buff.Type);
+                buff.isOnBuff = false;
+                buffs.Remove(buff.BuffType);
                 Debug.Log("Buff Off");
                 return;
             }
         }
     }
-
-    private void StartBuff(Buff newBuff)
+    public void BuffOverridePopup(Buff newBuff, Action limitCountAction, bool needAd = false)
     {
-        if (buffs.ContainsKey(newBuff.Type))
-            buffs[newBuff.Type] = newBuff;
-        else
-            buffs.Add(newBuff.Type, newBuff);
+        var buffPopup = Instantiate(buffPopupPrefab, popupParent.transform, false);
+        buffPopup.GetComponent<BuffOverrideAcceptPopup>().needAd = needAd;
+        buffPopup.GetComponent<BuffOverrideAcceptPopup>().Init(buffs[newBuff.BuffType], newBuff, () =>
+        {
+            buffs[newBuff.BuffType] = newBuff;
+            limitCountAction?.Invoke();
+        });
     }
 
-    public T GetBuff<T>(BuffType type) where T : Buff
+    public void StartBuff(Buff newBuff, Action limitCountAction = null, bool needAd = false)
+    {
+        if (ContainType(newBuff.BuffType))
+        {
+            if (ContainID(newBuff))
+            {
+                ExtendBuffTimer(newBuff, () => limitCountAction?.Invoke(), needAd);
+            }
+            else
+            {
+                BuffOverridePopup(newBuff, () => limitCountAction?.Invoke(), needAd);
+            }
+        }
+        else
+        {
+            if (needAd)
+            {
+                AdvertisementManager.Instance.ShowRewardedAd(() =>
+                {
+                    buffs[newBuff.BuffType] = newBuff;
+                    limitCountAction?.Invoke();
+                });
+            }
+            else
+            {
+                buffs[newBuff.BuffType] = newBuff;
+                limitCountAction?.Invoke();
+            }
+        }
+    }
+
+    public void StartBuff(Buff buff)
+    {
+        buffs[buff.BuffType] = buff;
+    }
+
+    public Buff GetBuff(BuffType type)
     {
         if (!buffs.ContainsKey(type))
             return null;
-        return buffs[type] as T;
+        return buffs[type];
+    }
+
+    public bool ContainType(BuffType type)
+    {
+        return buffs.ContainsKey(type);
+    }
+    public bool ContainID(Buff buff)
+    {
+        return buffs[buff.BuffType].BuffID == buff.BuffID;
+    }
+    public void ExtendBuffTimer(Buff buff, Action limitCountAction, bool needAd)
+    {
+        if (needAd)
+        {
+            AdvertisementManager.Instance.ShowRewardedAd(() =>
+            {
+                buffs[buff.BuffType].remainBuffTime += buff.remainBuffTime;
+                limitCountAction.Invoke();
+            });
+        }
+        else
+        {
+            buffs[buff.BuffType].remainBuffTime += buff.remainBuffTime;
+            limitCountAction.Invoke();
+        }
     }
 
     [ContextMenu("TempBuffOn!!!")]
     public void TempBuffOn()
     {
-        InfluencerBuff buff = new();
-        buff.IsOnBuff = true;
-        buff.RemainBuffTime = 5f;
+        var buffDatas = DataTableManager.Get<BuffDataTable>("Buff");
+        var buff = buffDatas.GetBuffForBuffID(990100);
+        buff.Init();
         StartBuff(buff);
-        Debug.Log("Buff On");
+        Debug.Log($"Buff On{buff.BuffType.ToString()}");
     }
 }
