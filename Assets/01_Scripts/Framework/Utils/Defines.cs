@@ -100,6 +100,7 @@ public static class Constants
     public static readonly float PLAYER_INTERACTION_SPEED = 3f;
     public static readonly int HEALTH_DECREASE_AMOUNT_ONWORKFINISHED = 2;
     public static readonly int HEALTH_DECREASE_AMOUNT_ONTIMEFINISHED = 1;
+    public static readonly int DEFAULT_SINKINGSTATION_CAPACITY = 5;
 }
 
 public static class Variables
@@ -142,6 +143,7 @@ public enum InteriorCategory
     인테리어,
     조리대,
     주방가구,
+    싱크대,
 }
 
 public enum InteriorEffectType

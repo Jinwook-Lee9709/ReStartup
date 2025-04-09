@@ -28,6 +28,12 @@ public class SinkingStation : InteractableObjectBase
         ReferencingManagers();
     }
 
+    public void ChangeCapacity(int capacity)
+    {
+        trayCapacity = capacity;
+        UpdateCountText();
+    }
+
     private void ReferencingManagers()
     {
         workManager = ServiceLocator.Instance.GetSceneService<GameManager>().WorkManager;

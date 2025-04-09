@@ -19,6 +19,7 @@ public class WorkStationManager
 
     Dictionary<int, Table> tables = new();
     Dictionary<CookwareType, Dictionary<int, CookingStation>> cookingStations = new();
+    SinkingStation sinkingStation;
 
     public TrayReturnCounter TrayReturnCounter => _trayReturnCounter;
 
@@ -67,7 +68,7 @@ public class WorkStationManager
         OnCookingStationInstantiated(obj, cookwareType, num - 1);
     }
 
-    public void UpdateCookingStation(InteriorData data, int level)
+    public void UpgradeCookingStation(InteriorData data, int level)
     {
         var table = DataTableManager.Get<CookwareDataTable>(DataTableIds.Cookware.ToString());
         var cookwareData = table.GetData(data.InteriorID);
@@ -86,7 +87,7 @@ public class WorkStationManager
         cookingStation.GetComponentInChildren<TextMeshPro>().text = cookwareType.ToString();
         workFlowController.AddCookingStation(cookingStation);
         cookingStations[cookwareType].Add(num, cookingStation);
-        
+
         UpdateNavMesh();
     }
 
@@ -96,7 +97,7 @@ public class WorkStationManager
         OnTableInstantiated(obj, num - 1);
     }
 
-    public void UpdateTable(InteriorData data, int level)
+    public void UpgradeTable(InteriorData data, int level)
     {
         float interactionSpeed = (1 - data.EffectQuantity * (level - 1) / 100f);
         tables[data.InteriorID % 10 - 1].SetInteractionSpeed(interactionSpeed);
@@ -109,9 +110,27 @@ public class WorkStationManager
         table.SetId(num);
         workFlowController.AddTable(table);
         tables.Add(num, table);
-        
+
         UpdateNavMesh();
     }
+
+    public void AddSinkingStation()
+    {
+        var sinkingStationPivot = objectPivotManager.GetSinkPivot();
+        var handle = Addressables.InstantiateAsync(Strings.SinkingStation);
+        handle.WaitForCompletion();
+        var station = handle.Result.GetComponent<SinkingStation>();
+        station.transform.SetParentAndInitialize(sinkingStationPivot);
+        workFlowController.SetSinkingStation(station);
+        sinkingStation = station;
+    }
+
+    public void UpgradeSinkingStation(InteriorData data, int level)
+    {
+        int capacity = Constants.DEFAULT_SINKINGSTATION_CAPACITY + data.EffectQuantity * (level - 1); 
+        sinkingStation.ChangeCapacity(capacity);
+    }
+
 
     private void UpdateNavMesh()
     {

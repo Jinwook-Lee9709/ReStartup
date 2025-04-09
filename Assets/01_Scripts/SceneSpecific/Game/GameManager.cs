@@ -97,7 +97,6 @@ public class GameManager : MonoBehaviour
         InitCounter();
         InitFoodPickupCounter();
         InitTrayReturnCounter();
-        InitSinkingStation();
     }
 
     private void InitCounter()
@@ -132,16 +131,6 @@ public class GameManager : MonoBehaviour
         var counter = handle.Result.GetComponent<TrayReturnCounter>();
         counter.transform.SetParentAndInitialize(trayReturnCounterPivot);
         WorkFlowController.SetTrayReturnCounter(counter);
-    }
-
-    private void InitSinkingStation()
-    {
-        var sinkingStationPivot = ObjectPivotManager.GetSinkPivot();
-        var handle = Addressables.InstantiateAsync(Strings.SinkingStation);
-        handle.WaitForCompletion();
-        var station = handle.Result.GetComponent<SinkingStation>();
-        station.transform.SetParentAndInitialize(sinkingStationPivot);
-        WorkFlowController.SetSinkingStation(station);
     }
 
     //ForTest
