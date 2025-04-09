@@ -16,7 +16,7 @@ public class ConsumerManager : MonoBehaviour
     [SerializeField] private int maxWaitingSeatCnt;
     [SerializeField] private GameObject consumerPrefab;
     [SerializeField] public Transform spawnPoint;
-    [SerializeField] private int tempPairProb = 100;
+    private int tempPairProb = 50;
     [SerializeField] private TextMeshProUGUI waitingText;
 
     public WorkFlowController workFlowController;
@@ -56,21 +56,18 @@ public class ConsumerManager : MonoBehaviour
     [ContextMenu("Consumer Spawn")]
     public void SpawnConsumer()
     {
-        var consumer1 = consumerPool.Get().GetComponent<Consumer>();
-
-        //bool isPair = true;
-        //if (isPair)
-        //{
-        //    var consumer2 = consumerPool.Get().GetComponent<Consumer>();
-        //    SetPairData(consumer1, consumer2);
-        //    AfterSpawnInit(consumer1);
-        //}
-        //else
-        //{
-        AfterSpawnInit(consumer1);
-        //}
+        var consumer = consumerPool.Get().GetComponent<Consumer>();
+        AfterSpawnInit(consumer);
     }
 
+    [ContextMenu("Pair Consumer Spawn")]
+    public void SpawnPairConsumer()
+    {
+        var consumer1 = consumerPool.Get().GetComponent<Consumer>();
+        var consumer2 = consumerPool.Get().GetComponent<Consumer>();
+        SetPairData(consumer1, consumer2);
+        AfterSpawnInit(consumer1);
+    }
     public bool CanSpawnConsumer()
     {
         return currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count < 3;
@@ -90,6 +87,7 @@ public class ConsumerManager : MonoBehaviour
         owner.pairData.partner = partner;
 
         partner.pairData = owner.pairData;
+        partner.FSM.CurrentStatus = ConsumerFSM.ConsumerState.None;
     }
 
     private IEnumerator SpawnCoroutine()
@@ -107,7 +105,13 @@ public class ConsumerManager : MonoBehaviour
                     }
                 }
                 if (cnt < 9)
-                    SpawnConsumer();
+                {
+                    int pairProb = UnityEngine.Random.Range(0, 100);
+                    if (pairProb < tempPairProb)
+                        SpawnConsumer();
+                    else
+                        SpawnPairConsumer();
+                }
             }
             else if (waitOutsideConsumerCnt < 99)
             {
@@ -124,7 +128,11 @@ public class ConsumerManager : MonoBehaviour
 
     public void OnEndMeal(Consumer consumer)
     {
-        workFlowController.OnEatComplete(consumer.currentTable);
+        if (consumer.pairData == null)
+            workFlowController.OnEatComplete(consumer.currentTable);
+        else if (consumer.pairData.owner == consumer)
+            workFlowController.OnEatComplete(consumer.currentTable, true);
+
         var cnt = workFlowController.AssignCashier(consumer);
         if (cnt != 0)
             consumer.GetComponent<NavMeshAgent>().SetDestination(
@@ -180,6 +188,13 @@ public class ConsumerManager : MonoBehaviour
             {
                 currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting][i].NextTargetTransform =
                     waitingConsumerSeats[i];
+                if (currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting][i].pairData != null)
+                {
+                    var ownerDst = currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting][i].GetComponent<NavMeshAgent>().destination;
+                    var partnerDst = new Vector3(ownerDst.x + 0.5f, ownerDst.y, ownerDst.z);
+                    currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting][i].pairData.partner.GetComponent<NavMeshAgent>()
+                        .SetDestination(partnerDst);
+                }
             }
             if (waitOutsideConsumerCnt > 0)
             {
@@ -271,6 +286,12 @@ public class ConsumerManager : MonoBehaviour
             consumer.NextTargetTransform =
                 waitingConsumerSeats[currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count];
             currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Add(consumer);
+            if (consumer.pairData != null)
+            {
+                var ownerDst = consumer.GetComponent<NavMeshAgent>().destination;
+                var partnerDst = new Vector3(ownerDst.x + 0.5f, ownerDst.y, ownerDst.z);
+                consumer.pairData.partner.GetComponent<NavMeshAgent>().SetDestination(partnerDst);
+            }
         }
     }
 

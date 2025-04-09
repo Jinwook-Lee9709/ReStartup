@@ -8,6 +8,7 @@ public class ConsumerFSM : MonoBehaviour
 {
     public enum ConsumerState
     {
+        None,
         Waiting,
         BeforeOrder,
         AfterOrder,
@@ -16,7 +17,7 @@ public class ConsumerFSM : MonoBehaviour
         Paying,
         Exit,
 
-        Disappointed
+        WaitingPairMealEnd,
     }
 
     public enum Satisfaction
@@ -84,18 +85,17 @@ public class ConsumerFSM : MonoBehaviour
                 case ConsumerState.BeforeOrder:
                     consumerManager.OnChangeConsumerState(consumer, ConsumerState.BeforeOrder);
                     consumerManager.OnWaitingLineUpdate(consumer);
-                    //if (consumer.pairData?.partner == consumer)
-                    //{
-                    //    break;
-                    //}
-                    //if (consumer.pairData?.owner == consumer)
-                    //{
-                    //    consumer.pairData.partner.FSM.CurrentStatus = ConsumerState.BeforeOrder;
-                    //    targetPivot = consumer.pairData.pairTable.InteractablePoints[2].position;
-                    //    consumer.pairData.partner.GetComponent<NavMeshAgent>().SetDestination(targetPivot);
-                    //}
-                    //targetPivot = consumer.pairData.pairTable.InteractablePoints[1].position;
+                    if (consumer.pairData?.partner == consumer)
+                    {
+                        break;
+                    }
                     var permission = InteractPermission.Consumer;
+                    if (consumer.pairData?.owner == consumer)
+                    {
+                        consumer.pairData.partner.FSM.CurrentStatus = ConsumerState.BeforeOrder;
+                        targetPivot = consumer.pairData.partner.currentTable.GetInteractablePoints(permission)[0].transform.position;
+                        consumer.pairData.partner.GetComponent<NavMeshAgent>().SetDestination(targetPivot);
+                    }
                     targetPivot = consumer.currentTable.GetInteractablePoints(permission)[0].transform.position;
                     agent.SetDestination(targetPivot);
                     break;
@@ -130,7 +130,7 @@ public class ConsumerFSM : MonoBehaviour
 
                     agent.SetDestination(consumerManager.spawnPoint.position);
                     break;
-                case ConsumerState.Disappointed:
+                case ConsumerState.WaitingPairMealEnd:
 
                     break;
             }
@@ -209,8 +209,38 @@ public class ConsumerFSM : MonoBehaviour
             eattingTimer += Time.deltaTime;
             yield return null;
         }
-
-        CurrentStatus = ConsumerState.WaitForPay;
+        if (consumer.pairData != null)
+        {
+            consumer.isEndMeal = true;
+            if (consumer.pairData.owner == consumer)
+            {
+                if(!consumer.pairData.partner.isEndMeal)
+                {
+                    CurrentStatus = ConsumerState.WaitingPairMealEnd;
+                }
+                else
+                {
+                    CurrentStatus = ConsumerState.WaitForPay;
+                    consumer.pairData.partner.FSM.CurrentStatus = ConsumerState.WaitForPay;
+                }
+            }
+            else if (consumer.pairData.partner == consumer)
+            {
+                if (!consumer.pairData.owner.isEndMeal)
+                {
+                    CurrentStatus = ConsumerState.WaitingPairMealEnd;
+                }
+                else
+                {
+                    CurrentStatus = ConsumerState.WaitForPay;
+                    consumer.pairData.owner.FSM.CurrentStatus = ConsumerState.WaitForPay;
+                }
+            }
+        }
+        else
+        {
+            CurrentStatus = ConsumerState.WaitForPay;
+        }
     }
 
     public void OnOrderComplete()
@@ -233,14 +263,15 @@ public class ConsumerFSM : MonoBehaviour
     {
         //���ڸ��� ���� ���ڸ��� �̵� �� �ֹ�.
         //������ �ֹ��� �޾ư��� �������� ����.
-        //if(consumer.pairData != null)
-        //{
-        //    if (agent.IsArrive(targetPivot))
-        //    {
-        //        OnSeatEvent?.Invoke(consumer);
-        //    }
-        //    return;
-        //}
+        if (consumer.pairData != null)
+        {
+            if (agent.IsArrive(targetPivot) && !isOnSeat)
+            {
+                isOnSeat = true;
+                OnSeatEvent?.Invoke(consumer);
+            }
+            return;
+        }
         if (agent.IsArrive(targetPivot) && !isOnSeat)
         {
             isOnSeat = true;
@@ -268,7 +299,8 @@ public class ConsumerFSM : MonoBehaviour
                 break;
             case var t when t < satisfactionChangeLimit[2]:
                 CurrentSatisfaction = Satisfaction.Low;
-                CurrentStatus = ConsumerState.Exit;
+                if(consumerData.GuestType == GuestType.BadGuest)
+                    CurrentStatus = ConsumerState.Exit;
                 break;
         }
     }

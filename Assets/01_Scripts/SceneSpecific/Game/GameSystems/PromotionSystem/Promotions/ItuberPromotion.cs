@@ -4,15 +4,8 @@ using UnityEngine;
 
 public class ItuberPromotion : PromotionBase
 {
-    public ItuberPromotion(PromotionBase promo)
+    public ItuberPromotion(PromotionBase promo) : base(promo)
     {
-        PromotionID = promo.PromotionID;
-        PromotionType = promo.PromotionType;
-        PromotionEffect = promo.PromotionEffect;
-        CostType = promo.CostType;
-        CostQty = promo.CostQty;
-        LimitBuy = promo.LimitBuy;
-        LimitAD = promo.LimitAD;
     }
 
     public override void Excute(BuffManager buffManager, ConsumerManager consumerManager, bool needAd)

@@ -113,8 +113,8 @@ public class WorkFlowController
 
     public void OnEatComplete(Table table, bool isPair = false)
     {
-        CreateDirtyOnTable(table);
-        CreateCleanTableWork(table);
+        CreateDirtyOnTable(table, isPair);
+        CreateCleanTableWork(table, isPair);
     }
     private void CreateCleanTableWork(Table table, bool isPair = false)
     {
@@ -122,15 +122,18 @@ public class WorkFlowController
         work.SetInteractable(table);
         work.SetContext(this, isPair);
         table.SetWork(work);
-        table.FoodToTray();
+   
+
         workManager.AddWork(work);
     }
 
-    private static void CreateDirtyOnTable(Table table)
+    private static void CreateDirtyOnTable(Table table, bool isPair = false)
     {
-        var food = table.GetFood();
-        var sprite = food.GetComponent<SpriteRenderer>();
-        sprite.color = Color.red;
+        table.FoodToTray();
+        if(isPair)
+        {
+            table.PairTable.FoodToTray();
+        }
     }
     
 

@@ -5,15 +5,8 @@ using UnityEngine;
 
 public class SNSPromotion : PromotionBase
 {
-    public SNSPromotion(PromotionBase promo)
+    public SNSPromotion(PromotionBase promo) : base(promo)
     {
-        PromotionID = promo.PromotionID;
-        PromotionType = promo.PromotionType;
-        PromotionEffect = promo.PromotionEffect;
-        CostType = promo.CostType;
-        CostQty = promo.CostQty;
-        LimitBuy = promo.LimitBuy;
-        LimitAD = promo.LimitAD;
     }
 
     public override void Excute(BuffManager buffManager, bool needAd)
