@@ -122,12 +122,13 @@ public class ConsumerFSM : MonoBehaviour
                             break;
                         case Satisfaction.Low:
                             UserDataManager.Instance.AddConsumerCnt(false);
-                            consumerManager.workFlowController.CancelOrder(consumer);
-                            consumerManager.workFlowController.ReturnTable(consumer.currentTable);
+                            if (consumerData.GuestType == GuestType.BadGuest)
+                            {
+                                consumerManager.workFlowController.CancelOrder(consumer);
+                                consumerManager.workFlowController.ReturnTable(consumer.currentTable);
+                            }
                             break;
                     }
-
-
                     agent.SetDestination(consumerManager.spawnPoint.position);
                     break;
                 case ConsumerState.WaitingPairMealEnd:
