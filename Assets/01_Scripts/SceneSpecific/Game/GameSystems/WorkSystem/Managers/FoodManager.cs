@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class FoodManager: MonoBehaviour
 {
-    public FoodUpgradeListUi upgradeListUi;
+    public FoodScrollView scrollView;
     public void Awake()
     {
 
@@ -15,7 +15,11 @@ public class FoodManager: MonoBehaviour
         foreach (var item in data.Values)
         {
             if (item.Type == (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme)
-                upgradeListUi.AddFoodUpgradeItem(item);
+                scrollView.AddFoodUISet(item);
         }
+    }
+    public void UnlockFoodUpgrade(FoodData data)
+    {
+        scrollView.UnlockFoodUpgrade(data);
     }
 }

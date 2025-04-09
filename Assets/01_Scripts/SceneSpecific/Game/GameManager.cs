@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     public InteriorManager InteriorManager { get; private set; }
 
     public ConsumerManager consumerManager;
+    public FoodManager foodManager;
     #region InitializeClasses
     private void Awake()
     {

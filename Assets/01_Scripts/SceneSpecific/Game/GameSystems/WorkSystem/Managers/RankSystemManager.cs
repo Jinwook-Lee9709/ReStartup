@@ -24,7 +24,7 @@ public class RankSystemManager : MonoBehaviour
         {
             RestaurantName = currentUserData.Name,
             Ranking = 0,
-            RankingPoint = 1000,
+            RankingPoint = 0,
             Type = (int)gameManager.CurrentTheme
         };
         rankingListUi.AddRankingSystemItem(playerData);

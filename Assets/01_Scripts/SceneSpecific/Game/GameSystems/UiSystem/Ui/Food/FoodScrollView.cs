@@ -1,0 +1,33 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using static UnityEditor.Progress;
+
+public class FoodScrollView : MonoBehaviour
+{
+    [SerializeField] private GameObject upgradeViews;
+    [SerializeField] private GameObject ResearchViews;
+    [SerializeField] private FoodUpgradeListUI foodUpgradeListUI;
+    [SerializeField] private FoodResearchListUI foodResearchListUI;
+
+    public void SetUpgradeViews()
+    {
+        upgradeViews.SetActive(true);
+        ResearchViews.SetActive(false);
+    }
+    public void SetResearchViews()
+    {
+        upgradeViews.SetActive(false);
+        ResearchViews.SetActive(true);
+    }
+
+    public void AddFoodUISet(FoodData data)
+    {
+        foodResearchListUI.AddFoodResearchItem(data);
+        foodUpgradeListUI.AddFoodUpgradeItem(data);
+    }
+    public void UnlockFoodUpgrade(FoodData data)
+    {
+        foodUpgradeListUI.UnlockFood(data);
+    }
+}

@@ -9,6 +9,7 @@ public class UserDataManager : Singleton<UserDataManager>
     private UserData currentUserData = new();
 
     public event Action<int?> ChangeGoldAction;
+    public event Action<int?> ChangeRankPointAction;
     public event Action<int, int> OnInteriorUpgradeEvent;
     public event Action<int> SetRankingPointAction;
     public event Action<bool> OnReviewCntFullEvent;
@@ -65,7 +66,7 @@ public class UserDataManager : Singleton<UserDataManager>
     public IEnumerator OnGoldUp(Consumer consumer)
     {
         ModifyGold(consumer.needFood.SellingCost);
-        SetRankingPointAction?.Invoke(1000);
+        OnRankPointUp(1000);
 
         yield return new WaitForSeconds(0.5f);
 
@@ -75,12 +76,17 @@ public class UserDataManager : Singleton<UserDataManager>
                 Mathf.CeilToInt(consumer.needFood.SellingCost * (consumer.FSM.consumerData.SellTipPercent / 100));
         }
     }
+    public void OnRankPointUp(int getRankPoint)
+    {
+        SetRankingPointAction?.Invoke(getRankPoint);
+    }
 
     public void ModifyGold(int gold)
     {
+
         CurrentUserData.Gold += gold;
+        ChangeRankPointAction?.Invoke(currentUserData.CurrentRankPoint);
         ChangeGoldAction?.Invoke(CurrentUserData.Gold);
-        
     }
 
     public void UpgradeInterior(int interiorId)
