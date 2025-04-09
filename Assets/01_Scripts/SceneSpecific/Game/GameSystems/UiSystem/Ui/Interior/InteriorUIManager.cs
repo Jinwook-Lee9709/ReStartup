@@ -11,6 +11,7 @@ public class InteriorUIManager : MonoBehaviour
 {
     [SerializeField] private Button hallButton;
     [SerializeField] private Button kitchenButton;
+    [SerializeField] private Button closeButton;
     
     [SerializeField] private Transform cardGroupParent;
     [SerializeField] private AssetReference interiorCardGroupPrefab;
@@ -37,6 +38,13 @@ public class InteriorUIManager : MonoBehaviour
 
         UserDataManager.Instance.ChangeGoldAction -= OnGoldChanged;
         UserDataManager.Instance.ChangeGoldAction += OnGoldChanged;
+        UserDataManager.Instance.SetRankingPointAction -= OnRankpointChanged;
+        UserDataManager.Instance.SetRankingPointAction += OnRankpointChanged;
+    }
+
+    private void OnEnable()
+    {
+        UpdateCards();
     }
 
     private void InitCardGroups(List<InteriorData> dataList, ObjectArea area)
@@ -59,12 +67,24 @@ public class InteriorUIManager : MonoBehaviour
     {
         hallButton.onClick.RemoveAllListeners();
         kitchenButton.onClick.RemoveAllListeners();
+        closeButton.onClick.RemoveAllListeners();
         hallButton.onClick.AddListener(() => ToggleCardGroups(hallCardGroups, kitchenCardGroups));
         kitchenButton.onClick.AddListener(() => ToggleCardGroups(kitchenCardGroups, hallCardGroups));
+        closeButton.onClick.AddListener(OnClose);
         ToggleCardGroups(hallCardGroups, kitchenCardGroups);
     }
 
     private void OnGoldChanged(int? gold)
+    {
+        UpdateCards();
+    }
+
+    private void OnRankpointChanged(int rankpoint)
+    {
+        UpdateCards();
+    }
+
+    private void UpdateCards()
     {
         foreach (var group in hallCardGroups)
         {
@@ -87,6 +107,11 @@ public class InteriorUIManager : MonoBehaviour
         {
             group.gameObject.SetActive(false);
         }
+    }
+
+    private void OnClose()
+    {
+        gameObject.SetActive(false);
     }
 
     private void OnDestroy()
