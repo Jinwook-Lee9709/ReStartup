@@ -113,7 +113,6 @@ public class WorkFlowController
 
     public void OnEatComplete(Table table, bool isPair = false)
     {
-        CreateDirtyOnTable(table, isPair);
         CreateCleanTableWork(table, isPair);
     }
     private void CreateCleanTableWork(Table table, bool isPair = false)
@@ -127,13 +126,9 @@ public class WorkFlowController
         workManager.AddWork(work);
     }
 
-    private static void CreateDirtyOnTable(Table table, bool isPair = false)
+    public void CreateDirtyOnTable(Table table)
     {
         table.FoodToTray();
-        if(isPair)
-        {
-            table.PairTable.FoodToTray();
-        }
     }
     
 

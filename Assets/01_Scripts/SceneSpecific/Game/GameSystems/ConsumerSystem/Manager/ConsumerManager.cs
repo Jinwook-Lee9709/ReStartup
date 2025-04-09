@@ -129,9 +129,13 @@ public class ConsumerManager : MonoBehaviour
     public void OnEndMeal(Consumer consumer)
     {
         if (consumer.pairData == null)
+        {
             workFlowController.OnEatComplete(consumer.currentTable);
+        }
         else if (consumer.pairData.owner == consumer)
+        {
             workFlowController.OnEatComplete(consumer.currentTable, true);
+        }
 
         var cnt = workFlowController.AssignCashier(consumer);
         if (cnt != 0)

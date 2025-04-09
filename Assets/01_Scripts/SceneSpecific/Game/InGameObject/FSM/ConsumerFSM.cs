@@ -84,11 +84,11 @@ public class ConsumerFSM : MonoBehaviour
                     break;
                 case ConsumerState.BeforeOrder:
                     consumerManager.OnChangeConsumerState(consumer, ConsumerState.BeforeOrder);
-                    consumerManager.OnWaitingLineUpdate(consumer);
                     if (consumer.pairData?.partner == consumer)
                     {
                         break;
                     }
+                    consumerManager.OnWaitingLineUpdate(consumer);
                     var permission = InteractPermission.Consumer;
                     if (consumer.pairData?.owner == consumer)
                     {
@@ -209,6 +209,9 @@ public class ConsumerFSM : MonoBehaviour
             eattingTimer += Time.deltaTime;
             yield return null;
         }
+
+        consumerManager.workFlowController.CreateDirtyOnTable(consumer.currentTable);
+
         if (consumer.pairData != null)
         {
             consumer.isEndMeal = true;

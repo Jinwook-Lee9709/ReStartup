@@ -80,7 +80,7 @@ public class UiItem : MonoBehaviour
             {
 
                 var handle = Addressables.LoadAssetAsync<GameObject>(employeePrefab);
-                GameObject prefab = await handle.Task;
+                GameObject prefab = handle.WaitForCompletion();
                 var newEmployee = Instantiate(prefab).GetComponent<EmployeeFSM>();
                 newEmployee.EmployeeData = employeeData;
                 // var spriteRenderer = newEmployee.GetComponent<SpriteRenderer>();
