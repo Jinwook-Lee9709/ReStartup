@@ -7,6 +7,12 @@ public class ConsumerDataTable : DataTable
 {
     public Dictionary<int, ConsumerData> Data = new();
 
+    public List<ConsumerData> GetConsumerWithoutBadType(ThemeIds currentTheme)
+    {
+        var result = Data.Values.Where(consumerData => consumerData.GuestType != GuestType.BadGuest && consumerData.Theme == currentTheme).ToList();
+        return result;
+    }
+
     public List<ConsumerData> GetPromotionConsumerDataForCurrentTheme(ThemeIds currentTheme)
     {
         var result = Data.Values.Where(consumerData => consumerData.GuestType == GuestType.PromotionGuest && consumerData.Theme == currentTheme).ToList();
