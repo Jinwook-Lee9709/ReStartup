@@ -6,15 +6,17 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 public class WorkCleanTable : InteractWorkBase
 {
     private WorkFlowController controller;
+    private bool isPair;
 
     public WorkCleanTable(WorkManager workManager, WorkType workType) : base(workManager, workType)
     {
         interactTime = workManager.workDurationRatio.WorkDurationRatio[GetType().Name];
     }
 
-    public void SetContext(WorkFlowController controller)
+    public void SetContext(WorkFlowController controller, bool isPair = false)
     {
         this.controller = controller;
+        this.isPair = isPair;
     }
     
     public override void OnWorkRegistered()
@@ -57,6 +59,11 @@ public class WorkCleanTable : InteractWorkBase
         var transformer = worker as ITransportable;
         var foodObject = table.GetFood();
         transformer.LiftPackage(foodObject);
+        if (isPair)
+        {
+            var subFoodObject = table.PairTable.GetFood();
+            subFoodObject.GetComponent<FoodObject>().Release();
+        }
     }
     
 }

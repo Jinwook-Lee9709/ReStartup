@@ -116,6 +116,8 @@ public abstract class InteractWorkBase : WorkBase
     private void StartInteraction()
     {
         workPhase = WorkPhase.Working;
+        if(interactor is EmployeeFSM)
+            (interactor as EmployeeFSM).Model.PlayAnimation(PlayerState.IDLE,1);
         target.OnInteractStarted(interactor);
         target.OnInteract(interactor);
     }

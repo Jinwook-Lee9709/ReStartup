@@ -83,20 +83,20 @@ public class UiItem : MonoBehaviour
                 GameObject prefab = await handle.Task;
                 var newEmployee = Instantiate(prefab).GetComponent<EmployeeFSM>();
                 newEmployee.EmployeeData = employeeData;
-                var spriteRenderer = newEmployee.GetComponent<SpriteRenderer>();
-
-                switch ((WorkType)employeeData.StaffType)
-                {
-                    case WorkType.Payment:
-                        spriteRenderer.color = Color.yellow;
-                        break;
-                    case WorkType.Hall:
-                        spriteRenderer.color = Color.blue;
-                        break;
-                    case WorkType.Kitchen:
-                        spriteRenderer.color = Color.red;
-                        break;
-                }
+                // var spriteRenderer = newEmployee.GetComponent<SpriteRenderer>();
+                //
+                // switch ((WorkType)employeeData.StaffType)
+                // {
+                //     case WorkType.Payment:
+                //         spriteRenderer.color = Color.yellow;
+                //         break;
+                //     case WorkType.Hall:
+                //         spriteRenderer.color = Color.blue;
+                //         break;
+                //     case WorkType.Kitchen:
+                //         spriteRenderer.color = Color.red;
+                //         break;
+                // }
                 newEmployee.GetComponentInChildren<TextMeshPro>().text = $"{((WorkType)employeeData.StaffType).ToString()}직원";
                 var workerManager = gameManager.WorkerManager;
                 workerManager.RegisterWorker(newEmployee, (WorkType)newEmployee.EmployeeData.StaffType, newEmployee.EmployeeData.StaffID);

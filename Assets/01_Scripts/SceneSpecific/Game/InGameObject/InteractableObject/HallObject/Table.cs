@@ -2,6 +2,11 @@ using System;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Serialization;
+public enum TableType
+{
+    Main,
+    Sub,
+}
 
 public class Table : InteractableObjectBase
 {
@@ -9,8 +14,13 @@ public class Table : InteractableObjectBase
     [SerializeField] private SpriteRenderer iconBackgroundRenderer;
     [SerializeField] private SpriteRenderer defaultIconRenderer;
     [SerializeField] private SpriteRenderer consumerRenderer;
+    [SerializeField] private Table pairTable;
+    
+    [SerializeField] private TableType tableType;
     public Transform FoodPlacePivot => foodPlacePivot;
-
+    public TableType TableType => tableType;
+    public Table PairTable => pairTable;
+    
     public GameObject GetFood()
     {
         var food = foodPlacePivot.GetChild(0).gameObject;

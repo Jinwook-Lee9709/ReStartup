@@ -57,6 +57,13 @@ public class Consumer : MonoBehaviour
 
     public void SetTable(Table table)
     {
-        if (table != null) currentTable = table;
+        if (table is not null)
+        {
+            currentTable = table;
+            if (pairData != null)
+            {
+                pairData.partner.currentTable = table.PairTable;
+            }
+        }
     }
 }

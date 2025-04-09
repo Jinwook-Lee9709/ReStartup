@@ -20,6 +20,11 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     public Transform HandPivot => handPivot;
 
     public UiManager uiManager;
+    
+    private SPUM_Prefabs model;
+    public SPUM_Prefabs Model => model;
+
+    public float prevXPos;
 
     public WorkerState CurrentStatus
     {
@@ -27,7 +32,20 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
         set
         {
             currentStatus = value;
-            if (currentStatus == WorkerState.ReturnidleArea) agent.SetDestination(idleArea.position);
+            switch (currentStatus)
+            {
+                case WorkerState.Idle:
+                    model.PlayAnimation(PlayerState.IDLE, 0);
+                    break;
+                case WorkerState.ReturnidleArea:
+                    model.PlayAnimation(PlayerState.MOVE, 0);
+                    agent.SetDestination(idleArea.position);
+                    break;
+                case WorkerState.Working:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 
@@ -51,12 +69,20 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
             interactionSpeed = EmployeeData.WorkSpeed - upgradeWorkSpeedValue * EmployeeData.upgradeCount;
             //Added logic to change maximum health
         };
+
+        model = GetComponentInChildren<SPUM_Prefabs>();
+        model.OverrideControllerInit();
         uiManager = GameObject.FindWithTag("UIManager").GetComponent<UiManager>();
         uiManager.EmployeeHpUIItemSet(this);
     }
 
     private void Update()
     {
+        if(prevXPos > transform.position.x)
+            model.transform.localScale = new Vector3(1, 1, 1);
+        else
+            model.transform.localScale = new Vector3(-1, 1, 1);
+        prevXPos = transform.position.x;
         switch (currentStatus)
         {
             case WorkerState.Idle:
@@ -128,8 +154,8 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
 
     private void UpdateReturnidleArea()
     {
-        var distance = Vector3.Distance(transform.position, idleArea.position);
-        if (distance <= agent.stoppingDistance) CurrentStatus = WorkerState.Idle;
+        if (agent.IsArrive(idleArea)) 
+            CurrentStatus = WorkerState.Idle;
     }
 
     private void UpdateWorking()

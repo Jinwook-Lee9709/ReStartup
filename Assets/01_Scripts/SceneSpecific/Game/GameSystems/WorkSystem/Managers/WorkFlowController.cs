@@ -111,16 +111,16 @@ public class WorkFlowController
     
     #region TableCleanLogic()
 
-    public void OnEatComplete(Table table)
+    public void OnEatComplete(Table table, bool isPair = false)
     {
         CreateDirtyOnTable(table);
         CreateCleanTableWork(table);
     }
-    private void CreateCleanTableWork(Table table)
+    private void CreateCleanTableWork(Table table, bool isPair = false)
     {
         var work = new WorkCleanTable(workManager, WorkType.Hall);
         work.SetInteractable(table);
-        work.SetContext(this);
+        work.SetContext(this, isPair);
         table.SetWork(work);
         table.FoodToTray();
         workManager.AddWork(work);
@@ -156,9 +156,10 @@ public class WorkFlowController
     {
         if (waitingConsumerQueue.Count > 0)
         {
+            var table = tableManager.GetAvailableObject();
             var consumer = waitingConsumerQueue.First();
             waitingConsumerQueue.RemoveFirst();
-            consumer.SetTable(tableManager.GetAvailableObject());
+            consumer.SetTable(table);
             consumer.OnTableVacated();
         }
     }
@@ -166,12 +167,27 @@ public class WorkFlowController
     public void AssignGetOrderWork(Consumer consumer)
     {
         var table = consumer.currentTable;
-        var work = new WorkGetOrder(workManager, WorkType.Hall);
-        var context = new MainLoopWorkContext(consumer, this);
-        table.SetWork(work);
-        work.SetContext(context);
-        work.SetInteractable(table);
-        workManager.AddWork(work, consumer);
+        if (consumer.pairData != null)
+        {
+            var work = new WorkGetPairOrder(workManager, WorkType.Hall);
+            var firstContext = new MainLoopWorkContext(consumer, this);
+            var secondContext = new MainLoopWorkContext(consumer.pairData.partner, this);
+            table.SetWork(work);
+            work.SetContext(firstContext, secondContext);
+            work.SetInteractable(table);
+            workManager.AddWork(work, consumer);
+        }
+        else
+        {
+                    
+            var work = new WorkGetOrder(workManager, WorkType.Hall);
+            var context = new MainLoopWorkContext(consumer, this);
+            table.SetWork(work);
+            work.SetContext(context);
+            work.SetInteractable(table);
+            workManager.AddWork(work, consumer);
+        }
+
     }
 
     public void CancelOrder(Consumer consumer)
