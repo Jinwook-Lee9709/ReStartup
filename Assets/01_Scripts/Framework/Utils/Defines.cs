@@ -16,6 +16,8 @@ public enum DataTableIds
     Ranking,
     Interior,
     Cookware,
+    Buff,
+    Promoiton,
 }
 
 public enum IconPivots
@@ -84,7 +86,18 @@ public enum SceneIds
 
 public enum BuffType
 {
-    Influencer
+    FootTraffic,
+    StaffWork,
+    StaffMove,
+    PairSpawn,
+}
+
+public enum PromotionType
+{
+    SNS,
+    Ituber,
+    PD,
+    Chef,
 }
 
 public static class Endpoints

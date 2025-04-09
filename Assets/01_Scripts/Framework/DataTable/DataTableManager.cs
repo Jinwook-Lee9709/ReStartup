@@ -30,6 +30,14 @@ public static class DataTableManager
         var cookwareDataTable = new CookwareDataTable();
         cookwareDataTable.Load();
         tables.Add(DataTableIds.Cookware.ToString(), cookwareDataTable);
+
+        var buffDataTable = new BuffDataTable();
+        buffDataTable.Load();
+        tables.Add(DataTableIds.Buff.ToString(), buffDataTable);
+
+        var promotionDataTable = new PromotionDataTable();
+        promotionDataTable.Load();
+        tables.Add(DataTableIds.Promoiton.ToString(), promotionDataTable);
     }
 
     public static T Get<T>(string id) where T : DataTable

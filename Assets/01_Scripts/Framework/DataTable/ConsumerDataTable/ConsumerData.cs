@@ -20,7 +20,8 @@ public class ConsumerData
     public GuestType GuestType {  get; set; }
     public int SellTipPercent { get; set; }
     public BuffType BuffType { get; set; }
-    //public int BuffID { get; set; }
+    public int BuffID1 { get; set; }
+    public int BuffID2 { get; set; }
     public int LoveFoodId { get; set; }
     public string GuestPrefab { get; set; }
     //public string GuestEffect {  get; set; }

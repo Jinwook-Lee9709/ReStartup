@@ -6,21 +6,17 @@ public class AdvertisementManager : Singleton<AdvertisementManager>
 {
     public RewardedAd rewarded;
     public NativeOverlayAd nativeAd;
-    public BannerView bannerView;
     private bool isInitialized = false;
 
 #if UNITY_ANDROID
     private string rewardTestADID = "ca-app-pub-3940256099942544/5224354917";
     private string nativeTestADID = "ca-app-pub-3940256099942544/2247696110";
-    private string bannerTestADID = "ca-app-pub-3940256099942544/6300978111";
 #elif UNITY_IPHONE
     private string rewardTestADID = "ca-app-pub-3940256099942544/1712485313";
     private string nativeTestADID = "ca-app-pub-3940256099942544/3986624511";
-    private string bannerTestADID = "ca-app-pub-3940256099942544/2934735716";
 #else
     private string rewardTestADID = "unused";
     private string nativeTestADID = "unused";
-    private string bannerTestADID = "unused";
 #endif
 
     public void Init()
@@ -45,7 +41,6 @@ public class AdvertisementManager : Singleton<AdvertisementManager>
             nativeAd.Destroy();
             nativeAd = null;
         }
-        Debug.Log("Loading native overlay ad.");
 
         var adRequest = new AdRequest();
         var options = new NativeAdOptions();
@@ -83,12 +78,8 @@ public class AdvertisementManager : Singleton<AdvertisementManager>
 
     public void RenderNativeAd(int yPos)
     {
-        Debug.Log("Render!!!!");
-        Debug.Log($"Func : {System.Reflection.MethodBase.GetCurrentMethod().Name}\n nativeAd == null : {nativeAd == null}");
-        Debug.Log(yPos);
         if (nativeAd != null)
         {
-            Debug.Log("Rendering Native Overlay ad.");
 
             // Define a native template style with a custom style.
             var style = new NativeTemplateStyle
@@ -112,8 +103,6 @@ public class AdvertisementManager : Singleton<AdvertisementManager>
 
     public void ShowNativeAd()
     {
-        Debug.Log("Show!!!!");
-        Debug.Log($"Func : {System.Reflection.MethodBase.GetCurrentMethod().Name}\n nativeAd == null : {nativeAd == null}");
         if (nativeAd != null)
         {
             nativeAd.Show();
@@ -137,24 +126,6 @@ public class AdvertisementManager : Singleton<AdvertisementManager>
         }
     }
 
-    //public void CreateBannerView()
-    //{
-    //    Debug.Log("Creating banner view");
-
-    //    // If we already have a banner, destroy the old one.
-    //    if (bannerView != null)
-    //    {
-    //        bannerView.Destroy();
-    //        bannerView = null;
-    //    }
-
-    //    // Create a 320x50 banner at top of the screen
-    //    //AdSize.GetCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(AdSize.FullWidth)
-    //    bannerView = new BannerView(bannerTestADID, AdSize.GetCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(AdSize.FullWidth), AdPosition.BottomLeft);
-
-    //    var adRequest = new AdRequest();
-    //    bannerView.LoadAd(adRequest);
-    //}
 
 
     public void LoadRewardedAd()

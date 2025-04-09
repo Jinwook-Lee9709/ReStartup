@@ -7,6 +7,12 @@ public class ConsumerDataTable : DataTable
 {
     public Dictionary<int, ConsumerData> Data = new();
 
+    public List<ConsumerData> GetPromotionConsumerDataForCurrentTheme(ThemeIds currentTheme)
+    {
+        var result = Data.Values.Where(consumerData => consumerData.GuestType == GuestType.PromotionGuest && consumerData.Theme == currentTheme).ToList();
+        return result;
+    }
+
     public ConsumerData GetRandomConsumerForType(GuestType guestType)
     {
         var result = Data.Values.Where(consumerData => consumerData.GuestType == guestType && consumerData.Theme == ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme).ToList();

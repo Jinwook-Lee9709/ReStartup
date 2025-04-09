@@ -52,10 +52,10 @@ public class ConsumerManager : MonoBehaviour
         sb.AppendLine($"대기 인원 : {waitOutsideConsumerCnt}");
         waitingText.text = sb.ToString();
     }
+
     [ContextMenu("Consumer Spawn")]
     public void SpawnConsumer()
     {
-
         var consumer1 = consumerPool.Get().GetComponent<Consumer>();
 
         //bool isPair = true;
@@ -69,6 +69,18 @@ public class ConsumerManager : MonoBehaviour
         //{
         AfterSpawnInit(consumer1);
         //}
+    }
+
+    public bool CanSpawnConsumer()
+    {
+        return currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count < 3;
+    }
+
+    public void SpawnConsumer(ConsumerData consumerData)
+    {
+        var spawnConsumer = consumerPool.Get().GetComponent<Consumer>();
+        spawnConsumer.FSM.consumerData = consumerData;
+        AfterSpawnInit(spawnConsumer);
     }
 
     private void SetPairData(Consumer owner, Consumer partner)
@@ -102,9 +114,9 @@ public class ConsumerManager : MonoBehaviour
                 waitOutsideConsumerCnt++;
                 UpdateWaitingText();
             }
-            var buff = buffManager.GetBuff<InfluencerBuff>(BuffType.Influencer);
+            var buff = buffManager.GetBuff(BuffType.FootTraffic);
             var basicTime = 5f;
-            basicTime *= buff?.AccelValue ?? 1f;
+            basicTime *= buff?.BuffEffect ?? 1f;
 
             yield return new WaitForSeconds(basicTime);
         }
@@ -235,7 +247,6 @@ public class ConsumerManager : MonoBehaviour
 
         if (consumer.GetComponent<ConsumerFSM>().consumerData.GuestType == GuestType.Influencer)
         {
-            InfluencerBuff buff = new();
             //TODO : Make InfluencerBuff on consumerData based
             buffManager.TempBuffOn();
         }
