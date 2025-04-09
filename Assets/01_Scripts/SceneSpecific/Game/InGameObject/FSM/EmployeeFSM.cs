@@ -105,6 +105,11 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
             uiManager.EmployeeHpSet(this);
         }
     }
+    
+    public void PlayWorkAnimation()
+    {
+        Model.PlayAnimation(PlayerState.IDLE, 1);
+    }
     public void LiftPackage(GameObject package)
     {
         package.transform.SetParent(handPivot);

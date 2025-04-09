@@ -115,7 +115,7 @@ public class WorkFlowController
     {
         CreateCleanTableWork(table, isPair);
     }
-    private void CreateCleanTableWork(Table table, bool isPair = false)
+    public void CreateCleanTableWork(Table table, bool isPair = false)
     {
         var work = new WorkCleanTable(workManager, WorkType.Hall);
         work.SetInteractable(table);

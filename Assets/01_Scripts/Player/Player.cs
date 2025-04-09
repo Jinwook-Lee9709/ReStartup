@@ -6,9 +6,12 @@ public class Player : WorkerBase, IInteractor, ITransportable
 {
     [SerializeField] private Transform handPivot;
     [SerializeField] private Transform hallIdleArea, kitchenIdleArea;
+    [SerializeField] private SPUM_Prefabs model;
+    
     private WorkManager workManager;
     private float interactionSpeed = Constants.PLAYER_INTERACTION_SPEED;
     public float InteractionSpeed => interactionSpeed;
+    public SPUM_Prefabs Model => model;
     public Transform HandPivot => handPivot;
     private bool isCameraOnHall;
 
@@ -20,6 +23,10 @@ public class Player : WorkerBase, IInteractor, ITransportable
         kitchenIdleArea = pivots[1];
     }
 
+    private void Start()
+    {
+        model.OverrideControllerInit();
+    }
     public void SetWorkManager(WorkManager workManager)
     {
         this.workManager = workManager;
@@ -31,8 +38,20 @@ public class Player : WorkerBase, IInteractor, ITransportable
         private set
         {
             currentStatus = value;
-            if (currentStatus == WorkerState.ReturnidleArea)
-                agent.SetDestination(isCameraOnHall ? hallIdleArea.position : kitchenIdleArea.position);
+            switch (currentStatus)
+            {
+                case WorkerState.Idle:
+                    model.PlayAnimation(PlayerState.IDLE, 0);
+                    break;
+                case WorkerState.ReturnidleArea:
+                    model.PlayAnimation(PlayerState.MOVE, 0);
+                    agent.SetDestination(isCameraOnHall ? hallIdleArea.position : kitchenIdleArea.position);
+                    break;
+                case WorkerState.Working:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 
@@ -40,6 +59,11 @@ public class Player : WorkerBase, IInteractor, ITransportable
 
     private void Update()
     {
+        var currentVelocity = agent.velocity;
+        if(currentVelocity.x < 0)
+            model.transform.localScale = new Vector3(1, 1, 1);
+        else if(currentVelocity.x > 0)
+            model.transform.localScale = new Vector3(-1, 1, 1);
         switch (currentStatus)
         {
             case WorkerState.Idle:
@@ -61,6 +85,11 @@ public class Player : WorkerBase, IInteractor, ITransportable
         base.AssignWork(work);
         CurrentStatus = WorkerState.Working;
     }
+    
+    public void PlayWorkAnimation()
+    {
+        Model.PlayAnimation(PlayerState.IDLE, 1);
+    }
 
     private void UpdateIdle()
     {
@@ -68,8 +97,8 @@ public class Player : WorkerBase, IInteractor, ITransportable
 
     private void UpdateReturnidleArea()
     {
-        var distance = Vector3.Distance(transform.position, isCameraOnHall ? hallIdleArea.position : kitchenIdleArea.position);
-        if (distance <= agent.stoppingDistance) CurrentStatus = WorkerState.Idle;
+        Transform targetTransform = isCameraOnHall ? hallIdleArea : kitchenIdleArea;
+        if (agent.IsArrive(targetTransform)) CurrentStatus = WorkerState.Idle;
     }
 
     private void UpdateWorking()
