@@ -17,13 +17,14 @@ public interface IPromotion
 
 public class PromotionBase : IPromotion
 {
-    public int PromotionID {  get; set; }
+    public int PromotionID { get; set; }
     public PromotionType PromotionType { get; set; }
     public int PromotionEffect { get; set; }
     public CostType CostType { get; set; }
     public int CostQty { get; set; }
     public int LimitBuy { get; set; }
     public int LimitAD { get; set; }
+    public string PromotionIcon { get; set; }
 
     public int currentLimitBuy;
     public int currentLimitAD;
@@ -32,7 +33,17 @@ public class PromotionBase : IPromotion
     {
 
     }
-
+    public PromotionBase(PromotionBase promo)
+    {
+        PromotionID = promo.PromotionID;
+        PromotionType = promo.PromotionType;
+        PromotionEffect = promo.PromotionEffect;
+        CostType = promo.CostType;
+        CostQty = promo.CostQty;
+        LimitBuy = promo.LimitBuy;
+        LimitAD = promo.LimitAD;
+        PromotionIcon = promo.PromotionIcon;
+    }
 
     public virtual void Excute(BuffManager buffManager, bool needAd)
     {

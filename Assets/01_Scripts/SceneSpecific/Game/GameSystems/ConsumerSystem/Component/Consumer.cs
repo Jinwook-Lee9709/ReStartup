@@ -17,6 +17,7 @@ public class Consumer : MonoBehaviour
     public List<int> foodIds = new();
     public ConsumerFSM FSM => GetComponent<ConsumerFSM>();
 
+    public bool isEndMeal = false;
     public Transform NextTargetTransform
     {
         get => nextTargetTransform;

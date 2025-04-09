@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class Buff
 {
     public int BuffID { get; set; }

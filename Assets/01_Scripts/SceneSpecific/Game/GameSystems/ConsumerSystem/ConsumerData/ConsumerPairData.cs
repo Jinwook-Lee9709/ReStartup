@@ -1,3 +1,5 @@
+using CsvHelper.Configuration.Attributes;
+
 public class ConsumerPairData
 {
     public Consumer owner;
@@ -6,4 +8,5 @@ public class ConsumerPairData
     public Table pairTable;
 
     public Consumer partner;
+
 }

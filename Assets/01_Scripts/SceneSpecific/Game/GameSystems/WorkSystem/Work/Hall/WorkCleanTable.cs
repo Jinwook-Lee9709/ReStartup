@@ -34,6 +34,7 @@ public class WorkCleanTable : InteractWorkBase
         
         var table = target as Table;
         table.ShowIcon(IconPivots.Default, iconSprite, backgroundSprite, true);
+        table.PairTable.HideIcon();
     }
     
 
