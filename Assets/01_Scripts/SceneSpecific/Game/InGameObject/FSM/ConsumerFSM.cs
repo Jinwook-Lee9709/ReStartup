@@ -84,11 +84,11 @@ public class ConsumerFSM : MonoBehaviour
                     break;
                 case ConsumerState.BeforeOrder:
                     consumerManager.OnChangeConsumerState(consumer, ConsumerState.BeforeOrder);
-                    consumerManager.OnWaitingLineUpdate(consumer);
                     if (consumer.pairData?.partner == consumer)
                     {
                         break;
                     }
+                    consumerManager.OnWaitingLineUpdate(consumer);
                     var permission = InteractPermission.Consumer;
                     if (consumer.pairData?.owner == consumer)
                     {
