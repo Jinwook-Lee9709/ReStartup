@@ -26,7 +26,7 @@ public static class LZString
         return table;
     }
 
-    public static string GetLZStringSync(string key, StringTableIds tableId, params object[] args)
+    public static string GetStringSync(string key, StringTableIds tableId, params string[] args)
     {
         try
         {
@@ -47,19 +47,79 @@ public static class LZString
         }
     }
 
-    public static void GetLZStringAsync(string key, StringTableIds tableId, Action<string> callback, params object[] args)
+    public static void GetStringAsync(string key, StringTableIds tableId, Action<string> callback, params string[] args)
     {
         try
         {
             LocalizedString lzString = new LocalizedString() { TableReference = tableId.ToString(), TableEntryReference = key };
-            // var stringOperation = args
+            var stringOperation = args != null ? lzString.GetLocalizedStringAsync(args) : lzString.GetLocalizedStringAsync();
+            stringOperation.Completed += handle =>
+            {
+                if (stringOperation.Status == AsyncOperationStatus.Succeeded)
+                {
+                    callback?.Invoke(stringOperation.Result);
+                }
+                else
+                {
+                    Debug.Log("GetLZStringAsync failed: " + key + "");
+                    callback?.Invoke(ERROR_STRING);
+                }
+            };
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            Debug.Log("GetLZStringSync failed: " + key + "");
         }
     }
-    
+
+    public static string GetString(string key, StringTableIds tableId, Action<string> callback = null,
+        params string[] args)
+    {
+        try
+        {
+            var stringTable = GetCachedTable(tableId);
+
+            if (stringTable == null)
+            {
+                Debug.Log("GetLZString failed, Table not founded: " + key + "");
+                return ERROR_STRING;
+            }
+            var entry = stringTable.GetEntry(key);
+            if (entry == null)
+            {
+                Debug.Log("GetLZString failed, Key not founded: " + key + "");
+                return ERROR_STRING;
+            }
+
+            if (entry.IsSmart && callback == null)
+            {
+                return GetStringSync(key, tableId, args);
+            }
+            else if (entry.IsSmart && callback != null)
+            {
+                GetStringAsync(key, tableId, callback, args);
+                return key;
+            }
+            else if (callback == null)
+            {
+                return GetStringSync(key, tableId);
+            }
+            else
+            {
+                GetStringAsync(key, tableId, callback);
+                return key;
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.Log("GetLZString failed: " + key + "");
+            return ERROR_STRING;
+        }
+    }
+
+    public static string GetUIString(string key, Action<string> callback = null,  params string[] args)
+    {
+        return GetString(key, StringTableIds.UIString, callback, args);
+    }
     
 }

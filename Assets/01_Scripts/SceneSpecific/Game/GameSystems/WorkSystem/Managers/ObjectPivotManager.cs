@@ -40,6 +40,13 @@ public class ObjectPivotManager
     {
         return pivotLocator.SinkPivot;
     }
+
+    public Transform GetInteriorPivot(int id)
+    {
+        var dictionary = pivotLocator.InteriorPivots;
+        dictionary.TryGetValue(id, out Transform pivot);
+        return pivot;
+    }
     
     public List<Transform> GetWatingLines()
     {

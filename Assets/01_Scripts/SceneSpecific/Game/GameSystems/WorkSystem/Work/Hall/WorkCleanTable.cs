@@ -51,7 +51,8 @@ public class WorkCleanTable : InteractWorkBase
         worker.ClearWork();
         var trayReturnCounter = controller.TrayReturnCounter;
         var work = new WorkDishToKitchen(workManager, WorkType.Hall, 0, false, false);
-        work.SetContext(controller);
+        int trayCount = isPair ? 2 : 1;
+        work.SetContext(controller, trayCount);
         work.SetInteractable(trayReturnCounter);
         worker.AssignWork(work);
         nextWork = work;
