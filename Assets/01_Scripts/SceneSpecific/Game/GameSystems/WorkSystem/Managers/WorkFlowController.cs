@@ -6,26 +6,25 @@ using UnityEngine.AddressableAssets;
 
 public class WorkFlowController
 {
-    static readonly string FoodObjectName = "FoodObject";
-    private GameManager gameManager;
-    private WorkManager workManager;
-    private CashierCounter cashierCounter;
-    private TrayReturnCounter trayReturnCounter;
-    private SinkingStation sinkingStation;
+    private static readonly string FoodObjectName = "FoodObject";
     private readonly LinkedList<Consumer> cashierQueue = new();
     private readonly Dictionary<CookwareType, InteractableObjectManager<CookingStation>> cookingStationManagers = new();
     private readonly InteractableObjectManager<FoodPickupCounter> foodPickupCounterManager = new();
     private readonly LinkedList<(MainLoopWorkContext, CookingStation)> foodPickupCounterQueue = new();
     private readonly Dictionary<CookwareType, LinkedList<MainLoopWorkContext>> orderQueue = new();
-    
+
     private readonly InteractableObjectManager<Table> tableManager = new();
-    private LinkedList<Consumer> waitingConsumerQueue = new();
-    
-    public TrayReturnCounter TrayReturnCounter => trayReturnCounter;
-    public SinkingStation SinkingStation => sinkingStation;
+    private CashierCounter cashierCounter;
+    private GameManager gameManager;
+    private readonly LinkedList<Consumer> waitingConsumerQueue = new();
+    private WorkManager workManager;
+
+    public TrayReturnCounter TrayReturnCounter { get; private set; }
+
+    public SinkingStation SinkingStation { get; private set; }
 
     public event Action<CookwareType> OnCookingStationAdded;
-    
+
     public void Init(GameManager gameManager, WorkManager workManager)
     {
         this.gameManager = gameManager;
@@ -39,7 +38,7 @@ public class WorkFlowController
     {
         var handle = Addressables.LoadAssetAsync<GameObject>(FoodObjectName);
         handle.WaitForCompletion();
-        GameManager gameManager = ServiceLocator.Instance.GetSceneService<GameManager>();
+        var gameManager = ServiceLocator.Instance.GetSceneService<GameManager>();
         var foodGameObject = handle.Result;
         var foodObject = foodGameObject.GetComponent<FoodObject>();
         gameManager.ObjectPoolManager.CreatePool(foodObject, onRelease: ResetFoodAppearance);
@@ -64,15 +63,11 @@ public class WorkFlowController
     {
         tableManager.ObjectAvailableEvent += OnTableVacated;
         foodPickupCounterManager.ObjectAvailableEvent += OnFoodPickupCounterVacated;
-        foreach (var manager in cookingStationManagers)
-        {
-            manager.Value.ObjectAvailableEvent += OnCookingStationVacated;
-        }
+        foreach (var manager in cookingStationManagers) manager.Value.ObjectAvailableEvent += OnCookingStationVacated;
     }
 
     private void ResetFoodAppearance(FoodObject foodObject)
     {
-       
     }
 
     public void AddTable(Table table)
@@ -100,21 +95,22 @@ public class WorkFlowController
 
     public void SetTrayReturnCounter(TrayReturnCounter counter)
     {
-        trayReturnCounter = counter;
+        TrayReturnCounter = counter;
     }
 
     public void SetSinkingStation(SinkingStation station)
     {
-        sinkingStation = station;
-        sinkingStation.OnSinkVacated += OnSinkVacated;
+        SinkingStation = station;
+        SinkingStation.OnSinkVacated += OnSinkVacated;
     }
-    
+
     #region TableCleanLogic()
 
     public void OnEatComplete(Table table, bool isPair = false)
     {
         CreateCleanTableWork(table, isPair);
     }
+
     public void CreateCleanTableWork(Table table, bool isPair = false)
     {
         var work = new WorkCleanTable(workManager, WorkType.Hall);
@@ -129,8 +125,6 @@ public class WorkFlowController
     {
         table.FoodToTray();
     }
-    
-
 
     #endregion
 
@@ -176,7 +170,6 @@ public class WorkFlowController
         }
         else
         {
-                    
             var work = new WorkGetOrder(workManager, WorkType.Hall);
             var context = new MainLoopWorkContext(consumer, this);
             table.SetWork(work);
@@ -184,7 +177,6 @@ public class WorkFlowController
             work.SetInteractable(table);
             workManager.AddWork(work, consumer);
         }
-
     }
 
     public void CancelOrder(Consumer consumer)
@@ -207,6 +199,7 @@ public class WorkFlowController
                 break;
             }
         }
+
         var node3 = waitingConsumerQueue.FirstOrDefault(x => x == consumer);
         if (node3 != null)
             waitingConsumerQueue.Remove(node3);
@@ -224,8 +217,8 @@ public class WorkFlowController
     public void RegisterOrder(MainLoopWorkContext context)
     {
         var food = context.Consumer.needFood;
-        bool isCookingStationAvailable = cookingStationManagers[food.CookwareType].IsAvailableObjectExist;
-        bool isSinkFull = sinkingStation.IsSinkFull;
+        var isCookingStationAvailable = cookingStationManagers[food.CookwareType].IsAvailableObjectExist;
+        var isSinkFull = SinkingStation.IsSinkFull;
         if (isCookingStationAvailable && !isSinkFull)
             AssignOrderWork(context);
         else
@@ -236,10 +229,7 @@ public class WorkFlowController
     {
         if (orderQueue[availableStation.cookwareType].Count > 0)
         {
-            if (sinkingStation.IsSinkFull)
-            {
-                return;
-            }
+            if (SinkingStation.IsSinkFull) return;
             var context = orderQueue[availableStation.cookwareType].First();
             orderQueue[availableStation.cookwareType].RemoveFirst();
             AssignOrderWork(context);
@@ -266,20 +256,15 @@ public class WorkFlowController
     public void OnSinkVacated()
     {
         foreach (var pair in cookingStationManagers)
-        {
             while (orderQueue[pair.Key].Count > 0)
             {
-                if (!pair.Value.IsAvailableObjectExist)
-                {
-                    break;
-                }
+                if (!pair.Value.IsAvailableObjectExist) break;
                 var context = orderQueue[pair.Key].First();
                 orderQueue[pair.Key].RemoveFirst();
                 AssignOrderWork(context);
             }
-        }
     }
-    
+
     #endregion
 
     #region FoodPickupLogic
@@ -319,10 +304,11 @@ public class WorkFlowController
             var (context, target) = foodPickupCounterQueue.First();
             foodPickupCounterQueue.RemoveFirst();
             AddDeliverFoodWork(target, context, counter);
-            
         }
     }
-    private void AddDeliverFoodWork(InteractableObjectBase target, MainLoopWorkContext context, FoodPickupCounter counter)
+
+    private void AddDeliverFoodWork(InteractableObjectBase target, MainLoopWorkContext context,
+        FoodPickupCounter counter)
     {
         var work = new WorkGotoCookingStation(workManager, WorkType.Kitchen);
         target.SetWork(work);
@@ -330,7 +316,7 @@ public class WorkFlowController
         work.SetContext(context, counter);
         workManager.AddWork(work, context.Consumer);
     }
-    
+
     public void ReturnFoodPickupCounter(FoodPickupCounter counter)
     {
         foodPickupCounterManager.ReturnObject(counter);

@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 public class InteriorData
 {
@@ -23,7 +20,7 @@ public class InteriorData
     public int GetSellingCost()
     {
         var userData = UserDataManager.Instance.CurrentUserData;
-        int upgradeLevel = userData.InteriorSaveData[InteriorID];
+        var upgradeLevel = userData.InteriorSaveData[InteriorID];
         return (int)Math.Round(SellingCost * (1.5f + 0.3f * (upgradeLevel - 1)));
     }
 
@@ -38,5 +35,4 @@ public class InteriorData
             return true;
         return UserDataManager.Instance.CurrentUserData.InteriorSaveData[Requirements2] != 0;
     }
-    
 }

@@ -1,13 +1,12 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 public class ObjectPivotManager
 {
-    private PivotLocator pivotLocator;
     public static readonly string PivotFormat = "Pivot{0}";
-    
+    private PivotLocator pivotLocator;
+
     public void Init(ThemeIds themeId)
     {
         LoadAndInstantiatePivots(themeId);
@@ -15,7 +14,7 @@ public class ObjectPivotManager
 
     private void LoadAndInstantiatePivots(ThemeIds themeId)
     {
-        string assetName = string.Format(PivotFormat, themeId.ToString());
+        var assetName = string.Format(PivotFormat, themeId.ToString());
         var instantiateHandle = Addressables.InstantiateAsync(assetName);
         instantiateHandle.WaitForCompletion();
         pivotLocator = instantiateHandle.Result.GetComponent<PivotLocator>();
@@ -25,7 +24,7 @@ public class ObjectPivotManager
     {
         return pivotLocator.CounterPivot;
     }
-    
+
     public Transform GetConsumerSpawnPoint()
     {
         return pivotLocator.ConsumerSpawnPivot;
@@ -44,10 +43,10 @@ public class ObjectPivotManager
     public Transform GetInteriorPivot(int id)
     {
         var dictionary = pivotLocator.InteriorPivots;
-        dictionary.TryGetValue(id, out Transform pivot);
+        dictionary.TryGetValue(id, out var pivot);
         return pivot;
     }
-    
+
     public List<Transform> GetWatingLines()
     {
         return pivotLocator.WatingLinePivots;
@@ -72,5 +71,4 @@ public class ObjectPivotManager
     {
         return pivotLocator.PickupCounterPivots;
     }
-    
 }

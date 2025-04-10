@@ -1,4 +1,3 @@
-
 using System;
 using TMPro;
 using UnityEngine;
@@ -7,26 +6,32 @@ public class SinkingStation : InteractableObjectBase, IInterior
 {
     private static readonly string CountFomrat = "{0} / {1}";
     [SerializeField] private int trayCapacity = 5;
-    [SerializeField] TextMeshPro countText;
-    private int currentTrayCount = 0;
-    private bool isWashWorkAssigned = false;
-    
+    [SerializeField] private TextMeshPro countText;
+
     [SerializeField] private SpriteRenderer objectRenderer;
     [SerializeField] private IconBubble iconBubble;
-    
-    WorkManager workManager;
-    WorkFlowController controller;
-    
-    public event Action OnSinkVacated;
+    private WorkFlowController controller;
+    private bool isWashWorkAssigned;
+
+    private WorkManager workManager;
     public int TrayCapacity => trayCapacity;
-    public int CurrentTrayCount => currentTrayCount;
-    public bool IsSinkFull => currentTrayCount >= trayCapacity;
+    public int CurrentTrayCount { get; private set; }
+
+    public bool IsSinkFull => CurrentTrayCount >= trayCapacity;
 
     private void Start()
     {
         UpdateCountText();
         ReferencingManagers();
     }
+
+
+    public void ChangeSpirte(Sprite sprite)
+    {
+        objectRenderer.sprite = sprite;
+    }
+
+    public event Action OnSinkVacated;
 
     public void ChangeCapacity(int capacity)
     {
@@ -42,11 +47,8 @@ public class SinkingStation : InteractableObjectBase, IInterior
 
     public void AddTray(int trayCount)
     {
-        currentTrayCount += trayCount;
-        if (currentTrayCount >= trayCapacity)
-        {
-            AssignTrayWashWork();
-        }
+        CurrentTrayCount += trayCount;
+        if (CurrentTrayCount >= trayCapacity) AssignTrayWashWork();
 
         UpdateCountText();
     }
@@ -54,9 +56,9 @@ public class SinkingStation : InteractableObjectBase, IInterior
     public override void OnInteractCompleted()
     {
         base.OnInteractCompleted();
-        currentTrayCount -= trayCapacity;
-        currentTrayCount = Mathf.Max(currentTrayCount, 0, currentTrayCount);
-        if (currentTrayCount < trayCapacity)
+        CurrentTrayCount -= trayCapacity;
+        CurrentTrayCount = Mathf.Max(CurrentTrayCount, 0, CurrentTrayCount);
+        if (CurrentTrayCount < trayCapacity)
         {
             isWashWorkAssigned = false;
             OnSinkVacated?.Invoke();
@@ -67,14 +69,13 @@ public class SinkingStation : InteractableObjectBase, IInterior
 
     public override bool ShowIcon(IconPivots pivot, Sprite icon, Sprite background = null, bool flipBackground = false)
     {
-        iconBubble.ShowIcon(icon,iconBubble.transform.position, flipBackground);
+        iconBubble.ShowIcon(icon, iconBubble.transform.position, flipBackground);
         return true;
     }
 
     public override void HideIcon()
     {
         iconBubble.HideIcon();
-        
     }
 
     private void AssignTrayWashWork()
@@ -82,7 +83,7 @@ public class SinkingStation : InteractableObjectBase, IInterior
         if (isWashWorkAssigned)
             return;
         isWashWorkAssigned = true;
-       
+
         var work = new WorkWashTray(workManager, WorkType.Kitchen);
         work.SetContext(controller);
         work.SetInteractable(this);
@@ -93,12 +94,6 @@ public class SinkingStation : InteractableObjectBase, IInterior
 
     private void UpdateCountText()
     {
-        countText.text = string.Format(CountFomrat, currentTrayCount, trayCapacity);
-    }
-
-
-    public void ChangeSpirte(Sprite sprite)
-    {
-        objectRenderer.sprite = sprite;
+        countText.text = string.Format(CountFomrat, CurrentTrayCount, trayCapacity);
     }
 }

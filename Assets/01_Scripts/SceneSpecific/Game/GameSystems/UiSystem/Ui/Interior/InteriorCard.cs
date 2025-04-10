@@ -1,11 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class InteriorCard : MonoBehaviour
@@ -18,39 +13,40 @@ public class InteriorCard : MonoBehaviour
     [SerializeField] private TextMeshProUGUI buyButtonText;
     [SerializeField] private Button authorizationCheckButton;
     [SerializeField] private GameObject authorityCheckPanel;
-    
-    
+
+
     private bool isGoldEnough;
     private bool isSatisfyRequirements;
-    private InteriorUpgradePopup upgradePopup;
     private InteriorUpgradeAuthorityNotifyPopup upgradeAuthorityNotifyPopup;
+    private InteriorUpgradePopup upgradePopup;
 
-    
+
     public bool IsStateChanged
     {
         get
         {
             var userData = UserDataManager.Instance.CurrentUserData;
-            bool isGoldConditionChanged = isGoldEnough != (userData.Gold >= data.GetSellingCost());
-            bool isRequirementsChanged = isSatisfyRequirements != 
-                                         (userData.CurrentRankPoint >= data.Requirements1 && 
-                                          (data.Requirements2 == 0 || userData.InteriorSaveData[data.Requirements2] != 0));
+            var isGoldConditionChanged = isGoldEnough != userData.Gold >= Data.GetSellingCost();
+            var isRequirementsChanged = isSatisfyRequirements !=
+                                        (userData.CurrentRankPoint >= Data.Requirements1 &&
+                                         (Data.Requirements2 == 0 ||
+                                          userData.InteriorSaveData[Data.Requirements2] != 0));
             return isGoldConditionChanged || isRequirementsChanged;
         }
     }
-    
-    
-    private InteriorData data;
-    public InteriorData Data => data;
+
+    public InteriorData Data { get; private set; }
+
     public bool IsInteractable => buyButton.interactable;
 
-    public void Init(InteriorData data,InteriorUpgradePopup popup, InteriorUpgradeAuthorityNotifyPopup authorityNotifyPopup)
+    public void Init(InteriorData data, InteriorUpgradePopup popup,
+        InteriorUpgradeAuthorityNotifyPopup authorityNotifyPopup)
     {
-        this.data = data;
-        this.upgradePopup = popup;
-        this.upgradeAuthorityNotifyPopup = authorityNotifyPopup;
+        this.Data = data;
+        upgradePopup = popup;
+        upgradeAuthorityNotifyPopup = authorityNotifyPopup;
         nameText.text = data.Name;
-        
+
         buyButton.onClick.RemoveAllListeners();
         buyButton.onClick.AddListener(OnButtonClick);
         authorizationCheckButton.onClick.RemoveAllListeners();
@@ -61,15 +57,15 @@ public class InteriorCard : MonoBehaviour
     public void UpdateInteractable()
     {
         var userData = UserDataManager.Instance.CurrentUserData;
-        
-        int upgradeLevel = userData.InteriorSaveData[data.InteriorID];
-        int cost = data.GetSellingCost();
-        
+
+        var upgradeLevel = userData.InteriorSaveData[Data.InteriorID];
+        var cost = Data.GetSellingCost();
+
         costText.text = cost.ToString();
         isGoldEnough = userData.Gold >= cost;
-        
+
         isSatisfyRequirements = CheckRequirements(userData);
-        
+
         UpdatePanels();
         UpdateButtonAndText(upgradeLevel);
         UpdateImage();
@@ -77,7 +73,7 @@ public class InteriorCard : MonoBehaviour
 
     private void OnButtonClick()
     {
-        if (UserDataManager.Instance.CurrentUserData.InteriorSaveData[data.InteriorID] != 0)
+        if (UserDataManager.Instance.CurrentUserData.InteriorSaveData[Data.InteriorID] != 0)
         {
             upgradePopup.gameObject.SetActive(true);
             upgradePopup.SetInfo(this);
@@ -90,15 +86,15 @@ public class InteriorCard : MonoBehaviour
 
     public void OnBuy()
     {
-        UserDataManager.Instance.UpgradeInterior(data.InteriorID);
-        UserDataManager.Instance.ModifyGold(-data.SellingCost);
+        UserDataManager.Instance.UpgradeInterior(Data.InteriorID);
+        UserDataManager.Instance.ModifyGold(-Data.SellingCost);
         UpdateInteractable();
     }
-    
+
     private bool CheckRequirements(UserData userData)
     {
-        return userData.CurrentRankPoint >= data.Requirements1 &&
-               (data.Requirements2 == 0 || userData.InteriorSaveData[data.Requirements2] != 0);
+        return userData.CurrentRankPoint >= Data.Requirements1 &&
+               (Data.Requirements2 == 0 || userData.InteriorSaveData[Data.Requirements2] != 0);
     }
 
     private void UpdatePanels()
@@ -114,7 +110,7 @@ public class InteriorCard : MonoBehaviour
             //FIXME:스트링테이블로 분리
             buyButtonText.text = upgradeLevel == 0 ? "구매" : "신상품";
             //
-            
+
             buyButton.interactable = isGoldEnough;
             costText.color = isGoldEnough ? Color.white : Color.red;
         }
@@ -122,22 +118,22 @@ public class InteriorCard : MonoBehaviour
 
     private void UpdateImage()
     {
-        int level = UserDataManager.Instance.CurrentUserData.InteriorSaveData[data.InteriorID];
-        
+        var level = UserDataManager.Instance.CurrentUserData.InteriorSaveData[Data.InteriorID];
+
         Sprite sprite = null;
-        if (data.IconID == "Dummy")
-            sprite = Addressables.LoadAssetAsync<Sprite>(data.IconID).WaitForCompletion();
-        else if(level != 0) 
-            sprite = Addressables.LoadAssetAsync<Sprite>(data.IconID + level).WaitForCompletion();
+        if (Data.IconID == "Dummy")
+            sprite = Addressables.LoadAssetAsync<Sprite>(Data.IconID).WaitForCompletion();
+        else if (level != 0)
+            sprite = Addressables.LoadAssetAsync<Sprite>(Data.IconID + level).WaitForCompletion();
         else
-            sprite = Addressables.LoadAssetAsync<Sprite>(data.IconID + 1).WaitForCompletion();
-        
+            sprite = Addressables.LoadAssetAsync<Sprite>(Data.IconID + 1).WaitForCompletion();
+
         icon.sprite = sprite;
     }
 
     public void OnAuthorizationCheckButtonTouched()
     {
-        upgradeAuthorityNotifyPopup.SetRequirementText(data);
+        upgradeAuthorityNotifyPopup.SetRequirementText(Data);
         upgradeAuthorityNotifyPopup.gameObject.SetActive(true);
     }
 }

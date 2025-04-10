@@ -9,7 +9,7 @@ public class WorkPayment : InteractWorkBase
     {
         interactTime = workManager.workDurationRatio.WorkDurationRatio[GetType().Name];
     }
-    
+
     public override void OnWorkRegistered()
     {
         base.OnWorkRegistered();
@@ -19,10 +19,10 @@ public class WorkPayment : InteractWorkBase
 
         iconHandle.WaitForCompletion();
         backgroundHandle.WaitForCompletion();
-        
-        Sprite iconSprite = iconHandle.Result;
-        Sprite backgroundSprite = backgroundHandle.Result;
-        
+
+        var iconSprite = iconHandle.Result;
+        var backgroundSprite = backgroundHandle.Result;
+
         var counter = target as CashierCounter;
         counter.ShowIcon(IconPivots.Consumer, iconSprite, backgroundSprite, true);
     }
