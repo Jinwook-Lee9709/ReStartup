@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.UIElements;
 
 public class IconBubble : MonoBehaviour
 {
@@ -15,8 +12,8 @@ public class IconBubble : MonoBehaviour
     {
         background.sprite = Addressables.LoadAssetAsync<Sprite>(backgroundSpriteId).WaitForCompletion();
     }
-    
-    
+
+
     public void ShowIcon(Sprite sprite, Vector3 position, bool flip = false)
     {
         SetIcon(sprite);
@@ -29,12 +26,9 @@ public class IconBubble : MonoBehaviour
     {
         baseTransform.PopdownAnimation();
     }
-    
+
     private void SetIcon(Sprite sprite)
     {
         icon.sprite = sprite;
     }
-    
-    
-    
 }

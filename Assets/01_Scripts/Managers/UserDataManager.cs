@@ -8,19 +8,11 @@ public class UserDataManager : Singleton<UserDataManager>
 {
     private UserData currentUserData = new();
 
-    public event Action<int?> ChangeGoldAction;
-    public event Action<int?> ChangeRankPointAction;
-    public event Action<int, int> OnInteriorUpgradeEvent;
-    public event Action<int> SetRankingPointAction;
-    public event Action<bool> OnReviewCntFullEvent;
-
-    UserDataManager()
+    private UserDataManager()
     {
-        if (currentUserData.Gold == 0)
-        {
-            currentUserData.Gold = 1000000000;
-        }
+        if (currentUserData.Gold == 0) currentUserData.Gold = 1000000000;
     }
+
     public UserData CurrentUserData
     {
         get
@@ -35,6 +27,12 @@ public class UserDataManager : Singleton<UserDataManager>
             currentUserData = value;
         }
     }
+
+    public event Action<int?> ChangeGoldAction;
+    public event Action<int?> ChangeRankPointAction;
+    public event Action<int, int> OnInteriorUpgradeEvent;
+    public event Action<int> SetRankingPointAction;
+    public event Action<bool> OnReviewCntFullEvent;
 
     public bool SaveDB()
     {
@@ -71,11 +69,11 @@ public class UserDataManager : Singleton<UserDataManager>
         yield return new WaitForSeconds(0.5f);
 
         if (consumer.needFood.FoodID == consumer.FSM.consumerData.LoveFoodId && 0.25f < Random.Range(0f, 1f))
-        {    //TODO : Play Tip PopUp
+            //TODO : Play Tip PopUp
             CurrentUserData.Gold +=
                 Mathf.CeilToInt(consumer.needFood.SellingCost * (consumer.FSM.consumerData.SellTipPercent / 100));
-        }
     }
+
     public void OnRankPointUp(int getRankPoint)
     {
         SetRankingPointAction?.Invoke(getRankPoint);
@@ -83,7 +81,6 @@ public class UserDataManager : Singleton<UserDataManager>
 
     public void ModifyGold(int gold)
     {
-
         CurrentUserData.Gold += gold;
         ChangeRankPointAction?.Invoke(currentUserData.CurrentRankPoint);
         ChangeGoldAction?.Invoke(CurrentUserData.Gold);
@@ -92,9 +89,10 @@ public class UserDataManager : Singleton<UserDataManager>
     public void UpgradeInterior(int interiorId)
     {
         CurrentUserData.InteriorSaveData[interiorId]++;
-        int upgradeCount = CurrentUserData.InteriorSaveData[interiorId];
+        var upgradeCount = CurrentUserData.InteriorSaveData[interiorId];
         OnInteriorUpgradeEvent?.Invoke(interiorId, upgradeCount);
     }
+
     public void AddConsumerCnt(bool isPositive)
     {
         if (isPositive)
@@ -111,10 +109,7 @@ public class UserDataManager : Singleton<UserDataManager>
             currentUserData.NegativeCnt++;
             if (currentUserData.NegativeCnt >= 4)
             {
-                if (Random.Range(0f, 1f) < 0.6f)
-                {
-                    OnReviewCntFullEvent?.Invoke(isPositive);
-                }
+                if (Random.Range(0f, 1f) < 0.6f) OnReviewCntFullEvent?.Invoke(isPositive);
                 currentUserData.NegativeCnt = 0;
             }
         }

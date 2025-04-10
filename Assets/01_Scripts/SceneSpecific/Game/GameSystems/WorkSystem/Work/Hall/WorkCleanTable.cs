@@ -1,7 +1,5 @@
-using System;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class WorkCleanTable : InteractWorkBase
 {
@@ -18,7 +16,7 @@ public class WorkCleanTable : InteractWorkBase
         this.controller = controller;
         this.isPair = isPair;
     }
-    
+
     public override void OnWorkRegistered()
     {
         base.OnWorkRegistered();
@@ -28,15 +26,15 @@ public class WorkCleanTable : InteractWorkBase
 
         iconHandle.WaitForCompletion();
         backgroundHandle.WaitForCompletion();
-        
-        Sprite iconSprite = iconHandle.Result;
-        Sprite backgroundSprite = backgroundHandle.Result;
-        
+
+        var iconSprite = iconHandle.Result;
+        var backgroundSprite = backgroundHandle.Result;
+
         var table = target as Table;
         table.ShowIcon(IconPivots.Default, iconSprite, backgroundSprite);
         table.PairTable.HideIcon();
     }
-    
+
 
     protected override void HandlePostInteraction()
     {
@@ -45,19 +43,19 @@ public class WorkCleanTable : InteractWorkBase
         SetNextWork(table);
         controller.ReturnTable(table);
     }
-    
+
     private void SetNextWork(Table table)
     {
         worker.ClearWork();
         var trayReturnCounter = controller.TrayReturnCounter;
         var work = new WorkDishToKitchen(workManager, WorkType.Hall, 0, false, false);
-        int trayCount = isPair ? 2 : 1;
+        var trayCount = isPair ? 2 : 1;
         work.SetContext(controller, trayCount);
         work.SetInteractable(trayReturnCounter);
         worker.AssignWork(work);
         nextWork = work;
         nextWorker = worker;
-        
+
         var transformer = worker as ITransportable;
         var foodObject = table.GetFood();
         transformer.LiftPackage(foodObject);
@@ -67,5 +65,4 @@ public class WorkCleanTable : InteractWorkBase
             subFoodObject.GetComponent<FoodObject>().Release();
         }
     }
-    
 }

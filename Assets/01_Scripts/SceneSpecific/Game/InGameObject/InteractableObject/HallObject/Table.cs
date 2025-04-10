@@ -1,11 +1,10 @@
-using System;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.Serialization;
+
 public enum TableType
 {
     Main,
-    Sub,
+    Sub
 }
 
 public class Table : InteractableObjectBase, IInterior
@@ -16,18 +15,23 @@ public class Table : InteractableObjectBase, IInterior
     [SerializeField] private Transform consumerIconTransform;
     [SerializeField] private IconBubble iconBubble;
     [SerializeField] private Table pairTable;
-    
+
     [SerializeField] private TableType tableType;
     public Transform FoodPlacePivot => foodPlacePivot;
     public TableType TableType => tableType;
     public Table PairTable => pairTable;
-    
+
+    public void ChangeSpirte(Sprite sprite)
+    {
+        objectRenderer.sprite = sprite;
+    }
+
     public GameObject GetFood()
     {
         var food = foodPlacePivot.GetChild(0).gameObject;
         return food;
     }
-    
+
     public void FoodToTray()
     {
         var handle = Addressables.LoadAssetAsync<Sprite>(Strings.Tray);
@@ -39,7 +43,7 @@ public class Table : InteractableObjectBase, IInterior
     public override bool ShowIcon(IconPivots pivot, Sprite icon, Sprite background = null, bool flipBackground = false)
     {
         Transform targetRendererTransform = null;
-        
+
         switch (pivot)
         {
             case IconPivots.Default:
@@ -52,17 +56,13 @@ public class Table : InteractableObjectBase, IInterior
                 targetRendererTransform = defaultIconTransform.transform;
                 break;
         }
+
         iconBubble.ShowIcon(icon, targetRendererTransform.position, flipBackground);
         return true;
     }
-    
+
     public override void HideIcon()
     {
         iconBubble.HideIcon();
-    }
-
-    public void ChangeSpirte(Sprite sprite)
-    {
-        objectRenderer.sprite = sprite;
     }
 }

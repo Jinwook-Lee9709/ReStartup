@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.AI;
@@ -60,7 +59,8 @@ public static class Extends
         transform.DOScale(scale, duration).SetEase(Ease.InOutElastic);
     }
 
-    public static void PopdownAnimation(this Transform transform, float scale = 0f, float duration = 0.5f, Action onComplete = null)
+    public static void PopdownAnimation(this Transform transform, float scale = 0f, float duration = 0.5f,
+        Action onComplete = null)
     {
         transform.DOScale(scale, duration).SetEase(Ease.InOutElastic)
             .OnComplete(() => transform.gameObject.SetActive(false))

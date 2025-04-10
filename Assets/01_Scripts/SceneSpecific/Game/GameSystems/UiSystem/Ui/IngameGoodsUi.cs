@@ -1,13 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 
 public class IngameGoodsUi : MonoBehaviour
 {
     public static readonly string GoldFormatId = "GoldFormat";
-    
+
     public TextMeshProUGUI goldText;
     public TextMeshProUGUI upgradeUIMoeny;
     public TextMeshProUGUI upgradeUIRankingPoint;
@@ -21,29 +20,10 @@ public class IngameGoodsUi : MonoBehaviour
         upgradeUIRankingPoint.text = userDataManager.CurrentUserData.CurrentRankPoint.ToString();
         userDataManager.ChangeGoldAction += GoldUiValueSet;
         userDataManager.ChangeRankPointAction += RankPointValueSet;
-        
+
         LocalizationSettings.SelectedLocaleChanged += OnLanguageChanged;
     }
-    public void GoldUiValueSet(int? gold)
-    {
-        string goldString = LZString.GetUIString(GoldFormatId, args: gold.ToString());
-        goldText.text = goldString;
-        upgradeUIMoeny.text = goldString;
-    }
-    public void RankPointValueSet(int? rankPoint)
-    {
-        upgradeUIRankingPoint.text = rankPoint.ToString();
-    }
-    public void SetGoldUi()
-    {
-        GoldUiValueSet(userDataManager.CurrentUserData.Gold);
-    }
-    
-    private void OnLanguageChanged(UnityEngine.Localization.Locale locale)
-    {
-        SetGoldUi();
-    }
-    
+
     private void OnDestroy()
     {
         // 이벤트 구독 해제
@@ -52,5 +32,27 @@ public class IngameGoodsUi : MonoBehaviour
         // 유저 데이터 이벤트도 해제
         userDataManager.ChangeGoldAction -= GoldUiValueSet;
         userDataManager.ChangeRankPointAction -= RankPointValueSet;
+    }
+
+    public void GoldUiValueSet(int? gold)
+    {
+        var goldString = LZString.GetUIString(GoldFormatId, args: gold.ToString());
+        goldText.text = goldString;
+        upgradeUIMoeny.text = goldString;
+    }
+
+    public void RankPointValueSet(int? rankPoint)
+    {
+        upgradeUIRankingPoint.text = rankPoint.ToString();
+    }
+
+    public void SetGoldUi()
+    {
+        GoldUiValueSet(userDataManager.CurrentUserData.Gold);
+    }
+
+    private void OnLanguageChanged(Locale locale)
+    {
+        SetGoldUi();
     }
 }

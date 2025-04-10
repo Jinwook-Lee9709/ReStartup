@@ -6,15 +6,15 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
 {
     //References
     [SerializeField] private List<InteractPivot> interactablePoint;
-    
+
     //LocalVariables
     [SerializeField] private float interactProgress;
-    private InteractWorkBase currentWork;
-    private float interactionSpeed = 0.1f;
     private float calculatedInterationSpeed;
+    private float interactionSpeed = 0.1f;
 
     //Properties
     public int Id { get; private set; }
+    public InteractWorkBase CurrentWork { get; private set; }
 
     public int CompareTo(InteractableObjectBase other)
     {
@@ -23,15 +23,9 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
 
     public float InteractProgress => interactProgress;
     public InteractStatus InteractStatus { get; private set; }
-    public InteractWorkBase CurrentWork => currentWork;
-    
-    
-    public event Action<float> OnInteractedEvent;
-    public event Action OnClearWorkEvent;
-    public event Action OnInteractFinishedEvent;
 
     public List<InteractPivot> InteractablePoints => interactablePoint;
-    
+
     public List<InteractPivot> GetInteractablePoints(InteractPermission permission)
     {
         var interactablePoints = new List<InteractPivot>();
@@ -70,14 +64,19 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
         ClearWork();
     }
 
+
+    public event Action<float> OnInteractedEvent;
+    public event Action OnClearWorkEvent;
+    public event Action OnInteractFinishedEvent;
+
     public void SetWork(InteractWorkBase workBase)
     {
-        currentWork = workBase;
+        CurrentWork = workBase;
     }
 
     public virtual void SetId(int id)
     {
-        this.Id = id;
+        Id = id;
     }
 
     public void SetInteractionSpeed(float speed)
@@ -87,7 +86,7 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
 
     public void ClearWork()
     {
-        currentWork = null;
+        CurrentWork = null;
         OnClearWorkEvent?.Invoke();
         interactProgress = 0f;
     }
@@ -107,13 +106,12 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
 
     private float CalculateInteractionSpeed(IInteractor interactor)
     {
-        if (interactor == null || currentWork.InteractTime == 0)
+        if (interactor == null || CurrentWork.InteractTime == 0)
             return 0;
 
-        return 1 / interactor.InteractionSpeed / currentWork.InteractTime / interactionSpeed;
+        return 1 / interactor.InteractionSpeed / CurrentWork.InteractTime / interactionSpeed;
     }
 
     public abstract bool ShowIcon(IconPivots pivot, Sprite icon, Sprite background = null, bool flipBackGround = false);
     public abstract void HideIcon();
-    
 }

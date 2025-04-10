@@ -1,30 +1,27 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using NavMeshPlus.Components;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
-using UnityEngine.UI;
 
 public class WorkStationManager
 {
+    private readonly Dictionary<CookwareType, Dictionary<int, CookingStation>> cookingStations = new();
     private ObjectPivotManager objectPivotManager;
-    private WorkFlowController workFlowController;
-    private List<Transform> tablePivots;
+    private SinkingStation sinkingStation;
     private NavMeshSurface surface2D;
-    private TrayReturnCounter _trayReturnCounter;
+    private List<Transform> tablePivots;
 
-    Dictionary<int, Table> tables = new();
-    Dictionary<CookwareType, Dictionary<int, CookingStation>> cookingStations = new();
-    SinkingStation sinkingStation;
+    private readonly Dictionary<int, Table> tables = new();
+    private WorkFlowController workFlowController;
 
-    public TrayReturnCounter TrayReturnCounter => _trayReturnCounter;
+    public TrayReturnCounter TrayReturnCounter { get; }
 
-    public int CurrentCookwareCount(CookwareType type) =>
-        objectPivotManager.GetCookwarePivots(type).Count(x => x.childCount > 0);
+    public int CurrentCookwareCount(CookwareType type)
+    {
+        return objectPivotManager.GetCookwarePivots(type).Count(x => x.childCount > 0);
+    }
 
     public void Init(WorkFlowController workFlowController, ObjectPivotManager objectPivotManager,
         NavMeshSurface surface2D)
@@ -55,7 +52,7 @@ public class WorkStationManager
 
     public void BakeNavMesh()
     {
-        int excludeLayer = LayerMask.NameToLayer("InGameText");
+        var excludeLayer = LayerMask.NameToLayer("InGameText");
         surface2D.layerMask = ~(1 << excludeLayer);
         surface2D.BuildNavMesh();
     }
@@ -72,7 +69,7 @@ public class WorkStationManager
     {
         var table = DataTableManager.Get<CookwareDataTable>(DataTableIds.Cookware.ToString());
         var cookwareData = table.GetData(data.InteriorID);
-        float interactionSpeed = (1 - data.EffectQuantity * (level - 1) / 100f);
+        var interactionSpeed = 1 - data.EffectQuantity * (level - 1) / 100f;
 
         var sprite = Addressables.LoadAssetAsync<Sprite>(data.IconID + level).WaitForCompletion();
 
@@ -103,13 +100,12 @@ public class WorkStationManager
 
     public void UpgradeTable(InteriorData data, int level)
     {
-        float interactionSpeed = (1 - data.EffectQuantity * (level - 1) / 100f);
+        var interactionSpeed = 1 - data.EffectQuantity * (level - 1) / 100f;
         var sprite = Addressables.LoadAssetAsync<Sprite>(data.IconID + level).WaitForCompletion();
-        
+
         var table = tables[data.InteriorID % 10 - 1];
         table.SetInteractionSpeed(interactionSpeed);
         table.ChangeSpirte(sprite);
-        
     }
 
     private void OnTableInstantiated(GameObject obj, int num)
@@ -136,7 +132,7 @@ public class WorkStationManager
 
     public void UpgradeSinkingStation(InteriorData data, int level)
     {
-        int capacity = Constants.DEFAULT_SINKINGSTATION_CAPACITY + data.EffectQuantity * (level - 1);
+        var capacity = Constants.DEFAULT_SINKINGSTATION_CAPACITY + data.EffectQuantity * (level - 1);
         var sprite = Addressables.LoadAssetAsync<Sprite>(data.IconID + level).WaitForCompletion();
         sinkingStation.ChangeSpirte(sprite);
         sinkingStation.ChangeCapacity(capacity);

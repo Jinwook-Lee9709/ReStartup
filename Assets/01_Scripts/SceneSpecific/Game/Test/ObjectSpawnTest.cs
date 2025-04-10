@@ -1,25 +1,23 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class ObjectSpawnTest : MonoBehaviour
 {
     [SerializeField] private Transform contents;
     [SerializeField] private ObjectSpawnTestButton prefab;
-    
+
     private void Start()
     {
         var pivotManager = ServiceLocator.Instance.GetSceneService<GameManager>().ObjectPivotManager;
         var pivotList = pivotManager.GetTablePivots();
-        for (int i = 0; i < pivotList.Count; i++)
+        for (var i = 0; i < pivotList.Count; i++)
         {
             var obj = Instantiate(prefab, contents);
-            obj.gameObject.name = $"Table{i+1}";
+            obj.gameObject.name = $"Table{i + 1}";
             obj.transform.SetAsLastSibling();
-            obj.text.text = $"Table{i+1}";
-            int currentTableNum = i;
+            obj.text.text = $"Table{i + 1}";
+            var currentTableNum = i;
             obj.button.onClick.AddListener(
                 () =>
                 {
@@ -27,11 +25,12 @@ public class ObjectSpawnTest : MonoBehaviour
                     obj.button.interactable = false;
                 });
         }
+
         var table = DataTableManager.Get<FoodDataTable>(DataTableIds.Food.ToString());
-        GameManager gameManager = ServiceLocator.Instance.GetSceneService<GameManager>();
+        var gameManager = ServiceLocator.Instance.GetSceneService<GameManager>();
         var kvpList = table.GetSceneFoodDataList(gameManager.CurrentTheme);
         var cookwareTypeList = kvpList.Select(pair => pair.Value.CookwareType).Distinct().ToList();
-        Dictionary<CookwareType, List<Transform>> cookwareDict = new ();
+        Dictionary<CookwareType, List<Transform>> cookwareDict = new();
         foreach (var cookwareType in cookwareTypeList)
         {
             var list = pivotManager.GetCookwarePivots(cookwareType);
@@ -39,23 +38,20 @@ public class ObjectSpawnTest : MonoBehaviour
         }
 
         foreach (var pair in cookwareDict)
-        {
-            for (int i = 0; i < pair.Value.Count; i++)
+            for (var i = 0; i < pair.Value.Count; i++)
             {
                 var obj = Instantiate(prefab, contents);
-                obj.gameObject.name = $"{pair.Key}{i+1}";
+                obj.gameObject.name = $"{pair.Key}{i + 1}";
                 obj.transform.SetAsLastSibling();
-                obj.text.text = $"{pair.Key}{i+1}";
-                int currentWareNum = i;
+                obj.text.text = $"{pair.Key}{i + 1}";
+                var currentWareNum = i;
                 obj.button.onClick.AddListener(
                     () =>
                     {
-                        ServiceLocator.Instance.GetSceneService<GameManager>().WorkStationManager.AddCookingStation(pair.Key, currentWareNum);
+                        ServiceLocator.Instance.GetSceneService<GameManager>().WorkStationManager
+                            .AddCookingStation(pair.Key, currentWareNum);
                         obj.button.interactable = false;
                     });
             }
-           
-        }
-
     }
 }

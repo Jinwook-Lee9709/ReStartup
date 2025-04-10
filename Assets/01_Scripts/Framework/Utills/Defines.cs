@@ -5,7 +5,7 @@ public enum DebugFlags
 {
     None = 0,
     FrameRate = 1 << 0,
-    WorkSystem = 1 << 1,
+    WorkSystem = 1 << 1
 }
 
 public enum DataTableIds
@@ -17,13 +17,13 @@ public enum DataTableIds
     Interior,
     Cookware,
     Buff,
-    Promoiton,
+    Promoiton
 }
 
 public enum IconPivots
 {
     Default,
-    Consumer,
+    Consumer
 }
 
 public enum ThemeIds
@@ -89,7 +89,7 @@ public enum BuffType
     FootTraffic,
     StaffWork,
     StaffMove,
-    PairSpawn,
+    PairSpawn
 }
 
 public enum PromotionType
@@ -97,7 +97,7 @@ public enum PromotionType
     SNS,
     Ituber,
     PD,
-    Chef,
+    Chef
 }
 
 public static class Endpoints
@@ -119,7 +119,7 @@ public static class Constants
 public static class Variables
 {
     private static DebugFlags debugFlags = DebugFlags.WorkSystem;
-    public static event Action<DebugFlags> OnDebugFlagsChanged;
+
     public static DebugFlags DebugFlags
     {
         get => debugFlags;
@@ -132,6 +132,8 @@ public static class Variables
             }
         }
     }
+
+    public static event Action<DebugFlags> OnDebugFlagsChanged;
 }
 
 public enum CookwareType
@@ -146,7 +148,7 @@ public enum CookwareType
     CharcoalGrill,
     GriddleGrill,
     Pot,
-    KitchenTable,
+    KitchenTable
 }
 
 public enum InteriorCategory
@@ -156,7 +158,7 @@ public enum InteriorCategory
     인테리어,
     조리대,
     주방가구,
-    싱크대,
+    싱크대
 }
 
 public enum InteriorEffectType
@@ -166,13 +168,13 @@ public enum InteriorEffectType
     TipProbabilityIncrease,
     RankPoints,
     CapacityIncrease,
-    CraftTimeDecrease,
+    CraftTimeDecrease
 }
 
 public enum ObjectArea
 {
     Hall = 1,
-    Kitchen,
+    Kitchen
 }
 
 public static class Strings
@@ -180,9 +182,9 @@ public static class Strings
     public static readonly string PlayerTag = "Player";
     public static readonly string GameManagerTag = "GameManager";
     public static readonly string InteractableObjectTag = "InteractableObject";
-    
+
     public static readonly string WorkDurationRatioSO = "WorkDurationRatioSO";
-    
+
     public static readonly string CounterName = "Counter";
     public static readonly string FoodPickupCounterName = "FoodPickupCounter";
     public static readonly string CookingStation = "CookingStation";
@@ -199,6 +201,5 @@ public static class Strings
 
 public enum StringTableIds
 {
-    UIString,
-    
+    UIString
 }

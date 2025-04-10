@@ -19,10 +19,10 @@ public class WorkGetOrder : InteractWorkBase
 
         iconHandle.WaitForCompletion();
         backgroundHandle.WaitForCompletion();
-        
-        Sprite iconSprite = iconHandle.Result;
-        Sprite backgroundSprite = backgroundHandle.Result;
-        
+
+        var iconSprite = iconHandle.Result;
+        var backgroundSprite = backgroundHandle.Result;
+
         var table = target as Table;
         table.ShowIcon(IconPivots.Consumer, iconSprite, backgroundSprite, true);
     }

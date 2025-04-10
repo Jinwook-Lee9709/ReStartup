@@ -10,11 +10,11 @@ public class UserData
     public string UID { get; set; } //���� UID
     public string Name { get; set; } = "Player"; //���� �̸�
     public int? Gold { get; set; } = 0; //�ΰ��� ��ȭ
-    public int? CurrentRankPoint { get; set; } = new();//���� ��ŷ ����Ʈ
+    public int? CurrentRankPoint { get; set; } = new(); //���� ��ŷ ����Ʈ
     public int? CurrentRank { get; set; } = new();
     public int? PositiveCnt { get; set; } = new(); //�ſ츸�� �մ� ī��Ʈ
     public int? NegativeCnt { get; set; } = new(); //�Ҹ��� �մ� ī��Ʈ\
-    
+
     public Dictionary<int, FoodSaveData> FoodSaveData { get; set; } = new()
     {
         { 301001, new FoodSaveData() },
@@ -27,7 +27,7 @@ public class UserData
     public Dictionary<ThemeIds, Dictionary<CookwareType, int>> CookWareUnlock { get; set; } = new()
     {
         {
-            ThemeIds.Theme1, new Dictionary<CookwareType, int>()
+            ThemeIds.Theme1, new Dictionary<CookwareType, int>
             {
                 { CookwareType.CoffeeMachine, 0 },
                 { CookwareType.DrinkingFountain, 0 },
@@ -39,15 +39,14 @@ public class UserData
                 { CookwareType.CharcoalGrill, 0 },
                 { CookwareType.GriddleGrill, 0 },
                 { CookwareType.Pot, 0 },
-                { CookwareType.KitchenTable, 0 },
+                { CookwareType.KitchenTable, 0 }
             }
         },
         { ThemeIds.Theme2, new Dictionary<CookwareType, int>() },
         { ThemeIds.Theme3, new Dictionary<CookwareType, int>() }
     };
-    
-    public Dictionary<int, int> InteriorSaveData { get; set; } = new();
 
+    public Dictionary<int, int> InteriorSaveData { get; set; } = new();
 }
 
 public abstract class SaveData
