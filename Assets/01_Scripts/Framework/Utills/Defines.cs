@@ -196,3 +196,9 @@ public static class Strings
     public static readonly string WashDish = "WashDish";
     public static readonly string Cash = "Cash";
 }
+
+public enum StringTableIds
+{
+    UIString,
+    
+}
