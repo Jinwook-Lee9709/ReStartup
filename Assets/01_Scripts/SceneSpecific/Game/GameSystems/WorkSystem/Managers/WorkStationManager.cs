@@ -10,6 +10,7 @@ public class WorkStationManager
     private readonly Dictionary<CookwareType, Dictionary<int, CookingStation>> cookingStations = new();
     private ObjectPivotManager objectPivotManager;
     private SinkingStation sinkingStation;
+    private CashierCounter counter;
     private NavMeshSurface surface2D;
     private List<Transform> tablePivots;
 
@@ -117,6 +118,22 @@ public class WorkStationManager
         tables.Add(num, table);
 
         UpdateNavMesh();
+    }
+
+    public void AddCounter()
+    {
+        var counterPivot = objectPivotManager.GetCounterPivot();
+        var handle = Addressables.InstantiateAsync(Strings.CounterName);
+        handle.WaitForCompletion();
+        counter = handle.Result.GetComponent<CashierCounter>();
+        counter.transform.SetParentAndInitialize(counterPivot);
+        workFlowController.SetCashierCounter(counter);
+    }
+
+    public void UpgradeCounter(InteriorData data, int level)
+    {
+        var sprite = Addressables.LoadAssetAsync<Sprite>(data.IconID + level).WaitForCompletion();
+        counter.ChangeSpirte(sprite);
     }
 
     public void AddSinkingStation()

@@ -1,4 +1,5 @@
 using System.Linq;
+using UnityEngine.AddressableAssets;
 
 public class InteriorManager
 {
@@ -19,6 +20,7 @@ public class InteriorManager
         InitTable();
         InitCookwares();
         InitSinkingStation();
+        InitCounter();
     }
 
     public void InitTable()
@@ -63,6 +65,14 @@ public class InteriorManager
         var data = interiorTable.First(x =>
             x.RestaurantType == (int)gameManager.CurrentTheme && x.Category == InteriorCategory.싱크대);
         UpgradeSink(data, 1);
+    }
+    
+    private void InitCounter()
+    {
+        workStationManager.AddCounter();
+        var data = interiorTable.First(x =>
+            x.RestaurantType == (int)gameManager.CurrentTheme && x.Category == InteriorCategory.카운터);
+        UpgradeCounter(data, 1);
     }
 
     private void OnInteriorUpgrade(int interiorId, int level)
@@ -113,6 +123,11 @@ public class InteriorManager
         {
             UserDataManager.Instance.OnRankPointUp(interiorData.EffectQuantity);
         }
+    }
+
+    private void UpgradeCounter(InteriorData interiorData, int level)
+    {
+        workStationManager.UpgradeCounter(interiorData, level);
     }
 
 

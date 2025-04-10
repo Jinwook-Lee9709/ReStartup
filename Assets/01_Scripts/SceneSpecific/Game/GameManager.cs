@@ -94,20 +94,11 @@ public class GameManager : MonoBehaviour
 
     private void InitInteractableObject()
     {
-        InitCounter();
         InitFoodPickupCounter();
         InitTrayReturnCounter();
     }
 
-    private void InitCounter()
-    {
-        var counterPivot = ObjectPivotManager.GetCounterPivot();
-        var handle = Addressables.InstantiateAsync(Strings.CounterName);
-        handle.WaitForCompletion();
-        var counter = handle.Result.GetComponent<CashierCounter>();
-        counter.transform.SetParentAndInitialize(counterPivot);
-        WorkFlowController.SetCashierCounter(counter);
-    }
+
 
     private void InitFoodPickupCounter()
     {
