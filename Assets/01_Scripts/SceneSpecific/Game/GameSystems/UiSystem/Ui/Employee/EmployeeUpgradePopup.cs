@@ -10,13 +10,23 @@ public class EmployeeUpgradePopup : MonoBehaviour
     [SerializeField] private Button background;
     [SerializeField] private Button mainButton;
     [SerializeField] private Image panel;
-    [SerializeField] private Image beforeIcon;
-    [SerializeField] private Image afterIcon;
-    [SerializeField] private TextMeshProUGUI infoText;
+    [SerializeField] private Image employeeIcon;
+    [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI mainButtonText;
     [SerializeField] private TextMeshProUGUI priceText;
 
-    private FoodResearchUIItem currentCard;
+    [SerializeField] private TextMeshProUGUI currentMoveSpeedValue;
+    [SerializeField] private TextMeshProUGUI currentWorkSpeedValue;
+    [SerializeField] private TextMeshProUGUI currentHealthValue; 
+    
+    [SerializeField] private TextMeshProUGUI nextLevelMoveSpeedValue;
+    [SerializeField] private TextMeshProUGUI nextLevelWorkSpeedValue;
+    [SerializeField] private TextMeshProUGUI nextLevelHealthValue;
+
+    [SerializeField] private TextMeshProUGUI currentLevelText;
+    [SerializeField] private TextMeshProUGUI nextLevelText;
+
+    private EmployeeUIItem currentCard;
     private bool isPaid;
 
     private bool IsPaid
@@ -36,11 +46,22 @@ public class EmployeeUpgradePopup : MonoBehaviour
         mainButton.onClick.AddListener(OnMainButtonTouched);
     }
 
-    public void SetInfo(FoodResearchUIItem card)
+    public void SetInfo(EmployeeUIItem card , Sprite image)
     {
         IsPaid = false;
         currentCard = card;
-        priceText.text = card.foodData.BasicCost.ToString();
+        var data = card.employeeData;
+        employeeIcon.sprite = image;
+        currentLevelText.text = $"{data.upgradeCount} LV";
+        nextLevelText.text = $"{data.upgradeCount + 1} LV";
+        nameText.text = data.StaffNameKey.ToString();
+        priceText.text = (data.Cost * data.upgradeCount).ToString();
+        currentMoveSpeedValue.text = data.MoveSpeed.ToString();
+        currentWorkSpeedValue.text = data.WorkSpeed.ToString();
+        currentHealthValue.text = data.Health.ToString();
+        nextLevelMoveSpeedValue.text = data.MoveSpeed.ToString();
+        nextLevelWorkSpeedValue.text = data.WorkSpeed.ToString();
+        nextLevelHealthValue.text = data.Health.ToString();
     }
     private void OnEnable()
     {

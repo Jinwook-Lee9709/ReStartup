@@ -9,7 +9,7 @@ public class EmployeeUIManager : MonoBehaviour
     public Transform contents;
     public AssetReference employeeListUi;
     private GameManager gameManager;
-    [SerializeField] 
+    [SerializeField] EmployeeUpgradePopup employeeUpgradePopup;
 
     public void Start()
     {
@@ -28,7 +28,7 @@ public class EmployeeUIManager : MonoBehaviour
             line.SetWorkType((WorkType)pair.Key);
             foreach (var item in pair.Value)
             {
-                line.AddEmployeeUpgradeItem(item.Value);
+                line.AddEmployeeUpgradeItem(item.Value , employeeUpgradePopup);
             }
         }
     }

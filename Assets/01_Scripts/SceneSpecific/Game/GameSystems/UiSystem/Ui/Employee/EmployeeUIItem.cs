@@ -1,4 +1,5 @@
 using System.Collections;
+using DG.Tweening.Core.Easing;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -28,6 +29,7 @@ public class EmployeeUIItem : MonoBehaviour
     private readonly string employeePrefab = "Agent.prefab";
 
     private IngameGoodsUi ingameGoodsUi;
+    private EmployeeUpgradePopup employeeUpgradePopup;
 
     private void Start()
     {
@@ -43,14 +45,14 @@ public class EmployeeUIItem : MonoBehaviour
             }
             employeeUpgradeListUi.AddButtonList(button);
         }
-        
+
     }
 
-    public void Init(EmployeeTableGetData data)
+    public void Init(EmployeeTableGetData data, EmployeeUpgradePopup employeeUpgradePopup)
     {
-        var userData = UserDataManager.Instance.CurrentUserData;
         employeeData = data;
-        var gameManager = ServiceLocator.Instance.GetSceneService<GameManager>();
+
+        this.employeeUpgradePopup = employeeUpgradePopup;
         switch ((WorkType)employeeData.StaffType)
         {
             case WorkType.All:
@@ -72,40 +74,53 @@ public class EmployeeUIItem : MonoBehaviour
         moveSpeedValue.text = employeeData.MoveSpeed.ToString();
         HealthValue.text = employeeData.Health.ToString();
 
-        button.onClick.AddListener((UnityEngine.Events.UnityAction)(async () =>
-        {
-            if (employeeData.upgradeCount >= 5)
-            {
-                return;
-            }
-            if (employeeData.upgradeCount < 1 && userData.Gold > employeeData.Cost)
-            {
-
-                var handle = Addressables.LoadAssetAsync<GameObject>(employeePrefab);
-                GameObject prefab = handle.WaitForCompletion();
-                var newEmployee = Instantiate(prefab).GetComponent<EmployeeFSM>();
-                newEmployee.EmployeeData = employeeData;
-                newEmployee.GetComponentInChildren<TextMeshPro>().text = $"{((WorkType)employeeData.StaffType).ToString()}직원";
-                var workerManager = gameManager.WorkerManager;
-                workerManager.RegisterWorker(newEmployee, (WorkType)newEmployee.EmployeeData.StaffType, newEmployee.EmployeeData.StaffID);
-
-                userData.Gold -= employeeData.Cost;
-                OnUpgradeEmployee();
-            }
-            if (userData.Gold > employeeData.Cost * employeeData.upgradeCount)
-            {
-                OnUpgradeEmployee();
-                userData.Gold -= employeeData.Cost * employeeData.upgradeCount;
-            }
-            if (employeeData.upgradeCount >= 5)
-            {
-                upgradeButtonText.text = "완료됨";
-                button.interactable = false;
-            }
-        }));
+        button.onClick.AddListener(OnButtonClick);
 
     }
-    
+    private void OnButtonClick()
+    {
+        if (employeeData.upgradeCount != 0)
+        {
+            employeeUpgradePopup.gameObject.SetActive(true);
+            employeeUpgradePopup.SetInfo(this, image.sprite);
+        }
+        else
+        {
+            OnBuy();
+        }
+    }
+    public void OnBuy()
+    {
+        var userData = UserDataManager.Instance.CurrentUserData;
+        if (employeeData.upgradeCount >= 5)
+        {
+            return;
+        }
+        if (employeeData.upgradeCount < 1 && userData.Gold > employeeData.Cost)
+        {
+            var gameManager = ServiceLocator.Instance.GetSceneService<GameManager>();
+            var handle = Addressables.LoadAssetAsync<GameObject>(employeePrefab);
+            GameObject prefab = handle.WaitForCompletion();
+            var newEmployee = Instantiate(prefab).GetComponent<EmployeeFSM>();
+            newEmployee.EmployeeData = employeeData;
+            newEmployee.GetComponentInChildren<TextMeshPro>().text = $"{((WorkType)employeeData.StaffType).ToString()}직원";
+            var workerManager = gameManager.WorkerManager;
+            workerManager.RegisterWorker(newEmployee, (WorkType)newEmployee.EmployeeData.StaffType, newEmployee.EmployeeData.StaffID);
+
+            userData.Gold -= employeeData.Cost;
+            OnUpgradeEmployee();
+        }
+        if (userData.Gold > employeeData.Cost * employeeData.upgradeCount)
+        {
+            OnUpgradeEmployee();
+            userData.Gold -= employeeData.Cost * employeeData.upgradeCount;
+        }
+        if (employeeData.upgradeCount >= 5)
+        {
+            upgradeButtonText.text = "완료됨";
+            button.interactable = false;
+        }
+    }
     private IEnumerator LoadSpriteCoroutine(string iconAddress)
     {
         var handle = Addressables.LoadAssetAsync<Sprite>(iconAddress);

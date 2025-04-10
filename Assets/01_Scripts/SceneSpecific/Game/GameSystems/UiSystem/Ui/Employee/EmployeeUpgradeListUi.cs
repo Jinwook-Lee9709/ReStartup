@@ -16,12 +16,12 @@ public class EmployeeUpgradeListUi : MonoBehaviour
     {
 
     }
-    public void AddEmployeeUpgradeItem(EmployeeTableGetData data)
+    public void AddEmployeeUpgradeItem(EmployeeTableGetData data, EmployeeUpgradePopup employeeUpgradePopup)
     {
        
         employeeData = data;
         var ui = Instantiate(upgradeItemObject, contents).GetComponent<EmployeeUIItem>();
-        ui.Init(data);
+        ui.Init(data, employeeUpgradePopup);
     }
     public void SetWorkType(WorkType worktype)
     {
