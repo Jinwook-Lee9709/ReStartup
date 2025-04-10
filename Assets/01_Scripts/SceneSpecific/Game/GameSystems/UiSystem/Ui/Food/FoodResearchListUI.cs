@@ -13,10 +13,10 @@ public class FoodResearchListUI : MonoBehaviour
         var userDataManager = UserDataManager.Instance;
         userDataManager.ChangeRankPointAction += Unlock;
     }
-    public void AddFoodResearchItem(FoodData data)
+    public void AddFoodResearchItem(FoodData data, FoodResearchNotifyPopup notifyPopup, FoodResearchPopup popup)
     {
         var ui = Instantiate(researchItemObject, transform).GetComponent<FoodResearchUIItem>();
-        ui.Init(data);
+        ui.Init(data, notifyPopup, popup);
         foodResearchItems.Add(data.Requirements ,ui);
     }
     public void AddButtonList(Button button)

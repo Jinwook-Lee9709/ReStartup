@@ -44,19 +44,19 @@ public class InteriorUpgradePopup : MonoBehaviour
         currentCard = card;
         priceText.text = card.Data.GetSellingCost().ToString();
     }
-        private void OnEnable()
+    private void OnEnable()
+    {
+        if (background != null)
         {
-            if (background != null)
-            {
-                var backgroundImage = background.GetComponent<Image>();
-                backgroundImage.FadeInAnimation();
-            }
-    
-            if (panel != null)
-            {
-                panel.transform.PopupAnimation();
-            }
+            var backgroundImage = background.GetComponent<Image>();
+            backgroundImage.FadeInAnimation();
         }
+
+        if (panel != null)
+        {
+            panel.transform.PopupAnimation();
+        }
+    }
 
 
     private void OnMainButtonTouched()
@@ -76,6 +76,6 @@ public class InteriorUpgradePopup : MonoBehaviour
     {
         var backgroundImage = background.GetComponent<Image>();
         backgroundImage.FadeOutAnimation();
-        panel.transform.PopdownAnimation(onComplete:() =>{gameObject.SetActive(false);});
+        panel.transform.PopdownAnimation(onComplete: () => { gameObject.SetActive(false); });
     }
 }

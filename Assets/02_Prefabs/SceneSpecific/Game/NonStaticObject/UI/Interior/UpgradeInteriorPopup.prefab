@@ -334,8 +334,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.3584906, g: 0.3584906, b: 0.3584906, a: 0.80784315}
+  m_Material: {fileID: 2100000, guid: 5eb748808da6b41e589c9023661e62d0, type: 2}
+  m_Color: {r: 0.3584906, g: 0.3584906, b: 0.3584906, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -748,13 +748,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8751441172673002293}
+  - component: {fileID: 477915231694626735}
   m_Layer: 5
   m_Name: UpgradeInteriorPopup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8751441172673002293
 RectTransform:
   m_ObjectHideFlags: 0
@@ -764,7 +765,7 @@ RectTransform:
   m_GameObject: {fileID: 6352672368029895220}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.6049999, y: 1.6049999, z: 1.6049999}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7592150194481126701}
@@ -776,6 +777,27 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &477915231694626735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6352672368029895220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fac5ee1b2827d40618d5999018c805c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  backgroundOpacity: 0.8
+  background: {fileID: 3721540803451190888}
+  mainButton: {fileID: 6496919971415539490}
+  panel: {fileID: 2827590975275837337}
+  beforeIcon: {fileID: 5060356268753788490}
+  afterIcon: {fileID: 6330562631563061775}
+  infoText: {fileID: 2284538102404665177}
+  mainButtonText: {fileID: 3827836486532755056}
+  priceText: {fileID: 3359918624617122384}
 --- !u!1 &6868468235780309392
 GameObject:
   m_ObjectHideFlags: 0
@@ -918,7 +940,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Button
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 9ef2d00fbf70f7d47a09f193cb244e70, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -982,7 +1004,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &8586053438958207810

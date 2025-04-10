@@ -9,6 +9,8 @@ public class FoodScrollView : MonoBehaviour
     [SerializeField] private GameObject ResearchViews;
     [SerializeField] private FoodUpgradeListUI foodUpgradeListUI;
     [SerializeField] private FoodResearchListUI foodResearchListUI;
+    [SerializeField] private FoodResearchNotifyPopup authorityNotifyPopup;
+    [SerializeField] private FoodResearchPopup popup;
 
     public void SetUpgradeViews()
     {
@@ -23,7 +25,7 @@ public class FoodScrollView : MonoBehaviour
 
     public void AddFoodUISet(FoodData data)
     {
-        foodResearchListUI.AddFoodResearchItem(data);
+        foodResearchListUI.AddFoodResearchItem(data, authorityNotifyPopup, popup);
         foodUpgradeListUI.AddFoodUpgradeItem(data);
     }
     public void UnlockFoodUpgrade(FoodData data)
