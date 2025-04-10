@@ -61,6 +61,8 @@ public class InteriorManager
     private void InitSinkingStation()
     {
         workStationManager.AddSinkingStation();
+        var data = interiorTable.First(x => x.RestaurantType == (int)gameManager.CurrentTheme && x.Category == InteriorCategory.싱크대);
+        UpgradeSink(data, 1);
     }
     
     private void OnInteriorUpgrade(int interiorId, int level)
@@ -107,10 +109,8 @@ public class InteriorManager
             {
                 workStationManager.AddTable(interiorData.InteriorID % 10);
             }
-            else
-            {
-                workStationManager.UpgradeTable(interiorData, level);
-            }
+            workStationManager.UpgradeTable(interiorData, level);
+            
         }
     }
 
@@ -139,10 +139,8 @@ public class InteriorManager
                 var data = cookwareTable.GetData(interiorId);
                 workStationManager.AddCookingStation(data.CookwareType, data.CookwareNB);
             }
-            else
-            {
-                workStationManager.UpgradeCookingStation(interiorTable.GetData(interiorId), level);
-            }
+            workStationManager.UpgradeCookingStation(interiorTable.GetData(interiorId), level);
+            
         }
     }
 

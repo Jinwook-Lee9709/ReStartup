@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
@@ -71,6 +72,7 @@ public class InteriorCard : MonoBehaviour
         
         UpdatePanels();
         UpdateButtonAndText(upgradeLevel);
+        UpdateImage();
     }
 
     private void OnButtonClick()
@@ -116,6 +118,21 @@ public class InteriorCard : MonoBehaviour
             buyButton.interactable = isGoldEnough;
             costText.color = isGoldEnough ? Color.white : Color.red;
         }
+    }
+
+    private void UpdateImage()
+    {
+        int level = UserDataManager.Instance.CurrentUserData.InteriorSaveData[data.InteriorID];
+        
+        Sprite sprite = null;
+        if (data.IconID == "Dummy")
+            sprite = Addressables.LoadAssetAsync<Sprite>(data.IconID).WaitForCompletion();
+        else if(level != 0) 
+            sprite = Addressables.LoadAssetAsync<Sprite>(data.IconID + level).WaitForCompletion();
+        else
+            sprite = Addressables.LoadAssetAsync<Sprite>(data.IconID + 1).WaitForCompletion();
+        
+        icon.sprite = sprite;
     }
 
     public void OnAuthorizationCheckButtonTouched()

@@ -72,7 +72,7 @@ public class WorkFlowController
 
     private void ResetFoodAppearance(FoodObject foodObject)
     {
-        foodObject.GetComponent<SpriteRenderer>().color = Color.white;
+       
     }
 
     public void AddTable(Table table)

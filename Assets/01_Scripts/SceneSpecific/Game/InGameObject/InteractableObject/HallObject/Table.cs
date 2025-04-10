@@ -8,12 +8,13 @@ public enum TableType
     Sub,
 }
 
-public class Table : InteractableObjectBase
+public class Table : InteractableObjectBase, IInterior
 {
     [SerializeField] private Transform foodPlacePivot;
-    [SerializeField] private SpriteRenderer iconBackgroundRenderer;
-    [SerializeField] private SpriteRenderer defaultIconRenderer;
-    [SerializeField] private SpriteRenderer consumerRenderer;
+    [SerializeField] private SpriteRenderer objectRenderer;
+    [SerializeField] private Transform defaultIconTransform;
+    [SerializeField] private Transform consumerIconTransform;
+    [SerializeField] private IconBubble iconBubble;
     [SerializeField] private Table pairTable;
     
     [SerializeField] private TableType tableType;
@@ -38,53 +39,30 @@ public class Table : InteractableObjectBase
     public override bool ShowIcon(IconPivots pivot, Sprite icon, Sprite background = null, bool flipBackground = false)
     {
         Transform targetRendererTransform = null;
-        SpriteRenderer activeRenderer = null;
-        SpriteRenderer inactiveRenderer = null;
         
         switch (pivot)
         {
             case IconPivots.Default:
-                targetRendererTransform = defaultIconRenderer.transform;
-                activeRenderer = defaultIconRenderer;
-                inactiveRenderer = consumerRenderer;
+                targetRendererTransform = defaultIconTransform.transform;
                 break;
             case IconPivots.Consumer:
-                targetRendererTransform = consumerRenderer.transform;
-                activeRenderer = consumerRenderer;
-                inactiveRenderer = defaultIconRenderer;
+                targetRendererTransform = consumerIconTransform.transform;
                 break;
             default:
-                targetRendererTransform = defaultIconRenderer.transform;
-                activeRenderer = defaultIconRenderer;
-                inactiveRenderer = consumerRenderer;
+                targetRendererTransform = defaultIconTransform.transform;
                 break;
         }
-
-        if (background != null)
-        {
-            iconBackgroundRenderer.gameObject.SetActive(true);
-            iconBackgroundRenderer.sprite = background;
-            iconBackgroundRenderer.flipX = flipBackground;
-            iconBackgroundRenderer.transform.position = targetRendererTransform.position;
-        }
-        if (activeRenderer != null)
-        {
-            activeRenderer.sprite = icon;
-            activeRenderer.gameObject.SetActive(true);
-        }
-
-        if (inactiveRenderer != null)
-        {
-            inactiveRenderer.gameObject.SetActive(false);
-        }
-
+        iconBubble.ShowIcon(icon, targetRendererTransform.position, flipBackground);
         return true;
     }
     
     public override void HideIcon()
     {
-        iconBackgroundRenderer.gameObject.SetActive(false);
-        defaultIconRenderer.gameObject.SetActive(false);
-        consumerRenderer.gameObject.SetActive(false);
+        iconBubble.HideIcon();
+    }
+
+    public void ChangeSpirte(Sprite sprite)
+    {
+        objectRenderer.sprite = sprite;
     }
 }

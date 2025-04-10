@@ -24,7 +24,7 @@ public class WorkPayment : InteractWorkBase
         Sprite backgroundSprite = backgroundHandle.Result;
         
         var counter = target as CashierCounter;
-        counter.ShowIcon(IconPivots.Consumer, iconSprite, backgroundSprite, false);
+        counter.ShowIcon(IconPivots.Consumer, iconSprite, backgroundSprite, true);
     }
 
 

@@ -73,8 +73,12 @@ public class WorkStationManager
         var table = DataTableManager.Get<CookwareDataTable>(DataTableIds.Cookware.ToString());
         var cookwareData = table.GetData(data.InteriorID);
         float interactionSpeed = (1 - data.EffectQuantity * (level - 1) / 100f);
-        Debug.Log(interactionSpeed);
-        cookingStations[cookwareData.CookwareType][cookwareData.CookwareNB - 1].SetInteractionSpeed(interactionSpeed);
+
+        var sprite = Addressables.LoadAssetAsync<Sprite>(data.IconID + level).WaitForCompletion();
+
+        var cookingstation = cookingStations[cookwareData.CookwareType][cookwareData.CookwareNB - 1];
+        cookingstation.SetInteractionSpeed(interactionSpeed);
+        cookingstation.ChangeSpirte(sprite);
     }
 
     public void OnCookingStationInstantiated(GameObject obj, CookwareType cookwareType,
@@ -100,7 +104,12 @@ public class WorkStationManager
     public void UpgradeTable(InteriorData data, int level)
     {
         float interactionSpeed = (1 - data.EffectQuantity * (level - 1) / 100f);
-        tables[data.InteriorID % 10 - 1].SetInteractionSpeed(interactionSpeed);
+        var sprite = Addressables.LoadAssetAsync<Sprite>(data.IconID + level).WaitForCompletion();
+        
+        var table = tables[data.InteriorID % 10 - 1];
+        table.SetInteractionSpeed(interactionSpeed);
+        table.ChangeSpirte(sprite);
+        
     }
 
     private void OnTableInstantiated(GameObject obj, int num)
@@ -127,7 +136,9 @@ public class WorkStationManager
 
     public void UpgradeSinkingStation(InteriorData data, int level)
     {
-        int capacity = Constants.DEFAULT_SINKINGSTATION_CAPACITY + data.EffectQuantity * (level - 1); 
+        int capacity = Constants.DEFAULT_SINKINGSTATION_CAPACITY + data.EffectQuantity * (level - 1);
+        var sprite = Addressables.LoadAssetAsync<Sprite>(data.IconID + level).WaitForCompletion();
+        sinkingStation.ChangeSpirte(sprite);
         sinkingStation.ChangeCapacity(capacity);
     }
 

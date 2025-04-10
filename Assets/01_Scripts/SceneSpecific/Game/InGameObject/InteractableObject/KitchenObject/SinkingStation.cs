@@ -3,16 +3,16 @@ using System;
 using TMPro;
 using UnityEngine;
 
-public class SinkingStation : InteractableObjectBase
+public class SinkingStation : InteractableObjectBase, IInterior
 {
     private static readonly string CountFomrat = "{0} / {1}";
     [SerializeField] private int trayCapacity = 5;
     [SerializeField] TextMeshPro countText;
     private int currentTrayCount = 0;
     private bool isWashWorkAssigned = false;
-
-    public SpriteRenderer backgroundRenderer;
-    public SpriteRenderer defaultIconRenderer;
+    
+    [SerializeField] private SpriteRenderer objectRenderer;
+    [SerializeField] private IconBubble iconBubble;
     
     WorkManager workManager;
     WorkFlowController controller;
@@ -67,22 +67,14 @@ public class SinkingStation : InteractableObjectBase
 
     public override bool ShowIcon(IconPivots pivot, Sprite icon, Sprite background = null, bool flipBackground = false)
     {
-        defaultIconRenderer.gameObject.SetActive(true);
-        defaultIconRenderer.sprite = icon;
-        if (background != null)
-        {
-            backgroundRenderer.gameObject.SetActive(true);
-            backgroundRenderer.sprite = background;   
-            backgroundRenderer.flipX = flipBackground;
-        }
-        
+        iconBubble.ShowIcon(icon,iconBubble.transform.position, flipBackground);
         return true;
     }
 
     public override void HideIcon()
     {
-        defaultIconRenderer.gameObject.SetActive(false);
-        backgroundRenderer.gameObject.SetActive(false);
+        iconBubble.HideIcon();
+        
     }
 
     private void AssignTrayWashWork()
@@ -103,7 +95,10 @@ public class SinkingStation : InteractableObjectBase
     {
         countText.text = string.Format(CountFomrat, currentTrayCount, trayCapacity);
     }
-    
-    
-    
+
+
+    public void ChangeSpirte(Sprite sprite)
+    {
+        objectRenderer.sprite = sprite;
+    }
 }

@@ -33,7 +33,7 @@ public class WorkCleanTable : InteractWorkBase
         Sprite backgroundSprite = backgroundHandle.Result;
         
         var table = target as Table;
-        table.ShowIcon(IconPivots.Default, iconSprite, backgroundSprite, true);
+        table.ShowIcon(IconPivots.Default, iconSprite, backgroundSprite);
         table.PairTable.HideIcon();
     }
     

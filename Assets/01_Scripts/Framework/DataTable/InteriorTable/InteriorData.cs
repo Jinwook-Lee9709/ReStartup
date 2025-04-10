@@ -12,6 +12,7 @@ public class InteriorData
     public int SellingCost { get; set; }
     public int Requirements1 { get; set; }
     public int Requirements2 { get; set; }
+    public int MaxUpgradeCount { get; set; }
     public int Reward { get; set; }
     public InteriorEffectType EffectType { get; set; }
     public int EffectQuantity { get; set; }
