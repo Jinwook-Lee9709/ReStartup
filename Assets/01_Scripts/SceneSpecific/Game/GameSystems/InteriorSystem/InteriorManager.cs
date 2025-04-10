@@ -118,7 +118,6 @@ public class InteriorManager
     {
         if (level == 1)
         {
-          
         }
         else
         {
