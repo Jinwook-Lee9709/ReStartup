@@ -1,12 +1,10 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InteriorUpgradePopup : MonoBehaviour
+public class FoodResearchPopup : MonoBehaviour
 {
     [SerializeField] private float backgroundOpacity = 0.8f;
     [SerializeField] private Button background;
@@ -18,7 +16,7 @@ public class InteriorUpgradePopup : MonoBehaviour
     [SerializeField] private TextMeshProUGUI mainButtonText;
     [SerializeField] private TextMeshProUGUI priceText;
 
-    private InteriorCard currentCard;
+    private FoodResearchUIItem currentCard;
     private bool isPaid;
 
     private bool IsPaid
@@ -38,11 +36,11 @@ public class InteriorUpgradePopup : MonoBehaviour
         mainButton.onClick.AddListener(OnMainButtonTouched);
     }
 
-    public void SetInfo(InteriorCard card)
+    public void SetInfo(FoodResearchUIItem card)
     {
         IsPaid = false;
         currentCard = card;
-        priceText.text = card.Data.GetSellingCost().ToString();
+        priceText.text = card.foodData.BasicCost.ToString();
     }
     private void OnEnable()
     {

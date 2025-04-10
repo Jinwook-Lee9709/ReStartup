@@ -17,21 +17,20 @@ public class FoodResearchUIItem : MonoBehaviour
     [SerializeField] private TextMeshProUGUI NameText;
     [SerializeField] private TextMeshProUGUI CostText;
     [SerializeField] private TextMeshProUGUI RankPointText;
+    [SerializeField] private Button lockButton;
 
     //Fortest
     public EmployeeTableGetData employeeData;
-
     public FoodData foodData;
-
     private FoodResearchListUI foodUpgradeListUi;
-
     private Button button;
-
     private ConsumerManager consumerManager;
-
     private IngameGoodsUi ingameGoodsUi;
-
     private UserData userData;
+    private FoodResearchNotifyPopup upgradeAuthorityNotifyPopup;
+    private FoodResearchPopup foodResearchPopup;
+    private GameManager gameManager;
+    private bool chackCookWareUnlock;
     private void Start()
     {
         ingameGoodsUi = GameObject.FindWithTag("UIManager").GetComponent<UiManager>().inGameUi;
@@ -48,60 +47,77 @@ public class FoodResearchUIItem : MonoBehaviour
             foodUpgradeListUi.AddButtonList(button);
         }
     }
-    public void Init(FoodData data)
+    public void Init(FoodData data, FoodResearchNotifyPopup notifyPopup, FoodResearchPopup popup)
     {
-
         userData = UserDataManager.Instance.CurrentUserData;
         foodData = data;
+        foodResearchPopup = popup;
+        upgradeAuthorityNotifyPopup = notifyPopup;
         RankPointText.text = data.GetRankPoints.ToString();
         CostText.text = data.BasicCost.ToString();
         NameText.text = $"{foodData.FoodID.ToString()}";
         newImage.SetActive(false);
         button = GetComponentInChildren<Button>();
-        var gameManager = ServiceLocator.Instance.GetSceneService<GameManager>();
+        gameManager = ServiceLocator.Instance.GetSceneService<GameManager>();
         consumerManager = gameManager.consumerManager;
+        var cookwareType = foodData.CookwareType;
+        var currentTheme = gameManager.CurrentTheme;
+        int currentCookwareAmount = userData.CookWareUnlock[currentTheme][cookwareType];
+        chackCookWareUnlock = currentCookwareAmount < foodData.CookwareNB;
         if (foodData.FoodID == 301001)
         {
             consumerManager.foodIds.Add(foodData.FoodID);
             foodData.upgradeCount = 1;
             lockImage.SetActive(false);
             button.interactable = false;
+            button.GetComponentInChildren<TextMeshProUGUI>().text = "연구됨";
         }
         else
         {
-            if (foodData.Requirements < userData.CurrentRankPoint)
+            if (foodData.Requirements < userData.CurrentRankPoint && chackCookWareUnlock)
             {
                 lockImage.SetActive(false);
             }
         }
-        button.onClick.AddListener((UnityEngine.Events.UnityAction)(() =>
-        {
-            // add food unlock Requirements
-            if (userData.Gold > foodData.BasicCost)
-            {
-                var cookwareType = foodData.CookwareType;
-                var currentTheme = gameManager.CurrentTheme;
-                int currentCookwareAmount = userData.CookWareUnlock[currentTheme][cookwareType];
-                if (currentCookwareAmount < foodData.CookwareNB)
-                    return;
-
-                consumerManager.foodIds.Add(foodData.FoodID);
-                foodData.isUnlock = true;
-                foodData.upgradeCount++;
-                userData.CurrentRankPoint += foodData.GetRankPoints;
-                userData.Gold -= foodData.BasicCost;
-                ingameGoodsUi.SetGoldUi();
-                gameManager.foodManager.UnlockFoodUpgrade(foodData);
-                button.interactable = false;
-            }
-        }));
+        button.onClick.AddListener(OnButtonClick);
+        lockButton.onClick.AddListener(OnAuthorizationCheckButtonTouched);
+    }
+    private void OnButtonClick()
+    {
+        foodResearchPopup.gameObject.SetActive(true);
+        foodResearchPopup.SetInfo(this);
     }
     public void UnlockFood()
     {
         lockImage.SetActive(false);
         userData.CurrentRankPoint += foodData.GetRankPoints;
     }
+    public void OnAuthorizationCheckButtonTouched()
+    {
+        upgradeAuthorityNotifyPopup.SetRequirementText(foodData, chackCookWareUnlock);
+        upgradeAuthorityNotifyPopup.gameObject.SetActive(true);
+    }
 
+    public void OnBuy()
+    {
+        var cookwareType = foodData.CookwareType;
+        var currentTheme = gameManager.CurrentTheme;
+        int currentCookwareAmount = userData.CookWareUnlock[currentTheme][cookwareType];
+        chackCookWareUnlock = currentCookwareAmount < foodData.CookwareNB;
+        if (chackCookWareUnlock)
+            return;
+        if (userData.Gold > foodData.BasicCost)
+        {
+            consumerManager.foodIds.Add(foodData.FoodID);
+            foodData.isUnlock = true;
+            foodData.upgradeCount++;
+            userData.CurrentRankPoint += foodData.GetRankPoints;
+            userData.Gold -= foodData.BasicCost;
+            ingameGoodsUi.SetGoldUi();
+            gameManager.foodManager.UnlockFoodUpgrade(foodData);
+            button.interactable = false;
+        }
+    }
     private IEnumerator LoadSpriteCoroutine(string iconAddress)
     {
         var handle = Addressables.LoadAssetAsync<Sprite>(iconAddress);

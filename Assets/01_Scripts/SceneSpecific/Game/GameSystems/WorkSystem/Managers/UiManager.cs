@@ -26,7 +26,6 @@ public class UiManager : MonoBehaviour
     public void OnCilckButtonOepnUiReview()
     {
         uiUpgrade.SetActive(false);
-        uiApps.SetActive(false);
         uiPromotion.SetActive(false);
         uiReview.SetActive(true);
     }

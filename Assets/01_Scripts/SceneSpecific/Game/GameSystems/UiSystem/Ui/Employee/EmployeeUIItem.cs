@@ -1,0 +1,155 @@
+using System.Collections;
+using DG.Tweening.Core.Easing;
+using TMPro;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.InputSystem.Composites;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.UI;
+
+public class EmployeeUIItem : MonoBehaviour
+{
+    [SerializeField] private Image image;
+
+    [SerializeField] private TextMeshProUGUI uiNameText;
+    [SerializeField] private TextMeshProUGUI uiUpgradeCostText;
+    [SerializeField] private TextMeshProUGUI upgradeButtonText;
+
+    [SerializeField] private TextMeshProUGUI workSpeedValue;
+    [SerializeField] private TextMeshProUGUI moveSpeedValue;
+    [SerializeField] private TextMeshProUGUI HealthValue;
+
+    //Fortest
+    public EmployeeTableGetData employeeData;
+
+    private EmployeeUIManager employeeUIManager;
+
+    private Button button;
+
+    private readonly string employeePrefab = "Agent.prefab";
+
+    private IngameGoodsUi ingameGoodsUi;
+    private EmployeeUpgradePopup employeeUpgradePopup;
+
+    private void Start()
+    {
+        ingameGoodsUi = GameObject.FindWithTag("UIManager").GetComponent<UiManager>().inGameUi;
+        if (employeeData != null)
+        {
+            StartCoroutine(LoadSpriteCoroutine(employeeData.Icon));
+            employeeUIManager = GetComponentInParent<EmployeeUIManager>();
+            if (employeeUIManager == null)
+            {
+                Debug.LogError($"{gameObject.name}의 부모 중 employeeUIManagerr를 찾을 수 없습니다.");
+                return;
+            }
+            employeeUIManager.EmployeeAllBuy += OnBuy;
+        }
+
+    }
+
+    public void Init(EmployeeTableGetData data, EmployeeUpgradePopup employeeUpgradePopup)
+    {
+        employeeData = data;
+
+        this.employeeUpgradePopup = employeeUpgradePopup;
+        switch ((WorkType)employeeData.StaffType)
+        {
+            case WorkType.All:
+                break;
+            case WorkType.Payment:
+                uiNameText.text = $"계산원 :\n{employeeData.StaffID}";
+                break;
+            case WorkType.Hall:
+                uiNameText.text = $"홀직원 :\n{employeeData.StaffID}";
+                break;
+            case WorkType.Kitchen:
+                uiNameText.text = $"주방직원 :\n{employeeData.StaffID}";
+                break;
+        }
+        uiUpgradeCostText.text = $"{employeeData.Cost}";
+        button = GetComponentInChildren<Button>();
+        upgradeButtonText.text = "고용";
+        workSpeedValue.text = employeeData.WorkSpeed.ToString();
+        moveSpeedValue.text = employeeData.MoveSpeed.ToString();
+        HealthValue.text = employeeData.Health.ToString();
+
+        button.onClick.AddListener(OnButtonClick);
+
+    }
+    private void OnButtonClick()
+    {
+        if (employeeData.upgradeCount != 0)
+        {
+            employeeUpgradePopup.gameObject.SetActive(true);
+            employeeUpgradePopup.SetInfo(this, image.sprite);
+        }
+        else
+        {
+            OnBuy();
+        }
+    }
+    public void OnBuy()
+    {
+        var userData = UserDataManager.Instance.CurrentUserData;
+        if (employeeData.upgradeCount >= 5)
+        {
+            return;
+        }
+        if (employeeData.upgradeCount < 1 && userData.Gold > employeeData.Cost)
+        {
+            var gameManager = ServiceLocator.Instance.GetSceneService<GameManager>();
+            var handle = Addressables.LoadAssetAsync<GameObject>(employeePrefab);
+            GameObject prefab = handle.WaitForCompletion();
+            var newEmployee = Instantiate(prefab).GetComponent<EmployeeFSM>();
+            newEmployee.EmployeeData = employeeData;
+            newEmployee.GetComponentInChildren<TextMeshPro>().text = $"{((WorkType)employeeData.StaffType).ToString()}직원";
+            var workerManager = gameManager.WorkerManager;
+            workerManager.RegisterWorker(newEmployee, (WorkType)newEmployee.EmployeeData.StaffType, newEmployee.EmployeeData.StaffID);
+
+            userData.Gold -= employeeData.Cost;
+            OnUpgradeEmployee();
+        }
+        if (userData.Gold > employeeData.Cost * employeeData.upgradeCount)
+        {
+            OnUpgradeEmployee();
+            userData.Gold -= employeeData.Cost * employeeData.upgradeCount;
+        }
+        if (employeeData.upgradeCount >= 5)
+        {
+            upgradeButtonText.text = "완료됨";
+            button.interactable = false;
+        }
+    }
+    private IEnumerator LoadSpriteCoroutine(string iconAddress)
+    {
+        var handle = Addressables.LoadAssetAsync<Sprite>(iconAddress);
+        yield return handle;
+
+        if (handle.Status == AsyncOperationStatus.Succeeded)
+            image.sprite = handle.Result;
+        else
+            Debug.LogError($"Failed to load sprite: {iconAddress}");
+    }
+    private void OnUpgradeEmployee()
+    {
+        ingameGoodsUi.SetGoldUi();
+        upgradeButtonText.text = "교육";
+        employeeData.upgradeCount++;
+        uiUpgradeCostText.text = $"{employeeData.Cost * employeeData.upgradeCount}";
+        switch ((WorkType)employeeData.StaffType)
+        {
+            case WorkType.All:
+                break;
+            case WorkType.Payment:
+                uiNameText.text = $"계산원 :\n{employeeData.StaffID}:{employeeData.upgradeCount}";
+                break;
+            case WorkType.Hall:
+                uiNameText.text = $"홀직원 :\n{employeeData.StaffID}:{employeeData.upgradeCount}";
+                break;
+            case WorkType.Kitchen:
+                uiNameText.text = $"주방직원 :\n{employeeData.StaffID}:{employeeData.upgradeCount}";
+                break;
+        }
+    }
+}
