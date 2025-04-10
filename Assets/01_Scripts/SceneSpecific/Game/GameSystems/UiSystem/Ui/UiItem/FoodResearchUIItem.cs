@@ -74,7 +74,7 @@ public class FoodResearchUIItem : MonoBehaviour
         }
         else
         {
-            if (foodData.Requirements < userData.CurrentRankPoint)
+            if (foodData.Requirements < userData.CurrentRankPoint && chackCookWareUnlock)
             {
                 lockImage.SetActive(false);
             }

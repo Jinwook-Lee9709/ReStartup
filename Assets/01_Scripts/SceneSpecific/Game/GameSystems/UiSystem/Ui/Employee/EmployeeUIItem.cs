@@ -22,7 +22,7 @@ public class EmployeeUIItem : MonoBehaviour
     //Fortest
     public EmployeeTableGetData employeeData;
 
-    private EmployeeUpgradeListUi employeeUpgradeListUi;
+    private EmployeeUIManager employeeUIManager;
 
     private Button button;
 
@@ -37,13 +37,13 @@ public class EmployeeUIItem : MonoBehaviour
         if (employeeData != null)
         {
             StartCoroutine(LoadSpriteCoroutine(employeeData.Icon));
-            employeeUpgradeListUi = GetComponentInParent<EmployeeUpgradeListUi>();
-            if (employeeUpgradeListUi == null)
+            employeeUIManager = GetComponentInParent<EmployeeUIManager>();
+            if (employeeUIManager == null)
             {
-                Debug.LogError($"{gameObject.name}의 부모 중 EmployeeUpgradeListUi를 찾을 수 없습니다.");
+                Debug.LogError($"{gameObject.name}의 부모 중 employeeUIManagerr를 찾을 수 없습니다.");
                 return;
             }
-            employeeUpgradeListUi.AddButtonList(button);
+            employeeUIManager.EmployeeAllBuy += OnBuy;
         }
 
     }
@@ -69,7 +69,7 @@ public class EmployeeUIItem : MonoBehaviour
         }
         uiUpgradeCostText.text = $"{employeeData.Cost}";
         button = GetComponentInChildren<Button>();
-        upgradeButtonText.text = "고용하기";
+        upgradeButtonText.text = "고용";
         workSpeedValue.text = employeeData.WorkSpeed.ToString();
         moveSpeedValue.text = employeeData.MoveSpeed.ToString();
         HealthValue.text = employeeData.Health.ToString();
@@ -134,7 +134,7 @@ public class EmployeeUIItem : MonoBehaviour
     private void OnUpgradeEmployee()
     {
         ingameGoodsUi.SetGoldUi();
-        upgradeButtonText.text = "업그레이드";
+        upgradeButtonText.text = "교육";
         employeeData.upgradeCount++;
         uiUpgradeCostText.text = $"{employeeData.Cost * employeeData.upgradeCount}";
         switch ((WorkType)employeeData.StaffType)

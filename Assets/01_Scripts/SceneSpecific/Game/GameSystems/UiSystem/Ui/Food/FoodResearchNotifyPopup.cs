@@ -44,12 +44,12 @@ public class FoodResearchNotifyPopup : MonoBehaviour
 
     public void SetRequirementText(FoodData data, bool currentCookwareAmount)
     {
-        secondRequirementFrame.SetActive(!currentCookwareAmount);
-        if (!currentCookwareAmount)
+        secondRequirementFrame.SetActive(currentCookwareAmount);
+        if (currentCookwareAmount)
         {
             secondRequirementValueText.text = data.CookwareType.ToString(); // StringTable
 
-            var secondTextColor = currentCookwareAmount ? satisfiedColor : unsatisfiedColor;
+            var secondTextColor = currentCookwareAmount ? unsatisfiedColor : satisfiedColor;
             secondRequirementNameText.color = secondTextColor;
             secondRequirementValueText.color = secondTextColor;
         }

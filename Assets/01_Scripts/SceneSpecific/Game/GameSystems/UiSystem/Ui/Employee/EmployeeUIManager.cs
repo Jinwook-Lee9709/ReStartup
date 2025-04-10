@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ public class EmployeeUIManager : MonoBehaviour
     public Transform contents;
     public AssetReference employeeListUi;
     private GameManager gameManager;
+    public event Action EmployeeAllBuy;
     [SerializeField] EmployeeUpgradePopup employeeUpgradePopup;
 
     public void Start()
@@ -31,5 +33,9 @@ public class EmployeeUIManager : MonoBehaviour
                 line.AddEmployeeUpgradeItem(item.Value , employeeUpgradePopup);
             }
         }
+    }
+    public void OnClickEmployeeAllBuy()
+    {
+        EmployeeAllBuy.Invoke();
     }
 }

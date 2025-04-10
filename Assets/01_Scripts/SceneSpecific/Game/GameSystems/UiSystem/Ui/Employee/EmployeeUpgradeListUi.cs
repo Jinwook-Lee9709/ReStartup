@@ -8,7 +8,6 @@ public class EmployeeUpgradeListUi : MonoBehaviour
 {
     public GameObject upgradeItemObject;
     private EmployeeTableGetData employeeData;
-    public List<Button> allBuyButton;
     public Transform contents;
     private WorkType workType;
 
@@ -38,17 +37,6 @@ public class EmployeeUpgradeListUi : MonoBehaviour
             case WorkType.Kitchen:
                 GetComponentInChildren<TextMeshProUGUI>().text = "주방직원";
                 break;
-        }
-    }
-    public void AddButtonList(Button button)
-    {
-        allBuyButton.Add(button);
-    }
-    public void EmployeeAllBuy()
-    {
-        foreach (var item in allBuyButton)
-        {
-            item.onClick.Invoke();
         }
     }
 }
