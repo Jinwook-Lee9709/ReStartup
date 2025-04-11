@@ -4,19 +4,18 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FoodResearchPopup : MonoBehaviour
+public class FoodUpgradePopup : MonoBehaviour
 {
     [SerializeField] private float backgroundOpacity = 0.8f;
     [SerializeField] private Button background;
     [SerializeField] private Button mainButton;
     [SerializeField] private Image panel;
-    [SerializeField] private Image beforeIcon;
-    [SerializeField] private Image afterIcon;
+    [SerializeField] private Image icon;
     [SerializeField] private TextMeshProUGUI infoText;
     [SerializeField] private TextMeshProUGUI mainButtonText;
     [SerializeField] private TextMeshProUGUI priceText;
 
-    private FoodResearchUIItem currentCard;
+    private FoodUpgradeUIItem currentCard;
     private bool isPaid;
 
     private bool IsPaid
@@ -36,10 +35,12 @@ public class FoodResearchPopup : MonoBehaviour
         mainButton.onClick.AddListener(OnMainButtonTouched);
     }
 
-    public void SetInfo(FoodResearchUIItem card)
+    public void SetInfo(FoodUpgradeUIItem card)
     {
         IsPaid = false;
         currentCard = card;
+        icon.sprite = card.image.sprite;
+        infoText.text = card.foodData.StringID.ToString();
         priceText.text = card.foodData.BasicCost.ToString();
     }
     private void OnEnable()

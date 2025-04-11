@@ -10,7 +10,7 @@ public class FoodUpgradeUIItem : MonoBehaviour
 {
 
     [SerializeField] private GameObject levelUpImage;
-    [SerializeField] private Image image;
+    public Image image;
     [SerializeField] private GameObject lockImage;
     [SerializeField] private TextMeshProUGUI levelText;
 
@@ -24,6 +24,7 @@ public class FoodUpgradeUIItem : MonoBehaviour
     private Button button;
 
     private ConsumerManager consumerManager;
+    private FoodUpgradePopup foodUpgradePopup;
 
     private IngameGoodsUi ingameGoodsUi;
     private void Start()
@@ -42,11 +43,10 @@ public class FoodUpgradeUIItem : MonoBehaviour
             foodUpgradeListUi.AddButtonList(button);
         }
     }
-    public void Init(FoodData data)
+    public void Init(FoodData data, FoodUpgradePopup popup)
     {
-
-        var userData = UserDataManager.Instance.CurrentUserData;
         foodData = data;
+        foodUpgradePopup = popup;
         levelUpImage.SetActive(false);
         levelText.text = $"{foodData.upgradeCount}";
         button = GetComponentInChildren<Button>();
@@ -58,26 +58,32 @@ public class FoodUpgradeUIItem : MonoBehaviour
             foodData.upgradeCount = 1;
             lockImage.SetActive(false);
         }
-        button.onClick.AddListener((UnityEngine.Events.UnityAction)(() =>
+        button.onClick.AddListener(OnButtonClick);
+    }
+    private void OnButtonClick()
+    {
+        foodUpgradePopup.gameObject.SetActive(true);
+        foodUpgradePopup.SetInfo(this);
+    }
+    public void OnBuy()
+    {
+        if (foodData.upgradeCount >= 5)
         {
-            if (foodData.upgradeCount >= 5)
-            {
-                return;
-            }
-            // add food unlock Requirements
-            if (userData.Gold > foodData.BasicCost * foodData.upgradeCount)
-            {
-                foodData.upgradeCount++;
+            return;
+        }
+        var userData = UserDataManager.Instance.CurrentUserData;
+        if (userData.Gold > foodData.BasicCost * foodData.upgradeCount)
+        {
+            foodData.upgradeCount++;
+            levelText.text = foodData.upgradeCount.ToString();
+            userData.Gold -= foodData.BasicCost * foodData.upgradeCount;
+            ingameGoodsUi.SetGoldUi();
+        }
 
-                userData.Gold -= foodData.BasicCost * foodData.upgradeCount;
-                ingameGoodsUi.SetGoldUi();
-            }
-
-            if (foodData.upgradeCount >= 5)
-            {
-                button.interactable = false;
-            }
-        }));
+        if (foodData.upgradeCount >= 5)
+        {
+            button.interactable = false;
+        }
     }
     public void UnlockFoodUpgrade()
     {

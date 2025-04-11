@@ -24,7 +24,6 @@ public class FoodResearchUIItem : MonoBehaviour
     private IngameGoodsUi ingameGoodsUi;
     private UserData userData;
     private FoodResearchNotifyPopup upgradeAuthorityNotifyPopup;
-    private FoodResearchPopup foodResearchPopup;
     private GameManager gameManager;
     private bool chackCookWareUnlock;
     private void Start()
@@ -40,14 +39,13 @@ public class FoodResearchUIItem : MonoBehaviour
                 Debug.LogError($"{gameObject.name}의 부모 중 foodUpgradeListUi를 찾을 수 없습니다.");
                 return;
             }
-            foodUpgradeListUi.AddButtonList(button);
+            foodUpgradeListUi.FoodAllBuy += Unlock;
         }
     }
-    public void Init(FoodData data, FoodResearchNotifyPopup notifyPopup, FoodResearchPopup popup)
+    public void Init(FoodData data, FoodResearchNotifyPopup notifyPopup)
     {
         userData = UserDataManager.Instance.CurrentUserData;
         foodData = data;
-        foodResearchPopup = popup;
         upgradeAuthorityNotifyPopup = notifyPopup;
         RankPointText.text = data.GetRankPoints.ToString();
         CostText.text = data.BasicCost.ToString();
@@ -75,14 +73,10 @@ public class FoodResearchUIItem : MonoBehaviour
                 lockImage.SetActive(false);
             }
         }
-        button.onClick.AddListener(OnButtonClick);
+        button.onClick.AddListener(OnBuy);
         lockButton.onClick.AddListener(OnAuthorizationCheckButtonTouched);
     }
-    private void OnButtonClick()
-    {
-        foodResearchPopup.gameObject.SetActive(true);
-        foodResearchPopup.SetInfo(this);
-    }
+
     public void UnlockFood()
     {
         lockImage.SetActive(false);
@@ -104,15 +98,20 @@ public class FoodResearchUIItem : MonoBehaviour
             return;
         if (userData.Gold > foodData.BasicCost)
         {
-            consumerManager.foodIds.Add(foodData.FoodID);
-            foodData.isUnlock = true;
-            foodData.upgradeCount++;
-            userData.CurrentRankPoint += foodData.GetRankPoints;
-            userData.Gold -= foodData.BasicCost;
-            ingameGoodsUi.SetGoldUi();
-            gameManager.foodManager.UnlockFoodUpgrade(foodData);
-            button.interactable = false;
+            Unlock();
         }
+    }
+    public void Unlock()
+    {
+        lockImage.SetActive(false);
+        consumerManager.foodIds.Add(foodData.FoodID);
+        foodData.isUnlock = true;
+        foodData.upgradeCount++;
+        userData.CurrentRankPoint += foodData.GetRankPoints;
+        userData.Gold -= foodData.BasicCost;
+        ingameGoodsUi.SetGoldUi();
+        gameManager.foodManager.UnlockFoodUpgrade(foodData);
+        button.interactable = false;
     }
     private IEnumerator LoadSpriteCoroutine(string iconAddress)
     {

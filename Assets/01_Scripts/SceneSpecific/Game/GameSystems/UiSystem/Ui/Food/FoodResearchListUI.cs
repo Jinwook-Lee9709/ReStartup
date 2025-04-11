@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening.Core.Easing;
@@ -9,22 +10,17 @@ public class FoodResearchListUI : MonoBehaviour
 {
     public GameObject researchItemObject;
     private FoodData data;
-    public List<Button> allBuyButton;
     private Dictionary<int ,FoodResearchUIItem> foodResearchItems = new();
     void Start()
     {
         var userDataManager = UserDataManager.Instance;
         userDataManager.ChangeRankPointAction += Unlock;
     }
-    public void AddFoodResearchItem(FoodData data, FoodResearchNotifyPopup notifyPopup, FoodResearchPopup popup)
+    public void AddFoodResearchItem(FoodData data, FoodResearchNotifyPopup notifyPopup)
     {
         var ui = Instantiate(researchItemObject, transform).GetComponent<FoodResearchUIItem>();
-        ui.Init(data, notifyPopup, popup);
+        ui.Init(data, notifyPopup);
         foodResearchItems.Add(data.Requirements ,ui);
-    }
-    public void AddButtonList(Button button)
-    {
-        allBuyButton.Add(button);
     }
     public void Unlock(int? currentRankingPoint)
     {
@@ -40,11 +36,11 @@ public class FoodResearchListUI : MonoBehaviour
             }
         }
     }
-    public void FoodAllBuy()
+    public event Action FoodAllBuy;
+
+    public void OnClickFoodAllBuy()
     {
-        foreach (var item in allBuyButton)
-        {
-            item.onClick.Invoke();
-        }
+        if (FoodAllBuy != null)
+            FoodAllBuy.Invoke();
     }
 }

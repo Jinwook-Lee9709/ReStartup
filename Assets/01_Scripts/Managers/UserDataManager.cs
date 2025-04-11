@@ -82,6 +82,7 @@ public class UserDataManager : Singleton<UserDataManager>
     public void ModifyGold(int gold)
     {
         CurrentUserData.Gold += gold;
+        currentUserData.CurrentRankPoint += 1000;
         ChangeRankPointAction?.Invoke(currentUserData.CurrentRankPoint);
         ChangeGoldAction?.Invoke(CurrentUserData.Gold);
     }
