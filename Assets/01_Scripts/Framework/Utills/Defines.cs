@@ -148,7 +148,8 @@ public enum CookwareType
     CharcoalGrill,
     GriddleGrill,
     Pot,
-    KitchenTable
+    KitchenTable,
+    Refrigerator
 }
 
 public enum InteriorCategory
@@ -157,7 +158,6 @@ public enum InteriorCategory
     카운터,
     인테리어,
     조리대,
-    주방가구,
     싱크대
 }
 

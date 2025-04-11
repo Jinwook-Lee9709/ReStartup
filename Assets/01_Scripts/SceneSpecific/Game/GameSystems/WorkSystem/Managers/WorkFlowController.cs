@@ -46,7 +46,7 @@ public class WorkFlowController
 
     private void InitCookingStation()
     {
-        var table = DataTableManager.Get<FoodDataTable>(DataTableIds.Food.ToString());
+        var table = DataTableManager.Get<CookwareDataTable>(DataTableIds.Cookware.ToString());
         var kvpList = table.GetSceneFoodDataList(gameManager.CurrentTheme);
         var cookwareTypeList = kvpList.Select(pair => pair.Value.CookwareType).Distinct().ToList();
         foreach (var cookwareType in cookwareTypeList)

@@ -1,13 +1,19 @@
+using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 public class InteriorManager
 {
+    private static readonly string FurnitureStringID = "FurnitureBase";
+    
     private CookwareDataTable cookwareTable;
     private GameManager gameManager;
     private InteriorDataTable interiorTable;
     private WorkStationManager workStationManager;
 
+    private Dictionary<int, FurnitureBase> furnitureList = new();
+        
     public void Init(GameManager gameManager)
     {
         this.gameManager = gameManager;
@@ -21,6 +27,7 @@ public class InteriorManager
         InitCookwares();
         InitSinkingStation();
         InitCounter();
+        InitInterior();
     }
 
     public void InitTable()
@@ -66,13 +73,44 @@ public class InteriorManager
             x.RestaurantType == (int)gameManager.CurrentTheme && x.Category == InteriorCategory.싱크대);
         UpgradeSink(data, 1);
     }
-    
+
     private void InitCounter()
     {
         workStationManager.AddCounter();
         var data = interiorTable.First(x =>
             x.RestaurantType == (int)gameManager.CurrentTheme && x.Category == InteriorCategory.카운터);
         UpgradeCounter(data, 1);
+    }
+
+    private void InitInterior()
+    {
+        var interiorUpgradeDictionary = UserDataManager.Instance.CurrentUserData.InteriorSaveData;
+        var interiorQuery = interiorTable.Where(x =>
+                x.RestaurantType == (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme)
+            .Where(x => x.Category == InteriorCategory.인테리어);
+        foreach (var data in interiorQuery)
+        {
+            if(interiorUpgradeDictionary[data.InteriorID].Equals(0)) 
+                continue;
+            AddInterior(data);
+        }
+    }
+
+    private void AddInterior(InteriorData data)
+    {
+        //ForTest
+        if(data.IconID == "Dummy") return;
+        //ForTest
+        var parent = gameManager.ObjectPivotManager.GetInteriorPivot(data.InteriorID);
+        var spriteHandle = Addressables.LoadAssetAsync<Sprite>(data.IconID + 1);
+        var objHandle = Addressables.InstantiateAsync(FurnitureStringID, parent);
+        spriteHandle.WaitForCompletion();
+        objHandle.WaitForCompletion();
+        var sprite = spriteHandle.Result;
+        var obj = objHandle.Result;
+        var furnitureBase = obj.GetComponent<FurnitureBase>();
+        furnitureList.Add(data.InteriorID, furnitureBase); 
+        furnitureBase.ChangeSpirte(sprite);
     }
 
     private void OnInteriorUpgrade(int interiorId, int level)
@@ -85,16 +123,13 @@ public class InteriorManager
                 UpgradeTable(interiorData, level);
                 break;
             case InteriorCategory.카운터:
-                // Add implementation for 카운터 case
+                UpgradeCounter(interiorData, level);
                 break;
             case InteriorCategory.인테리어:
                 UpgradeInterior(interiorData, level);
                 break;
             case InteriorCategory.조리대:
                 UpgradeCookware(interiorId, level);
-                break;
-            case InteriorCategory.주방가구:
-                // Add implementation for 주방가구 case
                 break;
             case InteriorCategory.싱크대:
                 UpgradeSink(interiorData, level);
@@ -116,12 +151,14 @@ public class InteriorManager
 
     private void UpgradeInterior(InteriorData interiorData, int level)
     {
-        if (level == 1)
+        if (level != 1)
         {
+            var sprite = Addressables.LoadAssetAsync<Sprite>(interiorData.IconID + level).WaitForCompletion();
+            furnitureList[interiorData.InteriorID].ChangeSpirte(sprite);
         }
         else
         {
-            UserDataManager.Instance.OnRankPointUp(interiorData.EffectQuantity);
+            AddInterior(interiorData);
         }
     }
 

@@ -44,8 +44,9 @@ public class WorkWashTray : InteractWorkBase
             var work = new WorkWashTray(workManager, WorkType.Kitchen);
             work.SetContext(controller);
             work.SetInteractable(sinkingStation);
-            worker.AssignWork(work);
             sinkingStation.SetWork(work);
+            worker.AssignWork(work);
+
             nextWork = work;
             nextWorker = worker;
         }

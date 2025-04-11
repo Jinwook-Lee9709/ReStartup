@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
 
 public class InteriorUpgradePopup : MonoBehaviour
@@ -43,6 +45,12 @@ public class InteriorUpgradePopup : MonoBehaviour
         IsPaid = false;
         currentCard = card;
         priceText.text = card.Data.GetSellingCost().ToString();
+        var data = currentCard.Data;
+        var currentInteriorLevel = UserDataManager.Instance.CurrentUserData.InteriorSaveData[data.InteriorID];
+        var beforeSprite = Addressables.LoadAssetAsync<Sprite>(data.IconID + currentInteriorLevel).WaitForCompletion();
+        var afterSprite = Addressables.LoadAssetAsync<Sprite>($"{data.IconID}{currentInteriorLevel + 1}").WaitForCompletion();
+        beforeIcon.sprite = beforeSprite;
+        afterIcon.sprite = afterSprite;
     }
     private void OnEnable()
     {

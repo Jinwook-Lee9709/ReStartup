@@ -1,10 +1,17 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 
 public class InteriorCard : MonoBehaviour
 {
+    private static readonly string BuyStringID = "Buy";
+    private static readonly string NewProductStringID = "GodProduct";
+    private static readonly string PurchaseCompleteStringID = "PurchaseComplete";
+    
+    
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI costText;
     [SerializeField] private GameObject costPanel;
@@ -20,6 +27,7 @@ public class InteriorCard : MonoBehaviour
     private InteriorUpgradeAuthorityNotifyPopup upgradeAuthorityNotifyPopup;
     private InteriorUpgradePopup upgradePopup;
 
+    private string currentButtonStringId;
 
     public bool IsStateChanged
     {
@@ -52,6 +60,8 @@ public class InteriorCard : MonoBehaviour
         authorizationCheckButton.onClick.RemoveAllListeners();
         authorizationCheckButton.onClick.AddListener(OnAuthorizationCheckButtonTouched);
         UpdateInteractable();
+        
+        LocalizationSettings.SelectedLocaleChanged += OnLanguageChanged;
     }
 
     public void UpdateInteractable()
@@ -108,11 +118,22 @@ public class InteriorCard : MonoBehaviour
         if (isSatisfyRequirements)
         {
             //FIXME:스트링테이블로 분리
-            buyButtonText.text = upgradeLevel == 0 ? "구매" : "신상품";
-            //
-
-            buyButton.interactable = isGoldEnough;
-            costText.color = isGoldEnough ? Color.white : Color.red;
+            if (upgradeLevel == 0)
+            {
+                currentButtonStringId = BuyStringID;
+              
+            }
+            else if (upgradeLevel == Data.MaxUpgradeCount)
+            {
+                currentButtonStringId= PurchaseCompleteStringID;
+            }
+            else
+            {
+                currentButtonStringId = NewProductStringID;
+            }
+            buyButtonText.text = LZString.GetUIString(currentButtonStringId);
+            buyButton.interactable = isGoldEnough && upgradeLevel != Data.MaxUpgradeCount;
+            costText.color = isGoldEnough || upgradeLevel == Data.MaxUpgradeCount ? Color.white : Color.red;
         }
     }
 
@@ -135,5 +156,15 @@ public class InteriorCard : MonoBehaviour
     {
         upgradeAuthorityNotifyPopup.SetRequirementText(Data);
         upgradeAuthorityNotifyPopup.gameObject.SetActive(true);
+    }
+
+    private void OnLanguageChanged(Locale locale)
+    {
+        buyButtonText.text = LZString.GetUIString(currentButtonStringId);
+    }
+
+    private void OnDestroy()
+    {
+        LocalizationSettings.SelectedLocaleChanged -= OnLanguageChanged;
     }
 }
