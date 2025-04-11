@@ -100,6 +100,7 @@ public class WorkCooking : InteractWorkBase
         var station = target as CookingStation;
         station.ClearWork();
         context.WorkFlowController.ReturnCookingStation(station);
+        context.Consumer.currentTable.HideIcon();
 
         base.OnWorkCanceled();
     }

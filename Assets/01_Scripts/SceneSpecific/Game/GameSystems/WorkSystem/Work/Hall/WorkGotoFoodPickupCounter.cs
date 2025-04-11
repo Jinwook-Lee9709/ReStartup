@@ -39,7 +39,8 @@ public class WorkGotoFoodPickupCounter : InteractWorkBase
         var counter = target as FoodPickupCounter;
         counter.ClearWork();
         context.WorkFlowController.ReturnFoodPickupCounter(counter);
-
+        context.Consumer.currentTable.HideIcon();
+        
         var food = counter.FoodPlacePivot.GetChild(0).GetComponent<FoodObject>();
         if(food != null)
             food.Release();
