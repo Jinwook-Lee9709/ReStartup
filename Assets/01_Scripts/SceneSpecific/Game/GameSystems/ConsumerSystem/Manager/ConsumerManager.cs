@@ -224,6 +224,7 @@ public class ConsumerManager : MonoBehaviour
                     SpawnConsumer();
                     waitOutsideConsumerCnt--;
                 }
+                Debug.Log("Here??");
                 UpdateWaitingText();
             }
         }

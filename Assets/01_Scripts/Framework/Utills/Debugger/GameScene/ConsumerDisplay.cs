@@ -6,7 +6,7 @@ using UnityEngine;
 public class ConsumerDisplay : Debugger
 {
     [SerializeField] private ConsumerFSM target;
-    [SerializeField] private TextMeshPro text;
+    [SerializeField] private TextMeshProUGUI text;
     private void CheckAndSetText()
     {
         if (target is not null)

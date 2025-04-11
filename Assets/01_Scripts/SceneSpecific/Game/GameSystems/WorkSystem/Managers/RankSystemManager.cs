@@ -40,12 +40,12 @@ public class RankSystemManager : MonoBehaviour
         foreach (var corner in corners)
         {
             Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(Camera.main, corner);
-            if(!RectTransformUtility.RectangleContainsScreenPoint(canvas, screenPoint,Camera.main))
+            if(RectTransformUtility.RectangleContainsScreenPoint(canvas, screenPoint,Camera.main))
             {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
     private void Update()
     {
