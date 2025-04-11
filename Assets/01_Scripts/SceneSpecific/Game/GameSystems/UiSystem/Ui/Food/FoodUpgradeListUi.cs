@@ -12,10 +12,10 @@ public class FoodUpgradeListUI : MonoBehaviour
     void Start()
     {
     }
-    public void AddFoodUpgradeItem(FoodData data)
+    public void AddFoodUpgradeItem(FoodData data, FoodUpgradePopup popup)
     {
         var ui = Instantiate(upgradeItemObject, transform).GetComponent<FoodUpgradeUIItem>();
-        ui.Init(data);
+        ui.Init(data, popup);
         foodUpgradeUIItems.Add(data.FoodID, ui);
     }
     public void AddButtonList(Button button)

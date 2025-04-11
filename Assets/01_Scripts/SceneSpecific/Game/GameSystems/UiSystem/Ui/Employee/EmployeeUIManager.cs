@@ -33,6 +33,7 @@ public class EmployeeUIManager : MonoBehaviour
 
     public void OnClickEmployeeAllBuy()
     {
-        EmployeeAllBuy.Invoke();
+        if (EmployeeAllBuy != null)
+            EmployeeAllBuy.Invoke();
     }
 }
