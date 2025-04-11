@@ -24,6 +24,7 @@ public class WorkFoodToTable : InteractWorkBase
     {
         var table = target as Table;
         table.ClearWork();
+        table.HideIcon();
 
         if (worker != null)
         {

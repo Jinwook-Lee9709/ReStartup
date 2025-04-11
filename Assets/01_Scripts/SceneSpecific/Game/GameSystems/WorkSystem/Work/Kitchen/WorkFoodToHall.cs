@@ -34,6 +34,7 @@ public class WorkFoodToHall : InteractWorkBase
     {
         counter.ClearWork();
         context.WorkFlowController.ReturnFoodPickupCounter(counter);
+        context.Consumer.currentTable.HideIcon();
         if (worker is null)
             return;
         var transporter = worker as ITransportable;
