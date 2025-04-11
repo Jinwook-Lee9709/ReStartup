@@ -160,6 +160,8 @@ public class WorkFlowController
         var table = consumer.currentTable;
         if (consumer.pairData != null)
         {
+            if (consumer.pairData.owner != consumer)
+                return;
             var work = new WorkGetPairOrder(workManager, WorkType.Hall);
             var firstContext = new MainLoopWorkContext(consumer, this);
             var secondContext = new MainLoopWorkContext(consumer.pairData.partner, this);
