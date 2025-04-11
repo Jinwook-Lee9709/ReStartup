@@ -23,12 +23,11 @@ public class EmployeeHpUIItem : MonoBehaviour
             var button = GetComponentInChildren<Button>();
             button.onClick.AddListener(() =>
             {
-                employee.IncreaseHp(100);
                 if (employeeData.currentHealth == employeeData.Health)
                 {
-                    //currentHp max
                     return;
                 }
+                employee.IncreaseHp(100);
                 if (employeeData.currentHealth > employeeData.Health)
                 {
                     employeeData.currentHealth = employeeData.Health;
