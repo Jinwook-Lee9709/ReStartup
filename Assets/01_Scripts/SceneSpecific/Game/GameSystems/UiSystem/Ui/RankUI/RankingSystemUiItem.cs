@@ -22,9 +22,16 @@ public class RankingSystemUiItem : MonoBehaviour
 
     public void UpdateUI()
     {
+        if (rankingData.RestaurantName == "Player")
+        {
+            rankingData.rankingPoint = (int)UserDataManager.Instance.CurrentUserData.CurrentRankPoint;
+        }
+        else
+        {
+            rankingData.rankingPoint = Random.Range(rankingData.RankingPointminimum, rankingData.RankingPointmaximum);
+        }
         nameText.text = rankingData.RestaurantName;
-        rankingText.text = rankingData.Ranking.ToString();
-        rankingPointText.text = rankingData.RankingPoint.ToString();
+        rankingPointText.text = rankingData.rankingPoint.ToString();
     }
 
     //private void Start()

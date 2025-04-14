@@ -21,11 +21,12 @@ public class RankingSystemListUi : MonoBehaviour
 
     public void RankUpdate()
     {
-        items = items.OrderByDescending(item => item.rankingData.RankingPoint).ToList();
+        items = items.OrderByDescending(item => item.rankingData.rankingPoint).ToList();
 
         for (int i = 0; i < items.Count; i++)
         {
-            items[i].rankingData.Ranking = i + 1;
+            items[i].rankingData.rank = i + 1;
+            items[i].rankingText.text = items[i].rankingData.rank.ToString();
             items[i].UpdateUI();
             items[i].transform.SetSiblingIndex(i);
         }
@@ -36,7 +37,7 @@ public class RankingSystemListUi : MonoBehaviour
         if (player != null)
         {
             UserDataManager.Instance.CurrentUserData.CurrentRankPoint += points;
-            player.rankingData.RankingPoint += points;
+            player.rankingData.rankingPoint += points;
             RankUpdate();
             playerClone.UpdatePlayerData(player.rankingData);
         }
