@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -29,7 +30,8 @@ public class ConsumerFSM : MonoBehaviour
 
     public ConsumerManager consumerManager;
 
-    [SerializeField] private List<float> satisfactionChangeLimit = new()
+    [SerializeField]
+    private List<float> satisfactionChangeLimit = new()
     {
         15f,
         0f
@@ -44,11 +46,13 @@ public class ConsumerFSM : MonoBehaviour
     private CashierCounter cashierCounter;
     private Consumer consumer;
     public ConsumerData consumerData = new();
+    private SPUM_Prefabs model;
+    public SPUM_Prefabs Model => model;
     private bool isOnSeat;
 
     private bool isPaying;
     private Vector2 targetPivot;
-
+    private float prevXPos;
     public Satisfaction CurrentSatisfaction
     {
         get => currentSatisfaction;
@@ -81,8 +85,10 @@ public class ConsumerFSM : MonoBehaviour
             switch (value)
             {
                 case ConsumerState.Waiting:
+                    model.PlayAnimation(PlayerState.IDLE, 0);
                     break;
                 case ConsumerState.BeforeOrder:
+                    model.PlayAnimation(PlayerState.MOVE, 0);
                     consumerManager.OnChangeConsumerState(consumer, ConsumerState.BeforeOrder);
                     if (consumer.pairData?.partner == consumer)
                     {
@@ -107,6 +113,8 @@ public class ConsumerFSM : MonoBehaviour
                     StartCoroutine(EattingCoroutine());
                     break;
                 case ConsumerState.WaitForPay:
+                    transform.localScale = new Vector3(1, 1, 1);
+                    model.PlayAnimation(PlayerState.MOVE, 0);
                     consumerManager.OnChangeConsumerState(consumer, ConsumerState.WaitForPay);
                     consumerManager.OnEndMeal(consumer);
                     break;
@@ -114,6 +122,7 @@ public class ConsumerFSM : MonoBehaviour
                     consumerManager.OnChangeConsumerState(consumer, ConsumerState.Paying);
                     break;
                 case ConsumerState.Exit:
+                    model.PlayAnimation(PlayerState.MOVE, 0);
                     consumerManager.OnChangeConsumerState(consumer, ConsumerState.Exit);
                     switch (currentSatisfaction)
                     {
@@ -134,6 +143,9 @@ public class ConsumerFSM : MonoBehaviour
                 case ConsumerState.WaitingPairMealEnd:
 
                     break;
+                case ConsumerState.None:
+                    model.PlayAnimation(PlayerState.MOVE, 0);
+                    break;
             }
 
             if (currentStatus == prevStatus)
@@ -149,6 +161,12 @@ public class ConsumerFSM : MonoBehaviour
 
     private void Update()
     {
+        if (prevXPos > transform.position.x)
+            model.transform.localScale = new Vector3(1, 1, 1);
+        else
+            model.transform.localScale = new Vector3(-1, 1, 1);
+        prevXPos = transform.position.x;
+
         switch (currentStatus)
         {
             case ConsumerState.Waiting:
@@ -163,6 +181,9 @@ public class ConsumerFSM : MonoBehaviour
             case ConsumerState.Eatting:
                 UpdateEatting();
                 break;
+            case ConsumerState.WaitForPay:
+                UpdateWaitForPay();
+                break;
             case ConsumerState.Paying:
                 UpdatePaying();
                 break;
@@ -174,6 +195,9 @@ public class ConsumerFSM : MonoBehaviour
 
     private void OnEnable()
     {
+        model = GetComponentInChildren<SPUM_Prefabs>();
+        model.OverrideControllerInit();
+
         currentSatisfaction = Satisfaction.High;
         consumerData.Init();
         isPaying = false;
@@ -205,9 +229,12 @@ public class ConsumerFSM : MonoBehaviour
     private IEnumerator EattingCoroutine()
     {
         var eattingTimer = 0f;
+        StartCoroutine(model.PlayLoopAnim(PlayerState.OTHER, 1));
+
         while (eattingTimer < consumerData.MaxEattingLimit)
         {
             eattingTimer += Time.deltaTime;
+
             yield return null;
         }
 
@@ -218,7 +245,7 @@ public class ConsumerFSM : MonoBehaviour
             consumer.isEndMeal = true;
             if (consumer.pairData.owner == consumer)
             {
-                if(!consumer.pairData.partner.isEndMeal)
+                if (!consumer.pairData.partner.isEndMeal)
                 {
                     CurrentStatus = ConsumerState.WaitingPairMealEnd;
                 }
@@ -245,6 +272,7 @@ public class ConsumerFSM : MonoBehaviour
         {
             CurrentStatus = ConsumerState.WaitForPay;
         }
+        StopAllCoroutines();
     }
 
     public void OnOrderComplete()
@@ -259,27 +287,41 @@ public class ConsumerFSM : MonoBehaviour
 
     private void UpdateWaiting()
     {
-        //���ڸ��� ���� ����ϴ� ����.
-        //�ջ���� ������� �ջ�� �ڸ��� �̵�.
+        if (agent.IsArrive(agent.destination))
+        {
+            model.PlayAnimation(PlayerState.IDLE, 0);
+            consumer.pairData?.partner.FSM.Model.PlayAnimation(PlayerState.IDLE, 0);
+        }
     }
 
     private void UpdateBeforeOrder()
     {
-        //���ڸ��� ���� ���ڸ��� �̵� �� �ֹ�.
-        //������ �ֹ��� �޾ư��� �������� ����.
         if (consumer.pairData != null)
         {
-            if (agent.IsArrive(targetPivot) && !isOnSeat)
+            model.PlayAnimation(PlayerState.IDLE, 2);
+            consumer.pairData.partner.FSM.Model.PlayAnimation(PlayerState.IDLE, 2);
+            if (agent.IsArrive(targetPivot))
             {
-                isOnSeat = true;
-                OnSeatEvent?.Invoke(consumer);
+                consumer.pairData.partner.FSM.transform.localScale = new Vector3(-1, 1, 1);
+                if (!isOnSeat)
+                {
+                    isOnSeat = true;
+                    OnSeatEvent?.Invoke(consumer);
+                    consumer.pairData.partner.FSM.Model.PlayAnimation(PlayerState.OTHER, 0);
+                    model.PlayAnimation(PlayerState.OTHER, 0);
+                }
             }
             return;
         }
-        if (agent.IsArrive(targetPivot) && !isOnSeat)
+        if (agent.IsArrive(targetPivot))
         {
-            isOnSeat = true;
-            OnSeatEvent?.Invoke(consumer);
+            model.PlayAnimation(PlayerState.IDLE, 2);
+            if (!isOnSeat)
+            {
+                isOnSeat = true;
+                OnSeatEvent?.Invoke(consumer);
+                model.PlayAnimation(PlayerState.OTHER, 0);
+            }
         }
     }
 
@@ -303,7 +345,7 @@ public class ConsumerFSM : MonoBehaviour
                 break;
             case var t when t < satisfactionChangeLimit[2]:
                 CurrentSatisfaction = Satisfaction.Low;
-                if(consumerData.GuestType == GuestType.BadGuest)
+                if (consumerData.GuestType == GuestType.BadGuest)
                     CurrentStatus = ConsumerState.Exit;
                 break;
         }
@@ -319,12 +361,21 @@ public class ConsumerFSM : MonoBehaviour
     {
     }
 
+    private void UpdateWaitForPay()
+    {
+        if (agent.IsArrive(agent.destination))
+        {
+            model.PlayAnimation(PlayerState.IDLE, 0);
+        }
+    }
+
     private void UpdatePaying()
     {
         var destination = agent.destination;
         if (agent.IsArrive(destination) && !isPaying)
         {
             isPaying = true;
+            model.PlayAnimation(PlayerState.IDLE, 1);
             consumerManager.OnPayStart(consumerData);
         }
     }

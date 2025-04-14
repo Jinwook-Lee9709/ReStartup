@@ -10,6 +10,7 @@ public class ItuberPromotion : PromotionBase
 
     public override void Excute(BuffManager buffManager, ConsumerManager consumerManager, bool needAd)
     {
+        base.Excute(buffManager, consumerManager, needAd);
         var ituber = DataTableManager.Get<ConsumerDataTable>(DataTableIds.Consumer.ToString()).GetConsumerData(PromotionEffect);
         Buff footTrafficBuff = DataTableManager.Get<BuffDataTable>("Buff").GetBuffForBuffID(ituber.BuffID1);
         footTrafficBuff.Init();

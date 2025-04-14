@@ -4,7 +4,6 @@ public class ReviewData
     public string reviewMessage;
     public string date;
     public int addPoint;
-
     public void Init(bool isBest)
     {
         stars = isBest ? 5 : 1;

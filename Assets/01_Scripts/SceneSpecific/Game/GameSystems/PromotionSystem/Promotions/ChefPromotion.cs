@@ -10,6 +10,7 @@ public class ChefPromotion : PromotionBase
 
     public override void Excute(BuffManager buffManager, ConsumerManager consumerManager, bool needAd)
     {
+        base.Excute(buffManager, consumerManager, needAd);
         var chef = DataTableManager.Get<ConsumerDataTable>(DataTableIds.Consumer.ToString()).GetConsumerData(PromotionEffect);
         Buff doubleConsumerBuff = DataTableManager.Get<BuffDataTable>("Buff").GetBuffForBuffID(chef.BuffID1);
         doubleConsumerBuff.Init();

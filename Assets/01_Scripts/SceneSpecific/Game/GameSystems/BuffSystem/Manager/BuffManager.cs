@@ -50,8 +50,11 @@ public class BuffManager : MonoBehaviour
 
     private void Update()
     {
+        buffInfoButton.gameObject.SetActive(buffs.Count != 0); 
         if (buffs.Count == 0)
+        {
             return;
+        }
 
         foreach (var buff in buffs.Values)
         {
