@@ -350,6 +350,12 @@ public class ConsumerManager : MonoBehaviour
     {
         InitConsumer(consumer.GetComponent<Consumer>());
         consumer.SetActive(true);
+        var currentConsumerData = consumer.GetComponent<Consumer>().FSM.consumerData;
+        if (currentConsumerData.GuestType == GuestType.Influencer)
+        {
+            var timerBuff = DataTableManager.Get<BuffDataTable>(DataTableIds.Buff.ToString()).GetBuffForBuffID(currentConsumerData.BuffID1);
+            buffManager.StartBuff(timerBuff);
+        }
     }
 
     private void OnReturnConsumer(GameObject consumer)

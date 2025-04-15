@@ -89,7 +89,8 @@ public enum BuffType
     FootTraffic,
     StaffWork,
     StaffMove,
-    PairSpawn
+    PairSpawn,
+    TimerSpeed
 }
 
 public enum PromotionType
