@@ -19,13 +19,16 @@ public class ItuberPromotion : PromotionBase
             buffManager.StartBuff(footTrafficBuff, () =>
             {
                 consumerManager.SpawnConsumer(ituber);
-                Debug.Log("SpawnConsumer");
                 LimitCounting(needAd);
             }, needAd);
         }
         else
         {
-
+            buffManager.StartBuff(footTrafficBuff, () =>
+            {
+                consumerManager.AddPromotionConsumerWaitingLine(ituber);
+                LimitCounting(needAd);
+            }, needAd);
         }
     }
 }

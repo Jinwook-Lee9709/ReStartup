@@ -22,5 +22,13 @@ public class ChefPromotion : PromotionBase
                 LimitCounting(needAd);
             }, needAd);
         }
+        else
+        {
+            buffManager.StartBuff(doubleConsumerBuff, () =>
+            {
+                consumerManager.AddPromotionConsumerWaitingLine(chef);
+                LimitCounting(needAd);
+            }, needAd);
+        }
     }
 }

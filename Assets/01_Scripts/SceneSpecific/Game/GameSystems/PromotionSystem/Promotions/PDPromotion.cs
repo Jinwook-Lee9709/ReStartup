@@ -25,5 +25,14 @@ public class PDPromotion : PromotionBase
                 LimitCounting(needAd);
             }, needAd);
         }
+        else
+        {
+            buffManager.StartBuff(staffWalk, () =>
+            {
+                consumerManager.AddPromotionConsumerWaitingLine(pd);
+                buffManager.StartBuff(staffMove);
+                LimitCounting(needAd);
+            }, needAd);
+        }
     }
 }

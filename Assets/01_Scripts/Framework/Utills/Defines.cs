@@ -94,7 +94,7 @@ public enum BuffType
 
 public enum PromotionType
 {
-    SNS,
+    SNS = -1,
     Ituber,
     PD,
     Chef

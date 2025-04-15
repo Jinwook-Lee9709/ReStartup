@@ -16,27 +16,25 @@ public class ConsumerManager : MonoBehaviour
     [SerializeField] private int maxWaitingSeatCnt;
     [SerializeField] private GameObject consumerPrefab;
     [SerializeField] public Transform spawnPoint;
-    private int tempPairProb = 50;
+    private int pairProb = 95;
     [SerializeField] private TextMeshProUGUI waitingText;
-
     public WorkFlowController workFlowController;
-
     private ConsumerDataTable consumerDataTable;
     private Dictionary<int, List<int>> consumerSpawnPercent;
-
-    /// <summary>
-    ///     ��⿭ �ڸ�
-    /// </summary>
     [SerializeField] private List<Transform> waitingConsumerSeats;
 
-    /// <summary>
-    ///     ���� ���ӽſ� �����Ǿ��ִ� �մԵ��� ���º��� �����ϴ� ��ųʸ�
-    /// </summary>
     private readonly Dictionary<ConsumerFSM.ConsumerState, List<Consumer>> currentSpawnedConsumerDictionary = new();
     private int waitOutsideConsumerCnt = 0;
 
     public List<int> foodIds;
+    public Queue<ConsumerData> promotionWatings = new();
 
+    public void AddPromotionConsumerWaitingLine(ConsumerData data)
+    {
+        promotionWatings.Enqueue(data);
+        waitOutsideConsumerCnt++;
+        UpdateWaitingText();
+    }
     private void Awake()
     {
         workFlowController = ServiceLocator.Instance.GetSceneService<GameManager>().WorkFlowController;
@@ -67,6 +65,16 @@ public class ConsumerManager : MonoBehaviour
         var consumer2 = consumerPool.Get().GetComponent<Consumer>();
         SetPairData(consumer1, consumer2);
         AfterSpawnInit(consumer1);
+    }
+
+    public void SpawnPairConsumer(ConsumerData owner, ConsumerData partner)
+    {
+        var consumer1 = consumerPool.Get().GetComponent<Consumer>();
+        var consumer2 = consumerPool.Get().GetComponent<Consumer>();
+        SetPairData(consumer1, consumer2);
+        AfterSpawnInit(consumer1);
+        consumer1.FSM.consumerData = owner;
+        consumer2.FSM.consumerData = partner;
     }
     public bool CanSpawnConsumer()
     {
@@ -118,10 +126,20 @@ public class ConsumerManager : MonoBehaviour
                 if (cnt < 9)
                 {
                     int pairProb = UnityEngine.Random.Range(0, 100);
-                    if (pairProb < tempPairProb)
-                        SpawnConsumer();
+                    if (buffManager.GetBuff(BuffType.PairSpawn)?.isOnBuff ?? false)
+                    {
+                        if (pairProb > this.pairProb)
+                            SpawnConsumer();
+                        else
+                            SpawnPairConsumer();
+                    }
                     else
-                        SpawnPairConsumer();
+                    {
+                        if (pairProb < this.pairProb)
+                            SpawnConsumer();
+                        else
+                            SpawnPairConsumer();
+                    }
                 }
             }
             else if (waitOutsideConsumerCnt < 99)
@@ -214,20 +232,79 @@ public class ConsumerManager : MonoBehaviour
             if (waitOutsideConsumerCnt > 0)
             {
                 int pairProb = UnityEngine.Random.Range(0, 100);
-                if (pairProb > tempPairProb && waitOutsideConsumerCnt >= 2)
+
+                if (promotionWatings.Count > 0)
                 {
-                    SpawnPairConsumer();
-                    waitOutsideConsumerCnt -= 2;
+                    if (buffManager.GetBuff(BuffType.PairSpawn)?.isOnBuff ?? false)
+                    {
+                        if (pairProb < this.pairProb && waitOutsideConsumerCnt >= 2)
+                        {
+                            var owner = promotionWatings.Dequeue();
+                            var list = DataTableManager.Get<ConsumerDataTable>(DataTableIds.Consumer.ToString()).GetConsumerWithoutBadType(ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme);
+                            var partner = promotionWatings.Count != 0 ? promotionWatings.Dequeue() : list[UnityEngine.Random.Range(0,list.Count)];
+
+                            SpawnPairConsumer(owner, partner);
+                            waitOutsideConsumerCnt -= 2;
+                        }
+                        else
+                        {
+                            var promotionConsumer = promotionWatings.Dequeue();
+                            SpawnConsumer(promotionConsumer);
+                            waitOutsideConsumerCnt--;
+                        }
+                    }
+                    else
+                    {
+                        if (pairProb > this.pairProb && waitOutsideConsumerCnt >= 2)
+                        {
+                            var owner = promotionWatings.Dequeue();
+                            var list = DataTableManager.Get<ConsumerDataTable>(DataTableIds.Consumer.ToString()).GetConsumerWithoutBadType(ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme);
+                            var partner = promotionWatings.Count != 0 ? promotionWatings.Dequeue() : list[UnityEngine.Random.Range(0, list.Count)];
+
+                            SpawnPairConsumer(owner, partner);
+                            waitOutsideConsumerCnt -= 2;
+                        }
+                        else
+                        {
+                            var promotionConsumer = promotionWatings.Dequeue();
+                            SpawnConsumer(promotionConsumer);
+                            waitOutsideConsumerCnt--;
+                        }
+                    }
+
+                    UpdateWaitingText();
+                    return;
+                }
+
+                if (buffManager.GetBuff(BuffType.PairSpawn)?.isOnBuff ?? false)
+                {
+                    if (pairProb < this.pairProb && waitOutsideConsumerCnt >= 2)
+                    {
+                        SpawnPairConsumer();
+                        waitOutsideConsumerCnt -= 2;
+                    }
+                    else
+                    {
+                        SpawnConsumer();
+                        waitOutsideConsumerCnt--;
+                    }
                 }
                 else
                 {
-                    SpawnConsumer();
-                    waitOutsideConsumerCnt--;
+                    if (pairProb > this.pairProb && waitOutsideConsumerCnt >= 2)
+                    {
+                        SpawnPairConsumer();
+                        waitOutsideConsumerCnt -= 2;
+                    }
+                    else
+                    {
+                        SpawnConsumer();
+                        waitOutsideConsumerCnt--;
+                    }
                 }
                 UpdateWaitingText();
             }
         }
-
     }
 
     private GameObject OnCreateConsumer()
