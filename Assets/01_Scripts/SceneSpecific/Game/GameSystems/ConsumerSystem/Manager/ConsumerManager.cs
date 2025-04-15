@@ -22,6 +22,8 @@ public class ConsumerManager : MonoBehaviour
     private ConsumerDataTable consumerDataTable;
     private Dictionary<int, List<int>> consumerSpawnPercent;
     [SerializeField] private List<Transform> waitingConsumerSeats;
+    [SerializeField] private List<Transform> payWaitingPivots;
+
 
     private readonly Dictionary<ConsumerFSM.ConsumerState, List<Consumer>> currentSpawnedConsumerDictionary = new();
     private int waitOutsideConsumerCnt = 0;
@@ -29,6 +31,13 @@ public class ConsumerManager : MonoBehaviour
     public List<int> foodIds;
     public Queue<ConsumerData> promotionWatings = new();
 
+    public bool IsPayWaitingLineVacated
+    {
+        get
+        {
+            return workFlowController.GetCashierQueue().Count < payWaitingPivots.Count - 1;
+        }
+    }
     public void AddPromotionConsumerWaitingLine(ConsumerData data)
     {
         promotionWatings.Enqueue(data);
@@ -41,8 +50,8 @@ public class ConsumerManager : MonoBehaviour
         var pivotManager = ServiceLocator.Instance.GetSceneService<GameManager>().ObjectPivotManager;
         spawnPoint = pivotManager.GetConsumerSpawnPoint();
         waitingConsumerSeats = pivotManager.GetWatingLines();
+        payWaitingPivots = pivotManager.GetPayWaitingPibots();
     }
-
 
     private void UpdateWaitingText()
     {
@@ -148,7 +157,7 @@ public class ConsumerManager : MonoBehaviour
                 UpdateWaitingText();
             }
             var buff = buffManager.GetBuff(BuffType.FootTraffic);
-            var basicTime = 5f;
+            var basicTime = 40f;
             basicTime *= buff?.BuffEffect ?? 1f;
 
             yield return new WaitForSeconds(basicTime);
@@ -168,9 +177,16 @@ public class ConsumerManager : MonoBehaviour
 
         var cnt = workFlowController.AssignCashier(consumer);
         if (cnt != 0)
-            consumer.GetComponent<NavMeshAgent>().SetDestination(
-                workFlowController.GetCashierCounter().GetInteractablePoints(InteractPermission.Consumer)[0].transform
-                    .position + new Vector3(-0.5f, 0, 0) * cnt);
+        {
+            if (consumer.pairData?.owner == consumer)
+            {
+                consumer.GetComponent<NavMeshAgent>().SetDestination(payWaitingPivots[Mathf.Clamp(cnt - 1, 0, payWaitingPivots.Count - 1)].position);
+            }
+            else
+            {
+                consumer.GetComponent<NavMeshAgent>().SetDestination(payWaitingPivots[cnt - 1].position);
+            }
+        }
     }
 
     public void OnPayStart(ConsumerData consumerData)
@@ -241,7 +257,7 @@ public class ConsumerManager : MonoBehaviour
                         {
                             var owner = promotionWatings.Dequeue();
                             var list = DataTableManager.Get<ConsumerDataTable>(DataTableIds.Consumer.ToString()).GetConsumerWithoutBadType(ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme);
-                            var partner = promotionWatings.Count != 0 ? promotionWatings.Dequeue() : list[UnityEngine.Random.Range(0,list.Count)];
+                            var partner = promotionWatings.Count != 0 ? promotionWatings.Dequeue() : list[UnityEngine.Random.Range(0, list.Count)];
 
                             SpawnPairConsumer(owner, partner);
                             waitOutsideConsumerCnt -= 2;
@@ -324,6 +340,7 @@ public class ConsumerManager : MonoBehaviour
         consumer.FSM.consumerData = consumerDataTable.GetConsumerData(consumerSpawnPercent[14]);
         consumer.FSM.consumerData.Init();
         consumer.isEndMeal = false;
+        consumer.isFoodReady = false;
         consumer.FSM.SetCashierCounter(workFlowController.GetCashierCounter());
         consumer.FSM.OnSeatEvent -= workFlowController.AssignGetOrderWork;
         consumer.FSM.OnSeatEvent += workFlowController.AssignGetOrderWork;

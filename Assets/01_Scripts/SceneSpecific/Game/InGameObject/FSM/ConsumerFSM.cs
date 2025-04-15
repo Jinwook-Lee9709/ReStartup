@@ -19,6 +19,7 @@ public class ConsumerFSM : MonoBehaviour
         Exit,
 
         WaitingPairMealEnd,
+        WaitingPayLine,
     }
 
     public enum Satisfaction
@@ -122,6 +123,7 @@ public class ConsumerFSM : MonoBehaviour
                     consumerManager.OnChangeConsumerState(consumer, ConsumerState.Paying);
                     break;
                 case ConsumerState.Exit:
+                    model.PlayAnimation(PlayerState.IDLE, 0);
                     model.PlayAnimation(PlayerState.MOVE, 0);
                     consumerManager.OnChangeConsumerState(consumer, ConsumerState.Exit);
                     switch (currentSatisfaction)
@@ -140,7 +142,7 @@ public class ConsumerFSM : MonoBehaviour
                     }
                     agent.SetDestination(consumerManager.spawnPoint.position);
                     break;
-                case ConsumerState.WaitingPairMealEnd:
+                case ConsumerState.WaitingPayLine:
 
                     break;
                 case ConsumerState.None:
@@ -189,6 +191,9 @@ public class ConsumerFSM : MonoBehaviour
                 break;
             case ConsumerState.Exit:
                 UpdateExit();
+                break;
+            case ConsumerState.WaitingPayLine:
+                UpdateWaitingPayLine();
                 break;
         }
     }
@@ -251,8 +256,16 @@ public class ConsumerFSM : MonoBehaviour
                 }
                 else
                 {
-                    CurrentStatus = ConsumerState.WaitForPay;
-                    consumer.pairData.partner.FSM.CurrentStatus = ConsumerState.WaitForPay;
+                    if (consumerManager.IsPayWaitingLineVacated)
+                    {
+                        CurrentStatus = ConsumerState.WaitForPay;
+                        consumer.pairData.partner.FSM.CurrentStatus = ConsumerState.WaitForPay;
+                    }
+                    else
+                    {
+                        CurrentStatus = ConsumerState.WaitingPayLine;
+                        consumer.pairData.partner.FSM.CurrentStatus = ConsumerState.WaitingPayLine;
+                    }
                 }
             }
             else if (consumer.pairData.partner == consumer)
@@ -263,14 +276,25 @@ public class ConsumerFSM : MonoBehaviour
                 }
                 else
                 {
-                    CurrentStatus = ConsumerState.WaitForPay;
-                    consumer.pairData.owner.FSM.CurrentStatus = ConsumerState.WaitForPay;
+                    if (consumerManager.IsPayWaitingLineVacated)
+                    {
+                        CurrentStatus = ConsumerState.WaitForPay;
+                        consumer.pairData.owner.FSM.CurrentStatus = ConsumerState.WaitForPay;
+                    }
+                    else
+                    {
+                        CurrentStatus = ConsumerState.WaitingPayLine;
+                        consumer.pairData.owner.FSM.CurrentStatus = ConsumerState.WaitingPayLine;
+                    }
                 }
             }
         }
         else
         {
-            CurrentStatus = ConsumerState.WaitForPay;
+            if(consumerManager.IsPayWaitingLineVacated)
+                CurrentStatus = ConsumerState.WaitForPay;
+            else
+                CurrentStatus = ConsumerState.WaitingPayLine;
         }
         StopAllCoroutines();
     }
@@ -280,9 +304,39 @@ public class ConsumerFSM : MonoBehaviour
         CurrentStatus = ConsumerState.AfterOrder;
     }
 
+
     public void OnGetFood()
     {
-        CurrentStatus = ConsumerState.Eatting;
+        if(consumer.pairData == null)
+            CurrentStatus = ConsumerState.Eatting;
+        else
+        {
+            consumer.isFoodReady = true;
+            if (consumer.pairData.owner == consumer)
+            {
+                if (!consumer.pairData.partner.isFoodReady)
+                {
+                    CurrentStatus = ConsumerState.WaitingPairMealEnd;
+                }
+                else
+                {
+                    CurrentStatus = ConsumerState.Eatting;
+                    consumer.pairData.partner.FSM.CurrentStatus = ConsumerState.Eatting;
+                }
+            }
+            else if (consumer.pairData.partner == consumer)
+            {
+                if (!consumer.pairData.owner.isFoodReady)
+                {
+                    CurrentStatus = ConsumerState.WaitingPairMealEnd;
+                }
+                else
+                {
+                    CurrentStatus = ConsumerState.Eatting;
+                    consumer.pairData.owner.FSM.CurrentStatus = ConsumerState.Eatting;
+                }
+            }
+        }
     }
 
     private void UpdateWaiting()
@@ -386,4 +440,16 @@ public class ConsumerFSM : MonoBehaviour
         //���� ������ƮǮ�� ��ȯ��.
         if (agent.IsArrive(consumerManager.spawnPoint)) consumerManager.consumerPool.Release(gameObject);
     }
+    private void UpdateWaitingPayLine()
+    {
+        if(consumerManager.IsPayWaitingLineVacated)
+        {
+            CurrentStatus = ConsumerState.WaitForPay;
+            if(consumer.pairData != null && consumer.pairData.owner == consumer)
+            {
+                consumer.pairData.partner.FSM.CurrentStatus = ConsumerState.WaitForPay;
+            }
+        }
+    }
+
 }
