@@ -78,14 +78,22 @@ public class UserDataManager : Singleton<UserDataManager>
     public void OnRankPointUp(int getRankPoint)
     {
         currentUserData.CurrentRankPoint += getRankPoint;
-        ChangeRankPointAction?.Invoke(getRankPoint);
+        ChangeRankPointAction?.Invoke((int)currentUserData.CurrentRankPoint);
     }
     
     public async UniTask AddRankPointWithSave(int rankPoint)
     {
         var currentTheme = ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme;
         OnRankPointUp(rankPoint);
-        await ThemeRecordDAC.UpdateThemeRankpoint((int)currentTheme, rankPoint);
+        await ThemeRecordDAC.UpdateThemeRankpoint((int)currentTheme, (int)currentUserData.CurrentRankPoint);
+    }
+
+    public async UniTask SetRankWithSave(int rank)
+    {
+        var currentTheme = ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme;
+        CurrentUserData.CurrentRank = rank;
+        await ThemeRecordDAC.UpdateThemeRank((int)currentTheme, rank);
+        
     }
 
     public void AdjustMoney(int money)

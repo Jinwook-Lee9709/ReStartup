@@ -27,12 +27,23 @@ public static class ThemeRecordDAC
 
     public static async UniTask<bool> UpdateThemeRankpoint(int themeId, int rankpoint)
     {
-        Dictionary<string, string> data = new()
+        Dictionary<string, string> payload = new()
         {
             ["theme"] = themeId.ToString(),
             ["rank_point"] = rankpoint.ToString()
         };
-        ApiResponse<ThemeRecordData> response = await RestApiService.PostAsyncWithToken<ApiResponse<ThemeRecordData>>(Endpoints.SaveRankPointUrl, data);
+        ApiResponse<ThemeRecordData> response = await RestApiService.PostAsyncWithToken<ApiResponse<ThemeRecordData>>(Endpoints.SaveRankPointUrl, payload);
+        return response.Success;
+    }
+
+    public static async UniTask<bool> UpdateThemeRank(int themeId, int rank)
+    {
+        Dictionary<string, string> payload = new()
+        {
+            ["theme"] = themeId.ToString(),
+            ["ranking"] = rank.ToString()
+        };
+        ApiResponse<ThemeRecordData> response = await RestApiService.PostAsyncWithToken<ApiResponse<ThemeRecordData>>(Endpoints.SaveRankingUrl, payload);
         return response.Success;
     }
 }

@@ -70,7 +70,7 @@ public class ReviewManager : MonoBehaviour
             reviewObj.Init(tempData);
             reviewObj.reviewManager = this;
 
-            UserDataManager.Instance.CurrentUserData.CurrentRankPoint += reviewObj.data.addPoint;
+            UserDataManager.Instance.AddRankPointWithSave(reviewObj.data.addPoint);
 
             reviews.AddFirst(reviewObj.gameObject);
 
