@@ -31,9 +31,8 @@ public class UserDataManager : Singleton<UserDataManager>
     }
 
     public event Action<int?> ChangeMoneyAction;
-    public event Action<int?> ChangeRankPointAction;
+    public event Action<int> ChangeRankPointAction;
     public event Action<int, int> OnInteriorUpgradeEvent;
-    public event Action<int> SetRankingPointAction;
     public event Action<bool> OnReviewCntFullEvent;
 
     public bool SaveDB()
@@ -66,7 +65,7 @@ public class UserDataManager : Singleton<UserDataManager>
     public IEnumerator OnMoneyUp(Consumer consumer)
     {
         AdjustMoneyWithSave(consumer.needFood.SellingCost).Forget();
-        OnRankPointUp(1000);
+        AddRankPointWithSave(1000).Forget();
 
         yield return new WaitForSeconds(0.5f);
 
@@ -78,26 +77,20 @@ public class UserDataManager : Singleton<UserDataManager>
 
     public void OnRankPointUp(int getRankPoint)
     {
-        SetRankingPointAction?.Invoke(getRankPoint);
+        currentUserData.CurrentRankPoint += getRankPoint;
+        ChangeRankPointAction?.Invoke(getRankPoint);
     }
-
-    public void AddRankPoint(int rankPoint)
-    {
-        currentUserData.CurrentRankPoint += rankPoint;
-        ChangeRankPointAction?.Invoke(currentUserData.CurrentRankPoint);
-    }
-
+    
     public async UniTask AddRankPointWithSave(int rankPoint)
     {
-        AddRankPoint(rankPoint);
- 
+        var currentTheme = ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme;
+        OnRankPointUp(rankPoint);
+        await ThemeRecordDAC.UpdateThemeRankpoint((int)currentTheme, rankPoint);
     }
 
     public void AdjustMoney(int money)
     {
         CurrentUserData.Money += money;
-        
-        ChangeRankPointAction?.Invoke(currentUserData.CurrentRankPoint);
         ChangeMoneyAction?.Invoke(CurrentUserData.Money);
     }
 

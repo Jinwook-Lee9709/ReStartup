@@ -22,7 +22,7 @@ public class FoodResearchListUI : MonoBehaviour
         ui.Init(data, notifyPopup);
         foodResearchItems.Add(data.Requirements ,ui);
     }
-    public void Unlock(int? currentRankingPoint)
+    public void Unlock(int currentRankingPoint)
     {
         var currentTheme = ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme;
         foreach (var ui in foodResearchItems)
