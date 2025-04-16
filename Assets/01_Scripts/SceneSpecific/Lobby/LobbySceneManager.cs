@@ -29,7 +29,7 @@ public class LobbySceneManager : MonoBehaviour
     {
         PlayerPrefs.SetInt("Theme", id);
         var sceneManager = ServiceLocator.Instance.GetGlobalService<SceneController>();
-        sceneManager.LoadSceneWithLoading(SceneIds.Dev0, BeforeGameSceneLoad);
+        sceneManager.LoadSceneWithLoading(SceneIds.Dev2, BeforeGameSceneLoad);
     }
 
     private async UniTask BeforeGameSceneLoad()

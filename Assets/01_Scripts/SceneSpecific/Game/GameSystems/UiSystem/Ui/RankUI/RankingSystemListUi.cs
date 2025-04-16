@@ -36,7 +36,6 @@ public class RankingSystemListUi : MonoBehaviour
         var player = items.FirstOrDefault(i => i.rankingData.RestaurantName == "Player");
         if (player != null)
         {
-            UserDataManager.Instance.CurrentUserData.CurrentRankPoint += points;
             player.rankingData.rankingPoint += points;
             RankUpdate();
             playerClone.UpdatePlayerData(player.rankingData);

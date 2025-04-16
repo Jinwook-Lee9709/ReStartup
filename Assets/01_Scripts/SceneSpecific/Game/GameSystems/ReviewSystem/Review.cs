@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -34,7 +35,7 @@ public class Review : MonoBehaviour
         OnRemoveAdEvent += () =>
         {
             reviewManager.RemoveAt(gameObject);
-            UserDataManager.Instance.CurrentUserData.CurrentRankPoint -= data.addPoint;
+            UserDataManager.Instance.AddRankPointWithSave(-data.addPoint).Forget();
         };
     }
 

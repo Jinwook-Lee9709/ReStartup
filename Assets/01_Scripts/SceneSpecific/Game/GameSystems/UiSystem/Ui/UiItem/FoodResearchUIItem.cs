@@ -121,7 +121,7 @@ public class FoodResearchUIItem : MonoBehaviour
         lockImage.SetActive(false);
         consumerManager.foodIds.Add(foodData.FoodID);
         
-        userData.CurrentRankPoint += foodData.GetRankPoints;
+        UserDataManager.Instance.AddRankPointWithSave(foodData.GetRankPoints).Forget();
         userData.Money -= foodData.BasicCost;
         ingameGoodsUi.SetGoldUi();
         gameManager.foodManager.UnlockFoodUpgrade(foodData);
