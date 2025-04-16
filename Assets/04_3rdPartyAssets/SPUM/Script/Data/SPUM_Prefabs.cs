@@ -37,49 +37,45 @@ public class SPUM_Prefabs : MonoBehaviour
     public void OverrideControllerInit()
     {
         Animator animator = _anim;
-        OverrideController = new AnimatorOverrideController();
-        OverrideController.runtimeAnimatorController = animator.runtimeAnimatorController;
 
-        // 모든 애니메이션 클립을 가져옵니다
-        AnimationClip[] clips = animator.runtimeAnimatorController.animationClips;
+        // ❗ 기존 컨트롤러가 AnimatorOverrideController면, 내부 원본을 사용하도록 보정
+        RuntimeAnimatorController baseController = animator.runtimeAnimatorController;
 
+        if (baseController is AnimatorOverrideController currentOverride)
+        {
+            baseController = currentOverride.runtimeAnimatorController;
+        }
+
+        // ✅ 새 OverrideController 생성
+        OverrideController = new AnimatorOverrideController(baseController);
+
+        // 기존 클립을 그대로 등록
+        AnimationClip[] clips = baseController.animationClips;
         foreach (AnimationClip clip in clips)
         {
-            // 복제된 클립으로 오버라이드합니다
             OverrideController[clip.name] = clip;
         }
 
         animator.runtimeAnimatorController = OverrideController;
+
+        // 상태별 애니메이션 초기화
         foreach (PlayerState state in Enum.GetValues(typeof(PlayerState)))
         {
             var stateText = state.ToString();
             StateAnimationPairs[stateText] = new List<AnimationClip>();
             switch (stateText)
             {
-                case "IDLE":
-                    StateAnimationPairs[stateText] = IDLE_List;
-                    break;
-                case "MOVE":
-                    StateAnimationPairs[stateText] = MOVE_List;
-                    break;
-                case "ATTACK":
-                    StateAnimationPairs[stateText] = ATTACK_List;
-                    break;
-                case "DAMAGED":
-                    StateAnimationPairs[stateText] = DAMAGED_List;
-                    break;
-                case "DEBUFF":
-                    StateAnimationPairs[stateText] = DEBUFF_List;
-                    break;
-                case "DEATH":
-                    StateAnimationPairs[stateText] = DEATH_List;
-                    break;
-                case "OTHER":
-                    StateAnimationPairs[stateText] = OTHER_List;
-                    break;
+                case "IDLE": StateAnimationPairs[stateText] = IDLE_List; break;
+                case "MOVE": StateAnimationPairs[stateText] = MOVE_List; break;
+                case "ATTACK": StateAnimationPairs[stateText] = ATTACK_List; break;
+                case "DAMAGED": StateAnimationPairs[stateText] = DAMAGED_List; break;
+                case "DEBUFF": StateAnimationPairs[stateText] = DEBUFF_List; break;
+                case "DEATH": StateAnimationPairs[stateText] = DEATH_List; break;
+                case "OTHER": StateAnimationPairs[stateText] = OTHER_List; break;
             }
         }
     }
+
     public bool allListsHaveItemsExist()
     {
         List<List<AnimationClip>> allLists = new List<List<AnimationClip>>()
