@@ -56,7 +56,7 @@ public class EmployeeUpgradePopup : MonoBehaviour
         currentLevelText.text = $"{upgradeCount} LV";
         nextLevelText.text = $"{upgradeCount + 1} LV";
         nameText.text = data.StaffNameKey.ToString();
-        priceText.text = (data.Cost * upgradeCount + 1).ToString();
+        priceText.text = (data.Cost * (upgradeCount + 1)).ToString();
         currentMoveSpeedValue.text = data.MoveSpeed.ToString();
         currentWorkSpeedValue.text = data.WorkSpeed.ToString();
         currentHealthValue.text = data.Health.ToString();

@@ -40,7 +40,7 @@ public class EmployeeUIItem : MonoBehaviour
     {
         employeeSaveData = UserDataManager.Instance.CurrentUserData.EmployeeSaveData;
     }
-    
+
     private void Start()
     {
         ingameGoodsUi = GameObject.FindWithTag("UIManager").GetComponent<UiManager>().inGameUi;
@@ -83,6 +83,7 @@ public class EmployeeUIItem : MonoBehaviour
         workSpeedValue.text = employeeData.WorkSpeed.ToString();
         moveSpeedValue.text = employeeData.MoveSpeed.ToString();
         HealthValue.text = employeeData.Health.ToString();
+        
 
         SetButtonInteractable();
         SetInfoText();
@@ -95,7 +96,7 @@ public class EmployeeUIItem : MonoBehaviour
     {
         SetButtonInteractable();
     }
-    
+
     private void OnButtonClick()
     {
         if (employeeSaveData[employeeId].level != 0)
@@ -145,7 +146,16 @@ public class EmployeeUIItem : MonoBehaviour
 
     private void SetInfoText()
     {
-        uiUpgradeCostText.text = $"{employeeData.Cost * (employeeSaveData[employeeId].level + 1)}";
+        int payLevel = UserDataManager.Instance.CurrentUserData.EmployeeSaveData[employeeData.StaffID].level + 1;
+        if (payLevel > 5)
+        {
+            uiUpgradeCostText.text = "교육 완료됨";
+        }
+        else
+        {
+            uiUpgradeCostText.text = $"{employeeData.Cost * (employeeSaveData[employeeId].level + 1)}";
+
+        }
         switch ((WorkType)employeeData.StaffType)
         {
             case WorkType.All:
@@ -167,7 +177,7 @@ public class EmployeeUIItem : MonoBehaviour
         switch (level)
         {
             case 0:
-                upgradeButtonText.text = "고용";   
+                upgradeButtonText.text = "고용";
                 break;
             case > 0 and < 5:
                 upgradeButtonText.text = "교육";
@@ -183,7 +193,7 @@ public class EmployeeUIItem : MonoBehaviour
     {
         if (!IsPayable(employeeData))
             return;
-        
+
         await UserDataManager.Instance.UpgradeEmployee(employeeId);
         int cost = employeeData.Cost * employeeSaveData[employeeId].level;
         await UserDataManager.Instance.AdjustMoneyWithSave(-cost);
@@ -197,12 +207,15 @@ public class EmployeeUIItem : MonoBehaviour
     {
         button.interactable = IsPayable(employeeData);
     }
-    
+
     public bool IsPayable(EmployeeTableGetData data)
     {
         int payLevel = UserDataManager.Instance.CurrentUserData.EmployeeSaveData[data.StaffID].level + 1;
         if (payLevel > 5)
+        {
+            uiUpgradeCostText.text = "교육 완료됨";
             return false;
+        }
         return payLevel * data.Cost <= UserDataManager.Instance.CurrentUserData.Money;
     }
 }
