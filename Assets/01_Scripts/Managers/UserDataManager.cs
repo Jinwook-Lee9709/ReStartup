@@ -107,7 +107,7 @@ public class UserDataManager : Singleton<UserDataManager>
         AdjustMoney(money);
         await SaveMoneyData();
     }
-
+    
     public async UniTask SaveMoneyData()
     {
         List<CurrencyData> list = new();
@@ -117,6 +117,27 @@ public class UserDataManager : Singleton<UserDataManager>
         list.Add(data);
         await CurrencyDataDAC.UpdateCurrencyData(list);
     }
+
+    public void AdjustGold(int gold)
+    {
+        CurrentUserData.Gold += gold;
+    }
+
+    public async UniTask AdjustGoldWithSave(int gold)
+    {
+        AdjustGold(gold);
+        await SaveGoldData();
+    }
+
+    public async UniTask SaveGoldData()
+    {
+        List<CurrencyData> list = new();
+        CurrencyData data = new CurrencyData(CurrencyType.Gold, CurrentUserData.Gold);
+        list.Add(data);
+        await CurrencyDataDAC.UpdateCurrencyData(list);
+    }
+
+
 
     public async UniTask UpgradeInterior(int interiorId)
     {
