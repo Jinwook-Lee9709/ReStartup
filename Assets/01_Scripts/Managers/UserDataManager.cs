@@ -65,7 +65,7 @@ public class UserDataManager : Singleton<UserDataManager>
 
     public IEnumerator OnMoneyUp(Consumer consumer)
     {
-        AdjustMoney(consumer.needFood.SellingCost);
+        AdjustMoneyWithSave(consumer.needFood.SellingCost).Forget();
         OnRankPointUp(1000);
 
         yield return new WaitForSeconds(0.5f);
@@ -96,7 +96,6 @@ public class UserDataManager : Singleton<UserDataManager>
     public void AdjustMoney(int money)
     {
         CurrentUserData.Money += money;
-        currentUserData.CurrentRankPoint += 1000;
         
         ChangeRankPointAction?.Invoke(currentUserData.CurrentRankPoint);
         ChangeMoneyAction?.Invoke(CurrentUserData.Money);

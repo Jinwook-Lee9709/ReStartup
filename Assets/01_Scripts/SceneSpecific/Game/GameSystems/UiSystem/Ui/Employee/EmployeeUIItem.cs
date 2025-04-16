@@ -56,6 +56,7 @@ public class EmployeeUIItem : MonoBehaviour
             employeeUIManager.EmployeeAllBuy += OnBuy;
         }
 
+        UserDataManager.Instance.ChangeMoneyAction += OnConditionChanged;
     }
 
     public void Init(EmployeeTableGetData data, EmployeeUpgradePopup employeeUpgradePopup)
@@ -78,17 +79,23 @@ public class EmployeeUIItem : MonoBehaviour
                 uiNameText.text = $"주방직원 :\n{employeeData.StaffID}";
                 break;
         }
-        uiUpgradeCostText.text = $"{employeeData.Cost}";
         button = GetComponentInChildren<Button>();
-        upgradeButtonText.text = "고용";
         workSpeedValue.text = employeeData.WorkSpeed.ToString();
         moveSpeedValue.text = employeeData.MoveSpeed.ToString();
         HealthValue.text = employeeData.Health.ToString();
-        
+
+        SetButtonInteractable();
+        SetInfoText();
         SetUpgradeButtonText(employeeSaveData[employeeId].level);
         button.onClick.AddListener(OnButtonClick);
 
     }
+
+    private void OnConditionChanged(int? money)
+    {
+        SetButtonInteractable();
+    }
+    
     private void OnButtonClick()
     {
         if (employeeSaveData[employeeId].level != 0)
@@ -112,16 +119,12 @@ public class EmployeeUIItem : MonoBehaviour
         if (employeeSaveData[employeeId].level < 1 && userData.Money > employeeData.Cost)
         {
             ServiceLocator.Instance.GetSceneService<GameManager>().EmployeeManager.InstantiateAndRegisterWorker(employeeData);
-
-            userData.Money -= employeeData.Cost;
             OnUpgradeEmployee();
         }
-        if (userData.Money > employeeData.Cost * employeeData.upgradeCount)
+        else if (userData.Money > employeeData.Cost * employeeSaveData[employeeId].level)
         {
             OnUpgradeEmployee();
-            userData.Money -= employeeData.Cost * employeeData.upgradeCount;
         }
-        SetUpgradeButtonText(employeeSaveData[employeeId].level);
     }
 
 
@@ -137,23 +140,26 @@ public class EmployeeUIItem : MonoBehaviour
     }
     private void OnUpgradeEmployee()
     {
-        ingameGoodsUi.SetGoldUi();
-        uiUpgradeCostText.text = $"{employeeData.Cost * employeeData.upgradeCount}";
+        HandleUpgradeEmployee().Forget();
+    }
+
+    private void SetInfoText()
+    {
+        uiUpgradeCostText.text = $"{employeeData.Cost * (employeeSaveData[employeeId].level + 1)}";
         switch ((WorkType)employeeData.StaffType)
         {
             case WorkType.All:
                 break;
             case WorkType.Payment:
-                uiNameText.text = $"계산원 :\n{employeeData.StaffID}:{employeeData.upgradeCount}";
+                uiNameText.text = $"계산원 :\n{employeeData.StaffID}:{employeeSaveData[employeeId].level}";
                 break;
             case WorkType.Hall:
-                uiNameText.text = $"홀직원 :\n{employeeData.StaffID}:{employeeData.upgradeCount}";
+                uiNameText.text = $"홀직원 :\n{employeeData.StaffID}:{employeeSaveData[employeeId].level}";
                 break;
             case WorkType.Kitchen:
-                uiNameText.text = $"주방직원 :\n{employeeData.StaffID}:{employeeData.upgradeCount}";
+                uiNameText.text = $"주방직원 :\n{employeeData.StaffID}:{employeeSaveData[employeeId].level}";
                 break;
         }
-        HandleUpgradeEmployee().Forget();
     }
 
     private void SetUpgradeButtonText(int level)
@@ -175,11 +181,28 @@ public class EmployeeUIItem : MonoBehaviour
 
     private async UniTask HandleUpgradeEmployee()
     {
+        if (!IsPayable(employeeData))
+            return;
+        
         await UserDataManager.Instance.UpgradeEmployee(employeeId);
-        if (employeeSaveData[employeeId].level < 5)
-        {
-            button.interactable = true;
-        }
+        int cost = employeeData.Cost * employeeSaveData[employeeId].level;
+        await UserDataManager.Instance.AdjustMoneyWithSave(-cost);
+        ingameGoodsUi.SetGoldUi();
+        SetInfoText();
+        SetUpgradeButtonText(employeeSaveData[employeeId].level);
+        SetButtonInteractable();
+    }
+
+    private void SetButtonInteractable()
+    {
+        button.interactable = IsPayable(employeeData);
     }
     
+    public bool IsPayable(EmployeeTableGetData data)
+    {
+        int payLevel = UserDataManager.Instance.CurrentUserData.EmployeeSaveData[data.StaffID].level + 1;
+        if (payLevel > 5)
+            return false;
+        return payLevel * data.Cost <= UserDataManager.Instance.CurrentUserData.Money;
+    }
 }
