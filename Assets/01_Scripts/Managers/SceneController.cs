@@ -5,12 +5,12 @@ using UnityEngine.AddressableAssets;
 
 public class SceneController
 {
-    public void LoadSceneWithLoading(SceneIds sceneId)
+    public void LoadSceneWithLoading(SceneIds sceneId, Func<UniTask> postLoadAction = null)
     {
-        LoadLoadingScene(sceneId).Forget();
+        LoadLoadingScene(sceneId, postLoadAction).Forget();
     }
 
-    public async UniTask LoadLoadingScene(SceneIds sceneId)
+    public async UniTask LoadLoadingScene(SceneIds sceneId, Func<UniTask> postLoadAction = null)
     {
         var loadingSceneHandle = Addressables.LoadSceneAsync(SceneIds.Loading.ToString());
         try
@@ -28,7 +28,7 @@ public class SceneController
 
         var loadingController = ServiceLocator.Instance.GetSceneService<LoadingSceneManager>();
         if (loadingController != null)
-            loadingController.StartSceneLoad(sceneId);
+            loadingController.StartSceneLoad(sceneId, postLoadAction);
         else
             Debug.LogError("Loading Scene Manager is null");
     }

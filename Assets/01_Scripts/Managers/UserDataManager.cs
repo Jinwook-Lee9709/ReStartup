@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -10,7 +12,7 @@ public class UserDataManager : Singleton<UserDataManager>
 
     private UserDataManager()
     {
-        if (currentUserData.Gold == 0) currentUserData.Gold = 1000000000;
+        if (currentUserData.Money == 0) currentUserData.Money = 1000000000;
     }
 
     public UserData CurrentUserData
@@ -28,7 +30,7 @@ public class UserDataManager : Singleton<UserDataManager>
         }
     }
 
-    public event Action<int?> ChangeGoldAction;
+    public event Action<int?> ChangeMoneyAction;
     public event Action<int?> ChangeRankPointAction;
     public event Action<int, int> OnInteriorUpgradeEvent;
     public event Action<int> SetRankingPointAction;
@@ -61,16 +63,16 @@ public class UserDataManager : Singleton<UserDataManager>
             Debug.Log("Load DB Fail");
     }
 
-    public IEnumerator OnGoldUp(Consumer consumer)
+    public IEnumerator OnMoneyUp(Consumer consumer)
     {
-        ModifyGold(consumer.needFood.SellingCost);
+        AdjustMoney(consumer.needFood.SellingCost);
         OnRankPointUp(1000);
 
         yield return new WaitForSeconds(0.5f);
 
         if (consumer.needFood.FoodID == consumer.FSM.consumerData.LoveFoodId && 0.25f < Random.Range(0f, 1f))
             //TODO : Play Tip PopUp
-            CurrentUserData.Gold +=
+            CurrentUserData.Money +=
                 Mathf.CeilToInt(consumer.needFood.SellingCost * (consumer.FSM.consumerData.SellTipPercent / 100));
     }
 
@@ -79,19 +81,75 @@ public class UserDataManager : Singleton<UserDataManager>
         SetRankingPointAction?.Invoke(getRankPoint);
     }
 
-    public void ModifyGold(int gold)
+    public void AddRankPoint(int rankPoint)
     {
-        CurrentUserData.Gold += gold;
-        currentUserData.CurrentRankPoint += 1000;
+        currentUserData.CurrentRankPoint += rankPoint;
         ChangeRankPointAction?.Invoke(currentUserData.CurrentRankPoint);
-        ChangeGoldAction?.Invoke(CurrentUserData.Gold);
     }
 
-    public void UpgradeInterior(int interiorId)
+    public async UniTask AddRankPointWithSave(int rankPoint)
+    {
+        AddRankPoint(rankPoint);
+ 
+    }
+
+    public void AdjustMoney(int money)
+    {
+        CurrentUserData.Money += money;
+        currentUserData.CurrentRankPoint += 1000;
+        
+        ChangeRankPointAction?.Invoke(currentUserData.CurrentRankPoint);
+        ChangeMoneyAction?.Invoke(CurrentUserData.Money);
+    }
+
+    public async UniTask AdjustMoneyWithSave(int money)
+    {
+        AdjustMoney(money);
+        await SaveMoneyData();
+    }
+
+    public async UniTask SaveMoneyData()
+    {
+        List<CurrencyData> list = new();
+        if (CurrentUserData.Money == null)
+            return;
+        CurrencyData data = new CurrencyData(CurrencyType.Money, (int)CurrentUserData.Money);
+        list.Add(data);
+        await CurrencyDataDAC.UpdateCurrencyData(list);
+    }
+
+    public async UniTask UpgradeInterior(int interiorId)
     {
         CurrentUserData.InteriorSaveData[interiorId]++;
         var upgradeCount = CurrentUserData.InteriorSaveData[interiorId];
+        await SaveInteriorUpgrade(interiorId);
+       
         OnInteriorUpgradeEvent?.Invoke(interiorId, upgradeCount);
+    }
+
+    public async UniTask SaveInteriorUpgrade(int interiorId)
+    {
+        var table = DataTableManager.Get<InteriorDataTable>(DataTableIds.Interior.ToString());
+        var theme = table.GetData(interiorId).RestaurantType;
+        InteriorSaveData data = new InteriorSaveData();
+        data.id = interiorId;
+        data.theme = (ThemeIds)theme;
+        data.level = CurrentUserData.InteriorSaveData[interiorId];
+        await InteriorSaveDataDAC.UpdateInteriorData(data);
+    }
+
+    public async UniTask UpgradeEmployee (int staffId)
+    {
+        currentUserData.EmployeeSaveData[staffId].level++;
+        var payload = currentUserData.EmployeeSaveData[staffId];
+        await EmployeeSaveDataDAC.UpdateEmployeeData(payload);
+    }
+
+    public async UniTask UpgradeFood(int foodId)
+    {
+        currentUserData.FoodSaveData[foodId].level++;
+        var payload = currentUserData.FoodSaveData[foodId];
+        await FoodSaveDataDAC.UpdateFoodData(payload);
     }
 
     public void AddConsumerCnt(bool isPositive)

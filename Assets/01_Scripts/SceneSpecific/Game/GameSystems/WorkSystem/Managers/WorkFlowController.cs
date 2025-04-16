@@ -375,6 +375,11 @@ public class WorkFlowController
         return cashierCounter;
     }
 
+    public LinkedList<Consumer> GetCashierQueue()
+    {
+        return cashierQueue;
+    }
+
     #endregion
 
     //손님 대기열

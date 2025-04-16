@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -34,7 +36,7 @@ public class InteriorCard : MonoBehaviour
         get
         {
             var userData = UserDataManager.Instance.CurrentUserData;
-            var isGoldConditionChanged = isGoldEnough != userData.Gold >= Data.GetSellingCost();
+            var isGoldConditionChanged = isGoldEnough != userData.Money >= Data.GetSellingCost();
             var isRequirementsChanged = isSatisfyRequirements !=
                                         (userData.CurrentRankPoint >= Data.Requirements1 &&
                                          (Data.Requirements2 == 0 ||
@@ -72,7 +74,7 @@ public class InteriorCard : MonoBehaviour
         var cost = Data.GetSellingCost();
 
         costText.text = cost.ToString();
-        isGoldEnough = userData.Gold >= cost;
+        isGoldEnough = userData.Money >= cost;
 
         isSatisfyRequirements = CheckRequirements(userData);
 
@@ -90,14 +92,15 @@ public class InteriorCard : MonoBehaviour
         }
         else
         {
-            OnBuy();
+            buyButton.interactable = false;
+            OnBuy().Forget();
         }
     }
 
-    public void OnBuy()
+    public async UniTask OnBuy()
     {
-        UserDataManager.Instance.UpgradeInterior(Data.InteriorID);
-        UserDataManager.Instance.ModifyGold(-Data.SellingCost);
+        await UserDataManager.Instance.UpgradeInterior(Data.InteriorID);
+        await UserDataManager.Instance.AdjustMoneyWithSave(-Data.SellingCost);
         UpdateInteractable();
     }
 

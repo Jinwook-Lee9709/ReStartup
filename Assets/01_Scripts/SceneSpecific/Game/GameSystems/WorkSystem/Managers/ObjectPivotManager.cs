@@ -71,4 +71,9 @@ public class ObjectPivotManager
     {
         return pivotLocator.PickupCounterPivots;
     }
+
+    public List<Transform> GetPayWaitingPibots()
+    {
+        return pivotLocator.PayWaitingPivots;
+    }
 }

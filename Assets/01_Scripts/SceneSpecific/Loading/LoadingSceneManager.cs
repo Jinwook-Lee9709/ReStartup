@@ -19,14 +19,16 @@ public class LoadingSceneManager : MonoBehaviour
         ServiceLocator.Instance.UnRegisterSceneService<LoadingSceneManager>();
     }
 
-    public void StartSceneLoad(SceneIds targetSceneId)
+    public void StartSceneLoad(SceneIds targetSceneId, Func<UniTask> postLoadAction = null)
     {
         ServiceLocator.Instance.ClearSceneServices();
-        LoadTargetSceneAsync(targetSceneId).Forget();
+        LoadTargetSceneAsync(targetSceneId, postLoadAction).Forget();
     }
 
-    public async UniTask LoadTargetSceneAsync(SceneIds targetSceneId)
+    public async UniTask LoadTargetSceneAsync(SceneIds targetSceneId, Func<UniTask> postLoadAction = null)
     {
+        if(postLoadAction != null)
+            await postLoadAction();
         var sceneHandle = Addressables.LoadSceneAsync(targetSceneId.ToString());
         try
         {

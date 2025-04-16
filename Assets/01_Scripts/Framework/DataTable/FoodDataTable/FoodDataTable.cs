@@ -1,7 +1,8 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-public class FoodDataTable : DataTable
+public class FoodDataTable : DataTable, IEnumerable<FoodData>
 {
     public Dictionary<int, FoodData> Data = new();
 
@@ -24,5 +25,15 @@ public class FoodDataTable : DataTable
             if (Data.ContainsKey(row.FoodID)) continue;
             Data.Add(row.FoodID, row);
         }
+    }
+
+    public IEnumerator<FoodData> GetEnumerator()
+    {
+        return Data.Values.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }

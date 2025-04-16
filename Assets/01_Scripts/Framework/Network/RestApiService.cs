@@ -1,28 +1,42 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
+using Unity.VisualScripting;
+using UnityEngine;
 using UnityEngine.Networking;
 
 public static class RestApiService
 {
-    public static UnityWebRequest CreateGetRequest(string url)
+    public static UnityWebRequest CreateGetRequest(string url, Dictionary<string, string> data = null)
     {
+        url += "?" + GetQueryString(data);
         var request = new UnityWebRequest(url, "GET");
-        string jsonPayload;
 
         request.downloadHandler = new DownloadHandlerBuffer();
         request.certificateHandler = new BypassCertificateHandler();
         return request;
     }
 
-    public static UnityWebRequest CreatePostRequest(string url, List<KeyValuePair<string, string>> data)
+    public static string GetQueryString(Dictionary<string, string> data)
+    {
+        if (data == null || data.Count == 0)
+            return string.Empty;
+        return string.Join("&", data.Select(kvp => $"{Uri.EscapeDataString(kvp.Key)}={Uri.EscapeDataString(kvp.Value.ToString())}"));
+    }
+
+    public static UnityWebRequest CreatePostRequest(string url, Dictionary<string, string> data = null)
     {
         var request = new UnityWebRequest(url, "POST");
-        var jsonPayLoad = JsonConvert.SerializeObject(data);
-        var bodyRaw = Encoding.UTF8.GetBytes(jsonPayLoad);
-        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        if (data != null)
+        {
+            var jsonPayLoad = JsonConvert.SerializeObject(data);
+            var bodyRaw = Encoding.UTF8.GetBytes(jsonPayLoad);
+            request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        }
+
         request.downloadHandler = new DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
         request.certificateHandler = new BypassCertificateHandler();
@@ -40,15 +54,30 @@ public static class RestApiService
         return request;
     }
 
-    public static async Task<T> GetAsync<T>(string url)
+    public static async UniTask<T> GetAsync<T>(string url,  Dictionary<string, string> data = null)
     {
-        using (var request = CreateGetRequest(url))
+        using (var request = CreateGetRequest(url, data))
         {
             return await SendRequestAsync<T>(request);
         }
     }
 
-    public static async Task<T> PostAsync<T>(string url, List<KeyValuePair<string, string>> data)
+    public static async UniTask<T> GetAsyncWithToken<T>(string url, Dictionary<string, string> data = null)
+    {
+        using (var request = CreateGetRequest(url, data))
+        {
+            try
+            {
+                request.SetRequestHeader("Authorization", $"Bearer {TokenManager.LoginToken}");
+                return await SendRequestAsync<T>(request);
+            }catch(Exception e)
+            {
+                Debug.Log(e);
+                throw e;
+            }
+        }
+    }
+    public static async UniTask<T> PostAsync<T>(string url, Dictionary<string, string> data = null)
     {
         using (var request = CreatePostRequest(url, data))
         {
@@ -56,31 +85,101 @@ public static class RestApiService
         }
     }
 
-    public static async Task<T> PostAsync<T>(string url, string jsonPayLoad)
+    public static async UniTask<T> PostAsync<T>(string url, string jsonPayLoad)
     {
         using (var request = CreatePostRequest(url, jsonPayLoad))
         {
+            try
+            {
+                return await SendRequestAsync<T>(request);
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e);
+                throw e;
+            }
+        }
+    }
+    
+    public static async UniTask<T> PostAsyncWithToken<T>(string url, Dictionary<string, string> data = null)
+    {
+        using (var request = CreatePostRequest(url, data))
+        {
+            request.SetRequestHeader("Authorization", $"Bearer {TokenManager.LoginToken}");
             return await SendRequestAsync<T>(request);
         }
     }
-
-
-    public static async Task<T> SendRequestAsync<T>(UnityWebRequest request)
+    
+    public static async UniTask<T> SendRequestAsync<T>(UnityWebRequest request)
     {
         using (request)
         {
-            request.SendWebRequest();
-            while (!request.isDone) await Task.Yield();
-
-            if (request.result == UnityWebRequest.Result.Success)
+            try
             {
-                var settings = new JsonSerializerSettings();
-                settings.NullValueHandling = NullValueHandling.Ignore;
-                return JsonConvert.DeserializeObject<T>(request.downloadHandler.text, settings);
-            }
+                await request.SendWebRequest();
 
-            throw new Exception($"Request failed: {request.error}");
+                if (request.result == UnityWebRequest.Result.Success)
+                {
+                    try
+                    {
+                        var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+                        return JsonConvert.DeserializeObject<T>(request.downloadHandler.text, settings);
+                    }
+                    catch (JsonException ex)
+                    {
+                        throw new Exception($"JSON Deserialization Error: {ex.Message}");
+                    }
+                }
+                throw new Exception($"Request failed with error: {request.error}, ResponseCode: {request.responseCode}");
+            }
+            catch (Exception e)
+            {
+                if (request.responseCode == 401)
+                {
+                    bool refreshResult = await UserAuthController.RefreshToken();
+                    if (refreshResult)
+                    {
+                        var newRequest = CloneRequest(request);
+                        return await SendRequestAsync<T>(newRequest);
+                    }
+                    throw new UnauthorizedAccessException("Refresh token expired");
+                }
+                else
+                {
+                    throw e;
+                }
+            }
+            finally
+            {
+                if (request != null)
+                {
+                    request.Dispose();
+                }
+            }
         }
+    }
+    
+    private static UnityWebRequest CloneRequest(UnityWebRequest originalRequest)
+    {
+        var newRequest = new UnityWebRequest(originalRequest.url, originalRequest.method)
+        {
+            downloadHandler = new DownloadHandlerBuffer()
+        };
+
+        newRequest.SetRequestHeader("Authorization", $"Bearer {TokenManager.LoginToken}");
+
+
+        // Clone body (if present in the original POST/PUT request)
+        if (originalRequest.uploadHandler != null)
+        {
+            newRequest.uploadHandler = new UploadHandlerRaw(originalRequest.uploadHandler.data)
+            {
+                contentType = originalRequest.uploadHandler.contentType
+            };
+        }
+        newRequest.certificateHandler = new BypassCertificateHandler();
+
+        return newRequest;
     }
 
     private class BypassCertificateHandler : CertificateHandler
