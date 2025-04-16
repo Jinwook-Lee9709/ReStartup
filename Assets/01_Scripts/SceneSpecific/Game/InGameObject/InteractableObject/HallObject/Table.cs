@@ -20,7 +20,7 @@ public class Table : InteractableObjectBase, IInterior
     public Transform FoodPlacePivot => foodPlacePivot;
     public TableType TableType => tableType;
     public Table PairTable => pairTable;
-
+    public IconBubble IconBubble => iconBubble;
     public void ChangeSpirte(Sprite sprite)
     {
         objectRenderer.sprite = sprite;

@@ -39,6 +39,15 @@ public class ConsumerFSM : MonoBehaviour
         0f
     };
 
+    [SerializeField]
+    private List<float> satisfactionColorChangeFlagTimes = new()
+    {
+        30f,
+        25f,
+        15f,
+        10f,
+    };
+
 
     [SerializeField] public ConsumerState currentStatus = ConsumerState.Waiting;
     [SerializeField] private Satisfaction currentSatisfaction = Satisfaction.High;
@@ -67,7 +76,6 @@ public class ConsumerFSM : MonoBehaviour
                     break;
                 case Satisfaction.Middle:
                     // TODO : Serving Delay Script Play
-                    // UnityEditor.EditorApplication.isPaused = true;
                     break;
                 case Satisfaction.Low:
                     break;
@@ -109,6 +117,7 @@ public class ConsumerFSM : MonoBehaviour
                     break;
                 case ConsumerState.AfterOrder:
                     consumerManager.OnChangeConsumerState(consumer, ConsumerState.AfterOrder);
+                    consumer.currentTable.IconBubble.SetColorSatisfaction(Color.white, Color.blue, 1f);
                     break;
                 case ConsumerState.Eatting:
                     consumerManager.OnChangeConsumerState(consumer, ConsumerState.Eatting);
@@ -382,6 +391,10 @@ public class ConsumerFSM : MonoBehaviour
 
     private void UpdateAfterOrder()
     {
+        if (CurrentSatisfaction == Satisfaction.Low)
+        {
+            return;
+        }
         //�ֹ��� �޾ư� ��, ������ ����������� ����.
         //deltaTime�� �����Ͽ� ������ ���¸� ����.
         var deltaTime = buffManager.GetBuff(BuffType.TimerSpeed)?.isOnBuff ?? false ? Time.deltaTime * buffManager.GetBuff(BuffType.TimerSpeed).BuffEffect : Time.deltaTime;
@@ -391,6 +404,9 @@ public class ConsumerFSM : MonoBehaviour
         if (consumerData.GuestType == GuestType.BadGuest)
             consumerData.orderWaitTimer -= deltaTime;
 
+        float normalTimer = Mathf.Lerp(0.25f, 0.75f, Mathf.InverseLerp(0, consumerData.MaxOrderWaitLimit, consumerData.orderWaitTimer));
+        var iconBubble = consumer.currentTable.IconBubble;
+        iconBubble.FillingSatisfation(normalTimer);
         // Debug.Log(consumerData.orderWaitTimer);
         switch (consumerData.orderWaitTimer)
         {
@@ -405,6 +421,22 @@ public class ConsumerFSM : MonoBehaviour
                 CurrentSatisfaction = Satisfaction.Low;
                 if (consumerData.GuestType == GuestType.BadGuest)
                     CurrentStatus = ConsumerState.Exit;
+                break;
+        }
+
+        switch (consumerData.orderWaitTimer)
+        {
+            case var t when t < satisfactionColorChangeFlagTimes[0] && t > satisfactionColorChangeFlagTimes[1]:
+                var highLerp = Mathf.InverseLerp(satisfactionColorChangeFlagTimes[0], satisfactionColorChangeFlagTimes[1], consumerData.orderWaitTimer);
+                iconBubble.SetColorSatisfaction(Color.cyan, Color.green, highLerp);
+                break;
+            case var t when t < satisfactionColorChangeFlagTimes[1] && t > satisfactionColorChangeFlagTimes[2]:
+                var middleLerp = Mathf.InverseLerp(satisfactionColorChangeFlagTimes[1], satisfactionColorChangeFlagTimes[2], consumerData.orderWaitTimer);
+                iconBubble.SetColorSatisfaction(Color.green, Color.yellow, middleLerp);
+                break;
+            case var t when t < satisfactionColorChangeFlagTimes[2] && t > satisfactionColorChangeFlagTimes[3]:
+                var lowLerp = Mathf.InverseLerp(satisfactionColorChangeFlagTimes[2], satisfactionColorChangeFlagTimes[3], consumerData.orderWaitTimer);
+                iconBubble.SetColorSatisfaction(Color.yellow, Color.red, lowLerp);
                 break;
         }
     }
