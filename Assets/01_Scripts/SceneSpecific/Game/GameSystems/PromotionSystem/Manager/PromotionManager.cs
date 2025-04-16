@@ -15,25 +15,30 @@ public class PromotionManager : MonoBehaviour
     {
         foreach (var promotion in DataTableManager.Get<PromotionDataTable>(DataTableIds.Promoiton.ToString()).GetData())
         {
+            PromotionBase promotionBase = null;
             switch (promotion.Value.PromotionType)
             {
                 case PromotionType.SNS:
-                    var snsPromo = new SNSPromotion(promotion.Value);
-                    promotions.Add(snsPromo);
+                    promotionBase = new SNSPromotion(promotion.Value);
                     break;
                 case PromotionType.Ituber:
-                    var ituberPromo = new ItuberPromotion(promotion.Value);
-                    promotions.Add(ituberPromo);
+                    promotionBase = new ItuberPromotion(promotion.Value);
                     break;
                 case PromotionType.PD:
-                    var pdPromo = new PDPromotion(promotion.Value);
-                    promotions.Add(pdPromo);
+                    promotionBase = new PDPromotion(promotion.Value);
                     break;
                 case PromotionType.Chef:
-                    var chefPromo = new ChefPromotion(promotion.Value);
-                    promotions.Add(chefPromo);
+                    promotionBase = new ChefPromotion(promotion.Value);
                     break;
             }
+
+            if (promotionBase != null)
+            {
+                promotionBase.currentLimitAD -= UserDataManager.Instance.CurrentUserData.PromotionSaveData[promotionBase.PromotionID].adUseCount;
+                promotionBase.currentLimitBuy -= UserDataManager.Instance.CurrentUserData.PromotionSaveData[promotionBase.PromotionID].buyUseCount;
+                promotions.Add(promotionBase);
+            }
+                
         }
 
         var currentThemePromotionConsumerList = DataTableManager.Get<ConsumerDataTable>(DataTableIds.Consumer.ToString()).GetPromotionConsumerDataForCurrentTheme(ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme);

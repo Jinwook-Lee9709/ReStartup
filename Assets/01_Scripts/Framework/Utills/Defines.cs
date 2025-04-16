@@ -161,6 +161,9 @@ public static class Endpoints
     public static readonly string SaveRankPointUrl = BaseUrl + "/users/progress/saveRankpoint";
     public static readonly string GetCumulativeUrl = BaseUrl + "/users/progress/getCumulative";
     public static readonly string SaveCumulativeUrl = BaseUrl + "/users/progress/saveCumulative";
+    
+    public static readonly string GetPromotionsUrl = BaseUrl + "/users/getPromotions";
+    public static readonly string SavePromotionsUrl = BaseUrl + "/users/savePromotions";
 }
 
 public static class Constants

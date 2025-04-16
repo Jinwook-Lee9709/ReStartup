@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PromotionDataTable : DataTable
+public class PromotionDataTable : DataTable, IEnumerable<PromotionBase>
 {
     public Dictionary<int, PromotionBase> Data = new();
 
@@ -20,5 +20,15 @@ public class PromotionDataTable : DataTable
                 continue;
             Data.Add(row.PromotionID, row);
         }
+    }
+
+    public IEnumerator<PromotionBase> GetEnumerator()
+    {
+        return Data.Values.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }

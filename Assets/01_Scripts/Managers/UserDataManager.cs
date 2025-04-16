@@ -152,6 +152,17 @@ public class UserDataManager : Singleton<UserDataManager>
         await FoodSaveDataDAC.UpdateFoodData(payload);
     }
 
+    public async UniTask<bool> OnUsePromotion(PromotionBase promotion, bool isAd)
+    {
+        if (isAd)
+            CurrentUserData.PromotionSaveData[promotion.PromotionID].adUseCount--;
+        else
+            CurrentUserData.PromotionSaveData[promotion.PromotionID].buyUseCount--;
+        List<PromotionData> payload = new() { CurrentUserData.PromotionSaveData[promotion.PromotionID] };
+        var result = await PromotionDataDAC.UpdatePromotionData(payload);
+        return result;
+    }
+    
     public void AddConsumerCnt(bool isPositive)
     {
         if (isPositive)

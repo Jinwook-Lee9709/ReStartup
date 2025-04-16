@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
@@ -39,11 +38,13 @@ public class LobbySceneManager : MonoBehaviour
         var foodQueryTask =  FoodSaveDataDAC.GetFoodData(theme);
         var employeeQueryTask =  EmployeeSaveDataDAC.GetEmployeeData(theme);
         var themeRecordQueryTask = ThemeRecordDAC.GetThemeRecordData(theme);
+        var promotionQueryTask = PromotionDataDAC.GetPromotionData();
         
         var getInteriorResponse = await interiorQueryTask;
         var getFoodResponse = await foodQueryTask;
         var getEmployeeResponse = await employeeQueryTask;
         var themeRecordResponse = await themeRecordQueryTask;
+        var promotionResponse = await promotionQueryTask;
         
         if (getInteriorResponse.Data.Length == 0)
         {
@@ -83,6 +84,18 @@ public class LobbySceneManager : MonoBehaviour
             UserDataManager.Instance.CurrentUserData.CurrentRank = themeRecordResponse.Data[0].ranking;
             UserDataManager.Instance.CurrentUserData.CurrentRankPoint = themeRecordResponse.Data[0].rank_point;
             UserDataManager.Instance.CurrentUserData.Cumulative = themeRecordResponse.Data[0].cumulative;
+        }
+
+        if (promotionResponse.Data.Length == 0)
+        {
+            await SaveInitialPromotionData();
+        }
+        else
+        {
+            foreach (var data in promotionResponse.Data)
+            {
+                UserDataManager.Instance.CurrentUserData.PromotionSaveData.Add(data.id, data);
+            }
         }
     }
 
@@ -148,6 +161,37 @@ public class LobbySceneManager : MonoBehaviour
         UserDataManager.Instance.CurrentUserData.CurrentRank = 1;
         UserDataManager.Instance.CurrentUserData.CurrentRankPoint = 0;
         UserDataManager.Instance.CurrentUserData.Cumulative = 0;
+    }
+
+    private async UniTask SaveInitialPromotionData()
+    {
+        var table = DataTableManager.Get<PromotionDataTable>(DataTableIds.Promoiton.ToString());
+        List<PromotionData> payload = new ();
+        foreach (PromotionBase data in table)
+        {
+            var promotionData = new PromotionData
+            {
+                id = data.PromotionID,
+                buyUseCount = 0,
+                adUseCount = 0,
+            };
+            payload.Add(promotionData);
+        }
+        var result = await PromotionDataDAC.UpdatePromotionData(payload);
+        if (!result)
+        {
+            
+        }
+        else
+        {
+            foreach (var data in payload)
+            {
+                UserDataManager.Instance.CurrentUserData.PromotionSaveData.Add(data.id, data);
+            }
+            
+        }
+
+
     }
     
 }
