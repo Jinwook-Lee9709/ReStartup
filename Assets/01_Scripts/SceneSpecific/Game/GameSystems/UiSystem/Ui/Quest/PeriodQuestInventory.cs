@@ -33,4 +33,19 @@ public class PeriodQuestInventory : MonoBehaviour
                 break;
         }
     }
+    public void ResetDailyQuest()
+    {
+        foreach (var quest in dalilQuestList)
+        {
+            quest.ResetQuest();
+        }
+    }
+    public void ResetWeeklyQuest()
+    {
+        foreach(var quest in weeklyQuestList)
+        {
+            quest.ResetQuest();
+        }
+    }
+
 }

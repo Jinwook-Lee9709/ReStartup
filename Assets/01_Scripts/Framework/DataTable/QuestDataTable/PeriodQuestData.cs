@@ -12,5 +12,5 @@ public class PeriodQuestData
     public int RewardAmount1 { get; set; }
     public int Theme { get; set; }
 
-    public int requirmentsCount;
+    public int completionsCount;
 }
