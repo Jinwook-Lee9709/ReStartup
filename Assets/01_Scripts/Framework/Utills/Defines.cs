@@ -254,6 +254,8 @@ public static class Strings
     public static readonly string Clean = "Clean";
     public static readonly string WashDish = "WashDish";
     public static readonly string Cash = "Cash";
+
+    public static readonly string nameKeyFormat = "EmployeeName{0}";
 }
 
 public enum StringTableIds
