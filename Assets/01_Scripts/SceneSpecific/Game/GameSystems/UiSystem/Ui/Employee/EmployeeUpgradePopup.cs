@@ -51,11 +51,12 @@ public class EmployeeUpgradePopup : MonoBehaviour
         IsPaid = false;
         currentCard = card;
         var data = card.employeeData;
+        int upgradeCount = UserDataManager.Instance.CurrentUserData.EmployeeSaveData[data.StaffID].level;
         employeeIcon.sprite = image;
-        currentLevelText.text = $"{data.upgradeCount} LV";
-        nextLevelText.text = $"{data.upgradeCount + 1} LV";
+        currentLevelText.text = $"{upgradeCount} LV";
+        nextLevelText.text = $"{upgradeCount + 1} LV";
         nameText.text = data.StaffNameKey.ToString();
-        priceText.text = (data.Cost * data.upgradeCount).ToString();
+        priceText.text = (data.Cost * upgradeCount + 1).ToString();
         currentMoveSpeedValue.text = data.MoveSpeed.ToString();
         currentWorkSpeedValue.text = data.WorkSpeed.ToString();
         currentHealthValue.text = data.Health.ToString();
