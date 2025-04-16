@@ -334,6 +334,7 @@ public class ConsumerManager : MonoBehaviour
         //TODO : �մ��� ������ƮǮ���� ���� �� ���� (���ϴ� ����, �մ� Ÿ��, �ټ� �ڸ� ��)
         consumer.transform.position = spawnPoint.position;
         consumer.consumerManager = this;
+        consumer.FSM.buffManager = buffManager;
         consumer.NextTargetTransform = null;
         consumer.pairData = null;
         consumer.FSM.consumerManager = this;
@@ -353,7 +354,7 @@ public class ConsumerManager : MonoBehaviour
         var currentConsumerData = consumer.GetComponent<Consumer>().FSM.consumerData;
         if (currentConsumerData.GuestType == GuestType.Influencer)
         {
-            var timerBuff = DataTableManager.Get<BuffDataTable>(DataTableIds.Buff.ToString()).GetBuffForBuffID(currentConsumerData.BuffID1);
+            var timerBuff = DataTableManager.Get<BuffDataTable>(DataTableIds.Buff.ToString()).GetBuffForBuffID(currentConsumerData.BuffId1);
             buffManager.StartBuff(timerBuff);
         }
     }
@@ -364,13 +365,6 @@ public class ConsumerManager : MonoBehaviour
             if (list.Contains(consumer.GetComponent<Consumer>()))
                 list.Remove(consumer.GetComponent<Consumer>());
 
-        if (consumer.GetComponent<ConsumerFSM>().consumerData.GuestType == GuestType.Influencer)
-        {
-            //TODO : Make InfluencerBuff on consumerData based
-            buffManager.TempBuffOn();
-        }
-
-        //TODO : SPUM 초기화
         consumer.SetActive(false);
     }
 
@@ -400,5 +394,19 @@ public class ConsumerManager : MonoBehaviour
         }
     }
 
+    #endregion
+
+
+    #region test
+    [ContextMenu("인플루언서 소환술!")]
+    public void TestSpawn()
+    {
+        var consumer = consumerPool.Get().GetComponent<Consumer>();
+        AfterSpawnInit(consumer);
+        var currentConsumerData = consumer.FSM.consumerData;
+        currentConsumerData = DataTableManager.Get<ConsumerDataTable>(DataTableIds.Consumer.ToString()).GetRandomConsumerForType(GuestType.Influencer);
+        var timerBuff = DataTableManager.Get<BuffDataTable>(DataTableIds.Buff.ToString()).GetBuffForBuffID(currentConsumerData.BuffId1);
+        buffManager.StartBuff(timerBuff);
+    }
     #endregion
 }

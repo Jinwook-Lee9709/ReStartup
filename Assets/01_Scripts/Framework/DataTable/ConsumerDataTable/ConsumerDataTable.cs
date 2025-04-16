@@ -34,7 +34,12 @@ public class ConsumerDataTable : DataTable
             integration += percents[i];
             if(integration >= value)
             {
-                return GetRandomConsumerForType((GuestType)i);
+                ConsumerData result;
+                do
+                {
+                    result = GetRandomConsumerForType((GuestType)i);
+                } while (result.GuestType == GuestType.PromotionGuest);
+                return result;
             }
         }
         return null;

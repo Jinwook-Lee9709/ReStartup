@@ -30,6 +30,7 @@ public class ConsumerFSM : MonoBehaviour
     }
 
     public ConsumerManager consumerManager;
+    public BuffManager buffManager;
 
     [SerializeField]
     private List<float> satisfactionChangeLimit = new()
@@ -291,7 +292,7 @@ public class ConsumerFSM : MonoBehaviour
         }
         else
         {
-            if(consumerManager.IsPayWaitingLineVacated)
+            if (consumerManager.IsPayWaitingLineVacated)
                 CurrentStatus = ConsumerState.WaitForPay;
             else
                 CurrentStatus = ConsumerState.WaitingPayLine;
@@ -307,7 +308,7 @@ public class ConsumerFSM : MonoBehaviour
 
     public void OnGetFood()
     {
-        if(consumer.pairData == null)
+        if (consumer.pairData == null)
             CurrentStatus = ConsumerState.Eatting;
         else
         {
@@ -383,9 +384,12 @@ public class ConsumerFSM : MonoBehaviour
     {
         //�ֹ��� �޾ư� ��, ������ ����������� ����.
         //deltaTime�� �����Ͽ� ������ ���¸� ����.
-        consumerData.orderWaitTimer -= Time.deltaTime;
+        var deltaTime = buffManager.GetBuff(BuffType.TimerSpeed)?.isOnBuff ?? false ? Time.deltaTime * buffManager.GetBuff(BuffType.TimerSpeed).BuffEffect : Time.deltaTime;
+
+        consumerData.orderWaitTimer -= deltaTime;
+
         if (consumerData.GuestType == GuestType.BadGuest)
-            consumerData.orderWaitTimer -= Time.deltaTime;
+            consumerData.orderWaitTimer -= deltaTime;
 
         // Debug.Log(consumerData.orderWaitTimer);
         switch (consumerData.orderWaitTimer)
@@ -442,10 +446,10 @@ public class ConsumerFSM : MonoBehaviour
     }
     private void UpdateWaitingPayLine()
     {
-        if(consumerManager.IsPayWaitingLineVacated)
+        if (consumerManager.IsPayWaitingLineVacated)
         {
             CurrentStatus = ConsumerState.WaitForPay;
-            if(consumer.pairData != null && consumer.pairData.owner == consumer)
+            if (consumer.pairData != null && consumer.pairData.owner == consumer)
             {
                 consumer.pairData.partner.FSM.CurrentStatus = ConsumerState.WaitForPay;
             }

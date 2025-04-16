@@ -12,8 +12,8 @@ public class PDPromotion : PromotionBase
     {
         base.Excute(buffManager, consumerManager, needAd);
         var pd = DataTableManager.Get<ConsumerDataTable>(DataTableIds.Consumer.ToString()).GetConsumerData(PromotionEffect);
-        Buff staffWalk = DataTableManager.Get<BuffDataTable>("Buff").GetBuffForBuffID(pd.BuffID1);
-        Buff staffMove = DataTableManager.Get<BuffDataTable>("Buff").GetBuffForBuffID(pd.BuffID2);
+        Buff staffWalk = DataTableManager.Get<BuffDataTable>("Buff").GetBuffForBuffID(pd.BuffId1);
+        Buff staffMove = DataTableManager.Get<BuffDataTable>("Buff").GetBuffForBuffID(pd.BuffId2);
         staffWalk.Init();
         staffMove.Init();
         if (consumerManager.CanSpawnConsumer())

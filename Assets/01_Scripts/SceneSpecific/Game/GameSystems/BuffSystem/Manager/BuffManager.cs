@@ -135,6 +135,7 @@ public class BuffManager : MonoBehaviour
 
     public void StartBuff(Buff buff)
     {
+        buff.Init();
         buffs[buff.BuffType] = buff;
         var buffInfoUI = Instantiate(buffInfoPrefab, buffInfoPrefabParent.transform, false).GetComponent<BuffInfoUI>();
         buffInfoUI.Init(buff);
