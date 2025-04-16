@@ -183,6 +183,30 @@ public class UserDataManager : Singleton<UserDataManager>
         var result = await PromotionDataDAC.UpdatePromotionData(payload);
         return result;
     }
+
+    public async UniTask<bool> OnUseBuff(Buff buff)
+    {
+        BuffSaveData buf = new BuffSaveData();
+        buf.id = buff.BuffID;
+        buf.remainTime = buff.remainBuffTime;
+        var result = await BuffSaveDataDAC.UpdateBuffSaveData(buf);
+        return result;
+    }
+
+    public async UniTask<bool> SaveRemainBuffTime(Buff buff, float buffTime)
+    {
+        BuffSaveData buf = new BuffSaveData();
+        buf.id = buff.BuffID;
+        buf.remainTime = buffTime;
+        var result = await BuffSaveDataDAC.UpdateBuffSaveData(buf);
+        return result;
+    }
+
+    public async UniTask<bool> OnBuffExpired(Buff buff)
+    {
+        var result = await BuffSaveDataDAC.DeleteBuffSaveData(buff.BuffID);
+        return result;
+    }
     
     public void AddConsumerCnt(bool isPositive)
     {

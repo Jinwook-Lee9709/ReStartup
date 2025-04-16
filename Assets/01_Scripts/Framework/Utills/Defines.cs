@@ -168,6 +168,7 @@ public static class Endpoints
     public static readonly string GetBuffsUrl = BaseUrl + "/users/progress/getBuffs";
     public static readonly string SaveBuffUrl = BaseUrl + "/users/progress/saveBuff";
     public static readonly string SaveBuffsUrl = BaseUrl + "/users/progress/saveBuffs";
+    public static readonly string DeleteBuffUrl = BaseUrl + "/users/progress/deleteBuff";
 }
 
 public static class Constants
@@ -178,6 +179,9 @@ public static class Constants
     public static readonly int HEALTH_DECREASE_AMOUNT_ONWORKFINISHED = 2;
     public static readonly int HEALTH_DECREASE_AMOUNT_ONTIMEFINISHED = 1;
     public static readonly int DEFAULT_SINKINGSTATION_CAPACITY = 5;
+
+    public static readonly int BUFF_SAVE_INTERVAL = 30;
+    public static readonly int EMPLOYEE_SAVE_INTERVAL = 30;
 }
 
 public static class Variables

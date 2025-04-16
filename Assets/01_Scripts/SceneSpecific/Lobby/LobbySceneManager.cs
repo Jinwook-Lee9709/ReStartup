@@ -39,12 +39,14 @@ public class LobbySceneManager : MonoBehaviour
         var employeeQueryTask =  EmployeeSaveDataDAC.GetEmployeeData(theme);
         var themeRecordQueryTask = ThemeRecordDAC.GetThemeRecordData(theme);
         var promotionQueryTask = PromotionDataDAC.GetPromotionData();
+        var buffQueryTask = BuffSaveDataDAC.GetAllBuffSaveData();
         
         var getInteriorResponse = await interiorQueryTask;
         var getFoodResponse = await foodQueryTask;
         var getEmployeeResponse = await employeeQueryTask;
         var themeRecordResponse = await themeRecordQueryTask;
         var promotionResponse = await promotionQueryTask;
+        var buffResponse = await buffQueryTask;
         
         if (getInteriorResponse.Data.Length == 0)
         {
@@ -95,6 +97,14 @@ public class LobbySceneManager : MonoBehaviour
             foreach (var data in promotionResponse.Data)
             {
                 UserDataManager.Instance.CurrentUserData.PromotionSaveData.Add(data.id, data);
+            }
+        }
+
+        if (buffResponse.Data.Length != 0)
+        {
+            foreach (var data in buffResponse.Data)
+            {
+                UserDataManager.Instance.CurrentUserData.BuffSaveData.Add(data.id, data);
             }
         }
     }

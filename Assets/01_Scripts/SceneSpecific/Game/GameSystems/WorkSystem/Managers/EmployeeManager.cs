@@ -39,7 +39,21 @@ public class EmployeeManager
         newEmployee.EmployeeData = employeeData;
         newEmployee.GetComponentInChildren<TextMeshPro>().text = $"{((WorkType)employeeData.StaffType).ToString()}직원"; 
         AddEmployee(employeeData.StaffID, newEmployee);
+
+        LoadEmployeeSaveData(employeeData, newEmployee);
     }
 
-    
+    private static void LoadEmployeeSaveData(EmployeeTableGetData employeeData, EmployeeFSM newEmployee)
+    {
+        var save = UserDataManager.Instance.CurrentUserData.EmployeeSaveData[employeeData.StaffID];
+        if (save.remainHp != employeeData.Health)
+        {
+            newEmployee.EmployeeData.currentHealth = save.remainHp;
+        }
+        else
+        {
+            newEmployee.EmployeeData.currentHealth = employeeData.Health;
+        }
+        newEmployee.AdjustTimer(save.remainHpDecreaseTime);
+    }
 }

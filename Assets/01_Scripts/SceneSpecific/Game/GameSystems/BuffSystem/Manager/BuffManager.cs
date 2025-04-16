@@ -26,6 +26,10 @@ public class BuffManager : MonoBehaviour
 
         buffInfoButton.onClick.AddListener(OnBuffInfoButtonClick);
         buffInfoBackground.onClick.AddListener(OnBuffInfoCancleButton);
+        foreach (var data in UserDataManager.Instance.CurrentUserData.BuffSaveData.Values)
+        {
+            StartBuff(DataTableManager.Get<BuffDataTable>(DataTableIds.Buff.ToString()).GetBuffForBuffID(data.id), data.remainTime);
+        }
     }
 
     private void OnBuffInfoCancleButton()
@@ -58,7 +62,14 @@ public class BuffManager : MonoBehaviour
 
         foreach (var buff in buffs.Values)
         {
+            float prev = buff.remainBuffTime;
             buff.remainBuffTime -= Time.deltaTime;
+            int currentInterval = (int)(buff.remainBuffTime / Constants.BUFF_SAVE_INTERVAL);
+            int previousInterval = (int)(prev / Constants.BUFF_SAVE_INTERVAL);
+            if (currentInterval != previousInterval)
+            {
+                UserDataManager.Instance.SaveRemainBuffTime(buff, buff.remainBuffTime);
+            }
             if (buff.remainBuffTime < 0)
             {
                 buff.isOnBuff = false;
@@ -99,11 +110,19 @@ public class BuffManager : MonoBehaviour
         {
             if (ContainID(newBuff))
             {
-                ExtendBuffTimer(newBuff, () => limitCountAction?.Invoke(), needAd);
+                ExtendBuffTimer(newBuff, () =>
+                {
+                    limitCountAction?.Invoke();
+                    UserDataManager.Instance.OnUseBuff(newBuff);   
+                }, needAd);
             }
             else
             {
-                BuffOverridePopup(newBuff, () => limitCountAction?.Invoke(), needAd);
+                BuffOverridePopup(newBuff, () =>
+                {
+                    limitCountAction?.Invoke();
+                    UserDataManager.Instance.OnUseBuff(newBuff);   
+                }, needAd);
             }
         }
         else
@@ -112,6 +131,7 @@ public class BuffManager : MonoBehaviour
             {
                 AdvertisementManager.Instance.ShowRewardedAd(() =>
                 {
+                    UserDataManager.Instance.OnUseBuff(newBuff);   
                     buffs[newBuff.BuffType] = newBuff;
                     var buffInfoUI = Instantiate(buffInfoPrefab, buffInfoPrefabParent.transform, false).GetComponent<BuffInfoUI>();
                     buffInfoUI.Init(newBuff);
@@ -122,6 +142,7 @@ public class BuffManager : MonoBehaviour
             }
             else
             {
+                UserDataManager.Instance.OnUseBuff(newBuff);   
                 buffs[newBuff.BuffType] = newBuff;
                 var buffInfoUI = Instantiate(buffInfoPrefab, buffInfoPrefabParent.transform, false).GetComponent<BuffInfoUI>();
                 buffInfoUI.Init(newBuff);
@@ -132,17 +153,32 @@ public class BuffManager : MonoBehaviour
         }
 
     }
-
+    
     public void StartBuff(Buff buff)
     {
         buff.Init();
         buffs[buff.BuffType] = buff;
+
+        UserDataManager.Instance.OnUseBuff(buff); 
+        
         var buffInfoUI = Instantiate(buffInfoPrefab, buffInfoPrefabParent.transform, false).GetComponent<BuffInfoUI>();
         buffInfoUI.Init(buff);
         buffInfoUIList.Add(buffInfoUI);
         UpdateBuffInfoUIList();
     }
 
+    public void StartBuff(Buff buff, float remainTime)
+    {
+        buff.Init();
+        buffs[buff.BuffType] = buff;
+
+        buff.remainBuffTime = remainTime;
+        var buffInfoUI = Instantiate(buffInfoPrefab, buffInfoPrefabParent.transform, false).GetComponent<BuffInfoUI>();
+        buffInfoUI.Init(buff);
+        buffInfoUIList.Add(buffInfoUI);
+        UpdateBuffInfoUIList();
+    }
+    
 
     public Buff GetBuff(BuffType type)
     {
