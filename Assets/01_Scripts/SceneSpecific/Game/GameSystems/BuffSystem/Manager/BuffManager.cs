@@ -50,8 +50,11 @@ public class BuffManager : MonoBehaviour
 
     private void Update()
     {
+        buffInfoButton.gameObject.SetActive(buffs.Count != 0); 
         if (buffs.Count == 0)
+        {
             return;
+        }
 
         foreach (var buff in buffs.Values)
         {
@@ -132,6 +135,7 @@ public class BuffManager : MonoBehaviour
 
     public void StartBuff(Buff buff)
     {
+        buff.Init();
         buffs[buff.BuffType] = buff;
         var buffInfoUI = Instantiate(buffInfoPrefab, buffInfoPrefabParent.transform, false).GetComponent<BuffInfoUI>();
         buffInfoUI.Init(buff);

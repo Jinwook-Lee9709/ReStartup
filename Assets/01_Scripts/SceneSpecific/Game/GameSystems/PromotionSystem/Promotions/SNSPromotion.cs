@@ -11,6 +11,7 @@ public class SNSPromotion : PromotionBase
 
     public override void Excute(BuffManager buffManager, bool needAd)
     {
+        base.Excute(buffManager, needAd);
         Buff footTrafficBuff = DataTableManager.Get<BuffDataTable>("Buff").GetBuffForBuffID(PromotionEffect);
         footTrafficBuff.Init();
         buffManager.StartBuff(footTrafficBuff, () => LimitCounting(needAd), needAd);

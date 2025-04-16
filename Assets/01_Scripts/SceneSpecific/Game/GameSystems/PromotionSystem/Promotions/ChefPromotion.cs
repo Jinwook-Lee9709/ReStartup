@@ -10,14 +10,23 @@ public class ChefPromotion : PromotionBase
 
     public override void Excute(BuffManager buffManager, ConsumerManager consumerManager, bool needAd)
     {
+        base.Excute(buffManager, consumerManager, needAd);
         var chef = DataTableManager.Get<ConsumerDataTable>(DataTableIds.Consumer.ToString()).GetConsumerData(PromotionEffect);
-        Buff doubleConsumerBuff = DataTableManager.Get<BuffDataTable>("Buff").GetBuffForBuffID(chef.BuffID1);
+        Buff doubleConsumerBuff = DataTableManager.Get<BuffDataTable>("Buff").GetBuffForBuffID(chef.BuffId1);
         doubleConsumerBuff.Init();
         if (consumerManager.CanSpawnConsumer())
         {
             buffManager.StartBuff(doubleConsumerBuff, () =>
             {
                 consumerManager.SpawnConsumer(chef);
+                LimitCounting(needAd);
+            }, needAd);
+        }
+        else
+        {
+            buffManager.StartBuff(doubleConsumerBuff, () =>
+            {
+                consumerManager.AddPromotionConsumerWaitingLine(chef);
                 LimitCounting(needAd);
             }, needAd);
         }

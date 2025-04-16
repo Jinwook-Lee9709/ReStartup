@@ -3141,7 +3141,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000051158255}
+  m_AnchoredPosition: {x: 0, y: 0.00050160027}
   m_SizeDelta: {x: 783, y: 300}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &294863765
@@ -8308,7 +8308,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
   m_ScreenMatchMode: 1
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 1
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -21285,7 +21285,7 @@ GameObject:
   - component: {fileID: 1689721738}
   - component: {fileID: 1689721741}
   - component: {fileID: 1689721740}
-  - component: {fileID: 1689721739}
+  - component: {fileID: 1689721742}
   m_Layer: 5
   m_Name: NativePanel
   m_TagString: Untagged
@@ -21307,23 +21307,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1119086321}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 800, y: 220}
-  m_Pivot: {x: 0.5, y: 1}
---- !u!114 &1689721739
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1689721737}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d0f8feb6777b04bab55ec64580c05f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Pivot: {x: 0, y: 1}
 --- !u!114 &1689721740
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21362,6 +21350,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1689721737}
   m_CullTransparentMesh: 1
+--- !u!114 &1689721742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1689721737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d0f8feb6777b04bab55ec64580c05f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1691038842
 GameObject:
   m_ObjectHideFlags: 0
@@ -28272,6 +28272,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  payWaitingPivots: []
   foodIds: 
 --- !u!1 &1945778956
 GameObject:

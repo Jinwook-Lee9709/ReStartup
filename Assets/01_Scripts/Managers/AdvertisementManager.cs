@@ -43,7 +43,17 @@ public class AdvertisementManager : Singleton<AdvertisementManager>
         }
 
         var adRequest = new AdRequest();
-        var options = new NativeAdOptions();
+        var options = new NativeAdOptions
+        {
+            AdChoicesPlacement = AdChoicesPlacement.TopRightCorner,
+            MediaAspectRatio = MediaAspectRatio.Landscape,
+            VideoOptions = new VideoOptions
+            {
+                ClickToExpandRequested = false,
+                CustomControlsRequested = false,
+                StartMuted = true
+            }
+        };
 
         NativeOverlayAd.Load(nativeTestADID, adRequest, options,
             (ad, error) =>
@@ -76,12 +86,13 @@ public class AdvertisementManager : Singleton<AdvertisementManager>
             });
     }
 
-    public void RenderNativeAd(int yPos)
+    public void RenderNativeAd(Vector2 adSize, Vector2 adPosition)
     {
+        Debug.Log($"ScreenSize : {adSize}\nScreenPos : {adPosition}");
+        if (nativeAd == null)
+            LoadNativeAd();
         if (nativeAd != null)
         {
-
-            // Define a native template style with a custom style.
             var style = new NativeTemplateStyle
             {
                 TemplateId = NativeTemplateId.Small,
@@ -94,10 +105,9 @@ public class AdvertisementManager : Singleton<AdvertisementManager>
                     Style = NativeTemplateFontStyle.Bold
                 }
             };
-
-            // Renders a native overlay ad at the default size
-            // and anchored to the bottom of the screne.
-            nativeAd.RenderTemplate(style, 0, yPos);
+            AdSize currentAdSize = new((int)adSize.x, (int)adSize.y);
+            Debug.Log($"ScreenSize : {adSize}\nScreenPosY : {adPosition.y}");
+            nativeAd.RenderTemplate(style, currentAdSize, 0, (int)adPosition.y);
         }
     }
 

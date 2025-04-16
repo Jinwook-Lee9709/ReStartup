@@ -16,35 +16,42 @@ public class ConsumerManager : MonoBehaviour
     [SerializeField] private int maxWaitingSeatCnt;
     [SerializeField] private GameObject consumerPrefab;
     [SerializeField] public Transform spawnPoint;
-    private int tempPairProb = 50;
+    private int pairProb = 95;
     [SerializeField] private TextMeshProUGUI waitingText;
-
     public WorkFlowController workFlowController;
-
     private ConsumerDataTable consumerDataTable;
     private Dictionary<int, List<int>> consumerSpawnPercent;
-
-    /// <summary>
-    ///     ��⿭ �ڸ�
-    /// </summary>
     [SerializeField] private List<Transform> waitingConsumerSeats;
+    [SerializeField] private List<Transform> payWaitingPivots;
 
-    /// <summary>
-    ///     ���� ���ӽſ� �����Ǿ��ִ� �մԵ��� ���º��� �����ϴ� ��ųʸ�
-    /// </summary>
+
     private readonly Dictionary<ConsumerFSM.ConsumerState, List<Consumer>> currentSpawnedConsumerDictionary = new();
     private int waitOutsideConsumerCnt = 0;
 
     public List<int> foodIds;
+    public Queue<ConsumerData> promotionWatings = new();
 
+    public bool IsPayWaitingLineVacated
+    {
+        get
+        {
+            return workFlowController.GetCashierQueue().Count < payWaitingPivots.Count - 1;
+        }
+    }
+    public void AddPromotionConsumerWaitingLine(ConsumerData data)
+    {
+        promotionWatings.Enqueue(data);
+        waitOutsideConsumerCnt++;
+        UpdateWaitingText();
+    }
     private void Awake()
     {
         workFlowController = ServiceLocator.Instance.GetSceneService<GameManager>().WorkFlowController;
         var pivotManager = ServiceLocator.Instance.GetSceneService<GameManager>().ObjectPivotManager;
         spawnPoint = pivotManager.GetConsumerSpawnPoint();
         waitingConsumerSeats = pivotManager.GetWatingLines();
+        payWaitingPivots = pivotManager.GetPayWaitingPibots();
     }
-
 
     private void UpdateWaitingText()
     {
@@ -67,6 +74,16 @@ public class ConsumerManager : MonoBehaviour
         var consumer2 = consumerPool.Get().GetComponent<Consumer>();
         SetPairData(consumer1, consumer2);
         AfterSpawnInit(consumer1);
+    }
+
+    public void SpawnPairConsumer(ConsumerData owner, ConsumerData partner)
+    {
+        var consumer1 = consumerPool.Get().GetComponent<Consumer>();
+        var consumer2 = consumerPool.Get().GetComponent<Consumer>();
+        SetPairData(consumer1, consumer2);
+        AfterSpawnInit(consumer1);
+        consumer1.FSM.consumerData = owner;
+        consumer2.FSM.consumerData = partner;
     }
     public bool CanSpawnConsumer()
     {
@@ -118,10 +135,20 @@ public class ConsumerManager : MonoBehaviour
                 if (cnt < 9)
                 {
                     int pairProb = UnityEngine.Random.Range(0, 100);
-                    if (pairProb < tempPairProb)
-                        SpawnConsumer();
+                    if (buffManager.GetBuff(BuffType.PairSpawn)?.isOnBuff ?? false)
+                    {
+                        if (pairProb > this.pairProb)
+                            SpawnConsumer();
+                        else
+                            SpawnPairConsumer();
+                    }
                     else
-                        SpawnPairConsumer();
+                    {
+                        if (pairProb < this.pairProb)
+                            SpawnConsumer();
+                        else
+                            SpawnPairConsumer();
+                    }
                 }
             }
             else if (waitOutsideConsumerCnt < 99)
@@ -130,7 +157,7 @@ public class ConsumerManager : MonoBehaviour
                 UpdateWaitingText();
             }
             var buff = buffManager.GetBuff(BuffType.FootTraffic);
-            var basicTime = 5f;
+            var basicTime = 40f;
             basicTime *= buff?.BuffEffect ?? 1f;
 
             yield return new WaitForSeconds(basicTime);
@@ -150,9 +177,16 @@ public class ConsumerManager : MonoBehaviour
 
         var cnt = workFlowController.AssignCashier(consumer);
         if (cnt != 0)
-            consumer.GetComponent<NavMeshAgent>().SetDestination(
-                workFlowController.GetCashierCounter().GetInteractablePoints(InteractPermission.Consumer)[0].transform
-                    .position + new Vector3(-0.5f, 0, 0) * cnt);
+        {
+            if (consumer.pairData?.owner == consumer)
+            {
+                consumer.GetComponent<NavMeshAgent>().SetDestination(payWaitingPivots[Mathf.Clamp(cnt - 1, 0, payWaitingPivots.Count - 1)].position);
+            }
+            else
+            {
+                consumer.GetComponent<NavMeshAgent>().SetDestination(payWaitingPivots[cnt - 1].position);
+            }
+        }
     }
 
     public void OnPayStart(ConsumerData consumerData)
@@ -214,21 +248,79 @@ public class ConsumerManager : MonoBehaviour
             if (waitOutsideConsumerCnt > 0)
             {
                 int pairProb = UnityEngine.Random.Range(0, 100);
-                if (pairProb > tempPairProb && waitOutsideConsumerCnt >= 2)
+
+                if (promotionWatings.Count > 0)
                 {
-                    SpawnPairConsumer();
-                    waitOutsideConsumerCnt -= 2;
+                    if (buffManager.GetBuff(BuffType.PairSpawn)?.isOnBuff ?? false)
+                    {
+                        if (pairProb < this.pairProb && waitOutsideConsumerCnt >= 2)
+                        {
+                            var owner = promotionWatings.Dequeue();
+                            var list = DataTableManager.Get<ConsumerDataTable>(DataTableIds.Consumer.ToString()).GetConsumerWithoutBadType(ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme);
+                            var partner = promotionWatings.Count != 0 ? promotionWatings.Dequeue() : list[UnityEngine.Random.Range(0, list.Count)];
+
+                            SpawnPairConsumer(owner, partner);
+                            waitOutsideConsumerCnt -= 2;
+                        }
+                        else
+                        {
+                            var promotionConsumer = promotionWatings.Dequeue();
+                            SpawnConsumer(promotionConsumer);
+                            waitOutsideConsumerCnt--;
+                        }
+                    }
+                    else
+                    {
+                        if (pairProb > this.pairProb && waitOutsideConsumerCnt >= 2)
+                        {
+                            var owner = promotionWatings.Dequeue();
+                            var list = DataTableManager.Get<ConsumerDataTable>(DataTableIds.Consumer.ToString()).GetConsumerWithoutBadType(ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme);
+                            var partner = promotionWatings.Count != 0 ? promotionWatings.Dequeue() : list[UnityEngine.Random.Range(0, list.Count)];
+
+                            SpawnPairConsumer(owner, partner);
+                            waitOutsideConsumerCnt -= 2;
+                        }
+                        else
+                        {
+                            var promotionConsumer = promotionWatings.Dequeue();
+                            SpawnConsumer(promotionConsumer);
+                            waitOutsideConsumerCnt--;
+                        }
+                    }
+
+                    UpdateWaitingText();
+                    return;
+                }
+
+                if (buffManager.GetBuff(BuffType.PairSpawn)?.isOnBuff ?? false)
+                {
+                    if (pairProb < this.pairProb && waitOutsideConsumerCnt >= 2)
+                    {
+                        SpawnPairConsumer();
+                        waitOutsideConsumerCnt -= 2;
+                    }
+                    else
+                    {
+                        SpawnConsumer();
+                        waitOutsideConsumerCnt--;
+                    }
                 }
                 else
                 {
-                    SpawnConsumer();
-                    waitOutsideConsumerCnt--;
+                    if (pairProb > this.pairProb && waitOutsideConsumerCnt >= 2)
+                    {
+                        SpawnPairConsumer();
+                        waitOutsideConsumerCnt -= 2;
+                    }
+                    else
+                    {
+                        SpawnConsumer();
+                        waitOutsideConsumerCnt--;
+                    }
                 }
-                Debug.Log("Here??");
                 UpdateWaitingText();
             }
         }
-
     }
 
     private GameObject OnCreateConsumer()
@@ -242,42 +334,29 @@ public class ConsumerManager : MonoBehaviour
         //TODO : �մ��� ������ƮǮ���� ���� �� ���� (���ϴ� ����, �մ� Ÿ��, �ټ� �ڸ� ��)
         consumer.transform.position = spawnPoint.position;
         consumer.consumerManager = this;
+        consumer.FSM.buffManager = buffManager;
         consumer.NextTargetTransform = null;
         consumer.pairData = null;
         consumer.FSM.consumerManager = this;
         consumer.FSM.consumerData = consumerDataTable.GetConsumerData(consumerSpawnPercent[14]);
         consumer.FSM.consumerData.Init();
         consumer.isEndMeal = false;
+        consumer.isFoodReady = false;
         consumer.FSM.SetCashierCounter(workFlowController.GetCashierCounter());
         consumer.FSM.OnSeatEvent -= workFlowController.AssignGetOrderWork;
         consumer.FSM.OnSeatEvent += workFlowController.AssignGetOrderWork;
-        switch (consumer.FSM.consumerData.GuestType)
-        {
-            case GuestType.Guest:
-                consumer.GetComponent<SpriteRenderer>().color = Color.green;
-                break;
-            case GuestType.Regular1:
-                consumer.GetComponent<SpriteRenderer>().color = Color.white;
-                break;
-            case GuestType.Regular2:
-                consumer.GetComponent<SpriteRenderer>().color = Color.cyan;
-                break;
-            case GuestType.Regular3:
-                consumer.GetComponent<SpriteRenderer>().color = Color.yellow;
-                break;
-            case GuestType.Influencer:
-                consumer.GetComponent<SpriteRenderer>().color = Color.magenta;
-                break;
-            case GuestType.BadGuest:
-                consumer.GetComponent<SpriteRenderer>().color = Color.gray;
-                break;
-        }
     }
 
     private void OnTakeConsumer(GameObject consumer)
     {
         InitConsumer(consumer.GetComponent<Consumer>());
         consumer.SetActive(true);
+        var currentConsumerData = consumer.GetComponent<Consumer>().FSM.consumerData;
+        if (currentConsumerData.GuestType == GuestType.Influencer)
+        {
+            var timerBuff = DataTableManager.Get<BuffDataTable>(DataTableIds.Buff.ToString()).GetBuffForBuffID(currentConsumerData.BuffId1);
+            buffManager.StartBuff(timerBuff);
+        }
     }
 
     private void OnReturnConsumer(GameObject consumer)
@@ -285,12 +364,6 @@ public class ConsumerManager : MonoBehaviour
         foreach (var list in currentSpawnedConsumerDictionary.Values)
             if (list.Contains(consumer.GetComponent<Consumer>()))
                 list.Remove(consumer.GetComponent<Consumer>());
-
-        if (consumer.GetComponent<ConsumerFSM>().consumerData.GuestType == GuestType.Influencer)
-        {
-            //TODO : Make InfluencerBuff on consumerData based
-            buffManager.TempBuffOn();
-        }
 
         consumer.SetActive(false);
     }
@@ -321,5 +394,19 @@ public class ConsumerManager : MonoBehaviour
         }
     }
 
+    #endregion
+
+
+    #region test
+    [ContextMenu("인플루언서 소환술!")]
+    public void TestSpawn()
+    {
+        var consumer = consumerPool.Get().GetComponent<Consumer>();
+        AfterSpawnInit(consumer);
+        var currentConsumerData = consumer.FSM.consumerData;
+        currentConsumerData = DataTableManager.Get<ConsumerDataTable>(DataTableIds.Consumer.ToString()).GetRandomConsumerForType(GuestType.Influencer);
+        var timerBuff = DataTableManager.Get<BuffDataTable>(DataTableIds.Buff.ToString()).GetBuffForBuffID(currentConsumerData.BuffId1);
+        buffManager.StartBuff(timerBuff);
+    }
     #endregion
 }

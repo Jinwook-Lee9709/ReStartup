@@ -97,12 +97,13 @@ public enum BuffType
     FootTraffic,
     StaffWork,
     StaffMove,
-    PairSpawn
+    PairSpawn,
+    TimerSpeed
 }
 
 public enum PromotionType
 {
-    SNS,
+    SNS = -1,
     Ituber,
     PD,
     Chef

@@ -10,21 +10,25 @@ public class ItuberPromotion : PromotionBase
 
     public override void Excute(BuffManager buffManager, ConsumerManager consumerManager, bool needAd)
     {
+        base.Excute(buffManager, consumerManager, needAd);
         var ituber = DataTableManager.Get<ConsumerDataTable>(DataTableIds.Consumer.ToString()).GetConsumerData(PromotionEffect);
-        Buff footTrafficBuff = DataTableManager.Get<BuffDataTable>("Buff").GetBuffForBuffID(ituber.BuffID1);
+        Buff footTrafficBuff = DataTableManager.Get<BuffDataTable>("Buff").GetBuffForBuffID(ituber.BuffId1);
         footTrafficBuff.Init();
         if (consumerManager.CanSpawnConsumer())
         {
             buffManager.StartBuff(footTrafficBuff, () =>
             {
                 consumerManager.SpawnConsumer(ituber);
-                Debug.Log("SpawnConsumer");
                 LimitCounting(needAd);
             }, needAd);
         }
         else
         {
-
+            buffManager.StartBuff(footTrafficBuff, () =>
+            {
+                consumerManager.AddPromotionConsumerWaitingLine(ituber);
+                LimitCounting(needAd);
+            }, needAd);
         }
     }
 }
