@@ -34,6 +34,7 @@ public class PromotionManager : MonoBehaviour
 
             if (promotionBase != null)
             {
+                promotionBase.Init();
                 promotionBase.currentLimitAD -= UserDataManager.Instance.CurrentUserData.PromotionSaveData[promotionBase.PromotionID].adUseCount;
                 promotionBase.currentLimitBuy -= UserDataManager.Instance.CurrentUserData.PromotionSaveData[promotionBase.PromotionID].buyUseCount;
                 promotions.Add(promotionBase);
@@ -46,7 +47,6 @@ public class PromotionManager : MonoBehaviour
         {
             if (promotion.PromotionType == PromotionType.SNS || currentThemePromotionConsumerList.Contains(DataTableManager.Get<ConsumerDataTable>(DataTableIds.Consumer.ToString()).GetConsumerData(promotion.PromotionEffect)))
             {
-                promotion.Init();
                 var promotionUi = Instantiate(promotionPrefab).GetComponent<PromotionUI>();
                 promotionUi.Init(promotion);
                 promotionUi.transform.SetParent(promotionContent.transform);
@@ -55,6 +55,7 @@ public class PromotionManager : MonoBehaviour
                 promotionUi.consumerManager = consumerManager;
                 promotion.promotionUi = promotionUi;
                 promotionsUIs.Add(promotionUi);
+                promotionUi.UpdateUI();
             }
         }
     }

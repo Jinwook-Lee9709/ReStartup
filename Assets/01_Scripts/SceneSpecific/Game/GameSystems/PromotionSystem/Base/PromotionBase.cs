@@ -68,6 +68,7 @@ public class PromotionBase : IPromotion
             currentLimitBuy--;
         }
         promotionUi.UpdateUI();
+        UserDataManager.Instance.OnUsePromotion(this, needAd).Forget();
     }
 
     public virtual void Excute(BuffManager buffManager, ConsumerManager consumerManager, bool needAd)
@@ -82,7 +83,7 @@ public class PromotionBase : IPromotion
             switch (CostType)
             {
                 case CostType.Money:
-                    UserDataManager.Instance.AdjustMoneyWithSave(CostQty).Forget();
+                    UserDataManager.Instance.AdjustMoneyWithSave(-CostQty).Forget();
                     break;
                 case CostType.Gold:
                     break;

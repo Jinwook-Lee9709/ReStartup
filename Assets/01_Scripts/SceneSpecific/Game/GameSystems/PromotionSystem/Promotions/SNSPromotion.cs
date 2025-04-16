@@ -18,6 +18,7 @@ public class SNSPromotion : PromotionBase
         {
             LimitCounting(needAd);
             OnPayment(needAd);
+
         }, needAd);
     }
 }

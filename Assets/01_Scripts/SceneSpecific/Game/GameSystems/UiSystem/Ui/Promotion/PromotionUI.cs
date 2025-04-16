@@ -13,7 +13,6 @@ public class PromotionUI : MonoBehaviour
     public Button adButton;
     public PromotionBase promotionData;
     public TextMeshProUGUI buyCntText, adCntText, promotionNameText, promotionEffectText;
-
     private void Start()
     {
         payButton.onClick.AddListener(OnPayButtonClick);
@@ -21,7 +20,7 @@ public class PromotionUI : MonoBehaviour
     }
     public void Init(PromotionBase promotion)
     {
-        promotionData = promotion; 
+        promotionData = promotion;
         promotionNameText.text = $"{promotionData.PromotionType.ToString()}";
         UpdateUI();
     }
@@ -38,7 +37,7 @@ public class PromotionUI : MonoBehaviour
         }
     }
     public void OnAdButtonClick()
-    {        
+    {
         if (promotionData.PromotionType == PromotionType.SNS)
         {
             promotionData.Excute(buffManager, true);
@@ -51,6 +50,18 @@ public class PromotionUI : MonoBehaviour
 
     public void UpdateUI()
     {
+        payButton.interactable = true;
+        adButton.interactable = true;
+        if (promotionData.currentLimitAD <= 0)
+        {
+            promotionData.currentLimitAD = 0;
+            adButton.interactable = false;
+        }
+        if (promotionData.currentLimitBuy <= 0)
+        {
+            promotionData.currentLimitBuy = 0;
+            payButton.interactable = false;
+        }
         buyCntText.text = string.Format(cntFormat, promotionData.currentLimitBuy, promotionData.LimitBuy);
         adCntText.text = string.Format(cntFormat, promotionData.currentLimitAD, promotionData.LimitAD);
     }

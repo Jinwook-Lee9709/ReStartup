@@ -1,5 +1,7 @@
 using Newtonsoft.Json;
+using System;
 
+[Serializable]
 public class PromotionData
 {
     public int id;
