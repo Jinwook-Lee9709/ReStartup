@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PromotionManager : MonoBehaviour
@@ -8,6 +9,8 @@ public class PromotionManager : MonoBehaviour
     [SerializeField] private ConsumerManager consumerManager;
     [SerializeField] private GameObject promotionContent;
     [SerializeField] private GameObject promotionPrefab;
+    [SerializeField] private TextMeshProUGUI haveMeney;
+    [SerializeField] private TextMeshProUGUI haveGold;
     private List<PromotionBase> promotions = new();
     private List<PromotionUI> promotionsUIs = new();
 
@@ -52,8 +55,13 @@ public class PromotionManager : MonoBehaviour
                 promotionsUIs.Add(promotionUi);
             }
         }
+        haveMeney.text = UserDataManager.Instance.CurrentUserData.Money.ToString();
+        haveGold.text = UserDataManager.Instance.CurrentUserData.Gold.ToString();
+        UserDataManager.Instance.ChangeMoneyAction += ChangeGoods;
     }
-
-
-
+    public void ChangeGoods(int? a)
+    {
+        haveMeney.text = a.ToString();
+        haveGold.text = UserDataManager.Instance.CurrentUserData.Gold.ToString();
+    }
 }
