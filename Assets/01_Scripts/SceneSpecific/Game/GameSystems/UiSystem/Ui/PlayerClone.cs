@@ -18,10 +18,9 @@ public class PlayerClone : MonoBehaviour
 
     public void UpdatePlayerData(RankingData data)
     {
-        //playerImage.
         playerName.text = data.RestaurantName;
-        playerRank.text =data.Ranking.ToString();
-        playerRankPoint.text = data.RankingPoint.ToString();
+        playerRank.text = data.rank.ToString();
+        playerRankPoint.text = data.rankingPoint.ToString();
     }
     public void OnActive(RankingData playerData)
     {

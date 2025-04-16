@@ -4,6 +4,7 @@ using UnityEngine.UI;
 public class RankSystemManager : MonoBehaviour
 {
     public RankingSystemListUi rankingListUi;
+    public RankingConditionListUI rankingConditionListUi;
     [SerializeField] private GameManager gameManager;
     [SerializeField] private RectTransform canvas;
     [SerializeField] private GameObject playerClone;
@@ -23,14 +24,22 @@ public class RankSystemManager : MonoBehaviour
         RankingData playerData = new RankingData
         {
             RestaurantName = currentUserData.Name,
-            Ranking = 0,
-            RankingPoint = 0,
+            rank = (int)currentUserData.CurrentRank,
+            rankingPoint = (int)currentUserData.CurrentRankPoint,
             Type = (int)gameManager.CurrentTheme
         };
         rankingListUi.AddRankingSystemItem(playerData);
         UserDataManager.Instance.SetRankingPointAction += rankingListUi.AddPlayerPoints;
         playerUiItem = rankingListUi.GetPlayerUiItem();
         //playerClone.GetComponent<PlayerClone>().OnActive(playerUiItem.rankingData);
+
+        //RankCoinditionCardAdd
+        var rankConditiondata = DataTableManager.Get<RankConditionDataTable>("rankCondition").Data;
+        foreach (var item in rankConditiondata.Values)
+        {
+            if(item.Type == (int)gameManager.CurrentTheme)
+                rankingConditionListUi.RankCoinditionCardAdd(item);
+        }
     }
     private bool CheckOverlap(RectTransform rect)
     {

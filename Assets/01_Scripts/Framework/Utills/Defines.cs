@@ -23,7 +23,8 @@ public enum DataTableIds
     Interior,
     Cookware,
     Buff,
-    Promoiton
+    Promoiton,
+    rankCondition
 }
 
 public enum IconPivots

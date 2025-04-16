@@ -38,6 +38,10 @@ public static class DataTableManager
         var promotionDataTable = new PromotionDataTable();
         promotionDataTable.Load();
         tables.Add(DataTableIds.Promoiton.ToString(), promotionDataTable);
+
+        var rankConditionDataTable = new RankConditionDataTable();
+        rankConditionDataTable.Load();
+        tables.Add(DataTableIds.rankCondition.ToString(), rankConditionDataTable);
     }
 
     public static T Get<T>(string id) where T : DataTable

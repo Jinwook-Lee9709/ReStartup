@@ -17,8 +17,8 @@ public class RankingDataTable : DataTable
         var result = LoadCsv<RankingData>("rankingsystemtable");
         foreach (var row in result)
         {
-            if (Data.ContainsKey(row.Ranking)) continue;
-            Data.Add(row.Ranking, row);
+            if (Data.ContainsKey(row.Key)) continue;
+            Data.Add(row.Key, row);
         }
     }
 }
