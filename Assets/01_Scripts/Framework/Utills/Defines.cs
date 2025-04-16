@@ -24,7 +24,8 @@ public enum DataTableIds
     Cookware,
     Buff,
     Promoiton,
-    rankCondition
+    rankCondition,
+    periodQuest,
 }
 
 public enum IconPivots
@@ -108,6 +109,18 @@ public enum PromotionType
     Ituber,
     PD,
     Chef
+}
+
+public enum QuestType
+{
+    Daily,
+    Weekly
+}
+
+public enum RequirementsType
+{
+    SoldFood,
+    MakingFood
 }
 
 public static class Endpoints

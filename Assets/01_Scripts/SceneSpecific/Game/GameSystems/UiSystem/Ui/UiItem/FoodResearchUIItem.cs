@@ -64,7 +64,7 @@ public class FoodResearchUIItem : MonoBehaviour
         var cookwareType = foodData.CookwareType;
         var currentTheme = gameManager.CurrentTheme;
         int currentCookwareAmount = userData.CookWareUnlock[currentTheme][cookwareType];
-        chackCookWareUnlock = currentCookwareAmount < foodData.CookwareNB;
+        chackCookWareUnlock = currentCookwareAmount >= foodData.CookwareNB;
 #if UNITY_EDITOR
         if (foodData.FoodID == 301001)
         {
@@ -107,8 +107,8 @@ public class FoodResearchUIItem : MonoBehaviour
         var cookwareType = foodData.CookwareType;
         var currentTheme = gameManager.CurrentTheme;
         int currentCookwareAmount = userData.CookWareUnlock[currentTheme][cookwareType];
-        chackCookWareUnlock = currentCookwareAmount < foodData.CookwareNB;
-        if (chackCookWareUnlock)
+        chackCookWareUnlock = currentCookwareAmount >= foodData.CookwareNB;
+        if (!chackCookWareUnlock)
             return;
         if (userData.Money > foodData.BasicCost)
         {
