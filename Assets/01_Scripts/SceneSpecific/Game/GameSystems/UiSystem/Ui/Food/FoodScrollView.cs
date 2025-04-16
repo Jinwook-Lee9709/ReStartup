@@ -17,7 +17,7 @@ public class FoodScrollView : MonoBehaviour
     public void SetResearchViews()
     {
         upgradeViews.SetActive(false);
-        ResearchViews.SetActive(true);
+        ResearchViews.SetActive(true); 
     }
 
     public void AddFoodUISet(FoodData data)

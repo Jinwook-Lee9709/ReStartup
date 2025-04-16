@@ -42,6 +42,10 @@ public static class DataTableManager
         var rankConditionDataTable = new RankConditionDataTable();
         rankConditionDataTable.Load();
         tables.Add(DataTableIds.rankCondition.ToString(), rankConditionDataTable);
+
+        var periodQuestDataTable = new PeriodQuestDataTable();
+        periodQuestDataTable.Load();
+        tables.Add(DataTableIds.periodQuest.ToString(), periodQuestDataTable);
     }
 
     public static T Get<T>(string id) where T : DataTable
