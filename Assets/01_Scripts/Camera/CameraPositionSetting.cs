@@ -3,13 +3,17 @@ using UnityEngine;
 
 public class CameraPositionSetting : MonoBehaviour
 {
-    enum CameraPosition
+    public enum CameraPosition
     {
         Hall,
         Kitchen
     }
     
     [SerializeField] private CameraPosition cameraPosition;
+    public CameraPosition GetCameraPosition()
+    {
+        return cameraPosition;
+    }
     private void Start()
     {
         var leftPos = Camera.main.ScreenToWorldPoint(new Vector3(0f, Screen.height * 0.5f, 0f));

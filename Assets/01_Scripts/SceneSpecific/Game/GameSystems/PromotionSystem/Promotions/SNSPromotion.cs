@@ -14,6 +14,10 @@ public class SNSPromotion : PromotionBase
         base.Excute(buffManager, needAd);
         Buff footTrafficBuff = DataTableManager.Get<BuffDataTable>("Buff").GetBuffForBuffID(PromotionEffect);
         footTrafficBuff.Init();
-        buffManager.StartBuff(footTrafficBuff, () => LimitCounting(needAd), needAd);
+        buffManager.StartBuff(footTrafficBuff, () =>
+        {
+            LimitCounting(needAd);
+            OnPayment(needAd);
+        }, needAd);
     }
 }

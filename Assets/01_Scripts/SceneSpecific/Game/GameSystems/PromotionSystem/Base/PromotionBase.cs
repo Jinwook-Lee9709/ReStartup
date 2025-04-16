@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System;
 
 public enum CostType
@@ -72,5 +73,20 @@ public class PromotionBase : IPromotion
     public virtual void Excute(BuffManager buffManager, ConsumerManager consumerManager, bool needAd)
     {
         UserDataManager.Instance.OnRankPointUp(10);
+    }
+
+    public void OnPayment(bool needAd)
+    {
+        if(!needAd)
+        {
+            switch (CostType)
+            {
+                case CostType.Money:
+                    UserDataManager.Instance.AdjustMoneyWithSave(CostQty).Forget();
+                    break;
+                case CostType.Gold:
+                    break;
+            }
+        }
     }
 }

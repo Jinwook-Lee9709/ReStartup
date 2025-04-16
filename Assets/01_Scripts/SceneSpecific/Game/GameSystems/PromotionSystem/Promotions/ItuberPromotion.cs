@@ -20,6 +20,7 @@ public class ItuberPromotion : PromotionBase
             {
                 consumerManager.SpawnConsumer(ituber);
                 LimitCounting(needAd);
+                OnPayment(needAd);
             }, needAd);
         }
         else
@@ -28,6 +29,7 @@ public class ItuberPromotion : PromotionBase
             {
                 consumerManager.AddPromotionConsumerWaitingLine(ituber);
                 LimitCounting(needAd);
+                OnPayment(needAd);
             }, needAd);
         }
     }
