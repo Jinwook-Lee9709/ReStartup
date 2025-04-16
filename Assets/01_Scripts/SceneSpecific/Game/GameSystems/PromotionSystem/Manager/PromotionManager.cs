@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PromotionManager : MonoBehaviour
 {
+    [SerializeField] private Canvas parentCanvas;
+    [SerializeField] private GameObject notEnoughCostPopup;
     [SerializeField] private BuffManager buffManager;
     [SerializeField] private ConsumerManager consumerManager;
     [SerializeField] private GameObject promotionContent;
@@ -38,8 +40,10 @@ public class PromotionManager : MonoBehaviour
                 promotionBase.currentLimitAD -= UserDataManager.Instance.CurrentUserData.PromotionSaveData[promotionBase.PromotionID].adUseCount;
                 promotionBase.currentLimitBuy -= UserDataManager.Instance.CurrentUserData.PromotionSaveData[promotionBase.PromotionID].buyUseCount;
                 promotions.Add(promotionBase);
+                promotionBase.notEnoughCost = notEnoughCostPopup;
+                promotionBase.parentCanvas = parentCanvas;
             }
-                
+            
         }
 
         var currentThemePromotionConsumerList = DataTableManager.Get<ConsumerDataTable>(DataTableIds.Consumer.ToString()).GetPromotionConsumerDataForCurrentTheme(ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme);

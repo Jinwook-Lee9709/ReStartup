@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,9 +25,10 @@ public class MoneyTestButton : MonoBehaviour
         switch (costType)
         {
             case CostType.Money:
-                UserDataManager.Instance.AdjustMoney(10000);
+                UserDataManager.Instance.AdjustMoneyWithSave(1000000).Forget();
                 break;
             case CostType.Gold:
+                UserDataManager.Instance.AdjustGoldWithSave(1000000).Forget();
                 break;
         }
     }
