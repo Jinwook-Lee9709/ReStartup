@@ -191,7 +191,7 @@ public class ConsumerFSM : MonoBehaviour
     public void OnEndPayment()
     {
         ///TODO : If End Payment
-        StartCoroutine(UserDataManager.Instance.OnGoldUp(consumer));
+        StartCoroutine(UserDataManager.Instance.OnMoneyUp(consumer));
         ///And Play Tip PopUp
 
         CurrentStatus = ConsumerState.Exit;

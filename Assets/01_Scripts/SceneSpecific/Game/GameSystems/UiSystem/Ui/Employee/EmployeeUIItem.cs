@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using DG.Tweening.Core.Easing;
 using TMPro;
 using UnityEngine;
@@ -31,6 +33,14 @@ public class EmployeeUIItem : MonoBehaviour
     private IngameGoodsUi ingameGoodsUi;
     private EmployeeUpgradePopup employeeUpgradePopup;
 
+    private Dictionary<int, EmployeeSaveData> employeeSaveData;
+    private int employeeId;
+
+    private void Awake()
+    {
+        employeeSaveData = UserDataManager.Instance.CurrentUserData.EmployeeSaveData;
+    }
+    
     private void Start()
     {
         ingameGoodsUi = GameObject.FindWithTag("UIManager").GetComponent<UiManager>().inGameUi;
@@ -51,6 +61,7 @@ public class EmployeeUIItem : MonoBehaviour
     public void Init(EmployeeTableGetData data, EmployeeUpgradePopup employeeUpgradePopup)
     {
         employeeData = data;
+        employeeId = employeeData.StaffID;
 
         this.employeeUpgradePopup = employeeUpgradePopup;
         switch ((WorkType)employeeData.StaffType)
@@ -73,13 +84,14 @@ public class EmployeeUIItem : MonoBehaviour
         workSpeedValue.text = employeeData.WorkSpeed.ToString();
         moveSpeedValue.text = employeeData.MoveSpeed.ToString();
         HealthValue.text = employeeData.Health.ToString();
-
+        
+        SetUpgradeButtonText(employeeSaveData[employeeId].level);
         button.onClick.AddListener(OnButtonClick);
 
     }
     private void OnButtonClick()
     {
-        if (employeeData.upgradeCount != 0)
+        if (employeeSaveData[employeeId].level != 0)
         {
             employeeUpgradePopup.gameObject.SetActive(true);
             employeeUpgradePopup.SetInfo(this, image.sprite);
@@ -92,35 +104,27 @@ public class EmployeeUIItem : MonoBehaviour
     public void OnBuy()
     {
         var userData = UserDataManager.Instance.CurrentUserData;
-        if (employeeData.upgradeCount >= 5)
+        if (employeeSaveData[employeeId].level >= 5)
         {
             return;
         }
-        if (employeeData.upgradeCount < 1 && userData.Gold > employeeData.Cost)
+        button.interactable = false;
+        if (employeeSaveData[employeeId].level < 1 && userData.Money > employeeData.Cost)
         {
-            var gameManager = ServiceLocator.Instance.GetSceneService<GameManager>();
-            var handle = Addressables.LoadAssetAsync<GameObject>(employeePrefab);
-            GameObject prefab = handle.WaitForCompletion();
-            var newEmployee = Instantiate(prefab).GetComponent<EmployeeFSM>();
-            newEmployee.EmployeeData = employeeData;
-            newEmployee.GetComponentInChildren<TextMeshPro>().text = $"{((WorkType)employeeData.StaffType).ToString()}직원";
-            var workerManager = gameManager.WorkerManager;
-            workerManager.RegisterWorker(newEmployee, (WorkType)newEmployee.EmployeeData.StaffType, newEmployee.EmployeeData.StaffID);
+            ServiceLocator.Instance.GetSceneService<GameManager>().EmployeeManager.InstantiateAndRegisterWorker(employeeData);
 
-            userData.Gold -= employeeData.Cost;
+            userData.Money -= employeeData.Cost;
             OnUpgradeEmployee();
         }
-        if (userData.Gold > employeeData.Cost * employeeData.upgradeCount)
+        if (userData.Money > employeeData.Cost * employeeData.upgradeCount)
         {
             OnUpgradeEmployee();
-            userData.Gold -= employeeData.Cost * employeeData.upgradeCount;
+            userData.Money -= employeeData.Cost * employeeData.upgradeCount;
         }
-        if (employeeData.upgradeCount >= 5)
-        {
-            upgradeButtonText.text = "완료됨";
-            button.interactable = false;
-        }
+        SetUpgradeButtonText(employeeSaveData[employeeId].level);
     }
+
+
     private IEnumerator LoadSpriteCoroutine(string iconAddress)
     {
         var handle = Addressables.LoadAssetAsync<Sprite>(iconAddress);
@@ -134,8 +138,6 @@ public class EmployeeUIItem : MonoBehaviour
     private void OnUpgradeEmployee()
     {
         ingameGoodsUi.SetGoldUi();
-        upgradeButtonText.text = "교육";
-        employeeData.upgradeCount++;
         uiUpgradeCostText.text = $"{employeeData.Cost * employeeData.upgradeCount}";
         switch ((WorkType)employeeData.StaffType)
         {
@@ -151,5 +153,33 @@ public class EmployeeUIItem : MonoBehaviour
                 uiNameText.text = $"주방직원 :\n{employeeData.StaffID}:{employeeData.upgradeCount}";
                 break;
         }
+        HandleUpgradeEmployee().Forget();
     }
+
+    private void SetUpgradeButtonText(int level)
+    {
+        switch (level)
+        {
+            case 0:
+                upgradeButtonText.text = "고용";   
+                break;
+            case > 0 and < 5:
+                upgradeButtonText.text = "교육";
+                break;
+            default:
+                upgradeButtonText.text = "완료됨";
+                break;
+
+        }
+    }
+
+    private async UniTask HandleUpgradeEmployee()
+    {
+        await UserDataManager.Instance.UpgradeEmployee(employeeId);
+        if (employeeSaveData[employeeId].level < 5)
+        {
+            button.interactable = true;
+        }
+    }
+    
 }

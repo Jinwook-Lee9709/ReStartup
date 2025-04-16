@@ -13,5 +13,5 @@ public class FoodData
 
     public int upgradeCount;
 
-    public bool isUnlock = false;
+    // public bool isUnlock = false;
 }

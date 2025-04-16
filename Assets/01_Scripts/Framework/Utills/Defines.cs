@@ -8,6 +8,12 @@ public enum DebugFlags
     WorkSystem = 1 << 1
 }
 
+public enum CurrencyType
+{
+    Money,
+    Gold
+}
+
 public enum DataTableIds
 {
     Employee,
@@ -72,16 +78,18 @@ public enum LanguageType
 
 public enum SceneIds
 {
-    Title,
-    Lobby,
-    Loading,
+    Dev0 = 1,
+    Dev1,
+    Dev2,
+    Dev3,
     Theme1,
     Theme2,
     Theme3,
-    Dev0,
-    Dev1,
-    Dev2,
-    Dev3
+    Title,
+    Lobby,
+    Loading,
+
+
 }
 
 public enum BuffType
@@ -102,8 +110,42 @@ public enum PromotionType
 
 public static class Endpoints
 {
-    private static readonly string BaseUrl = "127.0.0.1:3000";
-    public static string UserUrl = BaseUrl + "/users";
+    // private static readonly string BaseUrl = "https://localhost:443/api";
+    private static readonly string BaseUrl = "https://ec2-3-39-166-105.ap-northeast-2.compute.amazonaws.com:3000/api";
+
+    public static readonly string DeleteUserUrl = BaseUrl + "/auth/delete";
+
+    public static readonly string GuestLoginUrl = BaseUrl + "/auth/guestLogin";
+    public static readonly string GuestRegisterUrl = BaseUrl + "/auth/guestRegister";
+    public static readonly string VerifyTokenUrl = BaseUrl + "/auth/verify";
+    public static readonly string RefreshTokenUrl = BaseUrl + "/auth/refresh";
+
+    public static readonly string GetAllCurrenciesUrl = BaseUrl + "/users/getAllCurrencies";
+    public static readonly string SaveCurrenciesUrl = BaseUrl + "/users/saveCurrencies";
+
+    public static readonly string GetAllStageStatusUrl = BaseUrl + "/users/progress/getAllStageStatus";
+    public static readonly string SaveStageStatusUrl = BaseUrl + "/users/progress/saveStageStatus";
+
+    public static readonly string GetInteriorByTheme = BaseUrl + "/users/progress/getInteriorByTheme";
+    public static readonly string SaveInteriorUrl = BaseUrl + "/users/progress/saveSingleInterior";
+    public static readonly string SaveInteriorsUrl = BaseUrl + "/users/progress/saveMultipleInterior";
+    
+    public static readonly string GetEmployeeByTheme = BaseUrl + "/users/progress/getEmployeeByTheme";
+    public static readonly string SaveEmployeeUrl = BaseUrl + "/users/progress/saveSingleEmployee";
+    public static readonly string SaveEmployeesUrl = BaseUrl + "/users/progress/saveMultipleEmployee";
+    
+    public static readonly string GetFoodByTheme = BaseUrl + "/users/progress/getFoodByTheme";
+    public static readonly string SaveFoodUrl = BaseUrl + "/users/progress/saveSingleFood";
+    public static readonly string SaveFoodsUrl = BaseUrl + "/users/progress/saveMultipleFood";
+    
+    public static readonly string InsertThemeRecordsUrl = BaseUrl + "/users/progress/insertRecords";
+    public static readonly string GetThemeRecordsUrl = BaseUrl + "/users/progress/getRecords";
+    public static readonly string GetRankingUrl = BaseUrl + "/users/progress/getRanking";
+    public static readonly string SaveRankingUrl = BaseUrl + "/users/progress/saveRanking";
+    public static readonly string GetRankPointUrl = BaseUrl + "/users/progress/getRankpoint";
+    public static readonly string SaveRankPointUrl = BaseUrl + "/users/progress/saveRankpoint";
+    public static readonly string GetCumulativeUrl = BaseUrl + "/users/progress/getCumulative";
+    public static readonly string SaveCumulativeUrl = BaseUrl + "/users/progress/saveCumulative";
 }
 
 public static class Constants

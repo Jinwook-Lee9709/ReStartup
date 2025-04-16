@@ -27,8 +27,8 @@ public class FoodUpgradeDataManager
         var foodSaveData = UserDataManager.Instance.CurrentUserData.FoodSaveData;
 
         if (!foodSaveData.ContainsKey(foodId)) Debug.LogError("Food not found");
-        if (foodSaveData[foodId].UpgradeLevel < Constants.MAX_UPGRADE_LEVEL)
-            foodSaveData[foodId].UpgradeLevel++;
+        if (foodSaveData[foodId].level < Constants.MAX_UPGRADE_LEVEL)
+            foodSaveData[foodId].level++;
     }
 
     public int GetRandomFood(int foodId)

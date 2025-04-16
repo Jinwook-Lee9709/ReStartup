@@ -33,8 +33,8 @@ public class InteriorUIManager : MonoBehaviour
         InitCardGroups(dataList, ObjectArea.Kitchen);
         InitButtonEvent();
 
-        UserDataManager.Instance.ChangeGoldAction -= OnGoldChanged;
-        UserDataManager.Instance.ChangeGoldAction += OnGoldChanged;
+        UserDataManager.Instance.ChangeMoneyAction -= OnMoneyChanged;
+        UserDataManager.Instance.ChangeMoneyAction += OnMoneyChanged;
         UserDataManager.Instance.SetRankingPointAction -= OnRankpointChanged;
         UserDataManager.Instance.SetRankingPointAction += OnRankpointChanged;
     }
@@ -71,7 +71,7 @@ public class InteriorUIManager : MonoBehaviour
         ToggleCardGroups(hallCardGroups, kitchenCardGroups);
     }
 
-    private void OnGoldChanged(int? gold)
+    private void OnMoneyChanged(int? gold)
     {
         UpdateCards();
     }
@@ -115,7 +115,7 @@ public class InteriorUIManager : MonoBehaviour
     {
         if (UserDataManager.Instance != null)
         {
-            UserDataManager.Instance.ChangeGoldAction -= OnGoldChanged;
+            UserDataManager.Instance.ChangeMoneyAction -= OnMoneyChanged;
         }
     }
 }

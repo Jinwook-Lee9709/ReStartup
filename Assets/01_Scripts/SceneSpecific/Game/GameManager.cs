@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using NavMeshPlus.Components;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -23,6 +22,8 @@ public class GameManager : MonoBehaviour
     public WorkStationManager WorkStationManager { get; private set; }
     public ObjectPivotManager ObjectPivotManager { get; private set; }
     public InteriorManager InteriorManager { get; private set; }
+    
+    public EmployeeManager EmployeeManager { get; private set; }
 
     public ConsumerManager consumerManager;
     public FoodManager foodManager;
@@ -31,17 +32,20 @@ public class GameManager : MonoBehaviour
     {
         currentTheme = (ThemeIds)PlayerPrefs.GetInt("Theme", 1);
         ServiceLocator.Instance.RegisterSceneService(this);
-        //Fortest
-        InitInteriorDictionary();
-        //Fortest
+        
+        InitDictionaries();
         
         InitFoodUpgradeDataManager();
         InitObjectPoolManager();
         InitWorkManagers();
         InitInteriorManager();
         
+        //EmployeeManager Must Init after InitDictionary
+        InitEmployeeManager();
+        
         InitGameScene();
     }
+    
     private void InitFoodUpgradeDataManager()
     {
         FoodUpgradeData = new FoodUpgradeDataManager();
@@ -125,22 +129,92 @@ public class GameManager : MonoBehaviour
     }
 
     //ForTest
+    private void InitDictionaries()
+    {
+        InitInteriorDictionary();
+        InitEmployeeDictionary();
+        InitFoodDictionary();
+    }
     private void InitInteriorDictionary()
     {
-        var dictionary = UserDataManager.Instance.CurrentUserData.InteriorSaveData;
+        var interiorDictionary = UserDataManager.Instance.CurrentUserData.InteriorSaveData;
         var table = DataTableManager.Get<InteriorDataTable>(DataTableIds.Interior.ToString());
         var list = table.Where(x=>x.RestaurantType.Equals((int)currentTheme)).ToList();
+        
+#if UNITY_EDITOR
+        var query = table.Where(x => x.RestaurantType == (int)CurrentTheme && x.SellingCost == 0);
+        foreach (var data in query)
+        {
+            interiorDictionary.TryAdd(data.InteriorID, 1);
+        }
+#endif
         foreach (var data in list)
         {
-            dictionary.Add(data.InteriorID, 0);
+            interiorDictionary.TryAdd(data.InteriorID, 0);
         }
-
-        dictionary[401101] = 1;
-        dictionary[401109] = 1;
-        dictionary[401201] = 1;
-        dictionary[401202] = 1;
     }
-    //ForTest
+    
+    private void InitEmployeeDictionary()
+    {
+        var employeeDictionary = UserDataManager.Instance.CurrentUserData.EmployeeSaveData;
+        var table = DataTableManager.Get<EmployeeDataTable>(DataTableIds.Employee.ToString());
+        var list = table.Where(x=>x.Theme.Equals((int)currentTheme)).ToList();
+        foreach (var data in list)
+        {
+            if (!employeeDictionary.ContainsKey(data.StaffID))
+            {
+                EmployeeSaveData buffer = new EmployeeSaveData();
+                buffer.id = data.StaffID;
+                buffer.level = 0;
+                buffer.theme = (ThemeIds)data.Theme;
+                buffer.remainHp = data.Health;
+                buffer.remainHpDecreaseTime = 60f;
+                employeeDictionary.TryAdd(buffer.id, buffer);
+            }
+        }
+    }
+
+    private void InitFoodDictionary()
+    {
+        var foodDictionary = UserDataManager.Instance.CurrentUserData.FoodSaveData;
+        var table = DataTableManager.Get<FoodDataTable>(DataTableIds.Food.ToString());
+        var list = table.Where(x=>x.Type.Equals((int)currentTheme)).ToList();
+        
+#if UNITY_EDITOR
+        var query = table.Where(x => x.Type == (int)CurrentTheme && x.Requirements == 0);
+        foreach (var data in query)
+        {
+            FoodSaveData buffer = new FoodSaveData();
+            buffer.id = data.FoodID;
+            buffer.level = 1;
+            buffer.theme = (ThemeIds)data.Type;
+            buffer.sellCount = 0;
+            foodDictionary.TryAdd(data.FoodID, buffer);
+        }
+#endif
+
+        foreach (var data in list)
+        {
+            if (!foodDictionary.ContainsKey(data.FoodID))
+            {
+                FoodSaveData buffer = new FoodSaveData();
+                buffer.id = data.FoodID;
+                buffer.level = 0;
+                buffer.theme = (ThemeIds)data.Type;
+                buffer.sellCount = 0;
+                foodDictionary.TryAdd(buffer.id, buffer);
+            }
+        }
+    }
+    
+    
+    private void InitEmployeeManager()
+    {
+        EmployeeManager = new EmployeeManager();
+        EmployeeManager.Init(this);
+        
+    }
+
     
     #endregion
     

@@ -79,4 +79,6 @@ public static class Extends
             .OnComplete(() => image.gameObject.SetActive(false))
             .OnComplete(() => onComplete?.Invoke());
     }
+    
+   
 }

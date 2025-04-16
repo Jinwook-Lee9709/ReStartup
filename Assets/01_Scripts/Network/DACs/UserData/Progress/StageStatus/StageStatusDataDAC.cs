@@ -1,0 +1,25 @@
+using System.Collections;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using Newtonsoft.Json;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+
+public static class StageStatusDataDAC
+{
+    public static async UniTask<ApiResponse<StageStatusData[]>> GetStageStatusData()
+    {
+        var data = await RestApiService.GetAsyncWithToken<ApiResponse<StageStatusData[]>>(Endpoints.GetAllStageStatusUrl);
+        return data;
+    }
+
+    public static async UniTask<bool> UpdateStageStatusData(StageStatusData stageStatus)
+    {
+        Dictionary<string, string> data = new Dictionary<string, string>
+        {
+            ["info"] = JsonConvert.SerializeObject(stageStatus)
+        };
+        ApiResponse<StageStatusData[]> response = await RestApiService.PostAsyncWithToken<ApiResponse<StageStatusData[]>>(Endpoints.SaveStageStatusUrl, data);
+        return response.Success;
+    }
+}

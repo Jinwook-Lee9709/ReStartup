@@ -52,12 +52,20 @@ public class FoodUpgradeUIItem : MonoBehaviour
         button = GetComponentInChildren<Button>();
         var gameManager = ServiceLocator.Instance.GetSceneService<GameManager>();
         consumerManager = gameManager.consumerManager;
+#if UNITY_EDITOR
         if (foodData.FoodID == 301001)
         {
             consumerManager.foodIds.Add(foodData.FoodID);
             foodData.upgradeCount = 1;
             lockImage.SetActive(false);
         }
+#endif
+        if (UserDataManager.Instance.CurrentUserData.FoodSaveData[foodData.FoodID].level != 0)
+        {
+            lockImage.SetActive(false);
+            foodData.upgradeCount = 1;
+        }
+        
         button.onClick.AddListener(OnButtonClick);
     }
     private void OnButtonClick()
@@ -72,11 +80,11 @@ public class FoodUpgradeUIItem : MonoBehaviour
             return;
         }
         var userData = UserDataManager.Instance.CurrentUserData;
-        if (userData.Gold > foodData.BasicCost * foodData.upgradeCount)
+        if (userData.Money > foodData.BasicCost * foodData.upgradeCount)
         {
             foodData.upgradeCount++;
             levelText.text = foodData.upgradeCount.ToString();
-            userData.Gold -= foodData.BasicCost * foodData.upgradeCount;
+            userData.Money -= foodData.BasicCost * foodData.upgradeCount;
             ingameGoodsUi.SetGoldUi();
         }
 

@@ -9,20 +9,15 @@ public class UserData
 {
     public string UID { get; set; } //���� UID
     public string Name { get; set; } = "Player"; //���� �̸�
-    public int? Gold { get; set; } = 0; //�ΰ��� ��ȭ
+    public int? Money { get; set; } = 0; //�ΰ��� ��ȭ
     public int? CurrentRankPoint { get; set; } = new(); //���� ��ŷ ����Ʈ
     public int? CurrentRank { get; set; } = new();
     public int? PositiveCnt { get; set; } = new(); //�ſ츸�� �մ� ī��Ʈ
     public int? NegativeCnt { get; set; } = new(); //�Ҹ��� �մ� ī��Ʈ\
+    public List<StageStatusData> ThemeStatus { get; set; } = new();
+    public Dictionary<int, FoodSaveData> FoodSaveData { get; set; } = new();
 
-    public Dictionary<int, FoodSaveData> FoodSaveData { get; set; } = new()
-    {
-        { 301001, new FoodSaveData() },
-        { 301002, new FoodSaveData() },
-        { 301003, new FoodSaveData() }
-    };
-
-    public Dictionary<string, int> EmployeeLevelValue { get; set; }
+    public Dictionary<int, EmployeeSaveData> EmployeeSaveData { get; set; } = new();
 
     public Dictionary<ThemeIds, Dictionary<CookwareType, int>> CookWareUnlock { get; set; } = new()
     {
