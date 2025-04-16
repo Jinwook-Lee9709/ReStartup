@@ -41,7 +41,7 @@ public class IngameGoodsUi : MonoBehaviour
         upgradeUIMoeny.text = goldString;
     }
 
-    public void RankPointValueSet(int? rankPoint)
+    public void RankPointValueSet(int rankPoint)
     {
         upgradeUIRankingPoint.text = rankPoint.ToString();
     }

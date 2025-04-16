@@ -29,7 +29,7 @@ public class RankSystemManager : MonoBehaviour
             Type = (int)gameManager.CurrentTheme
         };
         rankingListUi.AddRankingSystemItem(playerData);
-        UserDataManager.Instance.SetRankingPointAction += rankingListUi.AddPlayerPoints;
+        UserDataManager.Instance.ChangeRankPointAction += rankingListUi.AddPlayerPoints;
         playerUiItem = rankingListUi.GetPlayerUiItem();
         //playerClone.GetComponent<PlayerClone>().OnActive(playerUiItem.rankingData);
 

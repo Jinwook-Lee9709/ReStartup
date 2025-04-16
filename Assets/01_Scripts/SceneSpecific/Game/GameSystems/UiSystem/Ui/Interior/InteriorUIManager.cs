@@ -35,8 +35,8 @@ public class InteriorUIManager : MonoBehaviour
 
         UserDataManager.Instance.ChangeMoneyAction -= OnMoneyChanged;
         UserDataManager.Instance.ChangeMoneyAction += OnMoneyChanged;
-        UserDataManager.Instance.SetRankingPointAction -= OnRankpointChanged;
-        UserDataManager.Instance.SetRankingPointAction += OnRankpointChanged;
+        UserDataManager.Instance.ChangeRankPointAction -= OnRankpointChanged;
+        UserDataManager.Instance.ChangeRankPointAction += OnRankpointChanged;
     }
 
     private void OnEnable()

@@ -38,10 +38,12 @@ public class LobbySceneManager : MonoBehaviour
         var interiorQueryTask =  InteriorSaveDataDAC.GetInteriorData(theme);
         var foodQueryTask =  FoodSaveDataDAC.GetFoodData(theme);
         var employeeQueryTask =  EmployeeSaveDataDAC.GetEmployeeData(theme);
+        var themeRecordQueryTask = ThemeRecordDAC.GetThemeRecordData(theme);
         
         var getInteriorResponse = await interiorQueryTask;
         var getFoodResponse = await foodQueryTask;
         var getEmployeeResponse = await employeeQueryTask;
+        var themeRecordResponse = await themeRecordQueryTask;
         
         if (getInteriorResponse.Data.Length == 0)
         {
@@ -70,6 +72,17 @@ public class LobbySceneManager : MonoBehaviour
         foreach (var item in getEmployeeResponse.Data)
         {
             UserDataManager.Instance.CurrentUserData.EmployeeSaveData[item.id] = item;
+        }
+
+        if (themeRecordResponse.Data.Length == 0)
+        {
+            await SaveInitialRecordData(theme);
+        }
+        else
+        {
+            UserDataManager.Instance.CurrentUserData.CurrentRank = themeRecordResponse.Data[0].ranking;
+            UserDataManager.Instance.CurrentUserData.CurrentRankPoint = themeRecordResponse.Data[0].rank_point;
+            UserDataManager.Instance.CurrentUserData.Cumulative = themeRecordResponse.Data[0].cumulative;
         }
     }
 
@@ -118,6 +131,23 @@ public class LobbySceneManager : MonoBehaviour
             UserDataManager.Instance.CurrentUserData.FoodSaveData[payload.id] = payload;
         }
         
+    }
+
+    private async UniTask SaveInitialRecordData(int theme)
+    {
+        ThemeRecordData payload = new ThemeRecordData();
+        payload.theme = theme;
+        payload.cumulative = 0;
+        payload.rank_point = 0;
+        payload.ranking = 1;
+        var result = await ThemeRecordDAC.UpdateThemeRecordData(payload);
+        if (!result)
+        {
+            
+        }
+        UserDataManager.Instance.CurrentUserData.CurrentRank = 1;
+        UserDataManager.Instance.CurrentUserData.CurrentRankPoint = 0;
+        UserDataManager.Instance.CurrentUserData.Cumulative = 0;
     }
     
 }

@@ -22,7 +22,7 @@ public class RankingConditionListUI : MonoBehaviour
         newrankingConditionCard.Init(data);
         cards.Add(newrankingConditionCard);
     }
-    public void RankPointCheak(int? val)
+    public void RankPointCheak(int val)
     {
         foreach (var card in cards)
         {

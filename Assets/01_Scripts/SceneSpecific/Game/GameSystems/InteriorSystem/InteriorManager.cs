@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -116,7 +117,7 @@ public class InteriorManager
     private void OnInteriorUpgrade(int interiorId, int level)
     {
         var interiorData = interiorTable.GetData(interiorId);
-        UserDataManager.Instance.OnRankPointUp(interiorData.Reward);
+        UserDataManager.Instance.AddRankPointWithSave(interiorData.Reward).Forget();
         switch (interiorData.Category)
         {
             case InteriorCategory.테이블:
