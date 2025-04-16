@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System;
+using UnityEngine;
 
 public enum CostType
 {
@@ -26,6 +27,9 @@ public class PromotionBase : IPromotion
     public int LimitBuy { get; set; }
     public int LimitAD { get; set; }
     public string PromotionIcon { get; set; }
+
+    public GameObject notEnoughCost;
+    public Canvas parentCanvas;
 
     public int currentLimitBuy;
     public int currentLimitAD;
@@ -68,6 +72,7 @@ public class PromotionBase : IPromotion
             currentLimitBuy--;
         }
         promotionUi.UpdateUI();
+        UserDataManager.Instance.OnUsePromotion(this, needAd).Forget();
     }
 
     public virtual void Excute(BuffManager buffManager, ConsumerManager consumerManager, bool needAd)
@@ -82,9 +87,10 @@ public class PromotionBase : IPromotion
             switch (CostType)
             {
                 case CostType.Money:
-                    UserDataManager.Instance.AdjustMoneyWithSave(CostQty).Forget();
+                    UserDataManager.Instance.AdjustMoneyWithSave(-CostQty).Forget();
                     break;
                 case CostType.Gold:
+                    UserDataManager.Instance.AdjustGoldWithSave(-CostQty).Forget();
                     break;
             }
         }

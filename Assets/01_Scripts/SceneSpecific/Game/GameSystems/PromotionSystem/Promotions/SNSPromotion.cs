@@ -11,6 +11,11 @@ public class SNSPromotion : PromotionBase
 
     public override void Excute(BuffManager buffManager, bool needAd)
     {
+        if(UserDataManager.Instance.CurrentUserData.Money < CostQty)
+        {
+            GameObject.Instantiate(notEnoughCost, parentCanvas.transform);
+            return;
+        }
         base.Excute(buffManager, needAd);
         Buff footTrafficBuff = DataTableManager.Get<BuffDataTable>("Buff").GetBuffForBuffID(PromotionEffect);
         footTrafficBuff.Init();
@@ -18,6 +23,7 @@ public class SNSPromotion : PromotionBase
         {
             LimitCounting(needAd);
             OnPayment(needAd);
+
         }, needAd);
     }
 }
