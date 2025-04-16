@@ -20,6 +20,7 @@ public class ChefPromotion : PromotionBase
             {
                 consumerManager.SpawnConsumer(chef);
                 LimitCounting(needAd);
+                OnPayment(needAd);
             }, needAd);
         }
         else
@@ -28,6 +29,7 @@ public class ChefPromotion : PromotionBase
             {
                 consumerManager.AddPromotionConsumerWaitingLine(chef);
                 LimitCounting(needAd);
+                OnPayment(needAd);
             }, needAd);
         }
     }

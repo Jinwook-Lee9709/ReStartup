@@ -45,9 +45,13 @@ public class ConsumerFSM : MonoBehaviour
         30f,
         25f,
         15f,
-        10f,
     };
-
+    private List<Color> Colors = new()
+    {
+        new Color(Mathf.InverseLerp(0, 255, 202), Mathf.InverseLerp(0, 255, 235), Mathf.InverseLerp(0, 255, 255)),
+        new Color(Mathf.InverseLerp(0, 255, 255), Mathf.InverseLerp(0, 255, 249), Mathf.InverseLerp(0, 255, 159)),
+        new Color(Mathf.InverseLerp(0, 255, 255), Mathf.InverseLerp(0, 255, 128), Mathf.InverseLerp(0, 255, 125))
+    };
 
     [SerializeField] public ConsumerState currentStatus = ConsumerState.Waiting;
     [SerializeField] private Satisfaction currentSatisfaction = Satisfaction.High;
@@ -395,8 +399,7 @@ public class ConsumerFSM : MonoBehaviour
         {
             return;
         }
-        //�ֹ��� �޾ư� ��, ������ ����������� ����.
-        //deltaTime�� �����Ͽ� ������ ���¸� ����.
+
         var deltaTime = buffManager.GetBuff(BuffType.TimerSpeed)?.isOnBuff ?? false ? Time.deltaTime * buffManager.GetBuff(BuffType.TimerSpeed).BuffEffect : Time.deltaTime;
 
         consumerData.orderWaitTimer -= deltaTime;
@@ -428,15 +431,11 @@ public class ConsumerFSM : MonoBehaviour
         {
             case var t when t < satisfactionColorChangeFlagTimes[0] && t > satisfactionColorChangeFlagTimes[1]:
                 var highLerp = Mathf.InverseLerp(satisfactionColorChangeFlagTimes[0], satisfactionColorChangeFlagTimes[1], consumerData.orderWaitTimer);
-                iconBubble.SetColorSatisfaction(Color.cyan, Color.green, highLerp);
+                iconBubble.SetColorSatisfaction(Colors[0], Colors[1], highLerp);
                 break;
             case var t when t < satisfactionColorChangeFlagTimes[1] && t > satisfactionColorChangeFlagTimes[2]:
                 var middleLerp = Mathf.InverseLerp(satisfactionColorChangeFlagTimes[1], satisfactionColorChangeFlagTimes[2], consumerData.orderWaitTimer);
-                iconBubble.SetColorSatisfaction(Color.green, Color.yellow, middleLerp);
-                break;
-            case var t when t < satisfactionColorChangeFlagTimes[2] && t > satisfactionColorChangeFlagTimes[3]:
-                var lowLerp = Mathf.InverseLerp(satisfactionColorChangeFlagTimes[2], satisfactionColorChangeFlagTimes[3], consumerData.orderWaitTimer);
-                iconBubble.SetColorSatisfaction(Color.yellow, Color.red, lowLerp);
+                iconBubble.SetColorSatisfaction(Colors[1], Colors[2], middleLerp);
                 break;
         }
     }

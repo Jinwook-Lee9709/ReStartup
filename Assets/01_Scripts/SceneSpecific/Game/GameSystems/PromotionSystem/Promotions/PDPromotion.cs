@@ -23,6 +23,7 @@ public class PDPromotion : PromotionBase
                 consumerManager.SpawnConsumer(pd);
                 buffManager.StartBuff(staffMove);
                 LimitCounting(needAd);
+                OnPayment(needAd);
             }, needAd);
         }
         else
@@ -32,6 +33,7 @@ public class PDPromotion : PromotionBase
                 consumerManager.AddPromotionConsumerWaitingLine(pd);
                 buffManager.StartBuff(staffMove);
                 LimitCounting(needAd);
+                OnPayment(needAd);
             }, needAd);
         }
     }
