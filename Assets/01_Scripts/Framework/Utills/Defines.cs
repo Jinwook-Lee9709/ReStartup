@@ -164,6 +164,10 @@ public static class Endpoints
     
     public static readonly string GetPromotionsUrl = BaseUrl + "/users/getPromotions";
     public static readonly string SavePromotionsUrl = BaseUrl + "/users/savePromotions";
+    
+    public static readonly string GetBuffsUrl = BaseUrl + "/users/progress/getBuffs";
+    public static readonly string SaveBuffUrl = BaseUrl + "/users/progress/saveBuff";
+    public static readonly string SaveBuffsUrl = BaseUrl + "/users/progress/saveBuffs";
 }
 
 public static class Constants

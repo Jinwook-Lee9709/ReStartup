@@ -47,6 +47,8 @@ public class UserData
     public Dictionary<int, int> InteriorSaveData { get; set; } = new();
     
     public Dictionary<int, PromotionData> PromotionSaveData { get; set; } = new();
+    
+    public Dictionary<int, BuffSaveData> BuffSaveData { get; set; } = new();
 }
 
 public abstract class SaveData
