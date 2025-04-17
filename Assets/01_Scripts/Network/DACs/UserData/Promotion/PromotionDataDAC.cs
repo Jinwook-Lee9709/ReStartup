@@ -19,6 +19,6 @@ public class PromotionDataDAC
             ["info"] = JsonConvert.SerializeObject(promotions)
         };
         ApiResponse<PromotionData[]> response = await RestApiService.PostAsyncWithToken<ApiResponse<PromotionData[]>>(Endpoints.SavePromotionsUrl, data);
-        return response.Success;
+        return response != null && response.Success;
     }
 }

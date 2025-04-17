@@ -112,6 +112,14 @@ public static class RestApiService
     
     public static async UniTask<T> SendRequestAsync<T>(UnityWebRequest request)
     {
+        if (Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            var title = LZString.GetUIString("NetworkFailureAlertTitle");
+            var message = LZString.GetUIString("NetworkFailureAlertDescription");
+            ServiceLocator.Instance.GetGlobalService<AlertPopup>().PopUp(title, message);
+            return default;
+        }
+        
         using (request)
         {
             try
@@ -142,11 +150,18 @@ public static class RestApiService
                         var newRequest = CloneRequest(request);
                         return await SendRequestAsync<T>(newRequest);
                     }
+                    var title = LZString.GetUIString("TokenExpiredAlertTitle");
+                    var message = LZString.GetUIString("TokenExpiredAlertDescription");
+                    ServiceLocator.Instance.GetGlobalService<AlertPopup>().PopUp(title, message);
+                    return default;
                     throw new UnauthorizedAccessException("Refresh token expired");
                 }
                 else
                 {
-                    throw e;
+                    var title = LZString.GetUIString("ServerConnectionFailureAlertTitle");
+                    var message = LZString.GetUIString("ServerConnectionFailureAlertDescription");
+                    ServiceLocator.Instance.GetGlobalService<AlertPopup>().PopUp(title, message);
+                    return default;
                 }
             }
             finally

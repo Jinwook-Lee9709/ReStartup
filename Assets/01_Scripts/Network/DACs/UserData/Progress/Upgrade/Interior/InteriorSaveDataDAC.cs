@@ -20,7 +20,7 @@ public static class InteriorSaveDataDAC
             ["info"] = JsonConvert.SerializeObject(saveData)
         };
         ApiResponse<InteriorSaveData[]> response = await RestApiService.PostAsyncWithToken<ApiResponse<InteriorSaveData[]>>(Endpoints.SaveInteriorUrl, data);
-        return response.Success;
+        return response != null && response.Success;
     }
 
     public static async UniTask<bool> UpdateInteriorData(List<InteriorSaveData> saveData)
@@ -30,6 +30,6 @@ public static class InteriorSaveDataDAC
             ["info"] = JsonConvert.SerializeObject(saveData)
         };
         ApiResponse<InteriorSaveData[]> response = await RestApiService.PostAsyncWithToken<ApiResponse<InteriorSaveData[]>>(Endpoints.SaveInteriorsUrl, data);
-        return response.Success;
+        return response != null && response.Success;
     }
 }

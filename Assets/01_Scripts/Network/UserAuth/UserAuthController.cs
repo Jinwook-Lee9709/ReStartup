@@ -11,6 +11,7 @@ public static class UserAuthController
 {
     public static async UniTask<bool> RefreshToken()
     {
+        if(TokenManager.RefreshToken == null) return false;
         try
         {   
             Dictionary<string, string> queryData = new Dictionary<string, string>
@@ -32,6 +33,7 @@ public static class UserAuthController
 
     public static async UniTask<bool> VerifyToken()
     {
+        if(TokenManager.LoginToken == null) return false;
         Dictionary<string, string> queryData = new Dictionary<string, string>
         {
             { "token", TokenManager.LoginToken }

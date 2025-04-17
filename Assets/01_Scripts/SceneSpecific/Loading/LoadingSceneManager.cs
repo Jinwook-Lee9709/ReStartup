@@ -7,8 +7,9 @@ using Slider = UnityEngine.UI.Slider;
 
 public class LoadingSceneManager : MonoBehaviour
 {
+    private static readonly string titleSceneId = "TitleScene";
     [SerializeField] private Slider progressBar;
-
+    
     private void Awake()
     {
         ServiceLocator.Instance.RegisterSceneService(this);
@@ -27,29 +28,55 @@ public class LoadingSceneManager : MonoBehaviour
 
     public async UniTask LoadTargetSceneAsync(SceneIds targetSceneId, Func<UniTask> postLoadAction = null)
     {
-        if(postLoadAction != null)
-            await postLoadAction();
-        var sceneHandle = Addressables.LoadSceneAsync(targetSceneId.ToString());
         try
         {
-            while (!sceneHandle.IsDone)
-            {
-                progressBar.value = sceneHandle.PercentComplete;
-                await UniTask.Yield();
-            }
-
-            await UniTask.Delay(TimeSpan.FromSeconds(1));
-        }
+            if (postLoadAction != null)
+                await postLoadAction();
+        } 
         catch (Exception e)
         {
-            Debug.LogError($"[LoadTargetSceneAsync] Error while loading scene: {e.Message}");
-            throw;
+            return;
         }
 
-        var sceneIndex = (int)targetSceneId;
-        if (sceneIndex >= (int)SceneIds.Theme1 && sceneIndex <= (int)SceneIds.Dev3)
+        
+        if (targetSceneId != SceneIds.Title)
         {
-            await UniTask.WaitUntil(() => SceneManager.GetActiveScene().isLoaded);
+            var sceneHandle = Addressables.LoadSceneAsync(targetSceneId.ToString());
+            try
+            {
+                while (!sceneHandle.IsDone)
+                {
+                    progressBar.value = sceneHandle.PercentComplete;
+                    await UniTask.Yield();
+                }
+
+                await UniTask.Delay(TimeSpan.FromSeconds(1));
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[LoadTargetSceneAsync] Error while loading scene: {e.Message}");
+                throw;
+            }
         }
+        else
+        {
+            try
+            {
+                var handle = SceneManager.LoadSceneAsync(titleSceneId);
+                while (!handle.isDone)
+                {
+                    progressBar.value = handle.progress;
+                    await UniTask.Yield();
+                }
+                await UniTask.Delay(TimeSpan.FromSeconds(1));
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[LoadTargetSceneAsync] Error while loading scene: {e.Message}");
+                throw;
+            }
+        }
+
+        await UniTask.WaitUntil(() => SceneManager.GetActiveScene().isLoaded);
     }
 }

@@ -20,8 +20,9 @@ public static class EmployeeSaveDataDAC
         {
             ["info"] = JsonConvert.SerializeObject(saveData)
         };
-        ApiResponse<EmployeeSaveData[]> response = await RestApiService.PostAsyncWithToken<ApiResponse<EmployeeSaveData[]>>(Endpoints.SaveEmployeeUrl, data);
-        return response.Success;
+        ApiResponse<EmployeeSaveData[]> response =
+            await RestApiService.PostAsyncWithToken<ApiResponse<EmployeeSaveData[]>>(Endpoints.SaveEmployeeUrl, data);
+        return response != null && response.Success;
     }
 
     public static async UniTask<bool> UpdateEmployeeData(List<EmployeeSaveData> saveData)
@@ -31,7 +32,7 @@ public static class EmployeeSaveDataDAC
             ["info"] = JsonConvert.SerializeObject(saveData)
         };
         ApiResponse<EmployeeSaveData[]> response = await RestApiService.PostAsyncWithToken<ApiResponse<EmployeeSaveData[]>>(Endpoints.SaveEmployeesUrl, data);
-        return response.Success;
+        return response != null && response.Success;
     }
     
     

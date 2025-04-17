@@ -5,11 +5,14 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class TitleSceneManager : MonoBehaviour
 {
+    
+    
     [FormerlySerializedAs("button")] [SerializeField]
     private Button startButton;
 
@@ -43,13 +46,13 @@ public class TitleSceneManager : MonoBehaviour
             alarmText.text = "Need To Login Fisrt";
             return;
         }
-
         bool isLoginSucceed = await UserAuthController.VerifyToken();
         if (!isLoginSucceed)
         {
             bool isSucceed = await UserAuthController.RefreshToken();
             if (!isSucceed)
                 alarmText.text = "Refresh Token Expired, Please Login Again";
+            return;
         }
 
         var sceneManager = ServiceLocator.Instance.GetGlobalService<SceneController>();
@@ -58,6 +61,14 @@ public class TitleSceneManager : MonoBehaviour
 
     private void OnGuestLoginButtonClick()
     {
+        if (Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            var title = LZString.GetUIString("NetworkFailureAlertTitle");
+            var message = LZString.GetUIString("NetworkFailureAlertDescription");
+            ServiceLocator.Instance.GetGlobalService<AlertPopup>().PopUp(title, message);
+            return;
+        }
+        
         if (!GuestLoginManager.ReadUUID())
         {
             RegisterAsGuest().Forget();
@@ -76,6 +87,8 @@ public class TitleSceneManager : MonoBehaviour
     private async UniTask LoginAsGuest()
     {
         var token = await UserAuthController.LoginAsGuestTask();
+        if (token == null)
+            return;
         TokenManager.SaveToken(token.token, token.refreshToken);
     }
 
