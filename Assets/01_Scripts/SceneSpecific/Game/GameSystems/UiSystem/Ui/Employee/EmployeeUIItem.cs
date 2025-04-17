@@ -92,7 +92,7 @@ public class EmployeeUIItem : MonoBehaviour
         workSpeedValue.text = employeeData.WorkSpeed.ToString();
         moveSpeedValue.text = employeeData.MoveSpeed.ToString();
         HealthValue.text = employeeData.Health.ToString();
-        
+        employeeData.Health = employeeData.Health + (10 * employeeSaveData[employeeId].level);
 
         SetButtonInteractable();
         SetInfoText();
@@ -206,6 +206,7 @@ public class EmployeeUIItem : MonoBehaviour
 
         await UserDataManager.Instance.UpgradeEmployee(employeeId);
         int cost = employeeData.Cost * employeeSaveData[employeeId].level;
+        employeeData.Health = employeeData.Health + (10 * employeeSaveData[employeeId].level);
         await UserDataManager.Instance.AdjustMoneyWithSave(-cost);
         ingameGoodsUi.SetGoldUi();
         SetInfoText();
