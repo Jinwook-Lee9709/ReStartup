@@ -63,6 +63,7 @@ public abstract class InteractWorkBase : WorkBase
         if (!isArrive)
         {
             workerAgent.SetDestination(targetTransform.position);
+            interactor.PlayWalkAnimation();
             workPhase = WorkPhase.Moving;
         }
         else

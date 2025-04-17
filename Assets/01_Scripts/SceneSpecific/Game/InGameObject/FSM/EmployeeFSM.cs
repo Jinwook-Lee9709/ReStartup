@@ -127,6 +127,12 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     {
         Model.PlayAnimation(PlayerState.IDLE, 1);
     }
+
+    public void PlayWalkAnimation()
+    {
+        model.PlayAnimation(PlayerState.MOVE, 0);
+    }
+
     public void LiftPackage(GameObject package)
     {
         package.transform.SetParent(handPivot);
