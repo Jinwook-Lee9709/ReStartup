@@ -94,10 +94,15 @@ public class ConsumerManager : MonoBehaviour
         var loveFoodId = consumer.FSM.consumerData.LoveFoodId;
         if (foodIds.Contains(loveFoodId))
         {
-            var rand = UnityEngine.Random.Range(0, 4);
+            var rand = UnityEngine.Random.Range(0, 5);
             if(rand < 4)
             {
                 var foods = foodIds.Where((id) => id != loveFoodId).ToList();
+                if(foods.Count < 1)
+                {
+                    consumer.needFood = DataTableManager.Get<FoodDataTable>(DataTableIds.Food.ToString()).GetFoodData(loveFoodId);
+                    return;
+                }
                 var food = foods[UnityEngine.Random.Range(0, foods.Count)];
                 consumer.needFood = DataTableManager.Get<FoodDataTable>(DataTableIds.Food.ToString()).GetFoodData(food);
             }

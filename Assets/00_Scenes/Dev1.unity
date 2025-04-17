@@ -4583,9 +4583,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27c4192e234726d47927b412638b438e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moneyText: {fileID: 0}
   goldText: {fileID: 1691038845}
   upgradeUIMoeny: {fileID: 1745166654}
-  upgradeUIRankingPoint: {fileID: 656120520}
+  upgradeUIGold: {fileID: 0}
 --- !u!224 &415523619
 RectTransform:
   m_ObjectHideFlags: 0
@@ -23274,10 +23275,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14219ce03788f8548b8fee55ae90d90e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parentCanvas: {fileID: 0}
+  notEnoughCostPopup: {fileID: 0}
   buffManager: {fileID: 1711239462}
   consumerManager: {fileID: 1941923294}
   promotionContent: {fileID: 1882948351}
   promotionPrefab: {fileID: 428410792502505591, guid: ef8fa9ef9dc42ec488d82d40150ebf97, type: 3}
+  haveMeney: {fileID: 0}
+  haveGold: {fileID: 0}
 --- !u!1 &1729287288
 GameObject:
   m_ObjectHideFlags: 0
