@@ -187,7 +187,7 @@ public class EmployeeUIItem : MonoBehaviour
         await UserDataManager.Instance.UpgradeEmployee(employeeId);
         int cost = employeeData.Cost * employeeSaveData[employeeId].level;
         await UserDataManager.Instance.AdjustMoneyWithSave(-cost);
-        ingameGoodsUi.SetGoldUi();
+        ingameGoodsUi.SetCostUi();
         SetInfoText();
         SetUpgradeButtonText(employeeSaveData[employeeId].level);
         SetButtonInteractable();

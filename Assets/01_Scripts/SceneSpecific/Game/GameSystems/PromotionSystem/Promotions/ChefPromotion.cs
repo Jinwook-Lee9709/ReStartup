@@ -10,7 +10,7 @@ public class ChefPromotion : PromotionBase
 
     public override void Excute(BuffManager buffManager, ConsumerManager consumerManager, bool needAd)
     {
-        if (UserDataManager.Instance.CurrentUserData.Gold < CostQty)
+        if (UserDataManager.Instance.CurrentUserData.Money < CostQty && !needAd)
         {
             GameObject.Instantiate(notEnoughCost, parentCanvas.transform);
             return;

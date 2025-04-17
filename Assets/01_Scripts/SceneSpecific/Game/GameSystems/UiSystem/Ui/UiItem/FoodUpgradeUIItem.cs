@@ -85,7 +85,7 @@ public class FoodUpgradeUIItem : MonoBehaviour
             foodData.upgradeCount++;
             levelText.text = foodData.upgradeCount.ToString();
             userData.Money -= foodData.BasicCost * foodData.upgradeCount;
-            ingameGoodsUi.SetGoldUi();
+            ingameGoodsUi.SetCostUi();
         }
 
         if (foodData.upgradeCount >= 5)

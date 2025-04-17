@@ -11,7 +11,7 @@ public abstract class InteractableObjectBase : MonoBehaviour, IInteractable, ICo
     [SerializeField] private float interactProgress;
     private float calculatedInterationSpeed;
     private float interactionSpeed = 1f;
-
+    public float InteractionSpeed => interactionSpeed;
     //Properties
     public int Id { get; private set; }
     public InteractWorkBase CurrentWork { get; private set; }

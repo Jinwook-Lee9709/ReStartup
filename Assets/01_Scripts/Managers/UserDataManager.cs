@@ -31,6 +31,7 @@ public class UserDataManager : Singleton<UserDataManager>
     }
 
     public event Action<int?> ChangeMoneyAction;
+    public event Action<int?> ChangeGoldAction;
     public event Action<int> ChangeRankPointAction;
     public event Action<int, int> OnInteriorUpgradeEvent;
     public event Action<bool> OnReviewCntFullEvent;
@@ -121,6 +122,7 @@ public class UserDataManager : Singleton<UserDataManager>
     public void AdjustGold(int gold)
     {
         CurrentUserData.Gold += gold;
+        ChangeGoldAction?.Invoke(CurrentUserData.Gold);
     }
 
     public async UniTask AdjustGoldWithSave(int gold)

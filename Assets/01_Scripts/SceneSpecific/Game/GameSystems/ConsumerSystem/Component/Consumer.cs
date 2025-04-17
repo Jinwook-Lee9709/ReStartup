@@ -31,19 +31,9 @@ public class Consumer : MonoBehaviour
 
     private void Awake()
     {
-        //animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = false;
         agent.updateUpAxis = false;
-        needFood = DataTableManager.Get<FoodDataTable>("Food").GetFoodData(301001);
-    }
-    private void OnEnable() // 박성민 만듬 ConsumerManager에 foodIds 필드 추가.
-    {
-        var gameManager = GameObject.FindWithTag("GameManager").gameObject;
-        consumerManager = gameManager.GetComponent<GameManager>().consumerManager;
-        foodIds = consumerManager.foodIds;
-        var ran = Random.Range(0, foodIds.Count-1);
-        needFood = DataTableManager.Get<FoodDataTable>("Food").GetFoodData(foodIds[ran]);
     }
 
     public void OnTableVacated()

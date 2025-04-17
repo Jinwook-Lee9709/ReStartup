@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using TMPro;
 using UnityEngine;
@@ -84,6 +85,31 @@ public class ConsumerManager : MonoBehaviour
         AfterSpawnInit(consumer1);
         consumer1.FSM.consumerData = owner;
         consumer2.FSM.consumerData = partner;
+        SetFood(ref consumer1);
+        SetFood(ref consumer2);
+    }
+
+    private void SetFood(ref Consumer consumer)
+    {
+        var loveFoodId = consumer.FSM.consumerData.LoveFoodId;
+        if (foodIds.Contains(loveFoodId))
+        {
+            var rand = UnityEngine.Random.Range(0, 4);
+            if(rand < 4)
+            {
+                var foods = foodIds.Where((id) => id != loveFoodId).ToList();
+                var food = foods[UnityEngine.Random.Range(0, foods.Count)];
+                consumer.needFood = DataTableManager.Get<FoodDataTable>(DataTableIds.Food.ToString()).GetFoodData(food);
+            }
+            else
+            {
+                consumer.needFood = DataTableManager.Get<FoodDataTable>(DataTableIds.Food.ToString()).GetFoodData(loveFoodId);
+            }
+        }
+        else
+        {
+            consumer.needFood = DataTableManager.Get<FoodDataTable>(DataTableIds.Food.ToString()).GetFoodData(foodIds[UnityEngine.Random.Range(0, foodIds.Count)]);
+        }
     }
     public bool CanSpawnConsumer()
     {
@@ -260,6 +286,7 @@ public class ConsumerManager : MonoBehaviour
                             var partner = promotionWatings.Count != 0 ? promotionWatings.Dequeue() : list[UnityEngine.Random.Range(0, list.Count)];
 
                             SpawnPairConsumer(owner, partner);
+                            
                             waitOutsideConsumerCnt -= 2;
                         }
                         else
@@ -338,8 +365,9 @@ public class ConsumerManager : MonoBehaviour
         consumer.NextTargetTransform = null;
         consumer.pairData = null;
         consumer.FSM.consumerManager = this;
-        consumer.FSM.consumerData = consumerDataTable.GetConsumerData(consumerSpawnPercent[14]);
+        consumer.FSM.consumerData = consumerDataTable.GetConsumerData(consumerSpawnPercent[UserDataManager.Instance.CurrentUserData.CurrentRank ?? 0]);
         consumer.FSM.consumerData.Init();
+        SetFood(ref consumer);
         consumer.isEndMeal = false;
         consumer.isFoodReady = false;
         consumer.FSM.SetCashierCounter(workFlowController.GetCashierCounter());
