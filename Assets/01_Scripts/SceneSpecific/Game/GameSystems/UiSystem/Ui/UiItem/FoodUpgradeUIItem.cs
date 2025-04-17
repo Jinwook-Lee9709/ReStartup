@@ -64,7 +64,7 @@ public class FoodUpgradeUIItem : MonoBehaviour
             lockImage.SetActive(false);
             foodData.upgradeCount = 1;
         }
-        levelText.text = $"{foodData.upgradeCount}";
+        levelText.text = foodData.upgradeCount.ToString();
         button.onClick.AddListener(OnButtonClick);
     }
     private void OnButtonClick()

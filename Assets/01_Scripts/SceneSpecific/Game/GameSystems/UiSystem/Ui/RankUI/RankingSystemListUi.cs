@@ -21,13 +21,16 @@ public class RankingSystemListUi : MonoBehaviour
 
     public void RankUpdate()
     {
+        for (int i = 0; i < items.Count; i++)
+        {
+            items[i].UpdateUI();
+        }
         items = items.OrderByDescending(item => item.rankingData.rankingPoint).ToList();
 
         for (int i = 0; i < items.Count; i++)
         {
             items[i].rankingData.rank = i + 1;
             items[i].rankingText.text = items[i].rankingData.rank.ToString();
-            items[i].UpdateUI();
             items[i].transform.SetSiblingIndex(i);
         }
     }

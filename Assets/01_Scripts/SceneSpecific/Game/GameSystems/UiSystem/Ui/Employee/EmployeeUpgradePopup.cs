@@ -55,7 +55,7 @@ public class EmployeeUpgradePopup : MonoBehaviour
         employeeIcon.sprite = image;
         currentLevelText.text = $"{upgradeCount} LV";
         nextLevelText.text = $"{upgradeCount + 1} LV";
-        nameText.text = LZString.GetUIString(string.Format(Strings.nameKeyFormat, data.StaffID));
+        nameText.text = LZString.GetUIString(string.Format(Strings.employeeNameKeyFormat, data.StaffID));
         priceText.text = (data.Cost * (upgradeCount + 1)).ToString();
         currentMoveSpeedValue.text = data.MoveSpeed.ToString();
         currentWorkSpeedValue.text = data.WorkSpeed.ToString();

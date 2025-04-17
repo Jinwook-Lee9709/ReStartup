@@ -24,7 +24,7 @@ public class PlayerClone : MonoBehaviour
 
     public void UpdatePlayerData(RankingData data)
     {
-        playerName.text = data.RestaurantName;
+        playerName.text = LZString.GetUIString(Strings.PlayerTag);
         playerRank.text = data.rank.ToString();
         playerRankPoint.text = data.rankingPoint.ToString();
     }

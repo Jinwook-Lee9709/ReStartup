@@ -269,8 +269,13 @@ public static class Strings
     public static readonly string Clean = "Clean";
     public static readonly string WashDish = "WashDish";
     public static readonly string Cash = "Cash";
+    public static readonly string Check = "Check";
+    public static readonly string Upgrade = "Upgrade";
 
-    public static readonly string nameKeyFormat = "EmployeeName{0}";
+    public static readonly string employeeNameKeyFormat = "EmployeeName{0}";
+    public static readonly string complete = "Completed";
+
+    public static readonly string foodNameKeyFormat = "FoodName{0}";
 }
 
 public enum StringTableIds

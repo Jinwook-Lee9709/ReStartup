@@ -22,6 +22,16 @@ public class RankingConditionCard : MonoBehaviour
     {
         rankConditionListUI = gameObject.GetComponentInParent<RankingConditionListUI>();
     }
+    private void OnEnable()
+    {
+        var currentUserRankPoint = UserDataManager.Instance.CurrentUserData.CurrentRankPoint;
+        var currentRank = UserDataManager.Instance.CurrentUserData.CurrentRank;
+        if (index < currentRank)
+        {
+            Unlock();
+        }
+        CheakComplete((int)currentUserRankPoint);
+    }
     public void Init(RankConditionData data)
     {
         rankConditionData = data;

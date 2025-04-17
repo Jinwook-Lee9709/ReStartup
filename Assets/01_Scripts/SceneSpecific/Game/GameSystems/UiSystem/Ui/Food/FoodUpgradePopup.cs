@@ -24,7 +24,7 @@ public class FoodUpgradePopup : MonoBehaviour
         set
         {
             isPaid = value;
-            mainButtonText.text = value ? "확인" : "업그레이드";
+            mainButtonText.text = value ? LZString.GetUIString(Strings.Check) : LZString.GetUIString(Strings.Upgrade);
         }
     }
     public void Start()
@@ -40,7 +40,7 @@ public class FoodUpgradePopup : MonoBehaviour
         IsPaid = false;
         currentCard = card;
         icon.sprite = card.image.sprite;
-        infoText.text = card.foodData.StringID.ToString();
+        infoText.text = LZString.GetUIString(string.Format(Strings.foodNameKeyFormat,card.foodData.StringID));
         priceText.text = (card.foodData.BasicCost * card.foodData.upgradeCount).ToString();
     }
     private void OnEnable()

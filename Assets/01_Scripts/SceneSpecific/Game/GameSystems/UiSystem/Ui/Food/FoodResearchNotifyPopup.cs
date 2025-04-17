@@ -47,7 +47,7 @@ public class FoodResearchNotifyPopup : MonoBehaviour
         secondRequirementFrame.SetActive(!currentCookwareAmount);
         if (!currentCookwareAmount)
         {
-            secondRequirementValueText.text = data.CookwareType.ToString(); // StringTable
+            secondRequirementValueText.text = LZString.GetUIString(data.CookwareType.ToString()); // StringTable
 
             var secondTextColor = !currentCookwareAmount ? unsatisfiedColor : satisfiedColor;
             secondRequirementNameText.color = secondTextColor;
