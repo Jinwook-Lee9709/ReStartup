@@ -12,7 +12,7 @@ public class UserData
     public int? Money { get; set; } = 0; //�ΰ��� ��ȭ
     public int Gold { get; set; } = 0;
     public int? CurrentRankPoint { get; set; } = 2000; //���� ��ŷ ����Ʈ
-    public int? CurrentRank { get; set; } = new();
+    public int CurrentRank { get; set; }
     public int? PositiveCnt { get; set; } = new(); //�ſ츸�� �մ� ī��Ʈ
     public int? NegativeCnt { get; set; } = new(); //�Ҹ��� �մ� ī��Ʈ\
     public long Cumulative { get; set; } = 0;
