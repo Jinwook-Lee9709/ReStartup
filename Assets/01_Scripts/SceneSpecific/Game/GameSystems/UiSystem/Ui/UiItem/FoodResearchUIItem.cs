@@ -124,7 +124,7 @@ public class FoodResearchUIItem : MonoBehaviour
         
         UserDataManager.Instance.AddRankPointWithSave(foodData.GetRankPoints).Forget();
         userData.Money -= foodData.BasicCost;
-        ingameGoodsUi.SetGoldUi();
+        ingameGoodsUi.SetCostUi();
         gameManager.foodManager.UnlockFoodUpgrade(foodData);
         button.interactable = false;
         button.GetComponentInChildren<TextMeshProUGUI>().text = "연구됨";
