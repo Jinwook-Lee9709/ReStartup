@@ -8,9 +8,9 @@ public class PeriodQuestData
     public QuestType QuestType { get; set; }
     public RequirementsType RequirementsType { get; set; }
     public int RequirementsValue { get; set; }
-    public string RewardType1 { get; set; }
+    public CostType RewardType1 { get; set; }
     public int RewardAmount1 { get; set; }
     public int Theme { get; set; }
 
-    public int requirmentsCount;
+    public int completionsCount;
 }

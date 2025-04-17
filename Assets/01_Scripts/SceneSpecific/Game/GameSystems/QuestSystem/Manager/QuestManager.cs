@@ -14,6 +14,7 @@ public class QuestManager : MonoBehaviour
         {
             if (item.Theme == (int)gameManager.CurrentTheme)
             {
+                questInventory.AddPeriodQuest(item);
             }
         }
     }

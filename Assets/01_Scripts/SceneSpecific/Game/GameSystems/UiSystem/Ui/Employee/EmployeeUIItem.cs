@@ -11,6 +11,14 @@ using UnityEngine.UI;
 
 public class EmployeeUIItem : MonoBehaviour
 {
+    static readonly string employeeUpgradeFix = "EmployeeUpgradeComplete";
+    static readonly string hallStaff = "HallStaff";
+    static readonly string kitchenStaff = "KitchenStaff";
+    static readonly string cashierStaff = "CashierStaff";
+    static readonly string employment = "Employment";
+    static readonly string education = "Education";
+    static readonly string complete = "Completed";
+
     [SerializeField] private Image image;
 
     [SerializeField] private TextMeshProUGUI uiNameText;
@@ -39,8 +47,9 @@ public class EmployeeUIItem : MonoBehaviour
     private void Awake()
     {
         employeeSaveData = UserDataManager.Instance.CurrentUserData.EmployeeSaveData;
+        
     }
-    
+
     private void Start()
     {
         ingameGoodsUi = GameObject.FindWithTag("UIManager").GetComponent<UiManager>().inGameUi;
@@ -63,26 +72,27 @@ public class EmployeeUIItem : MonoBehaviour
     {
         employeeData = data;
         employeeId = employeeData.StaffID;
-
+        
         this.employeeUpgradePopup = employeeUpgradePopup;
         switch ((WorkType)employeeData.StaffType)
         {
             case WorkType.All:
                 break;
             case WorkType.Payment:
-                uiNameText.text = $"계산원 :\n{employeeData.StaffID}";
+                uiNameText.text = $"{LZString.GetUIString(hallStaff)} :\n{LZString.GetUIString(string.Format(Strings.nameKeyFormat,employeeData.StaffID))}";
                 break;
             case WorkType.Hall:
-                uiNameText.text = $"홀직원 :\n{employeeData.StaffID}";
+                uiNameText.text = $"{LZString.GetUIString(kitchenStaff)} :\n{LZString.GetUIString(string.Format(Strings.nameKeyFormat, employeeData.StaffID))}";
                 break;
             case WorkType.Kitchen:
-                uiNameText.text = $"주방직원 :\n{employeeData.StaffID}";
+                uiNameText.text = $"{LZString.GetUIString(cashierStaff)} :\n{LZString.GetUIString(string.Format(Strings.nameKeyFormat, employeeData.StaffID))}";
                 break;
         }
         button = GetComponentInChildren<Button>();
         workSpeedValue.text = employeeData.WorkSpeed.ToString();
         moveSpeedValue.text = employeeData.MoveSpeed.ToString();
         HealthValue.text = employeeData.Health.ToString();
+        
 
         SetButtonInteractable();
         SetInfoText();
@@ -95,7 +105,7 @@ public class EmployeeUIItem : MonoBehaviour
     {
         SetButtonInteractable();
     }
-    
+
     private void OnButtonClick()
     {
         if (employeeSaveData[employeeId].level != 0)
@@ -145,19 +155,29 @@ public class EmployeeUIItem : MonoBehaviour
 
     private void SetInfoText()
     {
-        uiUpgradeCostText.text = $"{employeeData.Cost * (employeeSaveData[employeeId].level + 1)}";
+        int payLevel = UserDataManager.Instance.CurrentUserData.EmployeeSaveData[employeeData.StaffID].level + 1;
+        if (payLevel > 5)
+        {
+            uiUpgradeCostText.text = LZString.GetUIString(employeeUpgradeFix);
+            
+        }
+        else
+        {
+            uiUpgradeCostText.text = $"{employeeData.Cost * (employeeSaveData[employeeId].level + 1)}";
+
+        }
         switch ((WorkType)employeeData.StaffType)
         {
             case WorkType.All:
                 break;
             case WorkType.Payment:
-                uiNameText.text = $"계산원 :\n{employeeData.StaffID}:{employeeSaveData[employeeId].level}";
+                uiNameText.text = $"{LZString.GetUIString(hallStaff)}:\n{LZString.GetUIString(string.Format(Strings.nameKeyFormat, employeeData.StaffID))}:{employeeSaveData[employeeId].level}";
                 break;
             case WorkType.Hall:
-                uiNameText.text = $"홀직원 :\n{employeeData.StaffID}:{employeeSaveData[employeeId].level}";
+                uiNameText.text = $"{LZString.GetUIString(kitchenStaff)}:\n{LZString.GetUIString(string.Format(Strings.nameKeyFormat, employeeData.StaffID))}:{employeeSaveData[employeeId].level}";
                 break;
             case WorkType.Kitchen:
-                uiNameText.text = $"주방직원 :\n{employeeData.StaffID}:{employeeSaveData[employeeId].level}";
+                uiNameText.text = $"{LZString.GetUIString(cashierStaff)}:\n{LZString.GetUIString(string.Format(Strings.nameKeyFormat, employeeData.StaffID))}:{employeeSaveData[employeeId].level}";
                 break;
         }
     }
@@ -167,13 +187,13 @@ public class EmployeeUIItem : MonoBehaviour
         switch (level)
         {
             case 0:
-                upgradeButtonText.text = "고용";   
+                upgradeButtonText.text = LZString.GetUIString(employment);
                 break;
             case > 0 and < 5:
-                upgradeButtonText.text = "교육";
+                upgradeButtonText.text = LZString.GetUIString(education);
                 break;
             default:
-                upgradeButtonText.text = "완료됨";
+                upgradeButtonText.text = LZString.GetUIString(complete);
                 break;
 
         }
@@ -183,7 +203,7 @@ public class EmployeeUIItem : MonoBehaviour
     {
         if (!IsPayable(employeeData))
             return;
-        
+
         await UserDataManager.Instance.UpgradeEmployee(employeeId);
         int cost = employeeData.Cost * employeeSaveData[employeeId].level;
         await UserDataManager.Instance.AdjustMoneyWithSave(-cost);
@@ -197,12 +217,15 @@ public class EmployeeUIItem : MonoBehaviour
     {
         button.interactable = IsPayable(employeeData);
     }
-    
+
     public bool IsPayable(EmployeeTableGetData data)
     {
         int payLevel = UserDataManager.Instance.CurrentUserData.EmployeeSaveData[data.StaffID].level + 1;
         if (payLevel > 5)
+        {
+            uiUpgradeCostText.text = LZString.GetUIString(employeeUpgradeFix);
             return false;
+        }
         return payLevel * data.Cost <= UserDataManager.Instance.CurrentUserData.Money;
     }
 }
