@@ -1,15 +1,13 @@
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class BuffManager : MonoBehaviour
 {
     private readonly Dictionary<BuffType, Buff> buffs = new();
-
-
-
-
+    
     [SerializeField] private GameObject buffPopupPrefab;
     [SerializeField] private GameObject popupParent;
     [SerializeField] private Button buffInfoButton, buffInfoBackground;
@@ -17,7 +15,9 @@ public class BuffManager : MonoBehaviour
     [SerializeField] private GameObject buffInfoPrefabParent;
     [SerializeField] private GameObject buffInfoPrefab;
     private List<BuffInfoUI> buffInfoUIList = new();
-
+    
+    public event Action<Buff> OnBuffUsed;
+    public event Action<Buff> OnBuffExpired;
 
     private void Start()
     {
@@ -68,10 +68,12 @@ public class BuffManager : MonoBehaviour
             int previousInterval = (int)(prev / Constants.BUFF_SAVE_INTERVAL);
             if (currentInterval != previousInterval)
             {
-                UserDataManager.Instance.SaveRemainBuffTime(buff, buff.remainBuffTime);
+                UserDataManager.Instance.SaveRemainBuffTime(buff, buff.remainBuffTime).Forget();
             }
             if (buff.remainBuffTime < 0)
             {
+                UserDataManager.Instance.OnBuffExpired(buff).Forget();
+                OnBuffExpired?.Invoke(buff);
                 buff.isOnBuff = false;
                 buffs.Remove(buff.BuffType);
                 Debug.Log("Buff Off");
@@ -160,6 +162,7 @@ public class BuffManager : MonoBehaviour
         buffs[buff.BuffType] = buff;
 
         UserDataManager.Instance.OnUseBuff(buff); 
+        OnBuffUsed?.Invoke(buff);
         
         var buffInfoUI = Instantiate(buffInfoPrefab, buffInfoPrefabParent.transform, false).GetComponent<BuffInfoUI>();
         buffInfoUI.Init(buff);
@@ -171,6 +174,8 @@ public class BuffManager : MonoBehaviour
     {
         buff.Init();
         buffs[buff.BuffType] = buff;
+        
+        OnBuffUsed?.Invoke(buff);
 
         buff.remainBuffTime = remainTime;
         var buffInfoUI = Instantiate(buffInfoPrefab, buffInfoPrefabParent.transform, false).GetComponent<BuffInfoUI>();

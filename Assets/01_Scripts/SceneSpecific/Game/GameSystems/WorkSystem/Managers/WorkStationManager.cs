@@ -86,7 +86,6 @@ public class WorkStationManager
         cookingStation.transform.InitializeLocalTransform();
         cookingStation.SetId(num);
         cookingStation.cookwareType = cookwareType;
-        cookingStation.GetComponentInChildren<TextMeshPro>().text = cookwareType.ToString();
         workFlowController.AddCookingStation(cookingStation);
         cookingStations[cookwareType].Add(num, cookingStation);
 

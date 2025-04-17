@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
 
     public ConsumerManager consumerManager;
     public FoodManager foodManager;
+    public BuffManager buffManager;
     #region InitializeClasses
     private void Awake()
     {
@@ -86,7 +87,7 @@ public class GameManager : MonoBehaviour
         WorkStationManager.BakeNavMesh();
         InteriorManager.Start();
         WorkerManager.Start();
-        
+        EmployeeManager.Start();
     }
 
     #region InitGameScene
