@@ -27,7 +27,7 @@ public class CameraPositionSetting : MonoBehaviour
                 transform.position = new Vector3(-screenWorldWidth * 0.5f, transform.position.y, transform.position.z);
                 break;
             case CameraPosition.Kitchen:
-                transform.position = new Vector3(screenWorldWidth * 0.5f, transform.position.y, transform.position.z);
+                transform.position = new Vector3(screenWorldWidth * 0.5f + 1, transform.position.y, transform.position.z);
                 break;
         }
             

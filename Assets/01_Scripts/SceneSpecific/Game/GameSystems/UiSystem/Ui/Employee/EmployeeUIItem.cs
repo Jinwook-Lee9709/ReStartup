@@ -33,6 +33,7 @@ public class EmployeeUIItem : MonoBehaviour
     public EmployeeTableGetData employeeData;
 
     private EmployeeUIManager employeeUIManager;
+    private EmployeeManager employeeManager;
 
     private Button button;
 
@@ -47,11 +48,11 @@ public class EmployeeUIItem : MonoBehaviour
     private void Awake()
     {
         employeeSaveData = UserDataManager.Instance.CurrentUserData.EmployeeSaveData;
-        
     }
 
     private void Start()
     {
+        employeeManager = ServiceLocator.Instance.GetSceneService<GameManager>().EmployeeManager;
         ingameGoodsUi = GameObject.FindWithTag("UIManager").GetComponent<UiManager>().inGameUi;
         if (employeeData != null)
         {
@@ -205,6 +206,7 @@ public class EmployeeUIItem : MonoBehaviour
             return;
 
         await UserDataManager.Instance.UpgradeEmployee(employeeId);
+        employeeManager.UpgradeEmployee(employeeId);
         int cost = employeeData.Cost * employeeSaveData[employeeId].level;
         employeeData.Health = employeeData.Health + (10 * employeeSaveData[employeeId].level);
         await UserDataManager.Instance.AdjustMoneyWithSave(-cost);

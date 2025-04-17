@@ -119,6 +119,10 @@ public class FoodResearchUIItem : MonoBehaviour
 
     public void Unlock()
     {
+        if(consumerManager.foodIds.Contains(foodData.FoodID))
+        {
+            return;
+        }
         lockImage.SetActive(false);
         consumerManager.foodIds.Add(foodData.FoodID);
         
