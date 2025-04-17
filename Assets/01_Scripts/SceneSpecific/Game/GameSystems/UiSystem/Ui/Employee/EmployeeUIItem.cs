@@ -17,7 +17,6 @@ public class EmployeeUIItem : MonoBehaviour
     static readonly string cashierStaff = "CashierStaff";
     static readonly string employment = "Employment";
     static readonly string education = "Education";
-    static readonly string complete = "Completed";
 
     [SerializeField] private Image image;
 
@@ -79,13 +78,13 @@ public class EmployeeUIItem : MonoBehaviour
             case WorkType.All:
                 break;
             case WorkType.Payment:
-                uiNameText.text = $"{LZString.GetUIString(hallStaff)} :\n{LZString.GetUIString(string.Format(Strings.nameKeyFormat,employeeData.StaffID))}";
+                uiNameText.text = $"{LZString.GetUIString(hallStaff)} :\n{LZString.GetUIString(string.Format(Strings.employeeNameKeyFormat,employeeData.StaffID))}";
                 break;
             case WorkType.Hall:
-                uiNameText.text = $"{LZString.GetUIString(kitchenStaff)} :\n{LZString.GetUIString(string.Format(Strings.nameKeyFormat, employeeData.StaffID))}";
+                uiNameText.text = $"{LZString.GetUIString(kitchenStaff)} :\n{LZString.GetUIString(string.Format(Strings.employeeNameKeyFormat, employeeData.StaffID))}";
                 break;
             case WorkType.Kitchen:
-                uiNameText.text = $"{LZString.GetUIString(cashierStaff)} :\n{LZString.GetUIString(string.Format(Strings.nameKeyFormat, employeeData.StaffID))}";
+                uiNameText.text = $"{LZString.GetUIString(cashierStaff)} :\n{LZString.GetUIString(string.Format(Strings.employeeNameKeyFormat, employeeData.StaffID))}";
                 break;
         }
         button = GetComponentInChildren<Button>();
@@ -121,7 +120,7 @@ public class EmployeeUIItem : MonoBehaviour
     public void OnBuy()
     {
         var userData = UserDataManager.Instance.CurrentUserData;
-        if (employeeSaveData[employeeId].level >= 5)
+        if (employeeSaveData[employeeId].level >= 5 || userData.Money < employeeData.Cost)
         {
             return;
         }
@@ -171,13 +170,13 @@ public class EmployeeUIItem : MonoBehaviour
             case WorkType.All:
                 break;
             case WorkType.Payment:
-                uiNameText.text = $"{LZString.GetUIString(hallStaff)}:\n{LZString.GetUIString(string.Format(Strings.nameKeyFormat, employeeData.StaffID))}:{employeeSaveData[employeeId].level}";
+                uiNameText.text = $"{LZString.GetUIString(hallStaff)}:\n{LZString.GetUIString(string.Format(Strings.employeeNameKeyFormat, employeeData.StaffID))}:{employeeSaveData[employeeId].level}";
                 break;
             case WorkType.Hall:
-                uiNameText.text = $"{LZString.GetUIString(kitchenStaff)}:\n{LZString.GetUIString(string.Format(Strings.nameKeyFormat, employeeData.StaffID))}:{employeeSaveData[employeeId].level}";
+                uiNameText.text = $"{LZString.GetUIString(kitchenStaff)}:\n{LZString.GetUIString(string.Format(Strings.employeeNameKeyFormat, employeeData.StaffID))}:{employeeSaveData[employeeId].level}";
                 break;
             case WorkType.Kitchen:
-                uiNameText.text = $"{LZString.GetUIString(cashierStaff)}:\n{LZString.GetUIString(string.Format(Strings.nameKeyFormat, employeeData.StaffID))}:{employeeSaveData[employeeId].level}";
+                uiNameText.text = $"{LZString.GetUIString(cashierStaff)}:\n{LZString.GetUIString(string.Format(Strings.employeeNameKeyFormat, employeeData.StaffID))}:{employeeSaveData[employeeId].level}";
                 break;
         }
     }
@@ -193,7 +192,7 @@ public class EmployeeUIItem : MonoBehaviour
                 upgradeButtonText.text = LZString.GetUIString(education);
                 break;
             default:
-                upgradeButtonText.text = LZString.GetUIString(complete);
+                upgradeButtonText.text = LZString.GetUIString(Strings.complete);
                 break;
 
         }

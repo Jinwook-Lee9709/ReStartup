@@ -36,11 +36,4 @@ public class FoodResearchListUI : MonoBehaviour
             }
         }
     }
-    public event Action FoodAllBuy;
-
-    public void OnClickFoodAllBuy()
-    {
-        if (FoodAllBuy != null)
-            FoodAllBuy.Invoke();
-    }
 }

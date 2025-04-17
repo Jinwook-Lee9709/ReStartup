@@ -18,7 +18,6 @@ public class FoodResearchUIItem : MonoBehaviour
     [SerializeField] private Button lockButton;
 
     //Fortest
-    public EmployeeTableGetData employeeData;
     public FoodData foodData;
     private FoodResearchListUI foodUpgradeListUi;
     private Button button;
@@ -44,8 +43,6 @@ public class FoodResearchUIItem : MonoBehaviour
                 Debug.LogError($"{gameObject.name}의 부모 중 foodUpgradeListUi를 찾을 수 없습니다.");
                 return;
             }
-
-            foodUpgradeListUi.FoodAllBuy += Unlock;
         }
     }
 
@@ -56,7 +53,7 @@ public class FoodResearchUIItem : MonoBehaviour
         upgradeAuthorityNotifyPopup = notifyPopup;
         RankPointText.text = data.GetRankPoints.ToString();
         CostText.text = data.BasicCost.ToString();
-        NameText.text = $"{foodData.FoodID.ToString()}";
+        NameText.text = LZString.GetUIString(string.Format(Strings.foodNameKeyFormat, foodData.StringID));
         newImage.SetActive(false);
         button = GetComponentInChildren<Button>();
         gameManager = ServiceLocator.Instance.GetSceneService<GameManager>();
@@ -72,7 +69,7 @@ public class FoodResearchUIItem : MonoBehaviour
             foodData.upgradeCount = 1;
             lockImage.SetActive(false);
             button.interactable = false;
-            button.GetComponentInChildren<TextMeshProUGUI>().text = "연구됨";
+            button.GetComponentInChildren<TextMeshProUGUI>().text = LZString.GetUIString(Strings.complete);
         }
 #endif
         if (UserDataManager.Instance.CurrentUserData.FoodSaveData[foodData.FoodID].level != 0)
@@ -80,7 +77,7 @@ public class FoodResearchUIItem : MonoBehaviour
             lockImage.SetActive(false);
             button.interactable = false;
             consumerManager.foodIds.Add(foodData.FoodID);
-            button.GetComponentInChildren<TextMeshProUGUI>().text = "연구됨";
+            button.GetComponentInChildren<TextMeshProUGUI>().text = LZString.GetUIString(Strings.complete);
         }
             
         if (foodData.Requirements < userData.CurrentRankPoint && chackCookWareUnlock)
@@ -131,7 +128,7 @@ public class FoodResearchUIItem : MonoBehaviour
         ingameGoodsUi.SetCostUi();
         gameManager.foodManager.UnlockFoodUpgrade(foodData);
         button.interactable = false;
-        button.GetComponentInChildren<TextMeshProUGUI>().text = "연구됨";
+        button.GetComponentInChildren<TextMeshProUGUI>().text = LZString.GetUIString(Strings.complete);
         HandleUpgradeEmployee().Forget();
     }
 

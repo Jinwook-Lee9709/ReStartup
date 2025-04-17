@@ -30,7 +30,7 @@ public class RankingSystemUiItem : MonoBehaviour
         {
             rankingData.rankingPoint = Random.Range(rankingData.RankingPointminimum, rankingData.RankingPointmaximum);
         }
-        nameText.text = rankingData.RestaurantName;
+        nameText.text = LZString.GetUIString(rankingData.RestaurantName);
         rankingPointText.text = rankingData.rankingPoint.ToString();
     }
 
