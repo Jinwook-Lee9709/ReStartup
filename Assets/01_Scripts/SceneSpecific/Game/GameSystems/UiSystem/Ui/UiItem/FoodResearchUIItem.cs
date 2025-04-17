@@ -27,7 +27,7 @@ public class FoodResearchUIItem : MonoBehaviour
     private FoodResearchNotifyPopup upgradeAuthorityNotifyPopup;
     private GameManager gameManager;
     private bool chackCookWareUnlock;
-    
+
     private Dictionary<int, FoodSaveData> foodSaveData;
 
     private void Start()
@@ -58,13 +58,10 @@ public class FoodResearchUIItem : MonoBehaviour
         button = GetComponentInChildren<Button>();
         gameManager = ServiceLocator.Instance.GetSceneService<GameManager>();
         consumerManager = gameManager.consumerManager;
-        var cookwareType = foodData.CookwareType;
-        var currentTheme = gameManager.CurrentTheme;
-        int currentCookwareAmount = userData.CookWareUnlock[currentTheme][cookwareType];
-        chackCookWareUnlock = currentCookwareAmount >= foodData.CookwareNB;
 #if UNITY_EDITOR
         if (foodData.FoodID == 301001)
         {
+            chackCookWareUnlock = true;
             consumerManager.foodIds.Add(foodData.FoodID);
             foodData.upgradeCount = 1;
             lockImage.SetActive(false);
@@ -79,19 +76,27 @@ public class FoodResearchUIItem : MonoBehaviour
             consumerManager.foodIds.Add(foodData.FoodID);
             button.GetComponentInChildren<TextMeshProUGUI>().text = LZString.GetUIString(Strings.complete);
         }
-            
         if (foodData.Requirements < userData.CurrentRankPoint && chackCookWareUnlock)
         {
             lockImage.SetActive(false);
         }
-
+        UnlockCookwareAmount();
+        UnlockFood();
         button.onClick.AddListener(OnBuy);
         lockButton.onClick.AddListener(OnAuthorizationCheckButtonTouched);
     }
 
     public void UnlockFood()
     {
-        lockImage.SetActive(false);
+        if (chackCookWareUnlock && userData.CurrentRankPoint > foodData.Requirements)
+            lockImage.SetActive(false);
+    }
+    public void UnlockCookwareAmount()
+    {
+        var cookwareType = foodData.CookwareType;
+        var currentTheme = gameManager.CurrentTheme;
+        int currentCookwareAmount = userData.CookWareUnlock[currentTheme][cookwareType];
+        chackCookWareUnlock = currentCookwareAmount >= foodData.CookwareNB;
     }
 
     public void OnAuthorizationCheckButtonTouched()
@@ -102,10 +107,6 @@ public class FoodResearchUIItem : MonoBehaviour
 
     public void OnBuy()
     {
-        var cookwareType = foodData.CookwareType;
-        var currentTheme = gameManager.CurrentTheme;
-        int currentCookwareAmount = userData.CookWareUnlock[currentTheme][cookwareType];
-        chackCookWareUnlock = currentCookwareAmount >= foodData.CookwareNB;
         if (!chackCookWareUnlock)
             return;
         if (userData.Money > foodData.BasicCost)
@@ -116,13 +117,13 @@ public class FoodResearchUIItem : MonoBehaviour
 
     public void Unlock()
     {
-        if(consumerManager.foodIds.Contains(foodData.FoodID))
+        if (consumerManager.foodIds.Contains(foodData.FoodID))
         {
             return;
         }
         lockImage.SetActive(false);
         consumerManager.foodIds.Add(foodData.FoodID);
-        
+
         UserDataManager.Instance.AddRankPointWithSave(foodData.GetRankPoints).Forget();
         userData.Money -= foodData.BasicCost;
         ingameGoodsUi.SetCostUi();

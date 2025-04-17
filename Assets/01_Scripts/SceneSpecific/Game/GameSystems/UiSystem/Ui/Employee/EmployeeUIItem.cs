@@ -8,6 +8,7 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.InputSystem.Composites;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.UI;
+using static SoonsoonData;
 
 public class EmployeeUIItem : MonoBehaviour
 {
@@ -72,14 +73,14 @@ public class EmployeeUIItem : MonoBehaviour
     {
         employeeData = data;
         employeeId = employeeData.StaffID;
-        
+
         this.employeeUpgradePopup = employeeUpgradePopup;
         switch ((WorkType)employeeData.StaffType)
         {
             case WorkType.All:
                 break;
             case WorkType.Payment:
-                uiNameText.text = $"{LZString.GetUIString(hallStaff)} :\n{LZString.GetUIString(string.Format(Strings.employeeNameKeyFormat,employeeData.StaffID))}";
+                uiNameText.text = $"{LZString.GetUIString(hallStaff)} :\n{LZString.GetUIString(string.Format(Strings.employeeNameKeyFormat, employeeData.StaffID))}";
                 break;
             case WorkType.Hall:
                 uiNameText.text = $"{LZString.GetUIString(kitchenStaff)} :\n{LZString.GetUIString(string.Format(Strings.employeeNameKeyFormat, employeeData.StaffID))}";
@@ -121,10 +122,12 @@ public class EmployeeUIItem : MonoBehaviour
     public void OnBuy()
     {
         var userData = UserDataManager.Instance.CurrentUserData;
-        if (employeeSaveData[employeeId].level >= 5 || userData.Money < employeeData.Cost)
+        if (employeeSaveData[employeeId].level >= 5 || userData.Money < employeeData.Cost ||
+            userData.Money < employeeData.Cost * employeeSaveData[employeeId].level)
         {
             return;
         }
+
         button.interactable = false;
         if (employeeSaveData[employeeId].level < 1 && userData.Money > employeeData.Cost)
         {
@@ -159,7 +162,7 @@ public class EmployeeUIItem : MonoBehaviour
         if (payLevel > 5)
         {
             uiUpgradeCostText.text = LZString.GetUIString(employeeUpgradeFix);
-            
+
         }
         else
         {
@@ -203,13 +206,17 @@ public class EmployeeUIItem : MonoBehaviour
     {
         if (!IsPayable(employeeData))
             return;
+        int cost = employeeData.Cost * employeeSaveData[employeeId].level;
+        UserDataManager.Instance.AdjustMoney(-cost);
+        ingameGoodsUi.SetCostUi();
+
+        await UserDataManager.Instance.AdjustMoneyWithSave(0);
 
         await UserDataManager.Instance.UpgradeEmployee(employeeId);
         employeeManager.UpgradeEmployee(employeeId);
-        int cost = employeeData.Cost * employeeSaveData[employeeId].level;
+
         employeeData.Health = employeeData.Health + (10 * employeeSaveData[employeeId].level);
-        await UserDataManager.Instance.AdjustMoneyWithSave(-cost);
-        ingameGoodsUi.SetCostUi();
+        UserDataManager.Instance.AddRankPointWithSave(employeeData.RankPoint).Forget();
         SetInfoText();
         SetUpgradeButtonText(employeeSaveData[employeeId].level);
         SetButtonInteractable();

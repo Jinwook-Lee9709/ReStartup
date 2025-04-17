@@ -10,28 +10,33 @@ public class FoodResearchListUI : MonoBehaviour
 {
     public GameObject researchItemObject;
     private FoodData data;
-    private Dictionary<int ,FoodResearchUIItem> foodResearchItems = new();
+    private Dictionary<int, FoodResearchUIItem> foodResearchItems = new();
     void Start()
     {
         var userDataManager = UserDataManager.Instance;
         userDataManager.ChangeRankPointAction += Unlock;
+        ServiceLocator.Instance.GetSceneService<GameManager>().WorkFlowController.OnCookingStationAdded += UnlockCheakCookwareType;
     }
     public void AddFoodResearchItem(FoodData data, FoodResearchNotifyPopup notifyPopup)
     {
         var ui = Instantiate(researchItemObject, transform).GetComponent<FoodResearchUIItem>();
         ui.Init(data, notifyPopup);
-        foodResearchItems.Add(data.Requirements ,ui);
+        foodResearchItems.Add(data.Requirements, ui);
     }
     public void Unlock(int currentRankingPoint)
     {
-        var currentTheme = ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme;
         foreach (var ui in foodResearchItems)
         {
-            var cookwareType = ui.Value.foodData.CookwareType;
-            int currentCookwareAmount = UserDataManager.Instance.CurrentUserData.CookWareUnlock[currentTheme][cookwareType];
-            var chackCookWareUnlock = currentCookwareAmount < ui.Value.foodData.CookwareNB;
-            if (ui.Key < currentRankingPoint && !chackCookWareUnlock)
+            ui.Value.UnlockFood();
+        }
+    }
+    public void UnlockCheakCookwareType(CookwareType type)
+    {
+        foreach (var ui in foodResearchItems)
+        {
+            if (ui.Value.foodData.CookwareType == type)
             {
+                ui.Value.UnlockCookwareAmount();
                 ui.Value.UnlockFood();
             }
         }

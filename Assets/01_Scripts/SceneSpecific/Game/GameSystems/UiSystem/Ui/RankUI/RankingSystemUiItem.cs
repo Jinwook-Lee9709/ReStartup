@@ -25,12 +25,13 @@ public class RankingSystemUiItem : MonoBehaviour
         if (rankingData.RestaurantName == "Player")
         {
             rankingData.rankingPoint = (int)UserDataManager.Instance.CurrentUserData.CurrentRankPoint;
+            nameText.text = LZString.GetUIString(Strings.PlayerTag);
         }
         else
         {
             rankingData.rankingPoint = Random.Range(rankingData.RankingPointminimum, rankingData.RankingPointmaximum);
+            nameText.text = LZString.GetUIString(rankingData.RestaurantName);
         }
-        nameText.text = LZString.GetUIString(rankingData.RestaurantName);
         rankingPointText.text = rankingData.rankingPoint.ToString();
     }
 
