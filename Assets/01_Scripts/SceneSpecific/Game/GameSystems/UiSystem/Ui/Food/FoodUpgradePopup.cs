@@ -41,7 +41,7 @@ public class FoodUpgradePopup : MonoBehaviour
         currentCard = card;
         icon.sprite = card.image.sprite;
         infoText.text = card.foodData.StringID.ToString();
-        priceText.text = card.foodData.BasicCost.ToString();
+        priceText.text = (card.foodData.BasicCost * card.foodData.upgradeCount).ToString();
     }
     private void OnEnable()
     {

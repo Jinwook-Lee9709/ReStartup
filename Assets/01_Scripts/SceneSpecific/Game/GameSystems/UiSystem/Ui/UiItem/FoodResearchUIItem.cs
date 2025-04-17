@@ -80,6 +80,7 @@ public class FoodResearchUIItem : MonoBehaviour
             lockImage.SetActive(false);
             button.interactable = false;
             consumerManager.foodIds.Add(foodData.FoodID);
+            button.GetComponentInChildren<TextMeshProUGUI>().text = "연구됨";
         }
             
         if (foodData.Requirements < userData.CurrentRankPoint && chackCookWareUnlock)
@@ -126,7 +127,7 @@ public class FoodResearchUIItem : MonoBehaviour
         ingameGoodsUi.SetCostUi();
         gameManager.foodManager.UnlockFoodUpgrade(foodData);
         button.interactable = false;
-        
+        button.GetComponentInChildren<TextMeshProUGUI>().text = "연구됨";
         HandleUpgradeEmployee().Forget();
     }
 

@@ -48,7 +48,6 @@ public class FoodUpgradeUIItem : MonoBehaviour
         foodData = data;
         foodUpgradePopup = popup;
         levelUpImage.SetActive(false);
-        levelText.text = $"{foodData.upgradeCount}";
         button = GetComponentInChildren<Button>();
         var gameManager = ServiceLocator.Instance.GetSceneService<GameManager>();
         consumerManager = gameManager.consumerManager;
@@ -65,7 +64,7 @@ public class FoodUpgradeUIItem : MonoBehaviour
             lockImage.SetActive(false);
             foodData.upgradeCount = 1;
         }
-        
+        levelText.text = $"{foodData.upgradeCount}";
         button.onClick.AddListener(OnButtonClick);
     }
     private void OnButtonClick()

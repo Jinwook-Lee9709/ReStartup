@@ -73,7 +73,7 @@ public class UserDataManager : Singleton<UserDataManager>
         if (consumer.needFood.FoodID == consumer.FSM.consumerData.LoveFoodId && 0.25f < Random.Range(0f, 1f))
             //TODO : Play Tip PopUp
             CurrentUserData.Money +=
-                Mathf.CeilToInt(consumer.needFood.SellingCost * (consumer.FSM.consumerData.SellTipPercent / 100));
+                Mathf.CeilToInt((consumer.needFood.SellingCost * consumer.needFood.upgradeCount) * (consumer.FSM.consumerData.SellTipPercent / 100));
     }
 
     public void OnRankPointUp(int getRankPoint)
@@ -81,7 +81,7 @@ public class UserDataManager : Singleton<UserDataManager>
         currentUserData.CurrentRankPoint += getRankPoint;
         ChangeRankPointAction?.Invoke((int)currentUserData.CurrentRankPoint);
     }
-    
+
     public async UniTask AddRankPointWithSave(int rankPoint)
     {
         var currentTheme = ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme;
@@ -94,7 +94,7 @@ public class UserDataManager : Singleton<UserDataManager>
         var currentTheme = ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme;
         CurrentUserData.CurrentRank = rank;
         await ThemeRecordDAC.UpdateThemeRank((int)currentTheme, rank);
-        
+
     }
 
     public void AdjustMoney(int money)
@@ -146,7 +146,7 @@ public class UserDataManager : Singleton<UserDataManager>
         CurrentUserData.InteriorSaveData[interiorId]++;
         var upgradeCount = CurrentUserData.InteriorSaveData[interiorId];
         await SaveInteriorUpgrade(interiorId);
-       
+
         OnInteriorUpgradeEvent?.Invoke(interiorId, upgradeCount);
     }
 
@@ -161,7 +161,7 @@ public class UserDataManager : Singleton<UserDataManager>
         await InteriorSaveDataDAC.UpdateInteriorData(data);
     }
 
-    public async UniTask UpgradeEmployee (int staffId)
+    public async UniTask UpgradeEmployee(int staffId)
     {
         currentUserData.EmployeeSaveData[staffId].level++;
         var payload = currentUserData.EmployeeSaveData[staffId];
