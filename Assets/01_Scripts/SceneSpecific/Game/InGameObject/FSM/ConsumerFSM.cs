@@ -257,7 +257,6 @@ public class ConsumerFSM : MonoBehaviour
             Cost += Mathf.CeilToInt(consumer.needFood.SellingCost * (consumerData.SellTipPercent / 100f));
         }
         UserDataManager.Instance.AdjustMoneyWithSave(Cost).Forget();
-
         Vector3 paymentTextPosition = new Vector3(transform.position.x, transform.position.y + 1f, 0);
         var paymentText = Instantiate(paymentTextPrefab, paymentTextPosition, Quaternion.identity).GetComponent<PaymentText>();
         paymentText.Init(consumer, isTip);

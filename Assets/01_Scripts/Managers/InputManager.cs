@@ -47,6 +47,7 @@ public class InputManager : MonoBehaviour
         slowTouchAction = InputSystem.actions.FindAction("SlowTouchAction");
         slowTouchAction.started += ctx =>
         {
+            AudioManager.Instance.PlaySFX("Touch");
             if (IsPointerOverUI()) 
                 return;
 
