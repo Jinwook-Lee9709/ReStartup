@@ -32,7 +32,7 @@ public class WorkGetPairOrder : InteractWorkBase
         backgroundHandle.WaitForCompletion();
         
         Sprite firstConsumerFoodIconSprite = firstConsumerFoodIcon.Result;
-        Sprite secondConsumerFoodIconSprite = firstConsumerFoodIcon.Result;
+        Sprite secondConsumerFoodIconSprite = secondConsumerFoodIcon.Result;
         Sprite backgroundSprite = backgroundHandle.Result;
         
         var mainTable = target as Table;
