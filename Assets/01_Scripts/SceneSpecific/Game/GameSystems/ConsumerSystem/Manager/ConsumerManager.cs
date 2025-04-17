@@ -364,7 +364,7 @@ public class ConsumerManager : MonoBehaviour
     private void InitConsumer(Consumer consumer)
     {
         //TODO : �մ��� ������ƮǮ���� ���� �� ���� (���ϴ� ����, �մ� Ÿ��, �ټ� �ڸ� ��)
-        consumer.transform.position = spawnPoint.position;
+        consumer.GetComponent<NavMeshAgent>().Warp(spawnPoint.position);
         consumer.consumerManager = this;
         consumer.FSM.buffManager = buffManager;
         consumer.NextTargetTransform = null;

@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -29,6 +30,7 @@ public class ConsumerFSM : MonoBehaviour
         Low
     }
 
+    public event Action<Consumer> OnSeatEvent;
     public ConsumerManager consumerManager;
     public BuffManager buffManager;
 
@@ -55,7 +57,7 @@ public class ConsumerFSM : MonoBehaviour
 
     [SerializeField] public ConsumerState currentStatus = ConsumerState.Waiting;
     [SerializeField] private Satisfaction currentSatisfaction = Satisfaction.High;
-
+    [SerializeField] private PaymentText paymentTextPrefab;
 
     private NavMeshAgent agent;
     private CashierCounter cashierCounter;
@@ -64,7 +66,6 @@ public class ConsumerFSM : MonoBehaviour
     private SPUM_Prefabs model;
     public SPUM_Prefabs Model => model;
     private bool isOnSeat;
-
     private bool isPaying;
     private Vector2 targetPivot;
     private float prevXPos;
@@ -223,19 +224,44 @@ public class ConsumerFSM : MonoBehaviour
         isOnSeat = false;
     }
 
-    public event Action<Consumer> OnSeatEvent;
-
 
     public void OnStartPayment()
     {
         CurrentStatus = ConsumerState.Paying;
     }
-
+    private bool IsTip()
+    {
+        if (consumerData.GuestType != GuestType.BadGuest)
+        {
+            if (consumer.needFood.FoodID == consumerData.LoveFoodId)
+            {
+                if (CurrentSatisfaction == Satisfaction.High)
+                {
+                    if (UnityEngine.Random.Range(0, 4) == 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
     public void OnEndPayment()
     {
-        ///TODO : If End Payment
-        StartCoroutine(UserDataManager.Instance.OnMoneyUp(consumer));
-        ///And Play Tip PopUp
+        bool isTip = IsTip();
+        //bool isTip = true;
+        int Cost = consumer.needFood.SellingCost;
+        int rankPoint = consumer.needFood.GetRankPoints;
+        if (isTip)
+        {
+            Cost += Mathf.CeilToInt(consumer.needFood.SellingCost * (consumerData.SellTipPercent / 100f));
+        }
+        UserDataManager.Instance.AdjustMoneyWithSave(Cost).Forget();
+
+        Vector3 paymentTextPosition = new Vector3(transform.position.x, transform.position.y + 1f, 0);
+        var paymentText = Instantiate(paymentTextPrefab, paymentTextPosition, Quaternion.identity).GetComponent<PaymentText>();
+        paymentText.Init(consumer, isTip);
+
 
         CurrentStatus = ConsumerState.Exit;
     }

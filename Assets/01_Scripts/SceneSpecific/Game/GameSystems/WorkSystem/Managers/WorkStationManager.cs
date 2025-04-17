@@ -86,7 +86,6 @@ public class WorkStationManager
         cookingStation.transform.InitializeLocalTransform();
         cookingStation.SetId(num);
         cookingStation.cookwareType = cookwareType;
-        cookingStation.GetComponentInChildren<TextMeshPro>().text = cookwareType.ToString();
         workFlowController.AddCookingStation(cookingStation);
         cookingStations[cookwareType].Add(num, cookingStation);
 
@@ -106,6 +105,7 @@ public class WorkStationManager
 
         var table = tables[data.InteriorID % 10 - 1];
         table.SetInteractionSpeed(interactionSpeed);
+        table.SetEattingSpeed(interactionSpeed);
         table.ChangeSpirte(sprite);
     }
 

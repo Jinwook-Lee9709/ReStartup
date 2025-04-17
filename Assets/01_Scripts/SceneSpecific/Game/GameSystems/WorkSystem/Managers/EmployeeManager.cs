@@ -10,8 +10,9 @@ public class EmployeeManager
 {
     private readonly string employeePrefab = "Agent.prefab";
     
-    private Dictionary<int, EmployeeFSM> employees;
+    private Dictionary<int, EmployeeFSM> employees = new();
     private GameManager gameManager;
+    private BuffManager buffManager;
 
     public void Init(GameManager gameManager)
     {
@@ -23,6 +24,67 @@ public class EmployeeManager
         {
             InstantiateAndRegisterWorker(data[pair.Key]);
         }
+    }
+
+    public void Start()
+    {
+        buffManager = gameManager.buffManager;
+        buffManager.OnBuffUsed += OnBuffUsed;
+        buffManager.OnBuffExpired += OnBuffExpired;
+    }
+
+    private void OnBuffUsed(Buff buff)
+    {
+        switch (buff.BuffType)
+        {
+            case BuffType.StaffMove:
+            {
+                foreach (var employee in employees.Values)
+                {
+                    employee.ApplyMoveSpeedBuff(buff.BuffEffect);
+                }
+                break;
+            }
+            case BuffType.StaffWork:
+            {
+                foreach (var employee in employees.Values)
+                {
+                    employee.ApplyWorkSpeedBuff(buff.BuffEffect);
+                }
+                break;
+            }
+            default:
+                break;
+        }
+    }
+
+    private void OnBuffExpired(Buff buff)
+    {
+        switch (buff.BuffType)
+        {
+            case BuffType.StaffMove:
+            {
+                foreach (var employee in employees.Values)
+                {
+                    employee.RemoveMoveSpeedBuff();
+                }
+                break;
+            }
+            case BuffType.StaffWork:
+            {
+                foreach (var employee in employees.Values)
+                {
+                    employee.RemoveWorkSpeedBuff();
+                }
+                break;
+            }
+        }
+    }
+
+    public void UpgradeEmployee(int id)
+    {
+        var employee = employees[id];
+        employee.OnUpgrade();
     }
 
     public void AddEmployee(int id, EmployeeFSM employee)
@@ -37,10 +99,11 @@ public class EmployeeManager
         GameObject prefab = handle.WaitForCompletion();
         var newEmployee = Object.Instantiate(prefab).GetComponent<EmployeeFSM>();
         newEmployee.EmployeeData = employeeData;
-        newEmployee.GetComponentInChildren<TextMeshPro>().text = $"{((WorkType)employeeData.StaffType).ToString()}직원"; 
+        newEmployee.GetComponentInChildren<TextMeshPro>().text = $"{((WorkType)employeeData.StaffType).ToString()}직원";
         AddEmployee(employeeData.StaffID, newEmployee);
 
         LoadEmployeeSaveData(employeeData, newEmployee);
+        employees[employeeData.StaffID] =newEmployee;
     }
 
     private static void LoadEmployeeSaveData(EmployeeTableGetData employeeData, EmployeeFSM newEmployee)

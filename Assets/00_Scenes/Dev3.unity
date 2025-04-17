@@ -4444,9 +4444,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27c4192e234726d47927b412638b438e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moneyText: {fileID: 0}
   goldText: {fileID: 1691038845}
   upgradeUIMoeny: {fileID: 1745166654}
-  upgradeUIRankingPoint: {fileID: 656120520}
+  upgradeUIGold: {fileID: 0}
 --- !u!224 &415523619
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10087,7 +10088,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   researchItemObject: {fileID: 7268391995244942854, guid: a66238cfe31170c47a76e855d6b44053, type: 3}
-  allBuyButton: []
 --- !u!114 &852564938
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21824,10 +21824,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14219ce03788f8548b8fee55ae90d90e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parentCanvas: {fileID: 0}
+  notEnoughCostPopup: {fileID: 0}
   buffManager: {fileID: 1711239462}
   consumerManager: {fileID: 1941923294}
   promotionContent: {fileID: 1882948351}
   promotionPrefab: {fileID: 428410792502505591, guid: ef8fa9ef9dc42ec488d82d40150ebf97, type: 3}
+  haveMeney: {fileID: 0}
+  haveGold: {fileID: 0}
 --- !u!1 &1729287288
 GameObject:
   m_ObjectHideFlags: 0
@@ -22199,6 +22203,7 @@ MonoBehaviour:
   surface2D: {fileID: 1528191182}
   consumerManager: {fileID: 1941923294}
   foodManager: {fileID: 1713731646}
+  buffManager: {fileID: 1711239462}
 --- !u!1 &1744651860
 GameObject:
   m_ObjectHideFlags: 0
@@ -28270,6 +28275,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rankingListUi: {fileID: 2094198828}
+  rankingConditionListUi: {fileID: 0}
   gameManager: {fileID: 1743103593}
   canvas: {fileID: 706047262}
   playerClone: {fileID: 365854682}
@@ -28327,6 +28333,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  payWaitingPivots: []
   foodIds: 
 --- !u!1 &1945778956
 GameObject:

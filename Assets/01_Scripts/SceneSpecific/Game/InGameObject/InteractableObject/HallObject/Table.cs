@@ -17,6 +17,7 @@ public class Table : InteractableObjectBase, IInterior
     [SerializeField] private Table pairTable;
 
     [SerializeField] private TableType tableType;
+    private float eattingSpeed = 1f;
     public Transform FoodPlacePivot => foodPlacePivot;
     public TableType TableType => tableType;
     public Table PairTable => pairTable;
@@ -64,5 +65,10 @@ public class Table : InteractableObjectBase, IInterior
     public override void HideIcon()
     {
         iconBubble.HideIcon();
+    }
+
+    public void SetEattingSpeed(float speed)
+    {
+        eattingSpeed = speed;
     }
 }

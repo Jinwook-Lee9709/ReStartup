@@ -63,19 +63,6 @@ public class UserDataManager : Singleton<UserDataManager>
             Debug.Log("Load DB Fail");
     }
 
-    public IEnumerator OnMoneyUp(Consumer consumer)
-    {
-        AdjustMoneyWithSave(consumer.needFood.SellingCost).Forget();
-        AddRankPointWithSave(1000).Forget();
-
-        yield return new WaitForSeconds(0.5f);
-
-        if (consumer.needFood.FoodID == consumer.FSM.consumerData.LoveFoodId && 0.25f < Random.Range(0f, 1f))
-            //TODO : Play Tip PopUp
-            CurrentUserData.Money +=
-                Mathf.CeilToInt((consumer.needFood.SellingCost * consumer.needFood.upgradeCount) * (consumer.FSM.consumerData.SellTipPercent / 100));
-    }
-
     public void OnRankPointUp(int getRankPoint)
     {
         currentUserData.CurrentRankPoint += getRankPoint;

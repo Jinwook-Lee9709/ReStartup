@@ -52,7 +52,7 @@ public class PromotionBase : IPromotion
 
     public virtual void Excute(BuffManager buffManager, bool needAd)
     {
-        UserDataManager.Instance.OnRankPointUp(10);
+        UserDataManager.Instance.AddRankPointWithSave(10).Forget();
     }
 
     public virtual void Init()
@@ -77,7 +77,7 @@ public class PromotionBase : IPromotion
 
     public virtual void Excute(BuffManager buffManager, ConsumerManager consumerManager, bool needAd)
     {
-        UserDataManager.Instance.OnRankPointUp(10);
+        UserDataManager.Instance.AddRankPointWithSave(10).Forget();
     }
 
     public void OnPayment(bool needAd)

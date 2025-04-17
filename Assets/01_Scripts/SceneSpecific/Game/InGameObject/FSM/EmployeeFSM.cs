@@ -15,17 +15,21 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     private readonly float healthDecreaseTimer = 60f;
 
     private float currentTimer = 0f;
-
     public EmployeeTableGetData EmployeeData { get; set; } = new();
     public float InteractionSpeed => interactionSpeed;
     public Transform HandPivot => handPivot;
-
+    public int CurrentLevel => UserDataManager.Instance.CurrentUserData.EmployeeSaveData[EmployeeData.StaffID].level;
+    public float CalculatedMoveSpeed => EmployeeData.MoveSpeed + EmployeeData.upgradeSpeed * (CurrentLevel - 1);
+    public float CalculatedWorkSpeed => EmployeeData.WorkSpeed - upgradeWorkSpeedValue * CurrentLevel;
     public UiManager uiManager;
     
     private SPUM_Prefabs model;
     public SPUM_Prefabs Model => model;
 
     public float prevXPos;
+
+    private float defaultMoveSpeed;
+    private float defaultWorkSpeed;
 
     public WorkerState CurrentStatus
     {
@@ -52,23 +56,20 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     
     private void Start()
     {
-        EmployeeData.MoveSpeed = EmployeeData.MoveSpeed + EmployeeData.upgradeSpeed;
-        agent.speed = EmployeeData.MoveSpeed;
-        interactionSpeed = EmployeeData.WorkSpeed - upgradeWorkSpeedValue * EmployeeData.upgradeCount;
-        //Added logic to change maximum health
-
-        EmployeeData.OnUpgradeEvent += () =>
-        {
-            EmployeeData.MoveSpeed = EmployeeData.MoveSpeed + EmployeeData.upgradeSpeed;
-            agent.speed = EmployeeData.MoveSpeed;
-            interactionSpeed = EmployeeData.WorkSpeed - upgradeWorkSpeedValue * EmployeeData.upgradeCount;
-            //Added logic to change maximum health
-        };
-
+        OnUpgrade();
+        
         model = GetComponentInChildren<SPUM_Prefabs>();
         model.OverrideControllerInit();
         uiManager = GameObject.FindWithTag("UIManager").GetComponent<UiManager>();
         uiManager.EmployeeHpUIItemSet(this);
+    }
+
+    public void OnUpgrade()
+    {
+        defaultMoveSpeed = CalculatedMoveSpeed;
+        defaultWorkSpeed = CalculatedWorkSpeed;
+        agent.speed = defaultMoveSpeed;
+        interactionSpeed = defaultWorkSpeed;
     }
 
     private void Update()
@@ -196,4 +197,25 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
 
         currentWork.DoWork();
     }
+
+    public void ApplyMoveSpeedBuff(float multiply)
+    {
+        agent.speed = defaultMoveSpeed * multiply;
+    }
+
+    public void ApplyWorkSpeedBuff(float multiply)
+    {
+        interactionSpeed = defaultWorkSpeed * multiply;
+    }
+
+    public void RemoveMoveSpeedBuff()
+    {
+        agent.speed = defaultMoveSpeed;
+    }
+    
+    public void RemoveWorkSpeedBuff()
+    {
+        interactionSpeed = defaultWorkSpeed;
+    }
+    
 }
