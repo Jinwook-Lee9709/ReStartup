@@ -40,6 +40,7 @@ public class RankSystemManager : MonoBehaviour
             if(item.Type == (int)gameManager.CurrentTheme)
                 rankingConditionListUi.RankCoinditionCardAdd(item);
         }
+        playerClone.GetComponent<PlayerClone>().playerData = playerData;
     }
     private bool CheckOverlap(RectTransform rect)
     {

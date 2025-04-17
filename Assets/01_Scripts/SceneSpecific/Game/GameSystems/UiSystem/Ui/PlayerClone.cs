@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 public class PlayerClone : MonoBehaviour
 {
+    public ScrollRect rect;
     public RankingData playerData;
     [SerializeField] private Image playerImage;
     [SerializeField] private TextMeshProUGUI playerName;
@@ -15,6 +16,11 @@ public class PlayerClone : MonoBehaviour
     [SerializeField] private TextMeshProUGUI playerRankPoint;
 
     private bool isActive = true;
+
+    private void Start()
+    {
+        GetComponent<Button>().onClick.AddListener(OnClickClone);
+    }
 
     public void UpdatePlayerData(RankingData data)
     {
@@ -43,5 +49,10 @@ public class PlayerClone : MonoBehaviour
                 gameObject.SetActive(false);
             });
         }
+    }
+
+    public void OnClickClone()
+    {
+        rect.DOVerticalNormalizedPos(Mathf.InverseLerp(50, 0, playerData.rank),1f);
     }
 }
