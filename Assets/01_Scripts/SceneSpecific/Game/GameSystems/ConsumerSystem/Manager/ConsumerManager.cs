@@ -365,7 +365,7 @@ public class ConsumerManager : MonoBehaviour
         consumer.NextTargetTransform = null;
         consumer.pairData = null;
         consumer.FSM.consumerManager = this;
-        consumer.FSM.consumerData = consumerDataTable.GetConsumerData(consumerSpawnPercent[UserDataManager.Instance.CurrentUserData.CurrentRank ?? 0]);
+        consumer.FSM.consumerData = consumerDataTable.GetConsumerData(consumerSpawnPercent[UserDataManager.Instance.CurrentUserData.CurrentRank]);
         consumer.FSM.consumerData.Init();
         SetFood(ref consumer);
         consumer.isEndMeal = false;
