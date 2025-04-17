@@ -15,7 +15,6 @@ public class PDPromotion : PromotionBase
             GameObject.Instantiate(notEnoughCost, parentCanvas.transform);
             return;
         }
-        base.Excute(buffManager, consumerManager, needAd);
         var pd = DataTableManager.Get<ConsumerDataTable>(DataTableIds.Consumer.ToString()).GetConsumerData(PromotionEffect);
         Buff staffWalk = DataTableManager.Get<BuffDataTable>("Buff").GetBuffForBuffID(pd.BuffId1);
         Buff staffMove = DataTableManager.Get<BuffDataTable>("Buff").GetBuffForBuffID(pd.BuffId2);
@@ -25,6 +24,7 @@ public class PDPromotion : PromotionBase
         {
             buffManager.StartBuff(staffWalk, () =>
             {
+                base.Excute(buffManager, consumerManager, needAd);
                 consumerManager.SpawnConsumer(pd);
                 buffManager.StartBuff(staffMove);
                 LimitCounting(needAd);
@@ -35,6 +35,7 @@ public class PDPromotion : PromotionBase
         {
             buffManager.StartBuff(staffWalk, () =>
             {
+                base.Excute(buffManager, consumerManager, needAd);
                 consumerManager.AddPromotionConsumerWaitingLine(pd);
                 buffManager.StartBuff(staffMove);
                 LimitCounting(needAd);

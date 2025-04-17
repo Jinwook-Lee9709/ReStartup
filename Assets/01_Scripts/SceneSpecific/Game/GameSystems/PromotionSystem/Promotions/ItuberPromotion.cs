@@ -15,7 +15,6 @@ public class ItuberPromotion : PromotionBase
             GameObject.Instantiate(notEnoughCost, parentCanvas.transform);
             return;
         }
-        base.Excute(buffManager, consumerManager, needAd);
         var ituber = DataTableManager.Get<ConsumerDataTable>(DataTableIds.Consumer.ToString()).GetConsumerData(PromotionEffect);
         Buff footTrafficBuff = DataTableManager.Get<BuffDataTable>("Buff").GetBuffForBuffID(ituber.BuffId1);
         footTrafficBuff.Init();
@@ -23,6 +22,7 @@ public class ItuberPromotion : PromotionBase
         {
             buffManager.StartBuff(footTrafficBuff, () =>
             {
+                base.Excute(buffManager, consumerManager, needAd);
                 consumerManager.SpawnConsumer(ituber);
                 LimitCounting(needAd);
                 OnPayment(needAd);
@@ -32,6 +32,7 @@ public class ItuberPromotion : PromotionBase
         {
             buffManager.StartBuff(footTrafficBuff, () =>
             {
+                base.Excute(buffManager, consumerManager, needAd);
                 consumerManager.AddPromotionConsumerWaitingLine(ituber);
                 LimitCounting(needAd);
                 OnPayment(needAd);

@@ -106,6 +106,7 @@ public class WorkStationManager
 
         var table = tables[data.InteriorID % 10 - 1];
         table.SetInteractionSpeed(interactionSpeed);
+        table.SetEattingSpeed(interactionSpeed);
         table.ChangeSpirte(sprite);
     }
 

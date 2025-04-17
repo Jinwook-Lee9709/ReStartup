@@ -73,6 +73,7 @@ MonoBehaviour:
   currentTable: {fileID: 0}
   foodIds: 
   isEndMeal: 0
+  isFoodReady: 0
 --- !u!114 &5636809137127063160
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -86,12 +87,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   consumerManager: {fileID: 0}
+  buffManager: {fileID: 0}
   satisfactionChangeLimit:
   - 30
   - 15
   - 0
+  satisfactionColorChangeFlagTimes:
+  - 30
+  - 25
+  - 15
   currentStatus: 0
   currentSatisfaction: 0
+  paymentTextPrefab: {fileID: 8800908531632865253, guid: e301f5dde6c742940bace6012e18688e, type: 3}
   consumerData:
     orderWaitTimer: 0
 --- !u!1 &4880422385622147833

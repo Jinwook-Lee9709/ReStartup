@@ -16,14 +16,13 @@ public class SNSPromotion : PromotionBase
             GameObject.Instantiate(notEnoughCost, parentCanvas.transform);
             return;
         }
-        base.Excute(buffManager, needAd);
         Buff footTrafficBuff = DataTableManager.Get<BuffDataTable>("Buff").GetBuffForBuffID(PromotionEffect);
         footTrafficBuff.Init();
         buffManager.StartBuff(footTrafficBuff, () =>
         {
+            base.Excute(buffManager, needAd);
             LimitCounting(needAd);
             OnPayment(needAd);
-
         }, needAd);
     }
 }
