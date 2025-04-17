@@ -250,7 +250,7 @@ public class ConsumerFSM : MonoBehaviour
         var eattingTimer = 0f;
         StartCoroutine(model.PlayLoopAnim(PlayerState.OTHER, 1));
 
-        while (eattingTimer < consumerData.MaxEattingLimit - (consumerData.MaxEattingLimit * consumer.currentTable.InteractionSpeed))
+        while (eattingTimer < consumerData.MaxEattingLimit)
         {
             eattingTimer += Time.deltaTime;
 
