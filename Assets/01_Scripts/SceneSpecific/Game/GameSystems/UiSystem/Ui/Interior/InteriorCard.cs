@@ -78,7 +78,7 @@ public class InteriorCard : MonoBehaviour
 
         isSatisfyRequirements = CheckRequirements(userData);
 
-        UpdatePanels();
+        UpdatePanels(upgradeLevel);
         UpdateButtonAndText(upgradeLevel);
         UpdateImage();
     }
@@ -110,10 +110,10 @@ public class InteriorCard : MonoBehaviour
                (Data.Requirements2 == 0 || userData.InteriorSaveData[Data.Requirements2] != 0);
     }
 
-    private void UpdatePanels()
+    private void UpdatePanels(int upgradeLevel)
     {
         authorityCheckPanel.SetActive(!isSatisfyRequirements);
-        costPanel.SetActive(isSatisfyRequirements);
+        costPanel.SetActive(isSatisfyRequirements && upgradeLevel != Data.MaxUpgradeCount);
     }
 
     private void UpdateButtonAndText(int upgradeLevel)

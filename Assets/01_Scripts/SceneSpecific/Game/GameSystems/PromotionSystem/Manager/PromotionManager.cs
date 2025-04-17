@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using TMPro;
 using UnityEngine;
 
@@ -40,8 +41,12 @@ public class PromotionManager : MonoBehaviour
             if (promotionBase != null)
             {
                 promotionBase.Init();
-                promotionBase.currentLimitAD -= UserDataManager.Instance.CurrentUserData.PromotionSaveData[promotionBase.PromotionID].adUseCount;
-                promotionBase.currentLimitBuy -= UserDataManager.Instance.CurrentUserData.PromotionSaveData[promotionBase.PromotionID].buyUseCount;
+                if (UserDataManager.Instance.CurrentUserData.PromotionSaveData.ContainsKey(promotionBase.PromotionID))
+                {
+                    promotionBase.currentLimitAD -= UserDataManager.Instance.CurrentUserData.PromotionSaveData[promotionBase.PromotionID].adUseCount;
+                    promotionBase.currentLimitBuy -= UserDataManager.Instance.CurrentUserData.PromotionSaveData[promotionBase.PromotionID].buyUseCount;
+                }
+               
                 promotions.Add(promotionBase);
                 promotionBase.notEnoughCost = notEnoughCostPopup;
                 promotionBase.parentCanvas = parentCanvas;

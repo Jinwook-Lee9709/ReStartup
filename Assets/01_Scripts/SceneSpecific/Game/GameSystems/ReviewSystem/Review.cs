@@ -34,6 +34,18 @@ public class Review : MonoBehaviour
 
         OnRemoveAdEvent += () =>
         {
+            
+            int count = 0;
+            foreach (var review in reviewManager.reviews)
+            {
+                if (review == gameObject)
+                {
+                    ReviewSaveDataDAC.DeleteReviewData(count).Forget();
+                    break;
+                }
+                count++;
+            }
+
             reviewManager.RemoveAt(gameObject);
             UserDataManager.Instance.AddRankPointWithSave(-data.addPoint).Forget();
         };

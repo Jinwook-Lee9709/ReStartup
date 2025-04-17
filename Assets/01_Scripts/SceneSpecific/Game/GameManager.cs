@@ -168,7 +168,7 @@ public class GameManager : MonoBehaviour
                 buffer.level = 0;
                 buffer.theme = (ThemeIds)data.Theme;
                 buffer.remainHp = data.Health;
-                buffer.remainHpDecreaseTime = 60f;
+                buffer.remainHpDecreaseTime = 0f;
                 employeeDictionary.TryAdd(buffer.id, buffer);
             }
         }

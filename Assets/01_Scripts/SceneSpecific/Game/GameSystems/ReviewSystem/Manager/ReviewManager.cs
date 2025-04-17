@@ -1,7 +1,10 @@
+using System;
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class ReviewManager : MonoBehaviour
@@ -20,6 +23,35 @@ public class ReviewManager : MonoBehaviour
     {
         AdvertisementManager.Instance.Init();
         UserDataManager.Instance.OnReviewCntFullEvent += AddReview;
+    }
+
+    private void Start()
+    {
+        var query = UserDataManager.Instance.CurrentUserData.ReviewSaveData.OrderBy(x=>x.orderIndex);
+        foreach (var data in query)
+        {
+            CreateReviewObject(data);
+        }
+
+        UpdateReviews();
+    }
+
+    private void CreateReviewObject(ReviewSaveData data)
+    {
+        ReviewData tempData = new();
+        
+        tempData.Init(data.isPositive, data.createdTime);
+        var gameObj = Instantiate(reviewPrefab);
+        gameObj.transform.SetParent(reviewContent.transform);
+        gameObj.transform.localPosition = Vector2.zero;
+        gameObj.transform.rotation = Quaternion.Euler(Vector3.zero);
+        gameObj.transform.SetSiblingIndex(0);
+        gameObj.GetComponent<RectTransform>().sizeDelta = new Vector2(reviewContent.GetComponent<RectTransform>().sizeDelta.x, gameObj.GetComponent<RectTransform>().sizeDelta.y);
+        gameObj.transform.localScale = Vector3.one;
+        var reviewObj = gameObj.GetComponent<Review>();
+        reviewObj.Init(tempData);
+        reviewObj.reviewManager = this;
+        reviews.AddFirst(reviewObj.gameObject);
     }
 
     private void AddReview(bool isBest)
@@ -58,7 +90,8 @@ public class ReviewManager : MonoBehaviour
             loadingObj.GetComponent<LoadingDot>().StopDoTween();
             Destroy(loadingObj);
             ReviewData tempData = new();
-            tempData.Init(isBest);
+            DateTime timeStamp = DateTime.Now;
+            tempData.Init(isBest, timeStamp);
             var gameObj = Instantiate(reviewPrefab);
             gameObj.transform.SetParent(reviewContent.transform);
             gameObj.transform.localPosition = Vector2.zero;
@@ -69,7 +102,8 @@ public class ReviewManager : MonoBehaviour
             var reviewObj = gameObj.GetComponent<Review>();
             reviewObj.Init(tempData);
             reviewObj.reviewManager = this;
-
+            
+            ReviewSaveDataDAC.InsertReviewData(isBest, 0, timeStamp).Forget();
             UserDataManager.Instance.AddRankPointWithSave(reviewObj.data.addPoint);
 
             reviews.AddFirst(reviewObj.gameObject);

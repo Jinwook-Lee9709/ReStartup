@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -48,15 +49,9 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
             }
         }
     }
-
-    protected override void Awake()
-    {
-        base.Awake();
-    }
-
+    
     private void Start()
     {
-        EmployeeData.currentHealth = EmployeeData.Health;
         EmployeeData.MoveSpeed = EmployeeData.MoveSpeed + EmployeeData.upgradeSpeed;
         agent.speed = EmployeeData.MoveSpeed;
         interactionSpeed = EmployeeData.WorkSpeed - upgradeWorkSpeedValue * EmployeeData.upgradeCount;
@@ -97,13 +92,34 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
             default:
                 throw new ArgumentOutOfRangeException();
         }
+
+        float prev = currentTimer;
         currentTimer += Time.deltaTime;
+        int currentInterval = (int)(currentTimer / Constants.BUFF_SAVE_INTERVAL);
+        int previousInterval = (int)(prev / Constants.BUFF_SAVE_INTERVAL);
+    
+        if (currentInterval != previousInterval)
+        {
+            var saveData = UserDataManager.Instance.CurrentUserData.EmployeeSaveData[EmployeeData.StaffID];
+            saveData.remainHp = EmployeeData.currentHealth;
+            saveData.remainHpDecreaseTime = currentTimer;
+            
+            EmployeeSaveDataDAC.UpdateEmployeeData(saveData).Forget();
+        }
+        
         if (healthDecreaseTimer < currentTimer)
         {
             currentTimer = 0;
+            if (EmployeeData.currentHealth == 0) 
+                return;
             DecreaseHp(Constants.HEALTH_DECREASE_AMOUNT_ONTIMEFINISHED);
             uiManager.EmployeeHpSet(this);
         }
+    }
+
+    public void AdjustTimer(float timer)
+    {
+        currentTimer = timer;
     }
     
     public void PlayWorkAnimation()
@@ -136,6 +152,12 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     public void IncreaseHp(int amount)
     {
         EmployeeData.currentHealth += amount;
+        EmployeeData.currentHealth = Mathf.Clamp(EmployeeData.currentHealth, 0, EmployeeData.Health);
+        UserDataManager.Instance.CurrentUserData.EmployeeSaveData[EmployeeData.StaffID].remainHp = EmployeeData.currentHealth;
+        UserDataManager.Instance.CurrentUserData.EmployeeSaveData[EmployeeData.StaffID].remainHpDecreaseTime = currentTimer;
+        
+        EmployeeSaveDataDAC.UpdateEmployeeData(UserDataManager.Instance.CurrentUserData.EmployeeSaveData[EmployeeData.StaffID]).Forget();
+        
         if (IsExhausted)
         {
             IsExhausted = false;
