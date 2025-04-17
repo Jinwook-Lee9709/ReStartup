@@ -169,6 +169,10 @@ public static class Endpoints
     public static readonly string SaveBuffUrl = BaseUrl + "/users/progress/saveBuff";
     public static readonly string SaveBuffsUrl = BaseUrl + "/users/progress/saveBuffs";
     public static readonly string DeleteBuffUrl = BaseUrl + "/users/progress/deleteBuff";
+    
+    public static readonly string GetAllReivewUrl = BaseUrl + "/users/progress/getAll";
+    public static readonly string InsertReivewUrl = BaseUrl + "/users/progress/insert";
+    public static readonly string DeleteReivewUrl = BaseUrl + "/users/progress/delete";
 }
 
 public static class Constants

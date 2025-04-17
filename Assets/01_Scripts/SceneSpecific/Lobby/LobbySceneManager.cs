@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
@@ -40,6 +41,7 @@ public class LobbySceneManager : MonoBehaviour
         var themeRecordQueryTask = ThemeRecordDAC.GetThemeRecordData(theme);
         var promotionQueryTask = PromotionDataDAC.GetPromotionData();
         var buffQueryTask = BuffSaveDataDAC.GetAllBuffSaveData();
+        var reviewQueryTask = ReviewSaveDataDAC.GetReviewSaveData();
         
         var getInteriorResponse = await interiorQueryTask;
         var getFoodResponse = await foodQueryTask;
@@ -47,6 +49,7 @@ public class LobbySceneManager : MonoBehaviour
         var themeRecordResponse = await themeRecordQueryTask;
         var promotionResponse = await promotionQueryTask;
         var buffResponse = await buffQueryTask;
+        var reviewResponse = await reviewQueryTask;
         
         if (getInteriorResponse.Data.Length == 0)
         {
@@ -105,6 +108,17 @@ public class LobbySceneManager : MonoBehaviour
             foreach (var data in buffResponse.Data)
             {
                 UserDataManager.Instance.CurrentUserData.BuffSaveData.Add(data.id, data);
+            }
+        }
+
+        if (reviewResponse.Data.Length != 0)
+        {
+            UserDataManager.Instance.CurrentUserData.ReviewSaveData.Clear();
+            foreach (var data in reviewResponse.Data.OrderBy(x=>x.orderIndex))
+            {
+                DateTime kstNow = data.createdTime.AddHours(9);
+                data.createdTime = kstNow;
+                UserDataManager.Instance.CurrentUserData.ReviewSaveData.Add(data);
             }
         }
     }
