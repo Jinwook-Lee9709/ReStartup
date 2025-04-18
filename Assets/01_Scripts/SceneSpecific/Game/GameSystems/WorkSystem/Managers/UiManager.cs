@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class UiManager : MonoBehaviour
 {
@@ -11,6 +12,10 @@ public class UiManager : MonoBehaviour
     public GameObject uiPromotion;
     public IngameGoodsUi inGameUi;
 
+    public void Start()
+    {
+        EmployeeReewalAll();
+    }
     public void OnClickButtonSetAppsUi()
     {
         var uiSetChack = uiHUD.gameObject.GetComponent<HeadsUpDisplayUi>().includedUiSet;
@@ -66,6 +71,14 @@ public class UiManager : MonoBehaviour
     public void EmployeeHpSet(EmployeeFSM employee)
     {
         uiEmployeeHp.GetComponent<EmployeeHpUi>().EmployeeHpSet(employee);
+    }
+    public void EmployeeHpRenewal(EmployeeTableGetData employeeData)
+    {
+        uiEmployeeHp.GetComponent<EmployeeHpUi>().EmployeeHpRenewal(employeeData);
+    }
+    public void EmployeeReewalAll()
+    {
+        uiEmployeeHp.GetComponent<EmployeeHpUi>().EmployeeReewalAll();
     }
     public void OnClickButtonOpenInteriorUI()
     {

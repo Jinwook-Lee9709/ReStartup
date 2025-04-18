@@ -19,17 +19,34 @@ public class EmployeeHpUi : MonoBehaviour
     {
         foreach (var item in items)
         {
-            if(item.employeeData == employee.EmployeeData)
+            if (item.employeeData == employee.EmployeeData)
             {
                 item.EmployeeHpSet();
             }
         }
     }
+    public void EmployeeHpRenewal(EmployeeTableGetData employeeData)
+    {
+        foreach (var item in items)
+        {
+            if (item.employeeData == employeeData)
+            {
+                item.HpSet();
+            }
+        }
+    }
     public void OnButtonClickEmployeeAll()
     {
-        foreach(var item in buttons)
+        foreach (var item in buttons)
         {
             item.onClick.Invoke();
+        }
+    }
+    public void EmployeeReewalAll()
+    {
+        foreach (var item in items)
+        {
+            item.HpSet();
         }
     }
 }
