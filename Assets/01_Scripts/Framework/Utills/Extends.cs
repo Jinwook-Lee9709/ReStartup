@@ -28,6 +28,7 @@ public static class Extends
                 permission |= InteractPermission.HallEmployee;
                 permission |= InteractPermission.KitchenEmployee;
                 permission |= InteractPermission.PaymentEmployee;
+                permission |= InteractPermission.Player;
                 return permission;
             case WorkType.Payment:
                 return InteractPermission.PaymentEmployee;

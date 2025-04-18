@@ -91,6 +91,11 @@ public class Player : WorkerBase, IInteractor, ITransportable
         Model.PlayAnimation(PlayerState.IDLE, 1);
     }
 
+    public void PlayWalkAnimation()
+    {
+        model.PlayAnimation(PlayerState.MOVE, 0);
+    }
+
     private void UpdateIdle()
     {
     }

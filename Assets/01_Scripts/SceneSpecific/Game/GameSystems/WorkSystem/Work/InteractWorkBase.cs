@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 public abstract class InteractWorkBase : WorkBase
 {
@@ -62,6 +63,7 @@ public abstract class InteractWorkBase : WorkBase
         if (!isArrive)
         {
             workerAgent.SetDestination(targetTransform.position);
+            interactor.PlayWalkAnimation();
             workPhase = WorkPhase.Moving;
         }
         else

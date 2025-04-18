@@ -52,16 +52,16 @@ public class PromotionUI : MonoBehaviour
     {
         payButton.interactable = true;
         adButton.interactable = true;
-        if (promotionData.currentLimitAD <= 0)
-        {
-            promotionData.currentLimitAD = 0;
-            adButton.interactable = false;
-        }
-        if (promotionData.currentLimitBuy <= 0)
-        {
-            promotionData.currentLimitBuy = 0;
-            payButton.interactable = false;
-        }
+        //if (promotionData.currentLimitAD <= 0)
+        //{
+        //    promotionData.currentLimitAD = 0;
+        //    adButton.interactable = false;
+        //}
+        //if (promotionData.currentLimitBuy <= 0)
+        //{
+        //    promotionData.currentLimitBuy = 0;
+        //    payButton.interactable = false;
+        //}
         buyCntText.text = string.Format(cntFormat, promotionData.currentLimitBuy, promotionData.LimitBuy);
         adCntText.text = string.Format(cntFormat, promotionData.currentLimitAD, promotionData.LimitAD);
     }

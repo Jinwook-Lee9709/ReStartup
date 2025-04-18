@@ -21,7 +21,7 @@ public class FoodSaveDataDAC : MonoBehaviour
             ["info"] = JsonConvert.SerializeObject(saveData)
         };
         ApiResponse<FoodSaveData[]> response = await RestApiService.PostAsyncWithToken<ApiResponse<FoodSaveData[]>>(Endpoints.SaveFoodUrl, data);
-        return response.Success;
+        return response != null && response.Success;
     }
 
     public static async UniTask<bool> UpdateFoodData(List<FoodSaveData> saveData)
@@ -31,6 +31,6 @@ public class FoodSaveDataDAC : MonoBehaviour
             ["info"] = JsonConvert.SerializeObject(saveData)
         };
         ApiResponse<FoodSaveData[]> response = await RestApiService.PostAsyncWithToken<ApiResponse<FoodSaveData[]>>(Endpoints.SaveFoodsUrl, data);
-        return response.Success;
+        return response != null && response.Success;
     }
 }

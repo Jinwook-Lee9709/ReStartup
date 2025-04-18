@@ -50,6 +50,10 @@ public class LobbySceneManager : MonoBehaviour
         var promotionResponse = await promotionQueryTask;
         var buffResponse = await buffQueryTask;
         var reviewResponse = await reviewQueryTask;
+
+        if (getInteriorResponse == null || getFoodResponse == null || getEmployeeResponse == null ||
+            themeRecordResponse == null || promotionResponse == null || buffResponse == null || reviewResponse == null)
+            throw new NullReferenceException();
         
         if (getInteriorResponse.Data.Length == 0)
         {
@@ -63,7 +67,7 @@ public class LobbySceneManager : MonoBehaviour
             }
         }
 
-        if (getFoodResponse.Data.Length == 0)
+        if (getFoodResponse?.Data.Length == 0)
         {
             await SaveInitialFoodData(theme);
         }
@@ -91,7 +95,7 @@ public class LobbySceneManager : MonoBehaviour
             UserDataManager.Instance.CurrentUserData.Cumulative = themeRecordResponse.Data[0].cumulative;
         }
 
-        if (promotionResponse.Data.Length == 0)
+        if (promotionResponse?.Data.Length == 0)
         {
             await SaveInitialPromotionData();
         }
@@ -105,7 +109,7 @@ public class LobbySceneManager : MonoBehaviour
 
         if (buffResponse.Data.Length != 0)
         {
-            foreach (var data in buffResponse.Data)
+            foreach (var data in buffResponse?.Data)
             {
                 UserDataManager.Instance.CurrentUserData.BuffSaveData.Add(data.id, data);
             }

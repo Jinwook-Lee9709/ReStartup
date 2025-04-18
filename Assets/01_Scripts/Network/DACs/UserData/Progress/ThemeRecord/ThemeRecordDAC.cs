@@ -22,7 +22,7 @@ public static class ThemeRecordDAC
             ["records"] = JsonConvert.SerializeObject(saveData)
         };
         ApiResponse<ThemeRecordData[]> response = await RestApiService.PostAsyncWithToken<ApiResponse<ThemeRecordData[]>>(Endpoints.InsertThemeRecordsUrl, data);
-        return response.Success;
+        return response != null && response.Success;
     }
 
     public static async UniTask<bool> UpdateThemeRankpoint(int themeId, int rankpoint)
@@ -33,7 +33,7 @@ public static class ThemeRecordDAC
             ["rank_point"] = rankpoint.ToString()
         };
         ApiResponse<ThemeRecordData> response = await RestApiService.PostAsyncWithToken<ApiResponse<ThemeRecordData>>(Endpoints.SaveRankPointUrl, payload);
-        return response.Success;
+        return response != null && response.Success;
     }
 
     public static async UniTask<bool> UpdateThemeRank(int themeId, int rank)
@@ -44,6 +44,6 @@ public static class ThemeRecordDAC
             ["ranking"] = rank.ToString()
         };
         ApiResponse<ThemeRecordData> response = await RestApiService.PostAsyncWithToken<ApiResponse<ThemeRecordData>>(Endpoints.SaveRankingUrl, payload);
-        return response.Success;
+        return response != null && response.Success;
     }
 }

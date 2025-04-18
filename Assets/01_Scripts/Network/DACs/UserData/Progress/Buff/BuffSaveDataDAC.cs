@@ -19,7 +19,7 @@ public class BuffSaveDataDAC
             ["remain_time"] = buffSaveData.remainTime.ToString()
         };
         ApiResponse<BuffSaveData> response = await RestApiService.PostAsyncWithToken<ApiResponse<BuffSaveData>>(Endpoints.SaveBuffUrl, payload);
-        return response.Success;
+        return response != null && response.Success;
     }
 
     public static async UniTask<bool> UpdateBuffSaveData(List<BuffSaveData> buffSaveData)
@@ -29,7 +29,7 @@ public class BuffSaveDataDAC
             ["info"] = JsonConvert.SerializeObject(buffSaveData)
         };
         ApiResponse<BuffSaveData> response = await RestApiService.PostAsyncWithToken<ApiResponse<BuffSaveData>>(Endpoints.SaveBuffsUrl, payload);
-        return response.Success;
+        return response != null && response.Success;
     }
 
     public static async UniTask<bool> DeleteBuffSaveData(int id)
@@ -39,6 +39,6 @@ public class BuffSaveDataDAC
             ["id"] = id.ToString(),
         };
         ApiResponse<BuffSaveData> response = await RestApiService.PostAsyncWithToken<ApiResponse<BuffSaveData>>(Endpoints.DeleteBuffUrl, payload);
-        return response.Success;
+        return response != null && response.Success;
     }
 }

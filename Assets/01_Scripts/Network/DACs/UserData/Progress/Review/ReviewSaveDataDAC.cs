@@ -24,7 +24,7 @@ public class ReviewSaveDataDAC
         };
         ApiResponse<ReviewSaveData> response =
             await RestApiService.PostAsyncWithToken<ApiResponse<ReviewSaveData>>(Endpoints.InsertReivewUrl, payload);
-        return response.Success;
+        return response != null && response.Success;
     }
 
     public static async UniTask<bool> DeleteReviewData(int index)
@@ -35,6 +35,6 @@ public class ReviewSaveDataDAC
         };
         ApiResponse<ReviewSaveData> response =
             await RestApiService.PostAsyncWithToken<ApiResponse<ReviewSaveData>>(Endpoints.DeleteReivewUrl, payload);
-        return response.Success;
+        return response != null && response.Success;
     }
 }

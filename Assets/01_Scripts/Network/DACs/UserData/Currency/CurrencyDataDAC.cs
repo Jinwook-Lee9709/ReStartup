@@ -17,6 +17,6 @@ public static class CurrencyDataDAC
         Dictionary<string, string> data = new Dictionary<string, string>();
         data["currencies"] = JsonConvert.SerializeObject(currencies);
         ApiResponse<CurrencyData[]> response = await RestApiService.PostAsyncWithToken<ApiResponse<CurrencyData[]>>(Endpoints.SaveCurrenciesUrl, data);
-        return response.Success;
+        return response != null && response.Success;
     }
 }

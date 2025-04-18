@@ -103,7 +103,7 @@ public class EmployeeManager
         AddEmployee(employeeData.StaffID, newEmployee);
 
         LoadEmployeeSaveData(employeeData, newEmployee);
-        employees[employeeData.StaffID] =newEmployee;
+        employees[employeeData.StaffID] = newEmployee;
     }
 
     private static void LoadEmployeeSaveData(EmployeeTableGetData employeeData, EmployeeFSM newEmployee)
