@@ -10,6 +10,7 @@ public class UiManager : MonoBehaviour
     public GameObject uiEmployeeHp;
     public GameObject uiInterior;
     public GameObject uiPromotion;
+    public GameObject uiQuest;
     public IngameGoodsUi inGameUi;
 
     public void Start()
@@ -91,5 +92,13 @@ public class UiManager : MonoBehaviour
     public void OnClickButtonExitPromotionUI()
     {
         uiPromotion.SetActive(false);
+    }
+    public void OnClickButtonOpenQuestUI()
+    {
+        uiQuest.SetActive(true);
+    }  
+    public void OnClickButtonExitQuestUI()
+    {
+        uiQuest.SetActive(false);
     }
 }

@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     public InteriorManager InteriorManager { get; private set; }
     public AudioManager AudioManager { get; private set; }
     public EmployeeManager EmployeeManager { get; private set; }
+    public QuestManager QuestManager { get; private set; }
 
     public ConsumerManager consumerManager;
     public FoodManager foodManager;
@@ -41,7 +42,7 @@ public class GameManager : MonoBehaviour
         InitFoodUpgradeDataManager();
         InitObjectPoolManager();
         InitWorkManagers();
-        InitInteriorManager();
+        InitUIManagers();
         
         //EmployeeManager Must Init after InitDictionary
         InitEmployeeManager();
@@ -77,15 +78,18 @@ public class GameManager : MonoBehaviour
 
     }
 
-    private void InitInteriorManager()
+    private void InitUIManagers()
     {
         InteriorManager = new InteriorManager();
         InteriorManager.Init(this);
+        QuestManager = new QuestManager();
+        QuestManager.Init(this);
     }
     #endregion
  
     public void Start()
     {
+        QuestManager.Start();
         WorkStationManager.BakeNavMesh();
         InteriorManager.Start();
         WorkerManager.Start();
