@@ -125,12 +125,14 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     
     public void PlayWorkAnimation()
     {
-        Model.PlayAnimation(PlayerState.IDLE, 1);
+        if(model!= null)
+            Model.PlayAnimation(PlayerState.IDLE, 1);
     }
 
     public void PlayWalkAnimation()
     {
-        model.PlayAnimation(PlayerState.MOVE, 0);
+        if(model!= null)
+            model.PlayAnimation(PlayerState.MOVE, 0);
     }
 
     public void LiftPackage(GameObject package)

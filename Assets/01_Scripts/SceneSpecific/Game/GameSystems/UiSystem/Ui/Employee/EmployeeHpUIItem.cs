@@ -63,7 +63,7 @@ public class EmployeeHpUIItem : MonoBehaviour
         else
             Debug.LogError($"Failed to load sprite: {iconAddress}");
     }
-    private void HpSet()
+    public void HpSet()
     {
         hpText.text = $"{employeeData.currentHealth.ToString()}/{employeeData.Health}";
         hpbar.value = Mathf.Clamp01((float)employeeData.currentHealth / employeeData.Health);

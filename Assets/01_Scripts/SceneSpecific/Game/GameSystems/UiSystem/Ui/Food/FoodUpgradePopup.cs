@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static SoonsoonData;
 
 public class FoodUpgradePopup : MonoBehaviour
 {
@@ -45,6 +47,7 @@ public class FoodUpgradePopup : MonoBehaviour
     }
     private void OnEnable()
     {
+        mainButton.interactable = true;
         if (background != null)
         {
             var backgroundImage = background.GetComponent<Image>();
@@ -60,10 +63,10 @@ public class FoodUpgradePopup : MonoBehaviour
 
     private void OnMainButtonTouched()
     {
-        if (!IsPaid)
+        if (currentCard.foodData.upgradeCount < 5)
         {
-            IsPaid = true;
             currentCard.OnBuy();
+            //업그레이드 완료 텍스트 띄워주기
         }
         else
         {

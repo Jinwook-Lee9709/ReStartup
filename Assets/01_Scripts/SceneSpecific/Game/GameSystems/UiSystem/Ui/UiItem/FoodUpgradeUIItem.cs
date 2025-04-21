@@ -27,6 +27,7 @@ public class FoodUpgradeUIItem : MonoBehaviour
     private FoodUpgradePopup foodUpgradePopup;
 
     private IngameGoodsUi ingameGoodsUi;
+    [SerializeField]private GameObject notEnoughCostPopUp;
     private void Start()
     {
         ingameGoodsUi = GameObject.FindWithTag("UIManager").GetComponent<UiManager>().inGameUi;
@@ -85,6 +86,10 @@ public class FoodUpgradeUIItem : MonoBehaviour
             levelText.text = foodData.upgradeCount.ToString();
             userData.Money -= foodData.BasicCost * foodData.upgradeCount;
             ingameGoodsUi.SetCostUi();
+        }
+        else
+        {
+            Instantiate(notEnoughCostPopUp, GameObject.FindWithTag("UIManager").GetComponentInChildren<Canvas>().transform);
         }
 
         if (foodData.upgradeCount >= 5)

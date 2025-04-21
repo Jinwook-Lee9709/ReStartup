@@ -27,6 +27,7 @@ public class PromotionBase : IPromotion
     public int LimitBuy { get; set; }
     public int LimitAD { get; set; }
     public string PromotionIcon { get; set; }
+    public string PromotionEffectText { get; set; }
 
     public GameObject notEnoughCost;
     public Canvas parentCanvas;
@@ -48,6 +49,7 @@ public class PromotionBase : IPromotion
         LimitBuy = promo.LimitBuy;
         LimitAD = promo.LimitAD;
         PromotionIcon = promo.PromotionIcon;
+        PromotionEffectText = promo.PromotionEffectText;
     }
 
     public virtual void Excute(BuffManager buffManager, bool needAd)

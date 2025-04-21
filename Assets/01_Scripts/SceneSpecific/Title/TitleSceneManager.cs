@@ -47,6 +47,7 @@ public class TitleSceneManager : MonoBehaviour
             return;
         }
         bool isLoginSucceed = await UserAuthController.VerifyToken();
+        alarmText.text = "Login Succeed";
         if (!isLoginSucceed)
         {
             bool isSucceed = await UserAuthController.RefreshToken();

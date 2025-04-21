@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks.Triggers;
 using DG.Tweening.Core.Easing;
 using TMPro;
 using UnityEngine;
@@ -45,6 +46,7 @@ public class EmployeeUIItem : MonoBehaviour
     private Dictionary<int, EmployeeSaveData> employeeSaveData;
     private int employeeId;
 
+
     private void Awake()
     {
         employeeSaveData = UserDataManager.Instance.CurrentUserData.EmployeeSaveData;
@@ -67,6 +69,7 @@ public class EmployeeUIItem : MonoBehaviour
         }
 
         UserDataManager.Instance.ChangeMoneyAction += OnConditionChanged;
+        GameObject.FindWithTag("UIManager").GetComponent<UiManager>().EmployeeHpRenewal(employeeData);
     }
 
     public void Init(EmployeeTableGetData data, EmployeeUpgradePopup employeeUpgradePopup)
@@ -93,8 +96,7 @@ public class EmployeeUIItem : MonoBehaviour
         workSpeedValue.text = employeeData.WorkSpeed.ToString();
         moveSpeedValue.text = employeeData.MoveSpeed.ToString();
         HealthValue.text = employeeData.Health.ToString();
-        employeeData.Health = employeeData.Health + (10 * employeeSaveData[employeeId].level);
-
+        
         SetButtonInteractable();
         SetInfoText();
         SetUpgradeButtonText(employeeSaveData[employeeId].level);
@@ -206,7 +208,7 @@ public class EmployeeUIItem : MonoBehaviour
     {
         if (!IsPayable(employeeData))
             return;
-        int cost = employeeData.Cost * employeeSaveData[employeeId].level;
+        int cost = employeeData.Cost * (employeeSaveData[employeeId].level + 1);
         UserDataManager.Instance.AdjustMoney(-cost);
         ingameGoodsUi.SetCostUi();
 
@@ -216,6 +218,7 @@ public class EmployeeUIItem : MonoBehaviour
         employeeManager.UpgradeEmployee(employeeId);
 
         employeeData.Health = employeeData.Health + (10 * employeeSaveData[employeeId].level);
+        GameObject.FindWithTag("UIManager").GetComponent<UiManager>().EmployeeHpRenewal(employeeData);
         UserDataManager.Instance.AddRankPointWithSave(employeeData.RankPoint).Forget();
         SetInfoText();
         SetUpgradeButtonText(employeeSaveData[employeeId].level);
