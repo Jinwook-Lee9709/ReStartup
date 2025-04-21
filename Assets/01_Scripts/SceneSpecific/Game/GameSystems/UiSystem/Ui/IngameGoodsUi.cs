@@ -5,9 +5,6 @@ using UnityEngine.Localization.Settings;
 
 public class IngameGoodsUi : MonoBehaviour
 {
-    public static readonly string MoneyFormatId = "MoneyFormat";
-    public static readonly string GoldFormatId = "GoldFormat";
-
     public TextMeshProUGUI moneyText, goldText;
     public TextMeshProUGUI upgradeUIMoeny, upgradeUIGold;
     private UserDataManager userDataManager;
@@ -37,15 +34,13 @@ public class IngameGoodsUi : MonoBehaviour
 
     public void MoneyUiValueSet(int? money)
     {
-        var moneyString = LZString.GetUIString(MoneyFormatId, args: money.ToString());
-        moneyText.text = moneyString;
-        upgradeUIMoeny.text = moneyString;
+        moneyText.text = money.ToString();
+        upgradeUIMoeny.text = money.ToString();
     }
     public void GoldUiValueSet(int? gold)
     {
-        var goldString = LZString.GetUIString(GoldFormatId, args: gold.ToString());
-        goldText.text = goldString;
-        upgradeUIGold.text = goldString;
+        goldText.text = gold.ToString();
+        upgradeUIGold.text = gold.ToString();
     }
     public void SetCostUi()
     {

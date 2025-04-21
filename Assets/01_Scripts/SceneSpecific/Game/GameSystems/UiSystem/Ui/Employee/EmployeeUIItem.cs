@@ -208,7 +208,7 @@ public class EmployeeUIItem : MonoBehaviour
     {
         if (!IsPayable(employeeData))
             return;
-        int cost = employeeData.Cost * employeeSaveData[employeeId].level;
+        int cost = employeeData.Cost * (employeeSaveData[employeeId].level + 1);
         UserDataManager.Instance.AdjustMoney(-cost);
         ingameGoodsUi.SetCostUi();
 

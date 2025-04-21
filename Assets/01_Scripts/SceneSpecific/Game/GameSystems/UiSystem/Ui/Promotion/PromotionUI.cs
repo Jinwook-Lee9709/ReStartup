@@ -22,6 +22,7 @@ public class PromotionUI : MonoBehaviour
     {
         promotionData = promotion;
         promotionNameText.text = $"{promotionData.PromotionType.ToString()}";
+        promotionEffectText.text = LZString.GetUIString(promotionData.PromotionEffectText);
         UpdateUI();
     }
 
