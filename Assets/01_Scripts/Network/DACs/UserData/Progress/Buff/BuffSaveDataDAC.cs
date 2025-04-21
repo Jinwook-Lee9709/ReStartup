@@ -16,6 +16,7 @@ public class BuffSaveDataDAC
         Dictionary<string, string> payload = new Dictionary<string, string>()
         {
             ["id"] = buffSaveData.id.ToString(),
+            ["buff_type"] = buffSaveData.type.ToString(),
             ["remain_time"] = buffSaveData.remainTime.ToString()
         };
         ApiResponse<BuffSaveData> response = await RestApiService.PostAsyncWithToken<BuffSaveData>(Endpoints.SaveBuffUrl, payload);
@@ -32,11 +33,11 @@ public class BuffSaveDataDAC
         return response != null && response.ResponseCode == ResponseType.Success;
     }
 
-    public static async UniTask<bool> DeleteBuffSaveData(int id)
+    public static async UniTask<bool> DeleteBuffSaveData(BuffType type)
     {
         Dictionary<string, string> payload = new Dictionary<string, string>()
         {
-            ["id"] = id.ToString(),
+            ["buff_type"] = type.ToString(),
         };
         ApiResponse<BuffSaveData> response = await RestApiService.PostAsyncWithToken<BuffSaveData>(Endpoints.DeleteBuffUrl, payload);
         return response != null && response.ResponseCode == ResponseType.Success;

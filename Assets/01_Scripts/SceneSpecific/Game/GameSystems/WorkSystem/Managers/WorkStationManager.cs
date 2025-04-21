@@ -16,6 +16,7 @@ public class WorkStationManager
 
     private readonly Dictionary<int, Table> tables = new();
     private WorkFlowController workFlowController;
+    private GameManager gameManager;
 
     public TrayReturnCounter TrayReturnCounter { get; }
 
@@ -24,9 +25,10 @@ public class WorkStationManager
         return objectPivotManager.GetCookwarePivots(type).Count(x => x.childCount > 0);
     }
 
-    public void Init(WorkFlowController workFlowController, ObjectPivotManager objectPivotManager,
+    public void Init(GameManager gameManager, WorkFlowController workFlowController, ObjectPivotManager objectPivotManager,
         NavMeshSurface surface2D)
     {
+        this.gameManager = gameManager;
         this.workFlowController = workFlowController;
         this.objectPivotManager = objectPivotManager;
         this.surface2D = surface2D;
@@ -62,7 +64,8 @@ public class WorkStationManager
     public void AddCookingStation(CookwareType cookwareType, int num)
     {
         var pivot = objectPivotManager.GetCookwarePivots(cookwareType)[num - 1];
-        var obj = Addressables.InstantiateAsync(Strings.CookingStation, pivot).WaitForCompletion();
+        string assetId = string.Format(Strings.cookwareFormat,(int)gameManager.CurrentTheme, cookwareType);
+        var obj = Addressables.InstantiateAsync(assetId, pivot).WaitForCompletion();
         OnCookingStationInstantiated(obj, cookwareType, num - 1);
     }
 
