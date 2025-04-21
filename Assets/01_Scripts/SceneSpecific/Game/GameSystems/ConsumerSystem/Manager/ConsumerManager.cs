@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Pool;
@@ -57,7 +58,7 @@ public class ConsumerManager : MonoBehaviour
     private void UpdateWaitingText()
     {
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine($"대기 인원 : {waitOutsideConsumerCnt}");
+        sb.AppendLine($"대기 인원 : {waitOutsideConsumerCnt + currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count}");
         waitingText.text = sb.ToString();
     }
 
@@ -95,10 +96,10 @@ public class ConsumerManager : MonoBehaviour
         if (foodIds.Contains(loveFoodId))
         {
             var rand = UnityEngine.Random.Range(0, 5);
-            if(rand < 4)
+            if (rand < 4)
             {
                 var foods = foodIds.Where((id) => id != loveFoodId).ToList();
-                if(foods.Count < 1)
+                if (foods.Count < 1)
                 {
                     consumer.needFood = DataTableManager.Get<FoodDataTable>(DataTableIds.Food.ToString()).GetFoodData(loveFoodId);
                     return;
@@ -125,6 +126,7 @@ public class ConsumerManager : MonoBehaviour
     {
         var spawnConsumer = consumerPool.Get().GetComponent<Consumer>();
         spawnConsumer.FSM.consumerData = consumerData;
+        spawnConsumer.FSM.consumerData.Init();
         AfterSpawnInit(spawnConsumer);
     }
 
@@ -147,6 +149,9 @@ public class ConsumerManager : MonoBehaviour
             var withoutBadTypeList = DataTableManager.Get<ConsumerDataTable>(DataTableIds.Consumer.ToString()).GetConsumerWithoutBadType(ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme);
             partner.FSM.consumerData = withoutBadTypeList[UnityEngine.Random.Range(0, withoutBadTypeList.Count)];
         }
+
+        owner.FSM.consumerData.Init();
+        partner.FSM.consumerData.Init();
     }
 
     private IEnumerator SpawnCoroutine()
@@ -155,42 +160,31 @@ public class ConsumerManager : MonoBehaviour
         {
             if (currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count < maxWaitingSeatCnt)
             {
-                int cnt = 0;
-                foreach (var consumers in currentSpawnedConsumerDictionary.Values)
+                int pairProb = UnityEngine.Random.Range(0, 100);
+                if (buffManager.GetBuff(BuffType.PairSpawn)?.isOnBuff ?? false)
                 {
-                    foreach (var consumer in consumers)
-                    {
-                        cnt++;
-                    }
-                }
-                if (cnt < 9)
-                {
-                    int pairProb = UnityEngine.Random.Range(0, 100);
-                    if (buffManager.GetBuff(BuffType.PairSpawn)?.isOnBuff ?? false)
-                    {
-                        if (pairProb > this.pairProb)
-                            SpawnConsumer();
-                        else
-                            SpawnPairConsumer();
-                    }
+                    if (pairProb > this.pairProb)
+                        SpawnConsumer();
                     else
-                    {
-                        if (pairProb < this.pairProb)
-                            SpawnConsumer();
-                        else
-                            SpawnPairConsumer();
-                    }
+                        SpawnPairConsumer();
+                }
+                else
+                {
+                    if (pairProb < this.pairProb)
+                        SpawnConsumer();
+                    else
+                        SpawnPairConsumer();
                 }
             }
             else if (waitOutsideConsumerCnt < 99)
             {
                 waitOutsideConsumerCnt++;
-                UpdateWaitingText();
             }
             var buff = buffManager.GetBuff(BuffType.FootTraffic);
             var basicTime = 40f;
             basicTime *= buff?.BuffEffect ?? 1f;
 
+            UpdateWaitingText();
             yield return new WaitForSeconds(basicTime);
         }
     }
@@ -249,6 +243,7 @@ public class ConsumerManager : MonoBehaviour
 
 
         StartCoroutine(SpawnCoroutine());
+        UpdateWaitingText();
     }
 
     public void OnChangeConsumerState(Consumer consumer, ConsumerFSM.ConsumerState state)
@@ -291,7 +286,7 @@ public class ConsumerManager : MonoBehaviour
                             var partner = promotionWatings.Count != 0 ? promotionWatings.Dequeue() : list[UnityEngine.Random.Range(0, list.Count)];
 
                             SpawnPairConsumer(owner, partner);
-                            
+
                             waitOutsideConsumerCnt -= 2;
                         }
                         else
@@ -370,8 +365,9 @@ public class ConsumerManager : MonoBehaviour
         consumer.NextTargetTransform = null;
         consumer.pairData = null;
         consumer.FSM.consumerManager = this;
-        consumer.FSM.consumerData = consumerDataTable.GetConsumerData(consumerSpawnPercent[UserDataManager.Instance.CurrentUserData.CurrentRank]);
+        ConsumerData data = new(consumerDataTable.GetConsumerData(consumerSpawnPercent[UserDataManager.Instance.CurrentUserData.CurrentRank]));
         consumer.FSM.consumerData.Init();
+        consumer.FSM.satisfactionIcon.gameObject.SetActive(false);
         SetFood(ref consumer);
         consumer.isEndMeal = false;
         consumer.isFoodReady = false;
