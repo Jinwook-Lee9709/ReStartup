@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using NavMeshPlus.Components;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -174,6 +176,20 @@ public class GameManager : MonoBehaviour
                 employeeDictionary.TryAdd(buffer.id, buffer);
             }
         }
+    }
+
+    private void InitCookWareDictionary()
+    {
+        var cookwareDictionary = UserDataManager.Instance.CurrentUserData.CookWareUnlock;
+        cookwareDictionary.Clear();
+        var dict = new Dictionary<CookwareType, int>();
+        var table = DataTableManager.Get<CookwareDataTable>(DataTableIds.Cookware.ToString());
+        var list = table.Where(x=>x.RestaurantType == (int)currentTheme).Select(x=>x.CookwareType).Distinct().ToList();
+        foreach (var type in list)
+        {
+            dict.Add(type, 0);
+        }
+        cookwareDictionary[currentTheme] = dict;
     }
 
     private void InitFoodDictionary()

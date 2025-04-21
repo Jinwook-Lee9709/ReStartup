@@ -99,6 +99,7 @@ public class WorkCooking : InteractWorkBase
     {
         var station = target as CookingStation;
         station.ClearWork();
+        station.HideIcon();
         context.WorkFlowController.ReturnCookingStation(station);
         context.Consumer.currentTable.HideIcon();
 

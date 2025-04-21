@@ -218,4 +218,17 @@ public class UserDataManager : Singleton<UserDataManager>
             }
         }
     }
+
+    public void ResetThemeSave()
+    {
+        CurrentUserData.InteriorSaveData.Clear();
+        CurrentUserData.FoodSaveData.Clear();
+        CurrentUserData.EmployeeSaveData.Clear();
+        CurrentUserData.PromotionSaveData.Clear();
+        CurrentUserData.BuffSaveData.Clear();
+        CurrentUserData.ReviewSaveData.Clear();
+        CurrentUserData.Cumulative = 0;
+        CurrentUserData.CurrentRank = 0;
+        CurrentUserData.CurrentRankPoint = 0;
+    }
 }

@@ -104,10 +104,14 @@ public class TitleSceneManager : MonoBehaviour
     private async UniTask InitializeStageStatus()
     {
         var stageStatus = await StageStatusDataDAC.GetStageStatusData();
-        if (stageStatus.Success && stageStatus.Data.Length == 0)
+        if (stageStatus.ResponseCode == ResponseType.Success && stageStatus.Data.Length == 0)
         {
             await SaveInitialStatusData();
             return;
+        }
+        if (stageStatus.ResponseCode != ResponseType.Success)
+        {
+            alarmText.text = "Stage Status Data Load Failed";
         }
         UserDataManager.Instance.CurrentUserData.ThemeStatus = stageStatus.Data.ToList();
     }

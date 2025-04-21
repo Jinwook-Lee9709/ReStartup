@@ -10,7 +10,7 @@ public class ReviewSaveDataDAC
     public static async UniTask<ApiResponse<ReviewSaveData[]>> GetReviewSaveData()
     {
         ApiResponse<ReviewSaveData[]> response =
-            await RestApiService.GetAsyncWithToken<ApiResponse<ReviewSaveData[]>>(Endpoints.GetAllReivewUrl);
+            await RestApiService.GetAsyncWithToken<ReviewSaveData[]>(Endpoints.GetAllReivewUrl);
         return response;
     }
 
@@ -23,8 +23,8 @@ public class ReviewSaveDataDAC
             ["createdTime"] = JsonConvert.SerializeObject(createdTime)
         };
         ApiResponse<ReviewSaveData> response =
-            await RestApiService.PostAsyncWithToken<ApiResponse<ReviewSaveData>>(Endpoints.InsertReivewUrl, payload);
-        return response != null && response.Success;
+            await RestApiService.PostAsyncWithToken<ReviewSaveData>(Endpoints.InsertReivewUrl, payload);
+        return response != null && response.ResponseCode == ResponseType.Success;
     }
 
     public static async UniTask<bool> DeleteReviewData(int index)
@@ -34,7 +34,7 @@ public class ReviewSaveDataDAC
             ["orderIndex"] = index.ToString()
         };
         ApiResponse<ReviewSaveData> response =
-            await RestApiService.PostAsyncWithToken<ApiResponse<ReviewSaveData>>(Endpoints.DeleteReivewUrl, payload);
-        return response != null && response.Success;
+            await RestApiService.PostAsyncWithToken<ReviewSaveData>(Endpoints.DeleteReivewUrl, payload);
+        return response != null && response.ResponseCode == ResponseType.Success;
     }
 }

@@ -10,7 +10,7 @@ public class FoodSaveDataDAC : MonoBehaviour
     {
         var payload = new Dictionary<string, string>();
         payload.Add("theme", themeId.ToString());
-        var data = await RestApiService.GetAsyncWithToken<ApiResponse<FoodSaveData[]>>(Endpoints.GetFoodByTheme, payload);
+        var data = await RestApiService.GetAsyncWithToken<FoodSaveData[]>(Endpoints.GetFoodByTheme, payload);
         return data;
     }
     
@@ -20,8 +20,8 @@ public class FoodSaveDataDAC : MonoBehaviour
         {
             ["info"] = JsonConvert.SerializeObject(saveData)
         };
-        ApiResponse<FoodSaveData[]> response = await RestApiService.PostAsyncWithToken<ApiResponse<FoodSaveData[]>>(Endpoints.SaveFoodUrl, data);
-        return response != null && response.Success;
+        ApiResponse<FoodSaveData[]> response = await RestApiService.PostAsyncWithToken<FoodSaveData[]>(Endpoints.SaveFoodUrl, data);
+        return response != null && response.ResponseCode == ResponseType.Success;
     }
 
     public static async UniTask<bool> UpdateFoodData(List<FoodSaveData> saveData)
@@ -30,7 +30,7 @@ public class FoodSaveDataDAC : MonoBehaviour
         {
             ["info"] = JsonConvert.SerializeObject(saveData)
         };
-        ApiResponse<FoodSaveData[]> response = await RestApiService.PostAsyncWithToken<ApiResponse<FoodSaveData[]>>(Endpoints.SaveFoodsUrl, data);
-        return response != null && response.Success;
+        ApiResponse<FoodSaveData[]> response = await RestApiService.PostAsyncWithToken<FoodSaveData[]>(Endpoints.SaveFoodsUrl, data);
+        return response != null && response.ResponseCode == ResponseType.Success;
     }
 }

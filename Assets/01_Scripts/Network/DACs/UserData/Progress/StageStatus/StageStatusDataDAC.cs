@@ -6,7 +6,7 @@ public static class StageStatusDataDAC
 {
     public static async UniTask<ApiResponse<StageStatusData[]>> GetStageStatusData()
     {
-        var data = await RestApiService.GetAsyncWithToken<ApiResponse<StageStatusData[]>>(Endpoints.GetAllStageStatusUrl);
+        var data = await RestApiService.GetAsyncWithToken<StageStatusData[]>(Endpoints.GetAllStageStatusUrl);
         return data;
     }
 
@@ -16,7 +16,7 @@ public static class StageStatusDataDAC
         {
             ["info"] = JsonConvert.SerializeObject(stageStatus)
         };
-        ApiResponse<StageStatusData[]> response = await RestApiService.PostAsyncWithToken<ApiResponse<StageStatusData[]>>(Endpoints.SaveStageStatusUrl, data);
-        return response != null && response.Success;
+        ApiResponse<StageStatusData[]> response = await RestApiService.PostAsyncWithToken<StageStatusData[]>(Endpoints.SaveStageStatusUrl, data);
+        return response != null && response.ResponseCode == ResponseType.Success;
     }
 }

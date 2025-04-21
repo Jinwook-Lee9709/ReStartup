@@ -10,7 +10,7 @@ public static class EmployeeSaveDataDAC
     {
         var payload = new Dictionary<string, string>();
         payload.Add("theme", themeId.ToString());
-        var data = await RestApiService.GetAsyncWithToken<ApiResponse<EmployeeSaveData[]>>(Endpoints.GetEmployeeByTheme, payload);
+        var data = await RestApiService.GetAsyncWithToken<EmployeeSaveData[]>(Endpoints.GetEmployeeByTheme, payload);
         return data;
     }
     
@@ -21,8 +21,8 @@ public static class EmployeeSaveDataDAC
             ["info"] = JsonConvert.SerializeObject(saveData)
         };
         ApiResponse<EmployeeSaveData[]> response =
-            await RestApiService.PostAsyncWithToken<ApiResponse<EmployeeSaveData[]>>(Endpoints.SaveEmployeeUrl, data);
-        return response != null && response.Success;
+            await RestApiService.PostAsyncWithToken<EmployeeSaveData[]>(Endpoints.SaveEmployeeUrl, data);
+        return response != null && response.ResponseCode == ResponseType.Success;
     }
 
     public static async UniTask<bool> UpdateEmployeeData(List<EmployeeSaveData> saveData)
@@ -31,8 +31,8 @@ public static class EmployeeSaveDataDAC
         {
             ["info"] = JsonConvert.SerializeObject(saveData)
         };
-        ApiResponse<EmployeeSaveData[]> response = await RestApiService.PostAsyncWithToken<ApiResponse<EmployeeSaveData[]>>(Endpoints.SaveEmployeesUrl, data);
-        return response != null && response.Success;
+        ApiResponse<EmployeeSaveData[]> response = await RestApiService.PostAsyncWithToken<EmployeeSaveData[]>(Endpoints.SaveEmployeesUrl, data);
+        return response != null && response.ResponseCode == ResponseType.Success;
     }
     
     

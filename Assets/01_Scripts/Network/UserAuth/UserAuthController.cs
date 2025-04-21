@@ -18,9 +18,11 @@ public static class UserAuthController
             {
                 { "token", TokenManager.RefreshToken }
             };
-            string newToken = await RestApiService.GetAsync<string>(Endpoints.RefreshTokenUrl, queryData);
-            TokenManager.LoginToken = newToken;
-            TokenManager.SaveToken(newToken);
+            var response = await RestApiService.GetAsync<string>(Endpoints.RefreshTokenUrl, queryData);
+            if(response.ResponseCode != ResponseType.Success) 
+                return false;
+            TokenManager.LoginToken = response.Data;
+            TokenManager.SaveToken(response.Data);
             
             return true;
         }
@@ -38,23 +40,27 @@ public static class UserAuthController
         {
             { "token", TokenManager.LoginToken }
         };
-        bool isValid = await RestApiService.GetAsync<bool>(Endpoints.VerifyTokenUrl, queryData);
-        return isValid;
+        var response = await RestApiService.GetAsync<bool>(Endpoints.VerifyTokenUrl, queryData);
+        if(response.ResponseCode != ResponseType.Success) return false;
+        return response.Data;
     }
 
     public static async UniTask<TokenData> LoginAsGuestTask()
     {
         Dictionary<string, string> payload = new Dictionary<string, string>();
         payload.Add("uuid", GuestLoginManager.UUID);
-        return await RestApiService.GetAsync<TokenData>(Endpoints.GuestLoginUrl, payload);
+        var response =  await RestApiService.GetAsync<TokenData>(Endpoints.GuestLoginUrl, payload);
+        if(response.ResponseCode != ResponseType.Success) return null;
+        return response.Data;
     }
 
     public static async UniTask<bool> RegisterAsGuestTask()
     {
         try
         {
-            var uuid = await RestApiService.PostAsync<string>(Endpoints.GuestRegisterUrl);
-            GuestLoginManager.SaveUUID(uuid);
+            var response = await RestApiService.PostAsync<string>(Endpoints.GuestRegisterUrl);
+            if(response.ResponseCode != ResponseType.Success) return false;
+            GuestLoginManager.SaveUUID(response.Data);
             
             var token = await LoginAsGuestTask();
             TokenManager.SaveToken(token.token, token.refreshToken);

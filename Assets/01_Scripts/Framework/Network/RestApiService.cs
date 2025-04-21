@@ -10,6 +10,10 @@ using UnityEngine.Networking;
 
 public static class RestApiService
 {
+    private static readonly int DefaultTimeout = 5;
+    private static readonly int RetryCount = 3;
+    
+    
     public static UnityWebRequest CreateGetRequest(string url, Dictionary<string, string> data = null)
     {
         url += "?" + GetQueryString(data);
@@ -54,7 +58,7 @@ public static class RestApiService
         return request;
     }
 
-    public static async UniTask<T> GetAsync<T>(string url,  Dictionary<string, string> data = null)
+    public static async UniTask<ApiResponse<T>> GetAsync<T>(string url,  Dictionary<string, string> data = null)
     {
         using (var request = CreateGetRequest(url, data))
         {
@@ -62,7 +66,7 @@ public static class RestApiService
         }
     }
 
-    public static async UniTask<T> GetAsyncWithToken<T>(string url, Dictionary<string, string> data = null)
+    public static async UniTask<ApiResponse<T>> GetAsyncWithToken<T>(string url, Dictionary<string, string> data = null)
     {
         using (var request = CreateGetRequest(url, data))
         {
@@ -77,7 +81,7 @@ public static class RestApiService
             }
         }
     }
-    public static async UniTask<T> PostAsync<T>(string url, Dictionary<string, string> data = null)
+    public static async UniTask<ApiResponse<T>> PostAsync<T>(string url, Dictionary<string, string> data = null)
     {
         using (var request = CreatePostRequest(url, data))
         {
@@ -85,7 +89,7 @@ public static class RestApiService
         }
     }
 
-    public static async UniTask<T> PostAsync<T>(string url, string jsonPayLoad)
+    public static async UniTask<ApiResponse<T>> PostAsync<T>(string url, string jsonPayLoad)
     {
         using (var request = CreatePostRequest(url, jsonPayLoad))
         {
@@ -101,7 +105,7 @@ public static class RestApiService
         }
     }
     
-    public static async UniTask<T> PostAsyncWithToken<T>(string url, Dictionary<string, string> data = null)
+    public static async UniTask<ApiResponse<T>> PostAsyncWithToken<T>(string url, Dictionary<string, string> data = null)
     {
         using (var request = CreatePostRequest(url, data))
         {
@@ -110,16 +114,15 @@ public static class RestApiService
         }
     }
     
-    public static async UniTask<T> SendRequestAsync<T>(UnityWebRequest request)
+    public static async UniTask<ApiResponse<T>> SendRequestAsync<T>(UnityWebRequest request)
     {
-        if (Application.internetReachability == NetworkReachability.NotReachable)
-        {
-            var title = LZString.GetUIString("NetworkFailureAlertTitle");
-            var message = LZString.GetUIString("NetworkFailureAlertDescription");
-            ServiceLocator.Instance.GetGlobalService<AlertPopup>().PopUp(title, message);
-            return default;
-        }
+        request.timeout = DefaultTimeout;
         
+        if (!CheckInternetConnection<T>())
+        {
+            return new ApiResponse<T>(ResponseType.InternetDisconnected, default);
+        }
+            
         using (request)
         {
             try
@@ -131,10 +134,12 @@ public static class RestApiService
                     try
                     {
                         var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
-                        return JsonConvert.DeserializeObject<T>(request.downloadHandler.text, settings);
+                        var data = JsonConvert.DeserializeObject<ApiResponse<T>>(request.downloadHandler.text, settings);
+                        return data;
                     }
                     catch (JsonException ex)
                     {
+                        Debug.Log(ex);
                         throw new Exception($"JSON Deserialization Error: {ex.Message}");
                     }
                 }
@@ -153,15 +158,20 @@ public static class RestApiService
                     var title = LZString.GetUIString("TokenExpiredAlertTitle");
                     var message = LZString.GetUIString("TokenExpiredAlertDescription");
                     ServiceLocator.Instance.GetGlobalService<AlertPopup>().PopUp(title, message);
-                    return default;
-                    throw new UnauthorizedAccessException("Refresh token expired");
+                    return new ApiResponse<T>(ResponseType.InvalidToken, default);
                 }
                 else
                 {
+                    var retryResult = await RetryRequest<T>(request);
+                    if (retryResult.ResponseCode == ResponseType.Success)
+                    {
+                        return retryResult;
+                    }
+                    
                     var title = LZString.GetUIString("ServerConnectionFailureAlertTitle");
                     var message = LZString.GetUIString("ServerConnectionFailureAlertDescription");
                     ServiceLocator.Instance.GetGlobalService<AlertPopup>().PopUp(title, message);
-                    return default;
+                    return new ApiResponse<T>(retryResult.ResponseCode, default);
                 }
             }
             finally
@@ -173,14 +183,60 @@ public static class RestApiService
             }
         }
     }
-    
+
+    private static bool CheckInternetConnection<T>()
+    {
+        if (Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            var title = LZString.GetUIString("NetworkFailureAlertTitle");
+            var message = LZString.GetUIString("NetworkFailureAlertDescription");
+            ServiceLocator.Instance.GetGlobalService<AlertPopup>().PopUp(title, message);
+            return false;
+        }
+        return true;
+    }
+
+    private static async UniTask<ApiResponse<T>> RetryRequest<T>(UnityWebRequest request)
+    {
+        for (int i = 0; i < RetryCount; i++)
+        {
+            var requestClone = CloneRequest(request);
+            using (requestClone)
+            {
+                try
+                {
+                    await requestClone.SendWebRequest();
+                    if (requestClone.result == UnityWebRequest.Result.Success)
+                    {
+                        try
+                        {
+                            var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+                            var data = JsonConvert.DeserializeObject<ApiResponse<T>>(request.downloadHandler.text, settings);
+                            return data;
+                        }
+                        catch (JsonException ex)
+                        {
+                            return new ApiResponse<T>(ResponseType.JsonParseError, default);
+                        }
+                    }
+                    throw new Exception($"Request failed with error: {request.error}, ResponseCode: {request.responseCode}");
+                }
+                catch(Exception e)
+                {
+                    Debug.Log(e);
+                }
+            }
+        }
+        return new ApiResponse<T>(ResponseType.Timeout, default);
+    }
+
     private static UnityWebRequest CloneRequest(UnityWebRequest originalRequest)
     {
         var newRequest = new UnityWebRequest(originalRequest.url, originalRequest.method)
         {
             downloadHandler = new DownloadHandlerBuffer()
         };
-
+        newRequest.timeout = DefaultTimeout;
         newRequest.SetRequestHeader("Authorization", $"Bearer {TokenManager.LoginToken}");
 
 

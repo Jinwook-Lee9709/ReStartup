@@ -7,7 +7,7 @@ public static class UserDataDAC
     public static async Task<UserData> GetUserData(string uid)
     {
         var result = await RestApiService.GetAsync<UserData>($"https://localhost:443/api/getInfo?uuid={uid}");
-        return result;
+        return result.Data;
     }
     
     
