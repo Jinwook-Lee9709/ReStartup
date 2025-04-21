@@ -29,6 +29,21 @@ public class ConsumerData
     public float orderWaitTimer;
     public readonly float MaxOrderWaitLimit = 30f;
     public readonly float MaxEattingLimit = 8f;
+
+    public ConsumerData() { }
+    public ConsumerData(ConsumerData data)
+    {
+        GuestId = data.GuestId;
+        GuestNameKey = data.GuestNameKey;
+        Theme = data.Theme;
+        GuestType = data.GuestType;
+        SellTipPercent = data.SellTipPercent;
+        BuffType = data.BuffType;
+        BuffId1 = data.BuffId1;
+        BuffId2 = data.BuffId2;
+        LoveFoodId = data.LoveFoodId;
+        GuestPrefab = data.GuestPrefab;
+    }
     public void Init()
     {
         orderWaitTimer = MaxOrderWaitLimit;

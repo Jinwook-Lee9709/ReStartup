@@ -58,6 +58,7 @@ public class ConsumerFSM : MonoBehaviour
     [SerializeField] public ConsumerState currentStatus = ConsumerState.Waiting;
     [SerializeField] private Satisfaction currentSatisfaction = Satisfaction.High;
     [SerializeField] private PaymentText paymentTextPrefab;
+    [SerializeField] public SatisfactionIcon satisfactionIcon;
 
     private NavMeshAgent agent;
     private CashierCounter cashierCounter;
@@ -75,7 +76,8 @@ public class ConsumerFSM : MonoBehaviour
         set
         {
             var prevSatisfaction = currentSatisfaction;
-            switch (value)
+            currentSatisfaction = value;
+            switch (currentSatisfaction)
             {
                 case Satisfaction.High:
                     break;
@@ -83,10 +85,11 @@ public class ConsumerFSM : MonoBehaviour
                     // TODO : Serving Delay Script Play
                     break;
                 case Satisfaction.Low:
+                    consumer.currentTable.HideIcon();
+                    satisfactionIcon.SetIcon(currentSatisfaction);
                     break;
             }
 
-            currentSatisfaction = value;
         }
     }
 
@@ -274,7 +277,11 @@ public class ConsumerFSM : MonoBehaviour
     {
         var eattingTimer = 0f;
         StartCoroutine(model.PlayLoopAnim(PlayerState.OTHER, 1));
-
+        if (CurrentSatisfaction != Satisfaction.Low)
+        {
+            consumer.currentTable.HideIcon();
+            satisfactionIcon.SetIcon(currentSatisfaction);
+        }
         while (eattingTimer < consumerData.MaxEattingLimit)
         {
             eattingTimer += Time.deltaTime;
@@ -432,10 +439,6 @@ public class ConsumerFSM : MonoBehaviour
         if (consumerData.GuestType == GuestType.BadGuest)
             consumerData.orderWaitTimer -= deltaTime;
 
-        float normalTimer = Mathf.Lerp(0.25f, 0.75f, Mathf.InverseLerp(0, consumerData.MaxOrderWaitLimit, consumerData.orderWaitTimer));
-        var iconBubble = consumer.currentTable.IconBubble;
-        iconBubble.FillingSatisfation(normalTimer);
-        // Debug.Log(consumerData.orderWaitTimer);
         switch (consumerData.orderWaitTimer)
         {
             case var t when t < satisfactionChangeLimit[0] && t > satisfactionChangeLimit[1]:
@@ -448,10 +451,28 @@ public class ConsumerFSM : MonoBehaviour
             case var t when t < satisfactionChangeLimit[2]:
                 CurrentSatisfaction = Satisfaction.Low;
                 if (consumerData.GuestType == GuestType.BadGuest)
+                {
                     CurrentStatus = ConsumerState.Exit;
+                    break;
+                }
+                if(consumer.pairData?.owner == consumer)
+                {
+                    consumer.pairData.partner.FSM.CurrentSatisfaction = Satisfaction.Low;
+                }
+                else if (consumer.pairData?.partner == consumer)
+                {
+                    consumer.pairData.owner.FSM.CurrentSatisfaction = Satisfaction.Low;
+                }
                 break;
         }
+        FillSatisfactionGage();
+    }
 
+    private void FillSatisfactionGage()
+    {
+        float normalTimer = Mathf.Lerp(0.25f, 0.75f, Mathf.InverseLerp(0, consumerData.MaxOrderWaitLimit, consumerData.orderWaitTimer));
+        var iconBubble = consumer.currentTable.IconBubble;
+        iconBubble.FillingSatisfation(normalTimer);
         switch (consumerData.orderWaitTimer)
         {
             case var t when t < satisfactionColorChangeFlagTimes[0] && t > satisfactionColorChangeFlagTimes[1]:

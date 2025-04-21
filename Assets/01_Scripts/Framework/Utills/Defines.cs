@@ -288,6 +288,8 @@ public static class Strings
     public static readonly string complete = "Completed";
 
     public static readonly string foodNameKeyFormat = "FoodName{0}";
+    public static readonly string shortOnMoney = "ShortOnMoney";
+
 }
 
 public enum StringTableIds
