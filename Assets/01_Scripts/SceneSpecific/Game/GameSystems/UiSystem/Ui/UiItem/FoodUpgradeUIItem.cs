@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -85,6 +86,7 @@ public class FoodUpgradeUIItem : MonoBehaviour
             levelText.text = foodData.upgradeCount.ToString();
             userData.Money -= foodData.BasicCost * foodData.upgradeCount;
             ingameGoodsUi.SetCostUi();
+            HandleUpgradeFood().Forget();
         }
 
         if (foodData.upgradeCount >= 5)
@@ -105,5 +107,10 @@ public class FoodUpgradeUIItem : MonoBehaviour
             image.sprite = handle.Result;
         else
             Debug.LogError($"Failed to load sprite: {iconAddress}");
+    }
+    
+    private async UniTask HandleUpgradeFood()
+    {
+        await UserDataManager.Instance.UpgradeFood(foodData.FoodID);
     }
 }

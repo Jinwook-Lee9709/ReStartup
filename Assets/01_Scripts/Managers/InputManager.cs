@@ -45,47 +45,53 @@ public class InputManager : MonoBehaviour
     {
         minSwipeDistance = Screen.width * swipeDistanceCalcParam;
         slowTouchAction = InputSystem.actions.FindAction("SlowTouchAction");
-        slowTouchAction.started += ctx =>
-        {
-            AudioManager.Instance.PlaySFX("Touch");
-            if (IsPointerOverUI()) 
-                return;
+        slowTouchAction.started += OnSlowTouchStarted;
 
-            isPressed = true;
-        };
-
-        slowTouchAction.performed += ctx =>
-        {
-            if (IsPointerOverUI()) return;
-            slowTouchDetected = true;
-            endPos = pos;
-            var distance = endPos.x - startPos.x;
-            if (MathF.Abs(distance) < minSwipeDistance)
-            {
-                player.OnTouch(pos);
-                return;
-            }
-            bool isCameraOnHall = distance > 0;
-            hollCamera.SetActive(isCameraOnHall);
-            player.UpdateIdleArea(isCameraOnHall);
-        };
+        slowTouchAction.performed += OnSlowTouchPerformed;
 
         touchAction = InputSystem.actions.FindAction("TouchAction");
 
-        touchAction.canceled += ctx =>
-        {
-            if (IsPointerOverUI()) return;
-
-            if (slowTouchDetected)
-            {
-                slowTouchDetected = false;
-                return;
-            }
-
-            player.OnTouch(pos);
-        };
+        touchAction.canceled += OnTouchActionCanceled;
         
         player.UpdateIdleArea(hollCamera.activeSelf);
+    }
+
+    private void OnSlowTouchStarted(InputAction.CallbackContext callbackContext)
+    {
+        AudioManager.Instance.PlaySFX("Touch");
+        if (IsPointerOverUI()) 
+            return;
+
+        isPressed = true;
+    }
+
+    private void OnSlowTouchPerformed(InputAction.CallbackContext callbackContext)
+    {
+        if (IsPointerOverUI()) return;
+        slowTouchDetected = true;
+        endPos = pos;
+        var distance = endPos.x - startPos.x;
+        if (MathF.Abs(distance) < minSwipeDistance)
+        {
+            player.OnTouch(pos);
+            return;
+        }
+        bool isCameraOnHall = distance > 0;
+        hollCamera.SetActive(isCameraOnHall);
+        player.UpdateIdleArea(isCameraOnHall);
+    }
+
+    private void OnTouchActionCanceled(InputAction.CallbackContext callbackContext)
+    {
+        if (IsPointerOverUI()) return;
+
+        if (slowTouchDetected)
+        {
+            slowTouchDetected = false;
+            return;
+        }
+
+        player.OnTouch(pos);
     }
 
     public void GetPos(InputAction.CallbackContext callbackContext)
@@ -109,5 +115,16 @@ public class InputManager : MonoBehaviour
         EventSystem.current.RaycastAll(eventData, results);
 
         return results.Count > 0; // UI 요소를 감지했으면 true 반환
+    }
+
+    private void OnDestroy()
+    {
+        slowTouchAction.started -= OnSlowTouchStarted;
+
+        slowTouchAction.performed -= OnSlowTouchPerformed;
+
+        touchAction = InputSystem.actions.FindAction("TouchAction");
+
+        touchAction.canceled -= OnTouchActionCanceled;
     }
 }

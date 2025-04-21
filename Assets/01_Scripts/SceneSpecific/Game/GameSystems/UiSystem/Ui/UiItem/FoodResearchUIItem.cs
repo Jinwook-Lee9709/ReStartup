@@ -130,7 +130,7 @@ public class FoodResearchUIItem : MonoBehaviour
         gameManager.foodManager.UnlockFoodUpgrade(foodData);
         button.interactable = false;
         button.GetComponentInChildren<TextMeshProUGUI>().text = LZString.GetUIString(Strings.complete);
-        HandleUpgradeEmployee().Forget();
+        HandleUpgradeFood().Forget();
     }
 
     private IEnumerator LoadSpriteCoroutine(string iconAddress)
@@ -144,7 +144,7 @@ public class FoodResearchUIItem : MonoBehaviour
             Debug.LogError($"Failed to load sprite: {iconAddress}");
     }
 
-    private async UniTask HandleUpgradeEmployee()
+    private async UniTask HandleUpgradeFood()
     {
         await UserDataManager.Instance.UpgradeFood(foodData.FoodID);
     }

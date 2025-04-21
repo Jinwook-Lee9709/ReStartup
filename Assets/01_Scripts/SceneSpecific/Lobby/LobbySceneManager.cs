@@ -34,6 +34,8 @@ public class LobbySceneManager : MonoBehaviour
 
     private async UniTask BeforeGameSceneLoad()
     {
+        UserDataManager.Instance.ResetThemeSave();
+        
         int theme = PlayerPrefs.GetInt("Theme", 1);
         var interiorQueryTask =  InteriorSaveDataDAC.GetInteriorData(theme);
         var foodQueryTask =  FoodSaveDataDAC.GetFoodData(theme);
@@ -95,7 +97,7 @@ public class LobbySceneManager : MonoBehaviour
             UserDataManager.Instance.CurrentUserData.Cumulative = themeRecordResponse.Data[0].cumulative;
         }
 
-        if (promotionResponse?.Data.Length == 0)
+        if (promotionResponse.Data.Length == 0)
         {
             await SaveInitialPromotionData();
         }

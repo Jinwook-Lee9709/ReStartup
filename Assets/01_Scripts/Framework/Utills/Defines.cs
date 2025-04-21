@@ -14,6 +14,18 @@ public enum CurrencyType
     Gold
 }
 
+public enum ResponseType
+{
+    Success = 0,
+    Fail = 1,
+    InvalidToken = 2,
+    Timeout = 3,
+    InternetDisconnected = 4,
+    ServerError = 5,
+    JsonParseError = 6,
+    
+}
+
 public enum DataTableIds
 {
     Employee,

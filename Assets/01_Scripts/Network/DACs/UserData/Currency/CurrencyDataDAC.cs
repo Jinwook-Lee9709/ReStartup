@@ -8,7 +8,7 @@ public static class CurrencyDataDAC
 {
     public static async UniTask<ApiResponse<CurrencyData[]>> GetCurrencyData()
     {
-        var data = await RestApiService.GetAsyncWithToken<ApiResponse<CurrencyData[]>>(Endpoints.GetAllCurrenciesUrl);
+        var data = await RestApiService.GetAsyncWithToken<CurrencyData[]>(Endpoints.GetAllCurrenciesUrl);
         return data;
     }
 
@@ -16,7 +16,7 @@ public static class CurrencyDataDAC
     {
         Dictionary<string, string> data = new Dictionary<string, string>();
         data["currencies"] = JsonConvert.SerializeObject(currencies);
-        ApiResponse<CurrencyData[]> response = await RestApiService.PostAsyncWithToken<ApiResponse<CurrencyData[]>>(Endpoints.SaveCurrenciesUrl, data);
-        return response != null && response.Success;
+        ApiResponse<CurrencyData[]> response = await RestApiService.PostAsyncWithToken<CurrencyData[]>(Endpoints.SaveCurrenciesUrl, data);
+        return response != null && response.ResponseCode == ResponseType.Success;
     }
 }

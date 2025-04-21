@@ -8,7 +8,7 @@ public class PromotionDataDAC
 {
     public static async UniTask<ApiResponse<PromotionData[]>> GetPromotionData()
     {
-        var data = await RestApiService.GetAsyncWithToken<ApiResponse<PromotionData[]>>(Endpoints.GetPromotionsUrl);
+        var data = await RestApiService.GetAsyncWithToken<PromotionData[]>(Endpoints.GetPromotionsUrl);
         return data;
     }
 
@@ -18,7 +18,7 @@ public class PromotionDataDAC
         {
             ["info"] = JsonConvert.SerializeObject(promotions)
         };
-        ApiResponse<PromotionData[]> response = await RestApiService.PostAsyncWithToken<ApiResponse<PromotionData[]>>(Endpoints.SavePromotionsUrl, data);
-        return response != null && response.Success;
+        ApiResponse<PromotionData[]> response = await RestApiService.PostAsyncWithToken<PromotionData[]>(Endpoints.SavePromotionsUrl, data);
+        return response != null && response.ResponseCode == ResponseType.Success;
     }
 }

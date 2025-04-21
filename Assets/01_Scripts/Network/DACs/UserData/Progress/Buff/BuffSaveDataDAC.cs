@@ -7,7 +7,7 @@ public class BuffSaveDataDAC
 {
     public static async UniTask<ApiResponse<BuffSaveData[]>>GetAllBuffSaveData()
     {
-        ApiResponse<BuffSaveData[]> response = await RestApiService.GetAsyncWithToken<ApiResponse<BuffSaveData[]>>(Endpoints.GetBuffsUrl);
+        ApiResponse<BuffSaveData[]> response = await RestApiService.GetAsyncWithToken<BuffSaveData[]>(Endpoints.GetBuffsUrl);
         return response;
     }
     
@@ -18,8 +18,8 @@ public class BuffSaveDataDAC
             ["id"] = buffSaveData.id.ToString(),
             ["remain_time"] = buffSaveData.remainTime.ToString()
         };
-        ApiResponse<BuffSaveData> response = await RestApiService.PostAsyncWithToken<ApiResponse<BuffSaveData>>(Endpoints.SaveBuffUrl, payload);
-        return response != null && response.Success;
+        ApiResponse<BuffSaveData> response = await RestApiService.PostAsyncWithToken<BuffSaveData>(Endpoints.SaveBuffUrl, payload);
+        return response != null && response.ResponseCode == ResponseType.Success;
     }
 
     public static async UniTask<bool> UpdateBuffSaveData(List<BuffSaveData> buffSaveData)
@@ -28,8 +28,8 @@ public class BuffSaveDataDAC
         {
             ["info"] = JsonConvert.SerializeObject(buffSaveData)
         };
-        ApiResponse<BuffSaveData> response = await RestApiService.PostAsyncWithToken<ApiResponse<BuffSaveData>>(Endpoints.SaveBuffsUrl, payload);
-        return response != null && response.Success;
+        ApiResponse<BuffSaveData> response = await RestApiService.PostAsyncWithToken<BuffSaveData>(Endpoints.SaveBuffsUrl, payload);
+        return response != null && response.ResponseCode == ResponseType.Success;
     }
 
     public static async UniTask<bool> DeleteBuffSaveData(int id)
@@ -38,7 +38,7 @@ public class BuffSaveDataDAC
         {
             ["id"] = id.ToString(),
         };
-        ApiResponse<BuffSaveData> response = await RestApiService.PostAsyncWithToken<ApiResponse<BuffSaveData>>(Endpoints.DeleteBuffUrl, payload);
-        return response != null && response.Success;
+        ApiResponse<BuffSaveData> response = await RestApiService.PostAsyncWithToken<BuffSaveData>(Endpoints.DeleteBuffUrl, payload);
+        return response != null && response.ResponseCode == ResponseType.Success;
     }
 }

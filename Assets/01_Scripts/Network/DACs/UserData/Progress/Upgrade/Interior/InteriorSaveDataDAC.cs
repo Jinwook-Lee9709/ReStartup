@@ -9,7 +9,7 @@ public static class InteriorSaveDataDAC
     {
         var payload = new Dictionary<string, string>();
         payload.Add("theme", themeId.ToString());
-        var data = await RestApiService.GetAsyncWithToken<ApiResponse<InteriorSaveData[]>>(Endpoints.GetInteriorByTheme, payload);
+        var data = await RestApiService.GetAsyncWithToken<InteriorSaveData[]>(Endpoints.GetInteriorByTheme, payload);
         return data;
     }
 
@@ -19,8 +19,8 @@ public static class InteriorSaveDataDAC
         {
             ["info"] = JsonConvert.SerializeObject(saveData)
         };
-        ApiResponse<InteriorSaveData[]> response = await RestApiService.PostAsyncWithToken<ApiResponse<InteriorSaveData[]>>(Endpoints.SaveInteriorUrl, data);
-        return response != null && response.Success;
+        ApiResponse<InteriorSaveData[]> response = await RestApiService.PostAsyncWithToken<InteriorSaveData[]>(Endpoints.SaveInteriorUrl, data);
+        return response != null && response.ResponseCode == ResponseType.Success;
     }
 
     public static async UniTask<bool> UpdateInteriorData(List<InteriorSaveData> saveData)
@@ -29,7 +29,7 @@ public static class InteriorSaveDataDAC
         {
             ["info"] = JsonConvert.SerializeObject(saveData)
         };
-        ApiResponse<InteriorSaveData[]> response = await RestApiService.PostAsyncWithToken<ApiResponse<InteriorSaveData[]>>(Endpoints.SaveInteriorsUrl, data);
-        return response != null && response.Success;
+        ApiResponse<InteriorSaveData[]> response = await RestApiService.PostAsyncWithToken<InteriorSaveData[]>(Endpoints.SaveInteriorsUrl, data);
+        return response != null && response.ResponseCode == ResponseType.Success;
     }
 }

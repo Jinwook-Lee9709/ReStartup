@@ -11,7 +11,7 @@ public static class ThemeRecordDAC
     {
         var payload = new Dictionary<string, string> { { "theme", themeId.ToString() } };
         Debug.Log(payload);
-        var result = await RestApiService.GetAsyncWithToken<ApiResponse<ThemeRecordData[]>>(Endpoints.GetThemeRecordsUrl, payload);
+        var result = await RestApiService.GetAsyncWithToken<ThemeRecordData[]>(Endpoints.GetThemeRecordsUrl, payload);
         return result;
     }
 
@@ -21,8 +21,8 @@ public static class ThemeRecordDAC
         {
             ["records"] = JsonConvert.SerializeObject(saveData)
         };
-        ApiResponse<ThemeRecordData[]> response = await RestApiService.PostAsyncWithToken<ApiResponse<ThemeRecordData[]>>(Endpoints.InsertThemeRecordsUrl, data);
-        return response != null && response.Success;
+        ApiResponse<ThemeRecordData[]> response = await RestApiService.PostAsyncWithToken<ThemeRecordData[]>(Endpoints.InsertThemeRecordsUrl, data);
+        return response != null && response.ResponseCode == ResponseType.Success;
     }
 
     public static async UniTask<bool> UpdateThemeRankpoint(int themeId, int rankpoint)
@@ -32,8 +32,8 @@ public static class ThemeRecordDAC
             ["theme"] = themeId.ToString(),
             ["rank_point"] = rankpoint.ToString()
         };
-        ApiResponse<ThemeRecordData> response = await RestApiService.PostAsyncWithToken<ApiResponse<ThemeRecordData>>(Endpoints.SaveRankPointUrl, payload);
-        return response != null && response.Success;
+        ApiResponse<ThemeRecordData> response = await RestApiService.PostAsyncWithToken<ThemeRecordData>(Endpoints.SaveRankPointUrl, payload);
+        return response != null && response.ResponseCode == ResponseType.Success;
     }
 
     public static async UniTask<bool> UpdateThemeRank(int themeId, int rank)
@@ -43,7 +43,7 @@ public static class ThemeRecordDAC
             ["theme"] = themeId.ToString(),
             ["ranking"] = rank.ToString()
         };
-        ApiResponse<ThemeRecordData> response = await RestApiService.PostAsyncWithToken<ApiResponse<ThemeRecordData>>(Endpoints.SaveRankingUrl, payload);
-        return response != null && response.Success;
+        ApiResponse<ThemeRecordData> response = await RestApiService.PostAsyncWithToken<ThemeRecordData>(Endpoints.SaveRankingUrl, payload);
+        return response != null && response.ResponseCode == ResponseType.Success;
     }
 }

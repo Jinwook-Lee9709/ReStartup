@@ -99,8 +99,8 @@ public class InteriorCard : MonoBehaviour
 
     public async UniTask OnBuy()
     {
+        await UserDataManager.Instance.AdjustMoneyWithSave(-Data.GetSellingCost());
         await UserDataManager.Instance.UpgradeInterior(Data.InteriorID);
-        await UserDataManager.Instance.AdjustMoneyWithSave(-Data.SellingCost);
         UpdateInteractable();
     }
 
@@ -128,7 +128,7 @@ public class InteriorCard : MonoBehaviour
             }
             else if (upgradeLevel == Data.MaxUpgradeCount)
             {
-                currentButtonStringId= PurchaseCompleteStringID;
+                currentButtonStringId = PurchaseCompleteStringID;
             }
             else
             {
