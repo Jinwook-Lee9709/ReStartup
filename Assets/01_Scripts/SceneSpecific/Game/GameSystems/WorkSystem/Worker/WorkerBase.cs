@@ -23,6 +23,7 @@ public class WorkerBase : MonoBehaviour, IComparable<WorkerBase>
     public bool IsBusy => currentWork != null;
     public WorkBase CurrentWork => currentWork;
     public WorkType WorkType => workType;
+    public int Id => id;
     public bool IsExhausted { get; protected set; }
 
     
@@ -89,5 +90,15 @@ public class WorkerBase : MonoBehaviour, IComparable<WorkerBase>
         var idComparison = id.CompareTo(other.id);
         if (idComparison != 0) return idComparison;
         return workType.CompareTo(other.workType);
+    }
+
+    public virtual int GetHealth()
+    {
+        return 0;
+    }
+
+    public virtual float GetInteractSpeed()
+    {
+        return 0;
     }
 }

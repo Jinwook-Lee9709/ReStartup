@@ -73,7 +73,7 @@ public class GameManager : MonoBehaviour
         WorkManager.Init(WorkerManager);
         WorkerManager.Init(WorkManager);
         WorkFlowController.Init(this, WorkManager);
-        WorkStationManager.Init(WorkFlowController, ObjectPivotManager, surface2D);
+        WorkStationManager.Init(this, WorkFlowController, ObjectPivotManager, surface2D);
 
     }
 

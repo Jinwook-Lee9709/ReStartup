@@ -195,7 +195,7 @@ public class UserDataManager : Singleton<UserDataManager>
 
     public async UniTask<bool> OnBuffExpired(Buff buff)
     {
-        var result = await BuffSaveDataDAC.DeleteBuffSaveData(buff.BuffID);
+        var result = await BuffSaveDataDAC.DeleteBuffSaveData(buff.BuffType);
         return result;
     }
     

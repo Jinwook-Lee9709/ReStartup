@@ -76,7 +76,27 @@ public class WorkerManager
         if (workers[work.workType].Count > 0)
         {
             var sortedSet = workers[work.workType];
-            var worker = sortedSet.Min;
+            int maxHealth = sortedSet.Max(x => x.GetHealth());
+            var listByHealth = sortedSet.Where(x => x.GetHealth() == maxHealth).ToList();
+            WorkerBase worker = null;
+            if (listByHealth.Count() > 1)
+            { 
+                float minSpeed = listByHealth.Min(x => x.GetInteractSpeed());
+                var listBySpeed = sortedSet.Where(x => Mathf.Approximately(x.GetInteractSpeed(), minSpeed)).ToList();
+                if (listBySpeed.Count() > 1)
+                {
+                    worker = sortedSet.OrderBy(x=>x.Id).First();
+                }
+                else
+                {
+                    worker = listBySpeed.First();
+                }
+            }
+            else
+            {
+                worker = listByHealth.First();
+            }
+            
             worker.AssignWork(work);
             sortedSet.Remove(worker);
             workingWorkers.Add(worker);

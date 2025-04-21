@@ -185,6 +185,8 @@ public static class Endpoints
     public static readonly string GetAllReivewUrl = BaseUrl + "/users/progress/getAll";
     public static readonly string InsertReivewUrl = BaseUrl + "/users/progress/insert";
     public static readonly string DeleteReivewUrl = BaseUrl + "/users/progress/delete";
+    
+    public static readonly string GetRankerUrl = BaseUrl + "/users/general/getRanker";
 }
 
 public static class Constants
@@ -285,6 +287,7 @@ public static class Strings
     public static readonly string Upgrade = "Upgrade";
 
     public static readonly string employeeNameKeyFormat = "EmployeeName{0}";
+    public static readonly string cookwareFormat = "S{0}_{1}";
     public static readonly string complete = "Completed";
 
     public static readonly string foodNameKeyFormat = "FoodName{0}";

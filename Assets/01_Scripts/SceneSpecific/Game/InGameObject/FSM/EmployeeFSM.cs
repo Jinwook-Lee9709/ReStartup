@@ -225,5 +225,15 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     {
         interactionSpeed = defaultWorkSpeed;
     }
+
+    public override int GetHealth()
+    {
+        return EmployeeData.currentHealth;
+    }
+
+    public override float GetInteractSpeed()
+    {
+        return interactionSpeed;
+    }
     
 }
