@@ -177,6 +177,7 @@ public class UserDataManager : Singleton<UserDataManager>
     {
         BuffSaveData buf = new BuffSaveData();
         buf.id = buff.BuffID;
+        buf.type = buff.BuffType;
         buf.remainTime = buff.remainBuffTime;
         var result = await BuffSaveDataDAC.UpdateBuffSaveData(buf);
         return result;
@@ -186,6 +187,7 @@ public class UserDataManager : Singleton<UserDataManager>
     {
         BuffSaveData buf = new BuffSaveData();
         buf.id = buff.BuffID;
+        buf.type = buff.BuffType;
         buf.remainTime = buffTime;
         var result = await BuffSaveDataDAC.UpdateBuffSaveData(buf);
         return result;

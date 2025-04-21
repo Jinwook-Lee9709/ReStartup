@@ -21,7 +21,7 @@ public class BuffTypeConverter : JsonConverter<BuffType>
     public override BuffType ReadJson(JsonReader reader, Type objectType, BuffType existingValue, bool hasExistingValue, JsonSerializer serializer)
     {
         // String -> Enum 변환
-        var value = reader.Value?.ToString()?.ToLower();
+        var value = reader.Value?.ToString();
 
         return value switch
         {
