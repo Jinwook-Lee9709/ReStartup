@@ -16,6 +16,7 @@ public class BuffSaveDataDAC
         Dictionary<string, string> payload = new Dictionary<string, string>()
         {
             ["id"] = buffSaveData.id.ToString(),
+            ["buff_type"] = JsonConvert.SerializeObject(buffSaveData.type),
             ["remain_time"] = buffSaveData.remainTime.ToString()
         };
         ApiResponse<BuffSaveData> response = await RestApiService.PostAsyncWithToken<BuffSaveData>(Endpoints.SaveBuffUrl, payload);
