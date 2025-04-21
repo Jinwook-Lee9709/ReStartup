@@ -18,6 +18,8 @@ public abstract class WorkBase : IComparable<WorkBase>
     public float CreatedTime => createdTime;
     public bool IsComplete => isComplete;
 
+    public float registeredTime = 0f;
+
 
     protected WorkBase(WorkManager workManager, WorkType workType, bool isStopable = true)
     {
@@ -26,7 +28,10 @@ public abstract class WorkBase : IComparable<WorkBase>
         this.workType = workType;
         this.isStoppable = isStopable;
     }
-
+    public void ResetRegisteredTime()
+    {
+        registeredTime = 0f;
+    }
     public void ModifyPriority(float priority)
     {
         createdTime = priority;
