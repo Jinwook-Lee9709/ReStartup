@@ -39,7 +39,7 @@ public class QuestCard : MonoBehaviour
             case CostType.Free:
                 break;
             case CostType.Money:
-                UserDataManager.Instance.CurrentUserData.Money += periodQuestData.RewardAmount1;
+                UserDataManager.Instance.AdjustMoney(periodQuestData.RewardAmount1);
                 break;
             case CostType.Gold:
                 break;

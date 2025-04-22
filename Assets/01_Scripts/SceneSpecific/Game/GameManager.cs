@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     public EmployeeManager EmployeeManager { get; private set; }
     public QuestManager QuestManager { get; private set; }
 
+    public Alarm alarm;
     public ConsumerManager consumerManager;
     public FoodManager foodManager;
     public BuffManager buffManager;
@@ -71,7 +72,7 @@ public class GameManager : MonoBehaviour
         WorkStationManager = new WorkStationManager();
         
         ObjectPivotManager.Init(currentTheme);
-        WorkManager.Init(WorkerManager);
+        WorkManager.Init(WorkerManager, alarm);
         WorkerManager.Init(WorkManager);
         WorkFlowController.Init(this, WorkManager);
         WorkStationManager.Init(this, WorkFlowController, ObjectPivotManager, surface2D);
@@ -95,6 +96,11 @@ public class GameManager : MonoBehaviour
         WorkerManager.Start();
         EmployeeManager.Start();
         AudioManager.Instance.Init();
+    }
+
+    public void Update()
+    {
+        WorkManager.UpdateWorkManager(Time.deltaTime);
     }
 
     #region InitGameScene
