@@ -13,14 +13,14 @@ public class QuestManager
     }
     public void Start()
     {
-        questInventory = GameObject.FindWithTag("UIManager").GetComponent<UiManager>().uiQuest.GetComponent<PeriodQuestInventory>();
-        var questdata = DataTableManager.Get<PeriodQuestDataTable>("periodQuest").Data;
-        foreach (var item in questdata.Values)
-        {
-            if (item.Theme == (int)gameManager.CurrentTheme)
-            {
-                questInventory.AddPeriodQuest(item);
-            }
-        }
+        // questInventory = GameObject.FindWithTag("UIManager").GetComponent<UiManager>().uiQuest.GetComponent<PeriodQuestInventory>();
+        // var questdata = DataTableManager.Get<PeriodQuestDataTable>("periodQuest").Data;
+        // foreach (var item in questdata.Values)
+        // {
+        //     if (item.Theme == (int)gameManager.CurrentTheme)
+        //     {
+        //         questInventory.AddPeriodQuest(item);
+        //     }
+        // }
     }
 }

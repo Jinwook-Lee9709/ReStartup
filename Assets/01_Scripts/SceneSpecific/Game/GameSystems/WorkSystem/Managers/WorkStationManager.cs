@@ -131,6 +131,8 @@ public class WorkStationManager
         counter = handle.Result.GetComponent<CashierCounter>();
         counter.transform.SetParentAndInitialize(counterPivot);
         workFlowController.SetCashierCounter(counter);
+        
+        UpdateNavMesh();
     }
 
     public void UpgradeCounter(InteriorData data, int level)

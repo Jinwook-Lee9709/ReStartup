@@ -17,6 +17,8 @@ public enum SpumCharacter
     ConstructComplete,
     FoodResearch,
     FoodResearchComplete,
+    HireEmployee,
+    HireEmployeeComplete,
 }
 
 public class AlertPopup : MonoBehaviour
