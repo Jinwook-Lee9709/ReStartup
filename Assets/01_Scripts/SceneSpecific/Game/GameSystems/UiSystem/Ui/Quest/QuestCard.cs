@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class QuestCard : MonoBehaviour
 {
-    [SerializeField] private GameObject CompleteImage; 
+    //[SerializeField] private GameObject CompleteImage;
+    [SerializeField] private TextMeshProUGUI rewardType, rewardValue, conditionText, currentProgress, buttonText;
+    [SerializeField] private Image rewardImage;
     private PeriodQuestData periodQuestData;
     private Button button;
 
@@ -14,7 +17,7 @@ public class QuestCard : MonoBehaviour
         periodQuestData = data;
         button = GetComponentInChildren<Button>();
         button.onClick.AddListener(OnButtonClick);
-        CompleteImage.SetActive(true);
+        //CompleteImage.SetActive(true);
         //switch (periodQuestData.RequirementsType)//미션 종류에 따라 액션 구독해주기 횟수 올려주기 위해
         //{
         //    case RequirementsType.SoldFood:
@@ -30,13 +33,13 @@ public class QuestCard : MonoBehaviour
             return;
         }
         button.interactable = false;
-        CompleteImage.SetActive(true);
+        //CompleteImage.SetActive(true);
         switch (periodQuestData.RewardType1)
         {
             case CostType.Free:
                 break;
             case CostType.Money:
-                UserDataManager.Instance.CurrentUserData.Money += periodQuestData.RewardAmount1;
+                UserDataManager.Instance.AdjustMoney(periodQuestData.RewardAmount1);
                 break;
             case CostType.Gold:
                 break;
