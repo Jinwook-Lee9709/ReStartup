@@ -34,7 +34,7 @@ public class RankSystemManager : MonoBehaviour
         //playerClone.GetComponent<PlayerClone>().OnActive(playerUiItem.rankingData);
 
         //RankCoinditionCardAdd
-        var rankConditiondata = DataTableManager.Get<RankConditionDataTable>("rankCondition").Data;
+        var rankConditiondata = DataTableManager.Get<RankConditionDataTable>(DataTableIds.RankCondition.ToString()).Data;
         foreach (var item in rankConditiondata.Values)
         {
             if(item.Type == (int)gameManager.CurrentTheme)

@@ -23,7 +23,7 @@ public enum ResponseType
     InternetDisconnected = 4,
     ServerError = 5,
     JsonParseError = 6,
-    
+
 }
 
 public enum DataTableIds
@@ -36,8 +36,8 @@ public enum DataTableIds
     Cookware,
     Buff,
     Promoiton,
-    rankCondition,
-    periodQuest,
+    RankCondition,
+    Mission,
 }
 
 public enum IconPivots
@@ -123,10 +123,12 @@ public enum PromotionType
     Chef
 }
 
-public enum QuestType
+public enum MissionType
 {
+    Main = 1,
     Daily,
-    Weekly
+    Weekly,
+    Achievements
 }
 
 public enum RequirementsType
@@ -134,7 +136,30 @@ public enum RequirementsType
     SoldFood,
     MakingFood
 }
-
+public enum RewardType
+{
+    Money,
+    Gold,
+    AdBlockTicket,
+    MissionPoint,
+    RankPoint
+}
+public enum MisionMainCategory
+{
+    BuyInterior,
+    UnlockFood,
+    SellingFood,
+    UpgradeFood,
+    HireStaff,
+    Promotion,
+    UpgradeInterior,
+    GuestSatisfied,
+    UpgradeStaff,
+    Clean,
+    Recover,
+    GainMoney,
+    Guest
+}
 public static class Endpoints
 {
     // private static readonly string BaseUrl = "https://localhost:443/api";
@@ -156,15 +181,15 @@ public static class Endpoints
     public static readonly string GetInteriorByTheme = BaseUrl + "/users/progress/getInteriorByTheme";
     public static readonly string SaveInteriorUrl = BaseUrl + "/users/progress/saveSingleInterior";
     public static readonly string SaveInteriorsUrl = BaseUrl + "/users/progress/saveMultipleInterior";
-    
+
     public static readonly string GetEmployeeByTheme = BaseUrl + "/users/progress/getEmployeeByTheme";
     public static readonly string SaveEmployeeUrl = BaseUrl + "/users/progress/saveSingleEmployee";
     public static readonly string SaveEmployeesUrl = BaseUrl + "/users/progress/saveMultipleEmployee";
-    
+
     public static readonly string GetFoodByTheme = BaseUrl + "/users/progress/getFoodByTheme";
     public static readonly string SaveFoodUrl = BaseUrl + "/users/progress/saveSingleFood";
     public static readonly string SaveFoodsUrl = BaseUrl + "/users/progress/saveMultipleFood";
-    
+
     public static readonly string InsertThemeRecordsUrl = BaseUrl + "/users/progress/insertRecords";
     public static readonly string GetThemeRecordsUrl = BaseUrl + "/users/progress/getRecords";
     public static readonly string GetRankingUrl = BaseUrl + "/users/progress/getRanking";
@@ -173,19 +198,19 @@ public static class Endpoints
     public static readonly string SaveRankPointUrl = BaseUrl + "/users/progress/saveRankpoint";
     public static readonly string GetCumulativeUrl = BaseUrl + "/users/progress/getCumulative";
     public static readonly string SaveCumulativeUrl = BaseUrl + "/users/progress/saveCumulative";
-    
+
     public static readonly string GetPromotionsUrl = BaseUrl + "/users/getPromotions";
     public static readonly string SavePromotionsUrl = BaseUrl + "/users/savePromotions";
-    
+
     public static readonly string GetBuffsUrl = BaseUrl + "/users/progress/getBuffs";
     public static readonly string SaveBuffUrl = BaseUrl + "/users/progress/saveBuff";
     public static readonly string SaveBuffsUrl = BaseUrl + "/users/progress/saveBuffs";
     public static readonly string DeleteBuffUrl = BaseUrl + "/users/progress/deleteBuff";
-    
+
     public static readonly string GetAllReivewUrl = BaseUrl + "/users/progress/getAll";
     public static readonly string InsertReivewUrl = BaseUrl + "/users/progress/insert";
     public static readonly string DeleteReivewUrl = BaseUrl + "/users/progress/delete";
-    
+
     public static readonly string GetRankerUrl = BaseUrl + "/users/general/getRanker";
 }
 

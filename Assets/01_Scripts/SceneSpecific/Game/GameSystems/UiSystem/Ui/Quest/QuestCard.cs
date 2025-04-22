@@ -9,53 +9,51 @@ public class QuestCard : MonoBehaviour
     //[SerializeField] private GameObject CompleteImage;
     [SerializeField] private TextMeshProUGUI rewardType, rewardValue, conditionText, currentProgress, buttonText;
     [SerializeField] private Image rewardImage;
-    private PeriodQuestData periodQuestData;
+    private MissionData missionData;
     private Button button;
 
-    public void Init(PeriodQuestData data)
+    public void Init(MissionData data)
     {
-        periodQuestData = data;
+        missionData = data;
         button = GetComponentInChildren<Button>();
         button.onClick.AddListener(OnButtonClick);
-        //CompleteImage.SetActive(true);
-        //switch (periodQuestData.RequirementsType)//미션 종류에 따라 액션 구독해주기 횟수 올려주기 위해
-        //{
-        //    case RequirementsType.SoldFood:
-        //        break;
-        //    case RequirementsType.MakingFood:
-        //        break;
-        //}
+        var MissionManager = ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager;
+        MissionManager.SubscribeMissionTarget(missionData.MainCategory, missionData);
     }
     public void OnButtonClick()
     {
-        if (periodQuestData.completionsCount >= periodQuestData.RequirementsValue)
+        if (missionData.count >= missionData.CompleteTimes)
         {
             return;
         }
         button.interactable = false;
         //CompleteImage.SetActive(true);
-        switch (periodQuestData.RewardType1)
+        switch (missionData.RewardType)
         {
-            case CostType.Free:
+            case RewardType.Money:
+                UserDataManager.Instance.AdjustMoney(missionData.RewardAmount);
                 break;
-            case CostType.Money:
-                UserDataManager.Instance.AdjustMoney(periodQuestData.RewardAmount1);
+            case RewardType.Gold:
                 break;
-            case CostType.Gold:
+            case RewardType.AdBlockTicket:
+                break;
+            case RewardType.MissionPoint:
+                break;
+            case RewardType.RankPoint:
                 break;
         }
         //보상지급
     }
     public void UpCount()
     {
-        if (periodQuestData.completionsCount >= periodQuestData.RequirementsValue)
+        if (missionData.count >= missionData.CompleteTimes)
         {
             return;
         }
-        ++periodQuestData.completionsCount;
+        ++missionData.count;
     }
     public void ResetQuest()
     {
-        periodQuestData.completionsCount = 0;
+        missionData.count = 0;
     }
 }

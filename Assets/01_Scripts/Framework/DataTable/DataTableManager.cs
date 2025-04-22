@@ -41,11 +41,11 @@ public static class DataTableManager
 
         var rankConditionDataTable = new RankConditionDataTable();
         rankConditionDataTable.Load();
-        tables.Add(DataTableIds.rankCondition.ToString(), rankConditionDataTable);
+        tables.Add(DataTableIds.RankCondition.ToString(), rankConditionDataTable);
 
-        var periodQuestDataTable = new PeriodQuestDataTable();
-        periodQuestDataTable.Load();
-        tables.Add(DataTableIds.periodQuest.ToString(), periodQuestDataTable);
+        var missionDataTable = new MissionDataTable();
+        missionDataTable.Load();
+        tables.Add(DataTableIds.Mission.ToString(), missionDataTable);
     }
 
     public static T Get<T>(string id) where T : DataTable

@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
     public InteriorManager InteriorManager { get; private set; }
     public AudioManager AudioManager { get; private set; }
     public EmployeeManager EmployeeManager { get; private set; }
-    public QuestManager QuestManager { get; private set; }
+    public MissionManager MissionManager { get; private set; }
 
     public Alarm alarm;
     public ConsumerManager consumerManager;
@@ -83,14 +83,14 @@ public class GameManager : MonoBehaviour
     {
         InteriorManager = new InteriorManager();
         InteriorManager.Init(this);
-        QuestManager = new QuestManager();
-        QuestManager.Init(this);
+        MissionManager = new MissionManager();
+        MissionManager.Init(this);
     }
     #endregion
  
     public void Start()
     {
-        QuestManager.Start();
+        MissionManager.Start();
         WorkStationManager.BakeNavMesh();
         InteriorManager.Start();
         WorkerManager.Start();
