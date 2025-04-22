@@ -15,6 +15,8 @@ public class FoodResearchListUI : MonoBehaviour
     {
         var userDataManager = UserDataManager.Instance;
         userDataManager.ChangeRankPointAction += Unlock;
+        if (UserDataManager.Instance.CurrentUserData.CurrentRankPoint != null)
+            Unlock((int)UserDataManager.Instance.CurrentUserData.CurrentRankPoint);
         ServiceLocator.Instance.GetSceneService<GameManager>().WorkFlowController.OnCookingStationAdded += UnlockCheakCookwareType;
     }
     public void AddFoodResearchItem(FoodData data, FoodResearchNotifyPopup notifyPopup)

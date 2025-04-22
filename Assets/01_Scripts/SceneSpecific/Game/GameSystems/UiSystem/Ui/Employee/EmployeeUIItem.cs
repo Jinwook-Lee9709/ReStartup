@@ -19,6 +19,7 @@ public class EmployeeUIItem : MonoBehaviour
     static readonly string cashierStaff = "CashierStaff";
     static readonly string employment = "Employment";
     static readonly string education = "Education";
+    private static readonly float buyInterval = 3f;   
 
     [SerializeField] private Image image;
 
@@ -208,13 +209,38 @@ public class EmployeeUIItem : MonoBehaviour
     {
         if (!IsPayable(employeeData))
             return;
+        
         int cost = employeeData.Cost * (employeeSaveData[employeeId].level + 1);
-        UserDataManager.Instance.AdjustMoney(-cost);
+        
+        float targetTime = Time.time + buyInterval;
+        var alertPopup = ServiceLocator.Instance.GetGlobalService<AlertPopup>();
+        
+        if(employeeSaveData[employeeId].level == 0)
+            alertPopup.PopUp("직원 고용중" ,"고용 고용!", SpumCharacter.HireEmployee, false);
+        else
+            alertPopup.PopUp("직원 교육중" ,"교육 교육!", SpumCharacter.HireEmployee, false);
+        
+        await UserDataManager.Instance.AdjustMoneyWithSave(-cost);
+        await UserDataManager.Instance.UpgradeEmployee(employeeId);
+        
+        if (targetTime > Time.time)
+        {
+            await UniTask.WaitForSeconds(targetTime - Time.time);
+        }
+
+        UpdateUIAfterBuy();
+
+
+        alertPopup.ChangeCharacter(SpumCharacter.HireEmployeeComplete);
+        alertPopup.ChangeText("교육 완료!","만세!");
+        alertPopup.EnableTouch();
+
+    }
+
+    private void UpdateUIAfterBuy()
+    {
         ingameGoodsUi.SetCostUi();
 
-        await UserDataManager.Instance.AdjustMoneyWithSave(0);
-
-        await UserDataManager.Instance.UpgradeEmployee(employeeId);
         employeeManager.UpgradeEmployee(employeeId);
 
         employeeData.Health = employeeData.Health + (10 * employeeSaveData[employeeId].level);

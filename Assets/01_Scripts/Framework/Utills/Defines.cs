@@ -284,6 +284,7 @@ public enum InteriorEffectType
 
 public enum ObjectArea
 {
+    None = 0,
     Hall = 1,
     Kitchen
 }

@@ -66,7 +66,7 @@ public class TitleSceneManager : MonoBehaviour
         {
             var title = LZString.GetUIString("NetworkFailureAlertTitle");
             var message = LZString.GetUIString("NetworkFailureAlertDescription");
-            ServiceLocator.Instance.GetGlobalService<AlertPopup>().PopUp(title, message);
+            ServiceLocator.Instance.GetGlobalService<AlertPopup>().PopUp(title, message, isError: true);
             return;
         }
         

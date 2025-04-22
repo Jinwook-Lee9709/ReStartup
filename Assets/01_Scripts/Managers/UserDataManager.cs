@@ -69,11 +69,12 @@ public class UserDataManager : Singleton<UserDataManager>
         ChangeRankPointAction?.Invoke((int)currentUserData.CurrentRankPoint);
     }
 
-    public async UniTask AddRankPointWithSave(int rankPoint)
+    public async UniTask<bool> AddRankPointWithSave(int rankPoint)
     {
         var currentTheme = ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme;
         OnRankPointUp(rankPoint);
-        await ThemeRecordDAC.UpdateThemeRankpoint((int)currentTheme, (int)currentUserData.CurrentRankPoint);
+        var response = await ThemeRecordDAC.UpdateThemeRankpoint((int)currentTheme, (int)currentUserData.CurrentRankPoint);
+        return response;
     }
 
     public async UniTask SetRankWithSave(int rank)
