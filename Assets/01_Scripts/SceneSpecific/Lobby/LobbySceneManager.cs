@@ -10,7 +10,7 @@ public class LobbySceneManager : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI text;
     [SerializeField] private List<Button> themeSelectButtons;
-    
+    [SerializeField] private SceneIds sceneId = SceneIds.Dev0;
     
     void Start()
     {
@@ -29,7 +29,7 @@ public class LobbySceneManager : MonoBehaviour
     {
         PlayerPrefs.SetInt("Theme", id);
         var sceneManager = ServiceLocator.Instance.GetGlobalService<SceneController>();
-        sceneManager.LoadSceneWithLoading(SceneIds.Dev0, BeforeGameSceneLoad);
+        sceneManager.LoadSceneWithLoading(sceneId, BeforeGameSceneLoad);
     }
 
     private async UniTask BeforeGameSceneLoad()

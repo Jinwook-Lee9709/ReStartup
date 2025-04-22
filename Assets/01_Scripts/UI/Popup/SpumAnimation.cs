@@ -34,7 +34,7 @@ public class SpumAnimation : MonoBehaviour
 
     private async UniTaskVoid PlayAnimationAsync(CancellationToken token)
     {
-        await UniTask.Delay(TimeSpan.FromSeconds(animationInterval), cancellationToken: token); 
+        await UniTask.Delay(TimeSpan.FromSeconds(0.1f), cancellationToken: token); 
         while (!token.IsCancellationRequested)
         {
             model.PlayAnimation(animationCategory, animationID);

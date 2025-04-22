@@ -157,7 +157,7 @@ public static class RestApiService
                     }
                     var title = LZString.GetUIString("TokenExpiredAlertTitle");
                     var message = LZString.GetUIString("TokenExpiredAlertDescription");
-                    ServiceLocator.Instance.GetGlobalService<AlertPopup>().PopUp(title, message);
+                    ServiceLocator.Instance.GetGlobalService<AlertPopup>().PopUp(title, message, isError: true);
                     return new ApiResponse<T>(ResponseType.InvalidToken, default);
                 }
                 else
@@ -170,7 +170,7 @@ public static class RestApiService
                     
                     var title = LZString.GetUIString("ServerConnectionFailureAlertTitle");
                     var message = LZString.GetUIString("ServerConnectionFailureAlertDescription");
-                    ServiceLocator.Instance.GetGlobalService<AlertPopup>().PopUp(title, message);
+                    ServiceLocator.Instance.GetGlobalService<AlertPopup>().PopUp(title, message, isError: true);
                     return new ApiResponse<T>(retryResult.ResponseCode, default);
                 }
             }
@@ -190,7 +190,7 @@ public static class RestApiService
         {
             var title = LZString.GetUIString("NetworkFailureAlertTitle");
             var message = LZString.GetUIString("NetworkFailureAlertDescription");
-            ServiceLocator.Instance.GetGlobalService<AlertPopup>().PopUp(title, message);
+            ServiceLocator.Instance.GetGlobalService<AlertPopup>().PopUp(title, message, isError: true);
             return false;
         }
         return true;
