@@ -16,6 +16,7 @@ public class FoodResearchUIItem : MonoBehaviour
     [SerializeField] private TextMeshProUGUI CostText;
     [SerializeField] private TextMeshProUGUI RankPointText;
     [SerializeField] private Button lockButton;
+    private static readonly float researchInterval = 3f;   
 
     //Fortest
     public FoodData foodData;
@@ -111,11 +112,11 @@ public class FoodResearchUIItem : MonoBehaviour
             return;
         if (userData.Money > foodData.BasicCost)
         {
-            Unlock();
+            Unlock().Forget();
         }
     }
 
-    public void Unlock()
+    public async UniTask Unlock()
     {
         if (consumerManager.foodIds.Contains(foodData.FoodID))
         {
@@ -123,14 +124,31 @@ public class FoodResearchUIItem : MonoBehaviour
         }
         lockImage.SetActive(false);
         consumerManager.foodIds.Add(foodData.FoodID);
-
-        UserDataManager.Instance.AddRankPointWithSave(foodData.GetRankPoints).Forget();
+        float targetTime = Time.time + researchInterval;
+        var alertPopup = ServiceLocator.Instance.GetGlobalService<AlertPopup>();
+        alertPopup.PopUp("음식 연구중!", "어떤 음식이 나오려나?", SpumCharacter.FoodResearch, false);
+        bool isComplete = await UserDataManager.Instance.AddRankPointWithSave(foodData.GetRankPoints);
+        if (!isComplete)
+        {
+            return;
+        }
+        if (targetTime > Time.time)
+        {
+            await UniTask.WaitForSeconds(targetTime - Time.time);
+        }
+    
         userData.Money -= foodData.BasicCost;
         ingameGoodsUi.SetCostUi();
         gameManager.foodManager.UnlockFoodUpgrade(foodData);
         button.interactable = false;
         button.GetComponentInChildren<TextMeshProUGUI>().text = LZString.GetUIString(Strings.complete);
         HandleUpgradeFood().Forget();
+        
+        alertPopup.ChangeCharacter(SpumCharacter.FoodResearchComplete);
+        alertPopup.ChangeText("연구 완료!","만세!");
+        alertPopup.EnableTouch();
+        
+        
     }
 
     private IEnumerator LoadSpriteCoroutine(string iconAddress)

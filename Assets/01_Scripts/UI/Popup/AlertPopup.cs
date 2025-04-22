@@ -15,6 +15,8 @@ public enum SpumCharacter
     Apologize,
     Construct,
     ConstructComplete,
+    FoodResearch,
+    FoodResearchComplete,
 }
 
 public class AlertPopup : MonoBehaviour
@@ -84,13 +86,13 @@ public class AlertPopup : MonoBehaviour
         var target = spumCharacters[spumCharacter];
         var originalScale = original.transform.localScale;
         var targetScale = target.transform.localScale;
-        original.transform.PopdownAnimation(onComplete: () =>
+        original.transform.PopdownAnimation(duration:0.2f, onComplete: () =>
         {
             original.transform.localScale = originalScale;
             original.SetActive(false);
             target.SetActive(true);
             target.transform.localScale = Vector3.zero;
-            target.transform.PopupAnimation(scale: targetScale.x);
+            target.transform.PopupAnimation(duration:0.2f, scale: targetScale.x);
         });
         currentCharacter = spumCharacter;
         
