@@ -13,8 +13,8 @@ public class InteriorCard : MonoBehaviour
     private static readonly string BuyStringID = "Buy";
     private static readonly string NewProductStringID = "GodProduct";
     private static readonly string PurchaseCompleteStringID = "PurchaseComplete";
-    private static readonly float constructInterval = 3f;   
-    
+    private static readonly float constructInterval = 3f;
+
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI costText;
     [SerializeField] private GameObject costPanel;
@@ -63,7 +63,7 @@ public class InteriorCard : MonoBehaviour
         authorizationCheckButton.onClick.RemoveAllListeners();
         authorizationCheckButton.onClick.AddListener(OnAuthorizationCheckButtonTouched);
         UpdateInteractable();
-        
+
         LocalizationSettings.SelectedLocaleChanged += OnLanguageChanged;
     }
 
@@ -100,9 +100,9 @@ public class InteriorCard : MonoBehaviour
 
     public async UniTask OnBuy()
     {
-        float targetTime = Time.time + constructInterval ;
+        float targetTime = Time.time + constructInterval;
         var alertPopup = ServiceLocator.Instance.GetGlobalService<AlertPopup>();
-        alertPopup.PopUp("인테리어 구매중!","영차 영차!", SpumCharacter.Construct, false);
+        alertPopup.PopUp("인테리어 구매중!", "영차 영차!", SpumCharacter.Construct, false);
         await UserDataManager.Instance.AdjustMoneyWithSave(-Data.GetSellingCost());
         await UserDataManager.Instance.UpgradeInterior(Data.InteriorID);
         if (Time.time < targetTime)
@@ -111,11 +111,11 @@ public class InteriorCard : MonoBehaviour
         }
         UpdateInteractable();
         if (UserDataManager.Instance.CurrentUserData.InteriorSaveData[Data.InteriorID] == 1)
-            ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.BuyInterior,(int)Data.InteriorID);
+            ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.BuyInterior, 1, (int)Data.InteriorID);
         else
-            ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.UpgradeInterior, (int)Data.InteriorID);
+            ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.UpgradeInterior, 1, (int)Data.InteriorID);
         alertPopup.ChangeCharacter(SpumCharacter.ConstructComplete);
-        alertPopup.ChangeText("구매 완료!","만세!");
+        alertPopup.ChangeText("구매 완료!", "만세!");
         alertPopup.EnableTouch();
     }
 
@@ -139,7 +139,7 @@ public class InteriorCard : MonoBehaviour
             if (upgradeLevel == 0)
             {
                 currentButtonStringId = BuyStringID;
-              
+
             }
             else if (upgradeLevel == Data.MaxUpgradeCount)
             {

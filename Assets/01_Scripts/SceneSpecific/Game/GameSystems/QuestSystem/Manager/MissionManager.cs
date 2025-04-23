@@ -34,11 +34,11 @@ public class MissionManager
     {
 
     }
-    public void OnEventInvoked(MissionMainCategory category, int id)
+    public void OnEventInvoked(MissionMainCategory category, int args ,int id = -1 )
     {
         foreach (var mission in missions[category])
         {
-            if (mission.OnEventInvoked(id))
+            if (mission.OnEventInvoked(args, id))
             {
                 OnMissonCleared(mission);
             }
