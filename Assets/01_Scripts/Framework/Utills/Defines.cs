@@ -125,10 +125,10 @@ public enum PromotionType
 
 public enum MissionType
 {
-    Main = 1,
+    Achievements,
+    Main,
     Daily,
     Weekly,
-    Achievements
 }
 
 public enum RequirementsType
@@ -146,7 +146,7 @@ public enum RewardType
 }
 public enum MissionMainCategory
 {
-    BuyInterior,
+    BuyInterior=1,
     UnlockFood,
     SellingFood,
     UpgradeFood,
@@ -154,11 +154,15 @@ public enum MissionMainCategory
     Promotion,
     UpgradeInterior,
     GuestSatisfied,
+    GainRanking,
     UpgradeStaff,
-    Clean,
+    CleanTrash,
+    CleanTable,
     Recover,
     GainMoney,
-    Guest
+    GetTip,
+    GoodReview,
+    BadReviewDelete
 }
 public static class Endpoints
 {

@@ -262,9 +262,12 @@ public class ConsumerFSM : MonoBehaviour
         //bool isTip = true;
         int Cost = consumer.needFood.SellingCost;
         int rankPoint = consumer.needFood.GetRankPoints;
+        ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.GainMoney, 1);
         if (isTip)
         {
             Cost += Mathf.CeilToInt(consumer.needFood.SellingCost * (consumerData.SellTipPercent / 100f));
+            ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.GetTip, 1);
+            //TODO : Get Tip
         }
         UserDataManager.Instance.AdjustMoneyWithSave(Cost).Forget();
         Vector3 paymentTextPosition = new Vector3(transform.position.x, transform.position.y + 1f, 0);
