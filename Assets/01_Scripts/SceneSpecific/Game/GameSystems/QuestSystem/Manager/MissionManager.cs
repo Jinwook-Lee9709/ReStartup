@@ -15,6 +15,16 @@ public class MissionManager
     public void Init(GameManager gameManager)
     {
         this.gameManager = gameManager;
+        InitDictionary();
+    }
+
+    private void InitDictionary()
+    {
+        missions = new Dictionary<MissionMainCategory, List<Mission>>();
+        foreach (var item in Enum.GetValues(typeof(MissionMainCategory)))
+        {
+            missions.Add((MissionMainCategory)item, new List<Mission>());
+        }
     }
     public void Start()
     {
