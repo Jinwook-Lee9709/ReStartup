@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.AI;
 
 public class ConsumerFSM : MonoBehaviour
@@ -59,13 +60,14 @@ public class ConsumerFSM : MonoBehaviour
     [SerializeField] private Satisfaction currentSatisfaction = Satisfaction.High;
     [SerializeField] private PaymentText paymentTextPrefab;
     [SerializeField] public SatisfactionIcon satisfactionIcon;
+    [SerializeField] public GameObject modelParent;
 
     private NavMeshAgent agent;
     private CashierCounter cashierCounter;
     private Consumer consumer;
     public ConsumerData consumerData = new();
     private SPUM_Prefabs model;
-    public SPUM_Prefabs Model => model;
+    public SPUM_Prefabs Model { get => model; set => model = value; }
     private bool isOnSeat;
     private bool isPaying;
     private Vector2 targetPivot;
@@ -218,13 +220,18 @@ public class ConsumerFSM : MonoBehaviour
 
     private void OnEnable()
     {
-        model = GetComponentInChildren<SPUM_Prefabs>();
-        model.OverrideControllerInit();
-
         currentSatisfaction = Satisfaction.High;
         consumerData.Init();
         isPaying = false;
         isOnSeat = false;
+    }
+
+    public void SetModel()
+    {
+        var handle = Addressables.InstantiateAsync(consumerData.GuestPrefab, modelParent.transform);
+        handle.WaitForCompletion();
+        Model = handle.Result.GetComponent<SPUM_Prefabs>();
+        Model.OverrideControllerInit();
     }
 
 

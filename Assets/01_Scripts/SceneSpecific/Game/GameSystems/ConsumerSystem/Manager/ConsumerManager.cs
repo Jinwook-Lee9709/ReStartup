@@ -5,7 +5,9 @@ using System.Linq;
 using System.Text;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEditor.VersionControl;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.AI;
 using UnityEngine.Pool;
 
@@ -66,7 +68,17 @@ public class ConsumerManager : MonoBehaviour
     public void SpawnConsumer()
     {
         var consumer = consumerPool.Get().GetComponent<Consumer>();
+        consumer.FSM.SetModel();
         AfterSpawnInit(consumer);
+    }
+
+    public void SpawnConsumer(ConsumerData consumerData)
+    {
+        var spawnConsumer = consumerPool.Get().GetComponent<Consumer>();
+        spawnConsumer.FSM.consumerData = consumerData;
+        spawnConsumer.FSM.consumerData.Init();
+        spawnConsumer.FSM.SetModel();
+        AfterSpawnInit(spawnConsumer);
     }
 
     [ContextMenu("Pair Consumer Spawn")]
@@ -75,6 +87,9 @@ public class ConsumerManager : MonoBehaviour
         var consumer1 = consumerPool.Get().GetComponent<Consumer>();
         var consumer2 = consumerPool.Get().GetComponent<Consumer>();
         SetPairData(consumer1, consumer2);
+        consumer1.FSM.SetModel();
+        consumer2.FSM.SetModel();
+        consumer2.FSM.CurrentStatus = ConsumerFSM.ConsumerState.None;
         AfterSpawnInit(consumer1);
     }
 
@@ -83,11 +98,14 @@ public class ConsumerManager : MonoBehaviour
         var consumer1 = consumerPool.Get().GetComponent<Consumer>();
         var consumer2 = consumerPool.Get().GetComponent<Consumer>();
         SetPairData(consumer1, consumer2);
-        AfterSpawnInit(consumer1);
         consumer1.FSM.consumerData = owner;
         consumer2.FSM.consumerData = partner;
         SetFood(ref consumer1);
         SetFood(ref consumer2);
+        consumer1.FSM.SetModel();
+        consumer2.FSM.SetModel();
+        consumer2.FSM.CurrentStatus = ConsumerFSM.ConsumerState.None;
+        AfterSpawnInit(consumer1);
     }
 
     private void SetFood(ref Consumer consumer)
@@ -122,13 +140,7 @@ public class ConsumerManager : MonoBehaviour
         return currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count < 3;
     }
 
-    public void SpawnConsumer(ConsumerData consumerData)
-    {
-        var spawnConsumer = consumerPool.Get().GetComponent<Consumer>();
-        spawnConsumer.FSM.consumerData = consumerData;
-        spawnConsumer.FSM.consumerData.Init();
-        AfterSpawnInit(spawnConsumer);
-    }
+
 
     private void SetPairData(Consumer owner, Consumer partner)
     {
@@ -137,7 +149,6 @@ public class ConsumerManager : MonoBehaviour
         owner.pairData.partner = partner;
 
         partner.pairData = owner.pairData;
-        partner.FSM.CurrentStatus = ConsumerFSM.ConsumerState.None;
 
         if (owner.FSM.consumerData.GuestType == GuestType.BadGuest)
         {
@@ -366,6 +377,7 @@ public class ConsumerManager : MonoBehaviour
         consumer.pairData = null;
         consumer.FSM.consumerManager = this;
         ConsumerData data = new(consumerDataTable.GetConsumerData(consumerSpawnPercent[UserDataManager.Instance.CurrentUserData.CurrentRank]));
+        consumer.FSM.consumerData = data;
         consumer.FSM.consumerData.Init();
         consumer.FSM.satisfactionIcon.gameObject.SetActive(false);
         SetFood(ref consumer);
@@ -386,6 +398,7 @@ public class ConsumerManager : MonoBehaviour
             var timerBuff = DataTableManager.Get<BuffDataTable>(DataTableIds.Buff.ToString()).GetBuffForBuffID(currentConsumerData.BuffId1);
             buffManager.StartBuff(timerBuff);
         }
+
     }
 
     private void OnReturnConsumer(GameObject consumer)
@@ -394,6 +407,7 @@ public class ConsumerManager : MonoBehaviour
             if (list.Contains(consumer.GetComponent<Consumer>()))
                 list.Remove(consumer.GetComponent<Consumer>());
 
+        Destroy(consumer.GetComponent<ConsumerFSM>().Model.gameObject);
         consumer.SetActive(false);
     }
 
@@ -421,6 +435,8 @@ public class ConsumerManager : MonoBehaviour
                 consumer.pairData.partner.GetComponent<NavMeshAgent>().SetDestination(partnerDst);
             }
         }
+
+
     }
 
     #endregion
