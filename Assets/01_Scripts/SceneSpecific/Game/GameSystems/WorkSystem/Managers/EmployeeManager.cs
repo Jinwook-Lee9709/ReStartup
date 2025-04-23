@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,10 +6,11 @@ using System.Xml.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using Object = UnityEngine.Object;
 
 public class EmployeeManager
 {
-    private readonly string employeePrefab = "Agent.prefab";
+    private readonly string employeePrefab = "Employee{0}";
     
     private Dictionary<int, EmployeeFSM> employees = new();
     private GameManager gameManager;
@@ -95,7 +97,9 @@ public class EmployeeManager
     
     public void InstantiateAndRegisterWorker(EmployeeTableGetData employeeData)
     {
-        var handle = Addressables.LoadAssetAsync<GameObject>(employeePrefab);
+        var assetId = String.Format(employeePrefab, employeeData.StaffID);
+        Debug.Log(assetId);
+        var handle = Addressables.LoadAssetAsync<GameObject>(assetId);
         GameObject prefab = handle.WaitForCompletion();
         var newEmployee = Object.Instantiate(prefab).GetComponent<EmployeeFSM>();
         newEmployee.EmployeeData = employeeData;
