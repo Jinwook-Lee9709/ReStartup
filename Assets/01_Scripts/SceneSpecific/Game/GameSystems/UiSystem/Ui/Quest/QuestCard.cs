@@ -18,7 +18,7 @@ public class QuestCard : MonoBehaviour
         button = GetComponentInChildren<Button>();
         button.onClick.AddListener(OnButtonClick);
         var MissionManager = ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager;
-        MissionManager.SubscribeMissionTarget(missionData.MainCategory, missionData);
+        MissionManager.SubscribeMissionTarget(missionData);
     }
     public void OnButtonClick()
     {

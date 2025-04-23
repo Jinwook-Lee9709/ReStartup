@@ -144,7 +144,7 @@ public enum RewardType
     MissionPoint,
     RankPoint
 }
-public enum MisionMainCategory
+public enum MissionMainCategory
 {
     BuyInterior,
     UnlockFood,

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening.Core.Easing;
@@ -7,6 +8,9 @@ public class MissionManager
 {
     private PeriodQuestInventory questInventory;
     private GameManager gameManager;
+    private Dictionary<MissionMainCategory, List<Mission>> missions;
+
+    public event Action<int> eve;
 
     public void Init(GameManager gameManager)
     {
@@ -14,6 +18,7 @@ public class MissionManager
     }
     public void Start()
     {
+        //로드해서 가져옴
         questInventory = GameObject.FindWithTag("UIManager").GetComponent<UiManager>().uiQuest.GetComponent<PeriodQuestInventory>();
         var questdata = DataTableManager.Get<MissionDataTable>(DataTableIds.Mission.ToString()).Data;
         foreach (var item in questdata.Values)
@@ -22,37 +27,52 @@ public class MissionManager
             {
                 questInventory.AddPeriodQuest(item);
             }
+            
         }
     }
-    public void SubscribeMissionTarget(MisionMainCategory misionMainCategory, MissionData card)
+    public void OnMissonCleared(Mission mission)
     {
-        switch (misionMainCategory)
+
+    }
+    public void OnEventInvoked(MissionMainCategory category, int id)
+    {
+        foreach (var mission in missions[category])
         {
-            case MisionMainCategory.BuyInterior:
+            if (mission.OnEventInvoked(id))
+            {
+                OnMissonCleared(mission);
+            }
+        }
+    }
+    public void SubscribeMissionTarget(MissionData card)
+    {
+        switch (card.MainCategory)
+        {
+            case MissionMainCategory.BuyInterior:
                 break;
-            case MisionMainCategory.UnlockFood:
+            case MissionMainCategory.UnlockFood:
                 break;
-            case MisionMainCategory.SellingFood:
+            case MissionMainCategory.SellingFood:
                 break;
-            case MisionMainCategory.UpgradeFood:
+            case MissionMainCategory.UpgradeFood:
                 break;
-            case MisionMainCategory.HireStaff:
+            case MissionMainCategory.HireStaff:
                 break;
-            case MisionMainCategory.Promotion:
+            case MissionMainCategory.Promotion:
                 break;
-            case MisionMainCategory.UpgradeInterior:
+            case MissionMainCategory.UpgradeInterior:
                 break;
-            case MisionMainCategory.GuestSatisfied:
+            case MissionMainCategory.GuestSatisfied:
                 break;
-            case MisionMainCategory.UpgradeStaff:
+            case MissionMainCategory.UpgradeStaff:
                 break;
-            case MisionMainCategory.Clean:
+            case MissionMainCategory.Clean:
                 break;
-            case MisionMainCategory.Recover:
+            case MissionMainCategory.Recover:
                 break;
-            case MisionMainCategory.GainMoney:
+            case MissionMainCategory.GainMoney:
                 break;
-            case MisionMainCategory.Guest:
+            case MissionMainCategory.Guest:
                 break;
         }
     }

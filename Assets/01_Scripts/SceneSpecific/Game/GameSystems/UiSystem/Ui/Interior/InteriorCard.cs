@@ -110,6 +110,10 @@ public class InteriorCard : MonoBehaviour
             await UniTask.WaitForSeconds(targetTime - Time.time);
         }
         UpdateInteractable();
+        if (UserDataManager.Instance.CurrentUserData.InteriorSaveData[Data.InteriorID] == 1)
+            ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.BuyInterior,(int)Data.InteriorID);
+        else
+            ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.UpgradeInterior, (int)Data.InteriorID);
         alertPopup.ChangeCharacter(SpumCharacter.ConstructComplete);
         alertPopup.ChangeText("구매 완료!","만세!");
         alertPopup.EnableTouch();
