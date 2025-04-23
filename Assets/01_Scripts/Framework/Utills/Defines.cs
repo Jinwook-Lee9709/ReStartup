@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 [Flags]
 public enum DebugFlags
@@ -318,6 +320,20 @@ public static class Strings
 
     public static readonly string foodNameKeyFormat = "FoodName{0}";
     public static readonly string shortOnMoney = "ShortOnMoney";
+
+}
+
+public static class Colors
+{
+    public static List<Color> satisfactionColors = new()
+    {
+        new Color(Mathf.InverseLerp(0, 255, 202), Mathf.InverseLerp(0, 255, 235), Mathf.InverseLerp(0, 255, 255)),
+        new Color(Mathf.InverseLerp(0, 255, 255), Mathf.InverseLerp(0, 255, 249), Mathf.InverseLerp(0, 255, 159)),
+        new Color(Mathf.InverseLerp(0, 255, 255), Mathf.InverseLerp(0, 255, 128), Mathf.InverseLerp(0, 255, 125))
+    };
+
+    public static Color invisibleBlack = new Color(0, 0, 0, 0);
+    public static Color invisibleWhite = new Color(1, 1, 1, 0);
 
 }
 

@@ -22,6 +22,7 @@ public class ConsumerFSM : MonoBehaviour
 
         WaitingPairMealEnd,
         WaitingPayLine,
+        TalkingAbout,
     }
 
     public enum Satisfaction
@@ -49,19 +50,14 @@ public class ConsumerFSM : MonoBehaviour
         25f,
         15f,
     };
-    private List<Color> Colors = new()
-    {
-        new Color(Mathf.InverseLerp(0, 255, 202), Mathf.InverseLerp(0, 255, 235), Mathf.InverseLerp(0, 255, 255)),
-        new Color(Mathf.InverseLerp(0, 255, 255), Mathf.InverseLerp(0, 255, 249), Mathf.InverseLerp(0, 255, 159)),
-        new Color(Mathf.InverseLerp(0, 255, 255), Mathf.InverseLerp(0, 255, 128), Mathf.InverseLerp(0, 255, 125))
-    };
+
 
     [SerializeField] public ConsumerState currentStatus = ConsumerState.Waiting;
     [SerializeField] private Satisfaction currentSatisfaction = Satisfaction.High;
     [SerializeField] private PaymentText paymentTextPrefab;
     [SerializeField] public SatisfactionIcon satisfactionIcon;
     [SerializeField] public GameObject modelParent;
-
+    [SerializeField] private GameObject textBubblePrefab;
     private NavMeshAgent agent;
     private CashierCounter cashierCounter;
     private Consumer consumer;
@@ -85,9 +81,9 @@ public class ConsumerFSM : MonoBehaviour
                     break;
                 case Satisfaction.Middle:
                     // TODO : Serving Delay Script Play
+                    StartCoroutine(consumer.currentTable.IconBubble.ShowText("테스트용 문자열",2f));
                     break;
                 case Satisfaction.Low:
-                    consumer.currentTable.HideIcon();
                     satisfactionIcon.SetIcon(currentSatisfaction);
                     break;
             }
@@ -162,8 +158,26 @@ public class ConsumerFSM : MonoBehaviour
                     }
                     agent.SetDestination(consumerManager.spawnPoint.position);
                     break;
-                case ConsumerState.WaitingPayLine:
-
+                case ConsumerState.TalkingAbout:
+                    consumer.currentTable.HideIcon();
+                    var text = Instantiate(textBubblePrefab, transform).GetComponent<TextBubble>();
+                    text.Init("테스트 문자열", () =>
+                    {
+                        CurrentSatisfaction = Satisfaction.Low;
+                        if (consumerData.GuestType == GuestType.BadGuest)
+                        {
+                            CurrentStatus = ConsumerState.Exit;
+                            return;
+                        }
+                        if (consumer.pairData?.owner == consumer)
+                        {
+                            consumer.pairData.partner.FSM.CurrentSatisfaction = Satisfaction.Low;
+                        }
+                        else if (consumer.pairData?.partner == consumer)
+                        {
+                            consumer.pairData.owner.FSM.CurrentSatisfaction = Satisfaction.Low;
+                        }
+                    });
                     break;
                 case ConsumerState.None:
                     model.PlayAnimation(PlayerState.MOVE, 0);
@@ -449,27 +463,15 @@ public class ConsumerFSM : MonoBehaviour
         switch (consumerData.orderWaitTimer)
         {
             case var t when t < satisfactionChangeLimit[0] && t > satisfactionChangeLimit[1]:
-                CurrentSatisfaction = Satisfaction.High;
+                if (CurrentSatisfaction != Satisfaction.High)
+                    CurrentSatisfaction = Satisfaction.High;
                 break;
             case var t when t < satisfactionChangeLimit[1] && t > satisfactionChangeLimit[2] &&
                             CurrentSatisfaction != Satisfaction.Middle:
                 CurrentSatisfaction = Satisfaction.Middle;
                 break;
             case var t when t < satisfactionChangeLimit[2]:
-                CurrentSatisfaction = Satisfaction.Low;
-                if (consumerData.GuestType == GuestType.BadGuest)
-                {
-                    CurrentStatus = ConsumerState.Exit;
-                    break;
-                }
-                if(consumer.pairData?.owner == consumer)
-                {
-                    consumer.pairData.partner.FSM.CurrentSatisfaction = Satisfaction.Low;
-                }
-                else if (consumer.pairData?.partner == consumer)
-                {
-                    consumer.pairData.owner.FSM.CurrentSatisfaction = Satisfaction.Low;
-                }
+                CurrentStatus = ConsumerState.TalkingAbout;
                 break;
         }
         FillSatisfactionGage();
@@ -484,11 +486,11 @@ public class ConsumerFSM : MonoBehaviour
         {
             case var t when t < satisfactionColorChangeFlagTimes[0] && t > satisfactionColorChangeFlagTimes[1]:
                 var highLerp = Mathf.InverseLerp(satisfactionColorChangeFlagTimes[0], satisfactionColorChangeFlagTimes[1], consumerData.orderWaitTimer);
-                iconBubble.SetColorSatisfaction(Colors[0], Colors[1], highLerp);
+                iconBubble.SetColorSatisfaction(Colors.satisfactionColors[0], Colors.satisfactionColors[1], highLerp);
                 break;
             case var t when t < satisfactionColorChangeFlagTimes[1] && t > satisfactionColorChangeFlagTimes[2]:
                 var middleLerp = Mathf.InverseLerp(satisfactionColorChangeFlagTimes[1], satisfactionColorChangeFlagTimes[2], consumerData.orderWaitTimer);
-                iconBubble.SetColorSatisfaction(Colors[1], Colors[2], middleLerp);
+                iconBubble.SetColorSatisfaction(Colors.satisfactionColors[1], Colors.satisfactionColors[2], middleLerp);
                 break;
         }
     }
