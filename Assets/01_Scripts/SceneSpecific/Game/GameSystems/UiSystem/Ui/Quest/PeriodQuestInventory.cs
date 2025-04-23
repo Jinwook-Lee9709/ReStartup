@@ -7,30 +7,39 @@ public class PeriodQuestInventory : MonoBehaviour
 {
     public AssetReference questCard;
 
-    public Transform dailyQuestContents;
-    public Transform weeklyQuestContents;
+    public Transform dailyMissionContents, weeklyMissionContents, MainMissionContents, achievementsMissionContents;
 
     private List<QuestCard> dalilQuestList = new();
     private List<QuestCard> weeklyQuestList = new();
 
     [SerializeField] public GameObject dailyQuestScrollview, weeklyQuestScrollview, mainQuestScrollview, AchievementScrollview;
 
-    public void AddPeriodQuest(PeriodQuestData data)
+    public void AddPeriodQuest(MissionData data)
     {
         GameObject newCard = null;
-        switch (data.QuestType)
+        switch (data.MissionType)
         {
-            case QuestType.Daily:
-                newCard = Addressables.InstantiateAsync(questCard, dailyQuestContents).WaitForCompletion();
+            case MissionType.Main:
+                newCard = Addressables.InstantiateAsync(questCard, MainMissionContents).WaitForCompletion();
+                var newMainCard = newCard.GetComponent<QuestCard>();
+                newMainCard.Init(data);
+                break;
+            case MissionType.Daily:
+                newCard = Addressables.InstantiateAsync(questCard, dailyMissionContents).WaitForCompletion();
                 var newDailyCard = newCard.GetComponent<QuestCard>();
                 newDailyCard.Init(data);
                 dalilQuestList.Add(newDailyCard);
                 break;
-            case QuestType.Weekly:
-                newCard = Addressables.InstantiateAsync(questCard, weeklyQuestContents).WaitForCompletion();
+            case MissionType.Weekly:
+                newCard = Addressables.InstantiateAsync(questCard, weeklyMissionContents).WaitForCompletion();
                 var newWeeklyCard = newCard.GetComponent<QuestCard>();
                 newWeeklyCard.Init(data);
                 weeklyQuestList.Add(newWeeklyCard);
+                break;
+            case MissionType.Achievements:
+                newCard = Addressables.InstantiateAsync(questCard, achievementsMissionContents).WaitForCompletion();
+                var newAchievementsCard = newCard.GetComponent<QuestCard>();
+                newAchievementsCard.Init(data);
                 break;
         }
     }
