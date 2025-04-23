@@ -29,7 +29,7 @@ public static class LZString
             var lzString = new LocalizedString { TableReference = tableId.ToString(), TableEntryReference = key };
             var stringOperation =
                 args != null ? lzString.GetLocalizedStringAsync(args) : lzString.GetLocalizedStringAsync();
-            stringOperation.WaitForCompletion();
+            stringOperation.WaitForCompletion();    
             if (stringOperation.Status == AsyncOperationStatus.Succeeded) return stringOperation.Result;
             Debug.Log("GetLZStringSync failed: " + key + "");
             return ERROR_STRING;
