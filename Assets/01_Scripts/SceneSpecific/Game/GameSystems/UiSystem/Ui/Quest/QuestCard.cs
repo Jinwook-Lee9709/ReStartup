@@ -26,6 +26,7 @@ public class QuestCard : MonoBehaviour
         progressSlider.value = 0;
         conditionText.text = LZString.GetUIString(string.Format(missionName, missionData.MissionId));
         currentProgress.text = $"{0} / {missionData.CompleteTimes}";
+        button.GetComponentInChildren<TextMeshProUGUI>().text = "미완료";
         //currentProgress.text <- 현재 진행 상황 로드해주기
     }
     public void OnButtonClick()
@@ -58,6 +59,7 @@ public class QuestCard : MonoBehaviour
         progressSlider.value = count / missionData.CompleteTimes;
         if (count >= missionData.CompleteTimes)
         {
+            button.GetComponentInChildren<TextMeshProUGUI>().text = "완료 \n 보상 받기";
             button.interactable = true;
         }
     }

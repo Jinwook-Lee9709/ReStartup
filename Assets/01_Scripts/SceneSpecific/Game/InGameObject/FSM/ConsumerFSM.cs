@@ -145,6 +145,7 @@ public class ConsumerFSM : MonoBehaviour
                     {
                         case Satisfaction.High:
                             UserDataManager.Instance.AddConsumerCnt(true);
+                            ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.GuestSatisfied, 1);
                             break;
                         case Satisfaction.Low:
                             UserDataManager.Instance.AddConsumerCnt(false);
@@ -263,7 +264,8 @@ public class ConsumerFSM : MonoBehaviour
         //bool isTip = true;
         int Cost = consumer.needFood.SellingCost;
         int rankPoint = consumer.needFood.GetRankPoints;
-        ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.GainMoney, 1);
+        ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.GainMoney, consumer.needFood.SellingCost);
+        ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.SellingFood, 1, (int)consumer.needFood.FoodID);
         if (isTip)
         {
             Cost += Mathf.CeilToInt(consumer.needFood.SellingCost * (consumerData.SellTipPercent / 100f));

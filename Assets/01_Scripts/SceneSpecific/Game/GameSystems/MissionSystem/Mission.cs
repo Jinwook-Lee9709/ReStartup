@@ -16,12 +16,13 @@ public class Mission
         this.id = id;
         this.targetId = targetId;
     }
-    public bool OnEventInvoked(int args = 1,int targetId = -1)
+    public bool OnEventInvoked(int args = 1, int targetId = -1)
     {
         if (targetId != -1)
         {
-            if(targetId != this.targetId)
+            if (targetId != this.targetId)
             {
+                Debug.LogError("ID다름");
                 return false;
             }
         }

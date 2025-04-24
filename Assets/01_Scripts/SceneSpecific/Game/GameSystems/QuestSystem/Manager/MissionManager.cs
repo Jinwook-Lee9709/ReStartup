@@ -38,7 +38,6 @@ public class MissionManager
             if (item.Theme == (int)gameManager.CurrentTheme || item.Theme == 0)
             {
                 questInventory.AddPeriodQuest(item);
-
             }
             foreach (var mission in missions)
             {
@@ -55,7 +54,7 @@ public class MissionManager
     {
 
     }
-    public void OnEventInvoked(MissionMainCategory category, int args = 1, int id = -1)
+    public void OnEventInvoked(MissionMainCategory category, int args, int id = -1)
     {
         foreach (var mission in missions[category])
         {
@@ -63,7 +62,7 @@ public class MissionManager
             {
                 OnMissonCleared(mission);
             }
-            UpdateMissionUICard(args, mission);
+            UpdateMissionUICard(mission.Count, mission);
         }
     }
     private void UpdateMissionUICard(int args, Mission mission)

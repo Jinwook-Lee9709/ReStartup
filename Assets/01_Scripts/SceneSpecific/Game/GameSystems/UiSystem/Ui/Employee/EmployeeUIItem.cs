@@ -135,10 +135,12 @@ public class EmployeeUIItem : MonoBehaviour
         if (employeeSaveData[employeeId].level < 1 && userData.Money > employeeData.Cost)
         {
             ServiceLocator.Instance.GetSceneService<GameManager>().EmployeeManager.InstantiateAndRegisterWorker(employeeData);
+            ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.HireStaff, 1, (int)employeeData.StaffID);
             OnUpgradeEmployee();
         }
         else if (userData.Money > employeeData.Cost * employeeSaveData[employeeId].level)
         {
+            ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.UpgradeStaff, 1, (int)employeeData.StaffID);
             OnUpgradeEmployee();
         }
     }
@@ -222,7 +224,6 @@ public class EmployeeUIItem : MonoBehaviour
         
         await UserDataManager.Instance.AdjustMoneyWithSave(-cost);
         await UserDataManager.Instance.UpgradeEmployee(employeeId);
-        
         if (targetTime > Time.time)
         {
             await UniTask.WaitForSeconds(targetTime - Time.time);

@@ -136,7 +136,7 @@ public class FoodResearchUIItem : MonoBehaviour
         {
             await UniTask.WaitForSeconds(targetTime - Time.time);
         }
-    
+        ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.UnlockFood, 1, (int)foodData.FoodID);
         userData.Money -= foodData.BasicCost;
         ingameGoodsUi.SetCostUi();
         gameManager.foodManager.UnlockFoodUpgrade(foodData);
