@@ -9,6 +9,7 @@ public class RankUIController : MonoBehaviour
     [SerializeField] private Button globalRankingButton;
     [SerializeField] private GameObject localRankingPanel;
     [SerializeField] private GameObject globalRankingPanel;
+    [SerializeField] private PlayerClone localPlayerClone;
     
     // Start is called before the first frame update
     void Start()
@@ -29,6 +30,7 @@ public class RankUIController : MonoBehaviour
     {
         localRankingPanel.SetActive(false);
         globalRankingPanel.SetActive(true);
+        localPlayerClone.OnUnActive();
     }
     
     

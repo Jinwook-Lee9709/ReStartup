@@ -212,6 +212,7 @@ public static class Endpoints
     public static readonly string DeleteReivewUrl = BaseUrl + "/users/progress/delete";
 
     public static readonly string GetRankerUrl = BaseUrl + "/users/general/getRanker";
+    public static readonly string GetUserRankUrl = BaseUrl + "/users/general/getUserRank";
 }
 
 public static class Constants

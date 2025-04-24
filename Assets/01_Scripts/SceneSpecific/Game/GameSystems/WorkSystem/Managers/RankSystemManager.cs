@@ -8,6 +8,7 @@ public class RankSystemManager : MonoBehaviour
     [SerializeField] private GameManager gameManager;
     [SerializeField] private RectTransform canvas;
     [SerializeField] private GameObject playerClone;
+    [SerializeField] private GameObject localRankingPanel;
     private RankingSystemUiItem playerUiItem;
     private void Start()
     {
@@ -59,6 +60,7 @@ public class RankSystemManager : MonoBehaviour
     }
     private void Update()
     {
+        if (!localRankingPanel.activeSelf) return;
         bool isOverLap = CheckOverlap(playerUiItem.GetComponent<RectTransform>());
         if (isOverLap)
         {
