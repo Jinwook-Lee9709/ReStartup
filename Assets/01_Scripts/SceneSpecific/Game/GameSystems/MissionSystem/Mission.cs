@@ -10,21 +10,17 @@ public class Mission
     public int ID => id;
     public int Count => count;
     public int goalCount;
-    public void Init(int goal, int id, int targetId = -1)
+    public void Init(int goal, int id, int targetId = 0)
     {
         this.goalCount = goal;
         this.id = id;
         this.targetId = targetId;
     }
-    public bool OnEventInvoked(int args = 1, int targetId = -1)
+    public bool OnEventInvoked(int args = 1, int targetId = 0)
     {
-        if (targetId != -1)
+        if (targetId != this.targetId)
         {
-            if (targetId != this.targetId)
-            {
-                Debug.LogError("ID다름");
-                return false;
-            }
+            return false;
         }
         count += args;
         return goalCount <= count;

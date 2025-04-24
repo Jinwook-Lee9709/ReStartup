@@ -61,6 +61,7 @@ public class QuestCard : MonoBehaviour
         {
             button.GetComponentInChildren<TextMeshProUGUI>().text = "완료 \n 보상 받기";
             button.interactable = true;
+            ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.RemoveMissionCard(missionData.MissionId);
         }
     }
     public void ResetQuest()

@@ -12,7 +12,7 @@ public class MissionManager
     private Dictionary<MissionMainCategory, List<Mission>> missions;
 
     public event Action<int> eve;
-    public List<QuestCard> missionCards = new();
+    public Dictionary<int, QuestCard> missionCards = new();
 
     public void Init(GameManager gameManager)
     {
@@ -54,7 +54,7 @@ public class MissionManager
     {
 
     }
-    public void OnEventInvoked(MissionMainCategory category, int args, int id = -1)
+    public void OnEventInvoked(MissionMainCategory category, int args, int id = 0)
     {
         foreach (var mission in missions[category])
         {
@@ -65,14 +65,15 @@ public class MissionManager
             UpdateMissionUICard(mission.Count, mission);
         }
     }
+    public void RemoveMissionCard(int id)
+    {
+        missionCards.Remove(id);
+    }
     private void UpdateMissionUICard(int args, Mission mission)
     {
-        foreach (var uiItem in missionCards)
+        if (missionCards.TryGetValue(mission.ID, out var card))
         {
-            if (uiItem.missionData.MissionId == mission.ID)
-            {
-                uiItem.UpdateMissionUICard(args);
-            }
+            card.UpdateMissionUICard(args);
         }
     }
 }

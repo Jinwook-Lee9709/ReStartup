@@ -34,27 +34,27 @@ public class PeriodQuestInventory : MonoBehaviour
                 newCard = Addressables.InstantiateAsync(questCard, MainMissionContents).WaitForCompletion();
                 var newMainCard = newCard.GetComponent<QuestCard>();
                 newMainCard.Init(data);
-                missionManager.missionCards.Add(newMainCard);
+                missionManager.missionCards.Add(data.MissionId,newMainCard);
                 break;
             case MissionType.Daily:
                 newCard = Addressables.InstantiateAsync(questCard, dailyMissionContents).WaitForCompletion();
                 var newDailyCard = newCard.GetComponent<QuestCard>();
                 newDailyCard.Init(data);
                 dalilQuestList.Add(newDailyCard);
-                missionManager.missionCards.Add(newDailyCard);
+                missionManager.missionCards.Add(data.MissionId, newDailyCard);
                 break;
             case MissionType.Weekly:
                 newCard = Addressables.InstantiateAsync(questCard, weeklyMissionContents).WaitForCompletion();
                 var newWeeklyCard = newCard.GetComponent<QuestCard>();
                 newWeeklyCard.Init(data);
                 weeklyQuestList.Add(newWeeklyCard);
-                missionManager.missionCards.Add(newWeeklyCard);
+                missionManager.missionCards.Add(data.MissionId, newWeeklyCard);
                 break;
             case MissionType.Achievements:
                 newCard = Addressables.InstantiateAsync(questCard, achievementsMissionContents).WaitForCompletion();
                 var newAchievementsCard = newCard.GetComponent<QuestCard>();
                 newAchievementsCard.Init(data);
-                missionManager.missionCards.Add(newAchievementsCard);
+                missionManager.missionCards.Add(data.MissionId, newAchievementsCard);
                 break;
         }
     }

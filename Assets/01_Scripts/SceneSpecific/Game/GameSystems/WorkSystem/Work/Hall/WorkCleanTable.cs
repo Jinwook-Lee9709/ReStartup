@@ -39,7 +39,7 @@ public class WorkCleanTable : InteractWorkBase
     protected override void HandlePostInteraction()
     {
         var table = target as Table;
-        ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.HireStaff, 1);
+        ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.CleanTable, 1);
         table.HideIcon();
         SetNextWork(table);
         controller.ReturnTable(table);
