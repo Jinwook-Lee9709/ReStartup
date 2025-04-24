@@ -25,7 +25,7 @@ public class RankingSystemUiItem : MonoBehaviour
         if (rankingData.RestaurantName == "Player")
         {
             rankingData.rankingPoint = (int)UserDataManager.Instance.CurrentUserData.CurrentRankPoint;
-            nameText.text = LZString.GetUIString(Strings.PlayerTag);
+            nameText.text = UserDataManager.Instance.CurrentUserData.Name;
         }
         else
         {
