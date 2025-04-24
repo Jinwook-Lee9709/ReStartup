@@ -61,6 +61,7 @@ public class PromotionBase : IPromotion
     public virtual void Excute(BuffManager buffManager, bool needAd)
     {
         UserDataManager.Instance.AddRankPointWithSave(10).Forget();
+        ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.Promotion, 1, PromotionID);
     }
 
     public virtual void Init()

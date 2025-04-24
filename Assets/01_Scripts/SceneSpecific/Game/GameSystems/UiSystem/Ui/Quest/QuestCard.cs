@@ -24,7 +24,7 @@ public class QuestCard : MonoBehaviour
         var MissionManager = ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager;
         rewardValue.text = $"X {missionData.RewardAmount}";
         progressSlider.value = 0;
-        conditionText.text = LZString.GetUIString(string.Format(missionName, missionData.MissionId));
+        conditionText.text = string.Format(LZString.GetUIString(string.Format(missionName, missionData.MissionId)), missionData.CompleteTimes);
         currentProgress.text = $"{0} / {missionData.CompleteTimes}";
         button.GetComponentInChildren<TextMeshProUGUI>().text = "미완료";
         //currentProgress.text <- 현재 진행 상황 로드해주기
