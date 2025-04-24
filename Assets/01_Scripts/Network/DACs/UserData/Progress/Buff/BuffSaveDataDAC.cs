@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
 
-public class BuffSaveDataDAC
+public static class BuffSaveDataDAC
 {
     public static async UniTask<ApiResponse<BuffSaveData[]>>GetAllBuffSaveData()
     {

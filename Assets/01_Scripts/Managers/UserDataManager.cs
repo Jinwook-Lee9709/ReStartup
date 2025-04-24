@@ -40,29 +40,6 @@ public class UserDataManager : Singleton<UserDataManager>
     {
         throw new NotImplementedException();
     }
-
-    public async Task<bool> LoadDB(string uid = "1234")
-    {
-        var result = await UserDataDAC.GetUserData(uid);
-        CurrentUserData = result;
-        return true;
-    }
-
-    public void InitCurrentUserData()
-    {
-        StartCoroutine(LoadRoutine());
-    }
-
-    private IEnumerator LoadRoutine()
-    {
-        var task = LoadDB();
-        while (!task.IsCompleted) yield return new WaitForEndOfFrame();
-        if (task.Result)
-            Debug.Log("Load DB Success");
-        else
-            Debug.Log("Load DB Fail");
-    }
-
     public void OnRankPointUp(int getRankPoint)
     {
         currentUserData.CurrentRankPoint += getRankPoint;
