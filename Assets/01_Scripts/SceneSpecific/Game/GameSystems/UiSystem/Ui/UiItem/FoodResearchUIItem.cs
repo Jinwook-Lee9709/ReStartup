@@ -29,12 +29,12 @@ public class FoodResearchUIItem : MonoBehaviour
     private GameManager gameManager;
     private bool chackCookWareUnlock;
 
+    private float imageSizeFilter = 0.12f;
     private Dictionary<int, FoodSaveData> foodSaveData;
 
     private void Start()
     {
         ingameGoodsUi = GameObject.FindWithTag("UIManager").GetComponent<UiManager>().inGameUi;
-
         if (foodData != null)
         {
             StartCoroutine(LoadSpriteCoroutine(foodData.IconID));
@@ -44,6 +44,9 @@ public class FoodResearchUIItem : MonoBehaviour
                 Debug.LogError($"{gameObject.name}의 부모 중 foodUpgradeListUi를 찾을 수 없습니다.");
                 return;
             }
+            var newWidth = foodUpgradeListUi.gameObject.GetComponent<RectTransform>().rect.width * imageSizeFilter;
+            image.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, newWidth);
+            image.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, newWidth);
         }
     }
 

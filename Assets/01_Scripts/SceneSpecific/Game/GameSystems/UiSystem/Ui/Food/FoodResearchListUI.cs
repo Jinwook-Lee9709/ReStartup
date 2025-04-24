@@ -11,6 +11,13 @@ public class FoodResearchListUI : MonoBehaviour
     public GameObject researchItemObject;
     private FoodData data;
     private Dictionary<int, FoodResearchUIItem> foodResearchItems = new();
+
+    void Update()
+    {
+        float newWidth = Screen.width * 0.3f;
+        float newHeight = Screen.width * 0.2f;
+        gameObject.GetComponent<GridLayoutGroup>().cellSize = new Vector2(newWidth, newHeight);
+    }
     void Start()
     {
         var userDataManager = UserDataManager.Instance;
@@ -18,6 +25,9 @@ public class FoodResearchListUI : MonoBehaviour
         if (UserDataManager.Instance.CurrentUserData.CurrentRankPoint != null)
             Unlock((int)UserDataManager.Instance.CurrentUserData.CurrentRankPoint);
         ServiceLocator.Instance.GetSceneService<GameManager>().WorkFlowController.OnCookingStationAdded += UnlockCheakCookwareType;
+        float newWidth = Screen.width * 0.3f;
+        float newHeight = Screen.width * 0.2f;
+        gameObject.GetComponent<GridLayoutGroup>().cellSize = new Vector2(newWidth, newHeight);
     }
     public void AddFoodResearchItem(FoodData data, FoodResearchNotifyPopup notifyPopup)
     {
