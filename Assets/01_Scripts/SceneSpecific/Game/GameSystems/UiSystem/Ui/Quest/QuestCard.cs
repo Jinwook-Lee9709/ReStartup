@@ -9,7 +9,8 @@ public class QuestCard : MonoBehaviour
     //[SerializeField] private GameObject CompleteImage;
     private readonly string categoryFormat = "MainCategory{0}";
     private readonly string missionName = "MissionName{0}";
-    [SerializeField] private TextMeshProUGUI rewardType, rewardValue, conditionText, currentProgress, buttonText;
+    [SerializeField] private TextMeshProUGUI rewardValue, conditionText, currentProgress, buttonText;
+    [SerializeField] private Slider progressSlider;
     [SerializeField] private Image rewardImage;
     public MissionData missionData;
     private Button button;
@@ -21,8 +22,8 @@ public class QuestCard : MonoBehaviour
         button.onClick.AddListener(OnButtonClick);
         button.interactable = false;
         var MissionManager = ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager;
-        rewardValue.text = missionData.RewardAmount.ToString();
-        rewardType.text = missionData.RewardType.ToString();
+        rewardValue.text = $"X {missionData.RewardAmount}";
+        progressSlider.value = 0;
         conditionText.text = LZString.GetUIString(string.Format(missionName, missionData.MissionId));
         currentProgress.text = $"{0} / {missionData.CompleteTimes}";
         //currentProgress.text <- 현재 진행 상황 로드해주기
@@ -52,7 +53,9 @@ public class QuestCard : MonoBehaviour
     }
     public void UpdateMissionUICard(int count)
     {
-        currentProgress.text = count.ToString();
+        Debug.Log("구매확인됨");
+        currentProgress.text = $"{count} / {missionData.CompleteTimes}";
+        progressSlider.value = count / missionData.CompleteTimes;
         if (count >= missionData.CompleteTimes)
         {
             button.interactable = true;
