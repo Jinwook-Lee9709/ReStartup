@@ -10,7 +10,6 @@ public static class ThemeRecordDAC
     public static async UniTask<ApiResponse<ThemeRecordData[]>>GetThemeRecordData(int themeId)
     {
         var payload = new Dictionary<string, string> { { "theme", themeId.ToString() } };
-        Debug.Log(payload);
         var result = await RestApiService.GetAsyncWithToken<ThemeRecordData[]>(Endpoints.GetThemeRecordsUrl, payload);
         return result;
     }

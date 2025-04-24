@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class Mission
@@ -23,6 +24,22 @@ public class Mission
             return false;
         }
         count += args;
+        bool isCleared = goalCount <= count;
+        SavePrgoress(false,this).Forget();
         return goalCount <= count;
+    }
+    
+    public static async UniTask SavePrgoress(bool isCleared, Mission mission)
+    {
+        MissionSaveData data = new MissionSaveData();
+        data.id = mission.ID;
+        data.count = mission.Count;
+        data.isCleared = isCleared;
+        await MissionSaveDataDAC.UpdateMissionSaveData(data);
+    }
+
+    public void SetCount(int count)
+    {
+        this.count = count;
     }
 }

@@ -50,6 +50,8 @@ public class UserData
     
     public Dictionary<int, BuffSaveData> BuffSaveData { get; set; } = new();
     
+    public Dictionary<int,MissionSaveData> MissionSaveData { get; set; } = new();
+    
     //Don't Use this
     public List<ReviewSaveData> ReviewSaveData { get; set; } = new();
 }
