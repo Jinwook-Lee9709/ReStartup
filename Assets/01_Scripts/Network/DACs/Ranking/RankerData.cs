@@ -7,6 +7,6 @@ public class RankerData
 {
     public string uuid;
     public string name;
-    [JsonProperty("total_rank_point")] public string rankPoint;
+    [JsonProperty("total_rank_point")] public int rankPoint;
     
 }

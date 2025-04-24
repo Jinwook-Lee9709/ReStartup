@@ -54,10 +54,10 @@ public static class Extends
         obj.transform.localScale = Vector3.one;
     }
 
-    public static void PopupAnimation(this Transform transform, float scale = 1.0f, float duration = 0.5f)
+    public static void PopupAnimation(this Transform transform, float scale = 1.0f, float duration = 0.5f, Action onComplete = null)
     {
         transform.gameObject.SetActive(true);
-        transform.DOScale(scale, duration).SetEase(Ease.InOutElastic);
+        transform.DOScale(scale, duration).SetEase(Ease.InOutElastic).OnComplete(() => onComplete?.Invoke());
     }
 
     public static void PopdownAnimation(this Transform transform, float scale = 0f, float duration = 0.5f,
@@ -80,6 +80,23 @@ public static class Extends
             .OnComplete(() => image.gameObject.SetActive(false))
             .OnComplete(() => onComplete?.Invoke());
     }
+    
+    
+    // private static bool CheckOverlap(this RectTransform rect, Canvas canvas)
+    // {
+    //     Vector3[] corners = new Vector3[4];
+    //     rect.GetWorldCorners(corners);
+    //
+    //     foreach (var corner in corners)
+    //     {
+    //         Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(Camera.main, corner);
+    //         if(RectTransformUtility.RectangleContainsScreenPoint(canvas, screenPoint,Camera.main))
+    //         {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
     
    
 }
