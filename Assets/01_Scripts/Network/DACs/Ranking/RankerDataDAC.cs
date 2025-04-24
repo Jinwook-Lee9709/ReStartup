@@ -7,7 +7,7 @@ public class RankerDataDAC
 {
     public static async UniTask<ApiResponse<RankerData[]>> GetRankerData()
     {
-        ApiResponse<RankerData[]> response = await RestApiService.GetAsync<RankerData[]>(Endpoints.GetBuffsUrl);
+        ApiResponse<RankerData[]> response = await RestApiService.GetAsync<RankerData[]>(Endpoints.GetRankerUrl);
         return response;
     }
 }
