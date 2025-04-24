@@ -1,15 +1,19 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
 
 public static class UserDataDAC
 {
-    public static async Task<UserData> GetUserData(string uid)
+    public static async UniTask<ApiResponse<string>> GetUserName()
     {
-        var result = await RestApiService.GetAsync<UserData>($"https://localhost:443/api/getInfo?uuid={uid}");
-        return result.Data;
+        ApiResponse<string> response = await RestApiService.GetAsyncWithToken<string>(Endpoints.GetUserName);
+        return response;
     }
     
-    
-    
+    public static async UniTask<ApiResponse<string>> SaveUserName()
+    {
+        ApiResponse<string> response = await RestApiService.PostAsyncWithToken<string>(Endpoints.GetUserName);
+        return response;
+    }
 }

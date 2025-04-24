@@ -178,6 +178,9 @@ public static class Endpoints
     public static readonly string VerifyTokenUrl = BaseUrl + "/auth/verify";
     public static readonly string RefreshTokenUrl = BaseUrl + "/auth/refresh";
 
+    public static readonly string GetUserName = BaseUrl + "/users/getName";
+    public static readonly string SaveUserName = BaseUrl + "/users/updateName";
+
     public static readonly string GetAllCurrenciesUrl = BaseUrl + "/users/getAllCurrencies";
     public static readonly string SaveCurrenciesUrl = BaseUrl + "/users/saveCurrencies";
 
@@ -219,6 +222,9 @@ public static class Endpoints
 
     public static readonly string GetRankerUrl = BaseUrl + "/users/general/getRanker";
     public static readonly string GetUserRankUrl = BaseUrl + "/users/general/getUserRank";
+    
+    public static readonly string GetMissionsUrl = BaseUrl + "/users/progress/getMissions";
+    public static readonly string SaveMissionUrl = BaseUrl + "/users/progress/saveMission";
 }
 
 public static class Constants
