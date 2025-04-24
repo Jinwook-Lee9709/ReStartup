@@ -46,5 +46,6 @@ public class NameRegister : MonoBehaviour
     private async UniTask SaveName(string name)
     {
         await UserDataDAC.SaveUserName(name);
+        UserDataManager.Instance.CurrentUserData.Name = name;
     }
 }

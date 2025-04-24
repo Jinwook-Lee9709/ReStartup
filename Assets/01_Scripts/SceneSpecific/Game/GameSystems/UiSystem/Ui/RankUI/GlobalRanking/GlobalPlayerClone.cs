@@ -29,7 +29,7 @@ public class GlobalPlayerClone : MonoBehaviour
     public void UpdatePlayerData(UserRankData data)
     {
         playerData = data;
-        playerName.text = LZString.GetUIString(Strings.PlayerTag);
+        playerName.text = UserDataManager.Instance.CurrentUserData.Name;
         playerRank.text = data.rank.ToString();
         playerRankPoint.text = data.rankPoint.ToString();
     }
