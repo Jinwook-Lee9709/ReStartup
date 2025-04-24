@@ -24,7 +24,9 @@ public class LobbySceneManager : MonoBehaviour
             button.onClick.AddListener(() => OnThemeSelectButtonTouched(id));
         }
         if (UserDataManager.Instance.CurrentUserData.Name == null)
+        {
             NamePanel.SetActive(true);
+        }
     }
 
     private void OnThemeSelectButtonTouched(int id)

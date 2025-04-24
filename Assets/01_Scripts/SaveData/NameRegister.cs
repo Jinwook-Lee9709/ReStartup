@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class NameRegister : MonoBehaviour
 {
     [SerializeField] private TMP_InputField nameInput;
-    [SerializeField] private Button registButton;
+    [SerializeField] private Button registButton, theme1Button;
 
     private void Start()
     {
@@ -16,6 +16,11 @@ public class NameRegister : MonoBehaviour
         registButton.onClick.RemoveAllListeners();
         registButton.onClick.AddListener(OnRegistButtonTouch);
         RegexFilter.Init();
+
+        if(UserDataManager.Instance.CurrentUserData.Name == null)
+        {
+            theme1Button.interactable = false;
+        }
     }
 
     private void OnRegistButtonTouch()
@@ -33,6 +38,8 @@ public class NameRegister : MonoBehaviour
         }
         Debug.Log("훌륭합니다!!");
         SaveName(check).Forget();
+        theme1Button.interactable = true;
+        transform.PopdownAnimation();
         return;
     }
 
