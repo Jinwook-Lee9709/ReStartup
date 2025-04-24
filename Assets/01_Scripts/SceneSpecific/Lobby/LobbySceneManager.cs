@@ -48,6 +48,7 @@ public class LobbySceneManager : MonoBehaviour
         var promotionQueryTask = PromotionDataDAC.GetPromotionData();
         var buffQueryTask = BuffSaveDataDAC.GetAllBuffSaveData();
         var reviewQueryTask = ReviewSaveDataDAC.GetReviewSaveData();
+        var missionQueryTask = MissionSaveDataDAC.GetAllMissionSaveData();
         
         var getInteriorResponse = await interiorQueryTask;
         var getFoodResponse = await foodQueryTask;
@@ -56,6 +57,7 @@ public class LobbySceneManager : MonoBehaviour
         var promotionResponse = await promotionQueryTask;
         var buffResponse = await buffQueryTask;
         var reviewResponse = await reviewQueryTask;
+        var missionResponse = await missionQueryTask;
 
         if (getInteriorResponse == null || getFoodResponse == null || getEmployeeResponse == null ||
             themeRecordResponse == null || promotionResponse == null || buffResponse == null || reviewResponse == null)
@@ -129,6 +131,14 @@ public class LobbySceneManager : MonoBehaviour
                 DateTime kstNow = data.createdTime.AddHours(9);
                 data.createdTime = kstNow;
                 UserDataManager.Instance.CurrentUserData.ReviewSaveData.Add(data);
+            }
+        }
+
+        if (missionResponse.Data.Length != 0)
+        {
+            foreach (var data in missionResponse.Data)
+            {
+                UserDataManager.Instance.CurrentUserData.MissionSaveData.Add(data.id, data);
             }
         }
     }
