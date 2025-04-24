@@ -20,7 +20,6 @@ public class UiManager : MonoBehaviour
     public void OnClickButtonSetAppsUi()
     {
         var uiSetChack = uiHUD.gameObject.GetComponent<HeadsUpDisplayUi>().includedUiSet;
-        Debug.Log(uiSetChack);
         if (uiSetChack)
         {
             uiHUD.SetActive(false);

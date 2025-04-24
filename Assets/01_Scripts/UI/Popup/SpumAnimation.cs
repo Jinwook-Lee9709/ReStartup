@@ -10,7 +10,7 @@ public class SpumAnimation : MonoBehaviour
     [SerializeField] private SPUM_Prefabs model;
     [SerializeField] private PlayerState animationCategory;
     [SerializeField] private int animationID;
-    [SerializeField] private int animationInterval;
+    [SerializeField] private float animationInterval;
 
     private float timer = 0;
     

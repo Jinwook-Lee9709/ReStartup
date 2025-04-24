@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -15,6 +16,8 @@ public class RankingGlobalController : MonoBehaviour
     [SerializeField] private Transform contents;
     
     private List<RankingGlobalUiItem> rankingGlobalUiItems = new List<RankingGlobalUiItem>();
+
+    private bool isFirstLoad = true;
     
     public void Awake()
     {
@@ -41,19 +44,40 @@ public class RankingGlobalController : MonoBehaviour
 
     private async UniTask LoadRanking()
     {
-        float targetTime = Time.time + LOAD_RANKING_DELAY;
-        var alert = ServiceLocator.Instance.GetGlobalService<AlertPopup>();
-        alert.PopUp("랭킹 로딩중..", "우리 가게는 몇등일까?", SpumCharacter.HireEmployee, false);
-        var response = await RankerDataDAC.GetRankerData();
-        if (response.ResponseCode != ResponseType.Success)
-            return;
-        if (Time.time < targetTime)
+        if (isFirstLoad)
         {
-            UniTask.WaitForSeconds(targetTime - Time.time);
+            isFirstLoad = false;
+            await LoadRankingWithPopup();
+            return;
         }
 
-        alert.ClosePopup();
+        await LoadDataAndUpdateUI();
+    }
+
+    private async UniTask LoadRankingWithPopup()
+    {
+        float targetTime = Time.time + LOAD_RANKING_DELAY;
+        ShowLoadingPopup();
+        var response = await LoadDataFromServer();
+        if (Time.time < targetTime)
+        {
+            await UniTask.WaitForSeconds(targetTime - Time.time);
+        }
         SetInfo(response.Data);
+        CloseLoadingPopup();
+    }
+
+    private async UniTask LoadDataAndUpdateUI()
+    {
+        var response = await LoadDataFromServer();
+        if (response.ResponseCode == ResponseType.Success)
+            SetInfo(response.Data);
+    }
+
+    private async UniTask<ApiResponse<RankerData[]>> LoadDataFromServer()
+    {
+        var response = await RankerDataDAC.GetRankerData();
+        return response;
     }
 
     private void SetInfo(RankerData[] arr)
@@ -65,5 +89,18 @@ public class RankingGlobalController : MonoBehaviour
                 data.rankPoint, data.uuid);
             rankingGlobalUiItems[i].gameObject.SetActive(true);
         }
+    }
+    
+    private void ShowLoadingPopup()
+    {
+        var alert = ServiceLocator.Instance.GetGlobalService<AlertPopup>();
+        alert?.PopUp("랭킹 로딩중..", "우리 가게는 몇등일까?", SpumCharacter.HireEmployee, false);
+    }
+
+    // 팝업 닫기
+    private void CloseLoadingPopup()
+    {
+        var alert = ServiceLocator.Instance.GetGlobalService<AlertPopup>();
+        alert?.ClosePopup();
     }
 }

@@ -16,7 +16,6 @@ public class HeadsUpDisplayUi : MonoBehaviour
             smartPhoneButton.transform.rotation = Quaternion.Euler(currentRotation);
             smartPhoneIncludedButton.SetActive(true);
             includedUiSet = true;
-            Debug.Log(includedUiSet);
         }
     }
 
