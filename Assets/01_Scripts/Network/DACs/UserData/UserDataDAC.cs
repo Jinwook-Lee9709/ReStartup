@@ -17,7 +17,7 @@ public static class UserDataDAC
         {
             ["name"] = name
         };
-        ApiResponse<string> response = await RestApiService.PostAsyncWithToken<string>(Endpoints.GetUserName, payload);
+        ApiResponse<string> response = await RestApiService.PostAsyncWithToken<string>(Endpoints.SaveUserName, payload);
         return response;
     }
 }
