@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Mission
+public class Mission
 {
     private int id;
     private int targetId;
@@ -16,7 +16,7 @@ public abstract class Mission
         this.id = id;
         this.targetId = targetId;
     }
-    public bool OnEventInvoked(int args,int targetId = -1)
+    public bool OnEventInvoked(int args = 1,int targetId = -1)
     {
         if (targetId != -1)
         {
