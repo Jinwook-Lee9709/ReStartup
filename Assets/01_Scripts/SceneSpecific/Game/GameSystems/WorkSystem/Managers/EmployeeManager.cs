@@ -98,7 +98,6 @@ public class EmployeeManager
     public void InstantiateAndRegisterWorker(EmployeeTableGetData employeeData)
     {
         var assetId = String.Format(employeePrefab, employeeData.StaffID);
-        Debug.Log(assetId);
         var handle = Addressables.LoadAssetAsync<GameObject>(assetId);
         GameObject prefab = handle.WaitForCompletion();
         var newEmployee = Object.Instantiate(prefab).GetComponent<EmployeeFSM>();

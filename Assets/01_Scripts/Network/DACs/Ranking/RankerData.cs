@@ -10,3 +10,11 @@ public class RankerData
     [JsonProperty("total_rank_point")] public int rankPoint;
     
 }
+
+public class UserRankData
+{
+    [JsonProperty("ranking")]
+    public int rank;
+    [JsonProperty("total_rank_point")]
+    public int rankPoint;
+}

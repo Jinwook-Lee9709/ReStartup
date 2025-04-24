@@ -14,10 +14,13 @@ public class RankingGlobalController : MonoBehaviour
     private static readonly float LOAD_RANKING_DELAY = 3f;
     
     [SerializeField] private Transform contents;
+    [SerializeField] private GlobalPlayerClone globalPlayerClone;
+    [SerializeField] private RectTransform canvas;
     
     private List<RankingGlobalUiItem> rankingGlobalUiItems = new List<RankingGlobalUiItem>();
-
     private bool isFirstLoad = true;
+
+    private int userRank = int.MaxValue;
     
     public void Awake()
     {
@@ -39,6 +42,8 @@ public class RankingGlobalController : MonoBehaviour
 
     public void OnEnable()
     {
+        if(!isFirstLoad)
+            globalPlayerClone.OnActive();
         LoadRanking().Forget();
     }
 
@@ -59,10 +64,18 @@ public class RankingGlobalController : MonoBehaviour
         float targetTime = Time.time + LOAD_RANKING_DELAY;
         ShowLoadingPopup();
         var response = await LoadDataFromServer();
+        var userResponse = await LoadUserDataFromServer();
+        if (userResponse.ResponseCode != ResponseType.Success || response.ResponseCode != ResponseType.Success
+                                                              || userResponse.Data == null || response.Data == null)
+            return;
         if (Time.time < targetTime)
         {
             await UniTask.WaitForSeconds(targetTime - Time.time);
         }
+
+        userRank = userResponse.Data.rank;
+        globalPlayerClone.UpdatePlayerData(userResponse.Data);
+        globalPlayerClone.SetRankerCount(response.Data.Length);
         SetInfo(response.Data);
         CloseLoadingPopup();
     }
@@ -70,24 +83,42 @@ public class RankingGlobalController : MonoBehaviour
     private async UniTask LoadDataAndUpdateUI()
     {
         var response = await LoadDataFromServer();
-        if (response.ResponseCode == ResponseType.Success)
-            SetInfo(response.Data);
+        var userResponse = await LoadUserDataFromServer();
+        if (userResponse.ResponseCode != ResponseType.Success || response.ResponseCode != ResponseType.Success
+            || userResponse.Data == null || response.Data == null)
+            return;
+        userRank = userResponse.Data.rank;
+        globalPlayerClone.UpdatePlayerData(userResponse.Data);
+        globalPlayerClone.SetRankerCount(response.Data.Length);
+        SetInfo(response.Data);
     }
-
+    
     private async UniTask<ApiResponse<RankerData[]>> LoadDataFromServer()
     {
         var response = await RankerDataDAC.GetRankerData();
         return response;
     }
 
+    private async UniTask<ApiResponse<UserRankData>> LoadUserDataFromServer()
+    {
+        var response = await RankerDataDAC.GetUserRank();
+        return response;
+    }
+
     private void SetInfo(RankerData[] arr)
     {
+        int rank = 1;
         for (int i = 0; i < arr.Length; i++)
         {
             var data = arr[i];
-            rankingGlobalUiItems[i].SetInfo(i, String.IsNullOrEmpty(data.name) ? "알수없음": data.name, "식당이름",
+            rankingGlobalUiItems[i].SetInfo(rank, String.IsNullOrEmpty(data.name) ? "알수없음": data.name, "식당이름",
                 data.rankPoint, data.uuid);
             rankingGlobalUiItems[i].gameObject.SetActive(true);
+            if (i + 1 < arr.Length && arr[i].rankPoint == arr[i + 1].rankPoint)
+            {
+                continue;   
+            }
+            rank++;
         }
     }
     
@@ -102,5 +133,27 @@ public class RankingGlobalController : MonoBehaviour
     {
         var alert = ServiceLocator.Instance.GetGlobalService<AlertPopup>();
         alert?.ClosePopup();
+    }
+
+    private void OnDisable()
+    {
+        globalPlayerClone.OnUnActive();
+    }
+    
+    private void Update()
+    {
+        if (userRank > 50 || rankingGlobalUiItems.Count < userRank)
+        {
+            return;
+        }
+        bool isOverLap = rankingGlobalUiItems[userRank - 1].GetComponent<RectTransform>().CheckOverlap(canvas);
+        if (isOverLap)
+        {
+            globalPlayerClone.OnUnActive();
+        }
+        else
+        {
+            globalPlayerClone.OnActive();
+        }
     }
 }
