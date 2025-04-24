@@ -39,7 +39,7 @@ public class RankSystemManager : MonoBehaviour
         foreach (var item in rankConditiondata.Values)
         {
             if(item.Type == (int)gameManager.CurrentTheme)
-                rankingConditionListUi.RankCoinditionCardAdd(item);
+                rankingConditionListUi.RankConditionCardAdd(item);
         }
         playerClone.GetComponent<PlayerClone>().playerData = playerData;
     }
