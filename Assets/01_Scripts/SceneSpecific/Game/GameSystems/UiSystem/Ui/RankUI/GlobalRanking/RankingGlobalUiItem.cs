@@ -41,9 +41,9 @@ public class RankingGlobalUiItem : MonoBehaviour
     private UniTask SetTextWithAnimation( int rank, string userName, string restaurantName, int rankPoint)
     {
         Sequence sequence = DOTween.Sequence();
-        sequence.Append(transform.DORotate(new Vector3(0, 180, 0), 1f).SetEase(Ease.Linear));
+        sequence.Append(transform.DORotate(new Vector3(180, 0, 0), 0.4f).SetEase(Ease.InOutElastic));
         sequence.AppendCallback(()=>SetText(rank, userName, restaurantName, rankPoint));
-        sequence.Append(transform.DORotate(new Vector3(0, 0, 0), 1f).SetEase(Ease.Linear));
+        sequence.Append(transform.DORotate(new Vector3(0, 0, 0), 0.4f).SetEase(Ease.InOutElastic));
         return UniTask.CompletedTask;
     }
 }

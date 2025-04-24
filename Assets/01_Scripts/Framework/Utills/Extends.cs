@@ -81,5 +81,22 @@ public static class Extends
             .OnComplete(() => onComplete?.Invoke());
     }
     
+    
+    // private static bool CheckOverlap(this RectTransform rect, Canvas canvas)
+    // {
+    //     Vector3[] corners = new Vector3[4];
+    //     rect.GetWorldCorners(corners);
+    //
+    //     foreach (var corner in corners)
+    //     {
+    //         Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(Camera.main, corner);
+    //         if(RectTransformUtility.RectangleContainsScreenPoint(canvas, screenPoint,Camera.main))
+    //         {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
+    
    
 }
