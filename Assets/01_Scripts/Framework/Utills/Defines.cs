@@ -316,8 +316,12 @@ public static class Strings
     public static readonly string Clean = "Clean";
     public static readonly string WashDish = "WashDish";
     public static readonly string Cash = "Cash";
+    public static readonly string Gold = "Gold";
+    public static readonly string Free = "Free";
+
     public static readonly string Check = "Check";
     public static readonly string Upgrade = "Upgrade";
+
 
     public static readonly string employeeNameKeyFormat = "EmployeeName{0}";
     public static readonly string cookwareFormat = "S{0}_{1}";
@@ -326,6 +330,14 @@ public static class Strings
     public static readonly string foodNameKeyFormat = "FoodName{0}";
     public static readonly string shortOnMoney = "ShortOnMoney";
 
+    public static readonly string buffNameFormat = "Buff{0}Name";
+    public static readonly string buffDescriptionFormat = "Buff{0}Description";
+
+    public static readonly string promotionNameFormat = "Promotion{0}Name";
+    public static readonly string promotionDescriptionFormat = "Promotion{0}Description";
+
+    public static readonly string costFormat = "#,##0";
+    public static readonly string cntFormat = "{0} / {1}";
 }
 
 public static class Colors

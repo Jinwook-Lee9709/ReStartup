@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class Buff
 {
-    private readonly string buffNameFormat = "Buff{0}Name";
-    private readonly string buffDescriptionFormat = "Buff{0}Description";
     public int BuffID { get; set; }
     public BuffType BuffType { get; set; }
     public float BuffTime { get; set; }
@@ -32,7 +30,7 @@ public class Buff
     {
         remainBuffTime = BuffTime;
         isOnBuff = true;
-        buffName = LZString.GetUIString(string.Format(buffNameFormat, BuffID));
-        buffDescription = LZString.GetUIString(string.Format(buffDescriptionFormat, BuffID));
+        buffName = LZString.GetUIString(string.Format(Strings.buffNameFormat, BuffID));
+        buffDescription = LZString.GetUIString(string.Format(Strings.buffDescriptionFormat, BuffID));
     }
 }

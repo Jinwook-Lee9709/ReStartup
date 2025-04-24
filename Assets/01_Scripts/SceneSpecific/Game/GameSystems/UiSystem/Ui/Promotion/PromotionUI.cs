@@ -7,8 +7,6 @@ using UnityEngine.UI;
 
 public class PromotionUI : MonoBehaviour
 {
-    private readonly string costFormat = "#,##0";
-    private readonly string cntFormat = "{0} / {1}";
     [SerializeField] private Image costImage;
     public BuffManager buffManager;
     public ConsumerManager consumerManager;
@@ -29,16 +27,16 @@ public class PromotionUI : MonoBehaviour
         switch (promotionData.CostType)
         {
             case CostType.Free:
-                costImage.sprite = LoadCostImage("Free");
+                costImage.sprite = LoadCostImage(Strings.Free);
                 costText.gameObject.SetActive(false);
                 break;
             case CostType.Money:
-                costImage.sprite = LoadCostImage("Cash");
-                costText.text = promotionData.CostQty.ToString(costFormat);
+                costImage.sprite = LoadCostImage(Strings.Cash);
+                costText.text = promotionData.CostQty.ToString(Strings.costFormat);
                 break;
             case CostType.Gold:
-                costImage.sprite = LoadCostImage("Gold");
-                costText.text = promotionData.CostQty.ToString(costFormat);
+                costImage.sprite = LoadCostImage(Strings.Gold);
+                costText.text = promotionData.CostQty.ToString(Strings.costFormat);
                 break;
         }
         UpdateUI();
@@ -88,7 +86,7 @@ public class PromotionUI : MonoBehaviour
         //    promotionData.currentLimitBuy = 0;
         //    payButton.interactable = false;
         //}
-        buyCntText.text = string.Format(cntFormat, promotionData.currentLimitBuy, promotionData.LimitBuy);
-        adCntText.text = string.Format(cntFormat, promotionData.currentLimitAD, promotionData.LimitAD);
+        buyCntText.text = string.Format(Strings.cntFormat, promotionData.currentLimitBuy, promotionData.LimitBuy);
+        adCntText.text = string.Format(Strings.cntFormat, promotionData.currentLimitAD, promotionData.LimitAD);
     }
 }
