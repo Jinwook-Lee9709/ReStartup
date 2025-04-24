@@ -186,6 +186,7 @@ public class UserDataManager : Singleton<UserDataManager>
             {
                 OnReviewCntFullEvent?.Invoke(isPositive);
                 currentUserData.PositiveCnt = 0;
+                ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.GoodReview, 1);
             }
         }
         else

@@ -54,10 +54,10 @@ public static class Extends
         obj.transform.localScale = Vector3.one;
     }
 
-    public static void PopupAnimation(this Transform transform, float scale = 1.0f, float duration = 0.5f)
+    public static void PopupAnimation(this Transform transform, float scale = 1.0f, float duration = 0.5f, Action onComplete = null)
     {
         transform.gameObject.SetActive(true);
-        transform.DOScale(scale, duration).SetEase(Ease.InOutElastic);
+        transform.DOScale(scale, duration).SetEase(Ease.InOutElastic).OnComplete(() => onComplete?.Invoke());
     }
 
     public static void PopdownAnimation(this Transform transform, float scale = 0f, float duration = 0.5f,

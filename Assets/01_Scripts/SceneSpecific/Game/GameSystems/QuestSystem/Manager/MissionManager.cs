@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using DG.Tweening.Core.Easing;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ public class MissionManager
     private Dictionary<MissionMainCategory, List<Mission>> missions;
 
     public event Action<int> eve;
+    public Dictionary<int, QuestCard> missionCards = new();
 
     public void Init(GameManager gameManager)
     {
@@ -37,14 +39,22 @@ public class MissionManager
             {
                 questInventory.AddPeriodQuest(item);
             }
-            
+            foreach (var mission in missions)
+            {
+                if (mission.Key == item.MissionCategory)
+                {
+                    var newMission = new Mission();
+                    newMission.Init(item.CompleteTimes, item.MissionId, item.TargetId);
+                    mission.Value.Add(newMission);
+                }
+            }
         }
     }
     public void OnMissonCleared(Mission mission)
     {
 
     }
-    public void OnEventInvoked(MissionMainCategory category, int args ,int id = -1 )
+    public void OnEventInvoked(MissionMainCategory category, int args, int id = 0)
     {
         foreach (var mission in missions[category])
         {
@@ -52,38 +62,18 @@ public class MissionManager
             {
                 OnMissonCleared(mission);
             }
+            UpdateMissionUICard(mission.Count, mission);
         }
     }
-    public void SubscribeMissionTarget(MissionData card)
+    public void RemoveMissionCard(int id)
     {
-        switch (card.MainCategory)
+        missionCards.Remove(id);
+    }
+    private void UpdateMissionUICard(int args, Mission mission)
+    {
+        if (missionCards.TryGetValue(mission.ID, out var card))
         {
-            case MissionMainCategory.BuyInterior:
-                break;
-            case MissionMainCategory.UnlockFood:
-                break;
-            case MissionMainCategory.SellingFood:
-                break;
-            case MissionMainCategory.UpgradeFood:
-                break;
-            case MissionMainCategory.HireStaff:
-                break;
-            case MissionMainCategory.Promotion:
-                break;
-            case MissionMainCategory.UpgradeInterior:
-                break;
-            case MissionMainCategory.GuestSatisfied:
-                break;
-            case MissionMainCategory.UpgradeStaff:
-                break;
-            case MissionMainCategory.Clean:
-                break;
-            case MissionMainCategory.Recover:
-                break;
-            case MissionMainCategory.GainMoney:
-                break;
-            case MissionMainCategory.Guest:
-                break;
+            card.UpdateMissionUICard(args);
         }
     }
 }

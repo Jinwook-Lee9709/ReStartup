@@ -20,7 +20,7 @@ public class BuffInfoUI : MonoBehaviour, IComparable<BuffInfoUI>
         currentBuff = buff;
         //TODO : buffImage
         buffRemainTimeText.text = $"{Mathf.CeilToInt(currentBuff.remainBuffTime)} 초";
-        buffInfoText.text = $"{currentBuff.BuffType.ToString()}";
+        buffInfoText.text = currentBuff.buffDescription;
     }
 
     private void Update()

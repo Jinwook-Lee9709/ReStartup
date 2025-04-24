@@ -1,3 +1,6 @@
+using DG.Tweening;
+using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -8,6 +11,7 @@ public class IconBubble : MonoBehaviour
     [SerializeField] private SpriteRenderer background;
     [SerializeField] private SpriteRenderer fillSatisfaction;
     [SerializeField] private SpriteRenderer icon;
+    [SerializeField] private TextMeshPro satisfactionText;
 
     private void Start()
     {
@@ -18,7 +22,6 @@ public class IconBubble : MonoBehaviour
     public void ShowIcon(Sprite sprite, Vector3 position, bool flip = false)
     {
         SetIcon(sprite);
-        //FillingSatisfation(1f);
         SetColorSatisfaction(fillSatisfaction.material.color, Color.white, 1f);
         background.flipX = flip;
         fillSatisfaction.flipX = flip;
@@ -42,8 +45,22 @@ public class IconBubble : MonoBehaviour
         fillSatisfaction.material.SetFloat("_FillAmount", fillAmount);
     }
 
-    public void SetColorSatisfaction(Color prevColor,Color targetColor, float normarizedAmount)
+    public void SetColorSatisfaction(Color prevColor, Color targetColor, float normarizedAmount)
     {
         fillSatisfaction.material.color = Utills.LerpTowardWhiter(prevColor, targetColor, normarizedAmount);
+    }
+
+    public IEnumerator ShowText(string text, float animationTime)
+    {
+        var prevIcon = icon.sprite;
+        satisfactionText.text = text;
+
+        SetIcon(null);
+        satisfactionText.gameObject.SetActive(true);
+        yield return new WaitForSeconds(animationTime);
+        SetIcon(prevIcon);
+        satisfactionText.gameObject.SetActive(false);
+
+
     }
 }

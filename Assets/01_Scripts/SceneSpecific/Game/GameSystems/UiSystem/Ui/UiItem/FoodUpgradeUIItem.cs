@@ -83,6 +83,7 @@ public class FoodUpgradeUIItem : MonoBehaviour
         var userData = UserDataManager.Instance.CurrentUserData;
         if (userData.Money > foodData.BasicCost * foodData.upgradeCount)
         {
+            ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.UpgradeFood, 1, (int)foodData.FoodID);
             foodData.upgradeCount++;
             levelText.text = foodData.upgradeCount.ToString();
             userData.Money -= foodData.BasicCost * foodData.upgradeCount;

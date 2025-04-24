@@ -7,9 +7,12 @@ using UnityEngine.UI;
 public class QuestCard : MonoBehaviour
 {
     //[SerializeField] private GameObject CompleteImage;
-    [SerializeField] private TextMeshProUGUI rewardType, rewardValue, conditionText, currentProgress, buttonText;
+    private readonly string categoryFormat = "MainCategory{0}";
+    private readonly string missionName = "MissionName{0}";
+    [SerializeField] private TextMeshProUGUI rewardValue, conditionText, currentProgress, buttonText;
+    [SerializeField] private Slider progressSlider;
     [SerializeField] private Image rewardImage;
-    private MissionData missionData;
+    public MissionData missionData;
     private Button button;
 
     public void Init(MissionData data)
@@ -17,15 +20,17 @@ public class QuestCard : MonoBehaviour
         missionData = data;
         button = GetComponentInChildren<Button>();
         button.onClick.AddListener(OnButtonClick);
+        button.interactable = false;
         var MissionManager = ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager;
-        MissionManager.SubscribeMissionTarget(missionData);
+        rewardValue.text = $"X {missionData.RewardAmount}";
+        progressSlider.value = 0;
+        conditionText.text = string.Format(LZString.GetUIString(string.Format(missionName, missionData.MissionId)), missionData.CompleteTimes);
+        currentProgress.text = $"{0} / {missionData.CompleteTimes}";
+        button.GetComponentInChildren<TextMeshProUGUI>().text = "미완료";
+        //currentProgress.text <- 현재 진행 상황 로드해주기
     }
     public void OnButtonClick()
     {
-        if (missionData.count >= missionData.CompleteTimes)
-        {
-            return;
-        }
         button.interactable = false;
         //CompleteImage.SetActive(true);
         switch (missionData.RewardType)
@@ -34,26 +39,33 @@ public class QuestCard : MonoBehaviour
                 UserDataManager.Instance.AdjustMoney(missionData.RewardAmount);
                 break;
             case RewardType.Gold:
+                UserDataManager.Instance.AdjustGold(missionData.RewardAmount);
                 break;
             case RewardType.AdBlockTicket:
                 break;
             case RewardType.MissionPoint:
                 break;
             case RewardType.RankPoint:
+                UserDataManager.Instance.OnRankPointUp(missionData.RewardAmount);
                 break;
         }
+        Destroy(gameObject);
         //보상지급
     }
-    public void UpCount()
+    public void UpdateMissionUICard(int count)
     {
-        if (missionData.count >= missionData.CompleteTimes)
+        Debug.Log("구매확인됨");
+        currentProgress.text = $"{count} / {missionData.CompleteTimes}";
+        progressSlider.value = count / missionData.CompleteTimes;
+        if (count >= missionData.CompleteTimes)
         {
-            return;
+            button.GetComponentInChildren<TextMeshProUGUI>().text = "완료 \n 보상 받기";
+            button.interactable = true;
+            ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.RemoveMissionCard(missionData.MissionId);
         }
-        ++missionData.count;
     }
     public void ResetQuest()
     {
-        missionData.count = 0;
+        //퀘스트 초기화 해주기
     }
 }

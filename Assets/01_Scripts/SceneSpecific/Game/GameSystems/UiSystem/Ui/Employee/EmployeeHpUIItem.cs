@@ -27,6 +27,7 @@ public class EmployeeHpUIItem : MonoBehaviour
                 {
                     return;
                 }
+                ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.Recover, 1);
                 employee.IncreaseHp(100);
                 if (employeeData.currentHealth > employeeData.Health)
                 {
