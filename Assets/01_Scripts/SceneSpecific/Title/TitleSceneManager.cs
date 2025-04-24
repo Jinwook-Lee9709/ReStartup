@@ -95,9 +95,11 @@ public class TitleSceneManager : MonoBehaviour
 
     private async UniTask BeforeLobbySceneLoad()
     {
+        var nameResponse = await UserDataDAC.GetUserName();
         var response = await CurrencyDataDAC.GetCurrencyData();
         UserDataManager.Instance.CurrentUserData.Gold = response.Data.First(x=>x.currencyType == CurrencyType.Gold).amount;
         UserDataManager.Instance.CurrentUserData.Money = response.Data.First(x=>x.currencyType == CurrencyType.Money).amount;
+        UserDataManager.Instance.CurrentUserData.Name = nameResponse.Data;
         await InitializeStageStatus();
     }
 

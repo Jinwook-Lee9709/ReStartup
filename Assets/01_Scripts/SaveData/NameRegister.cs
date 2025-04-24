@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -29,6 +30,12 @@ public class NameRegister : MonoBehaviour
             return;
         }
         Debug.Log("훌륭합니다!!");
+        SaveName(check).Forget();
         return;
+    }
+
+    private async UniTask SaveName(string name)
+    {
+        await UserDataDAC.SaveUserName(name);
     }
 }
