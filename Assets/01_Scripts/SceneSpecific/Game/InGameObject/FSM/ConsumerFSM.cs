@@ -84,7 +84,6 @@ public class ConsumerFSM : MonoBehaviour
                     StartCoroutine(consumer.currentTable.IconBubble.ShowText("테스트용 문자열",2f));
                     break;
                 case Satisfaction.Low:
-                    satisfactionIcon.SetIcon(currentSatisfaction);
                     break;
             }
 
@@ -163,20 +162,8 @@ public class ConsumerFSM : MonoBehaviour
                     var text = Instantiate(textBubblePrefab, transform).GetComponent<TextBubble>();
                     text.Init("테스트 문자열", () =>
                     {
-                        CurrentSatisfaction = Satisfaction.Low;
-                        if (consumerData.GuestType == GuestType.BadGuest)
-                        {
-                            CurrentStatus = ConsumerState.Exit;
-                            return;
-                        }
-                        if (consumer.pairData?.owner == consumer)
-                        {
-                            consumer.pairData.partner.FSM.CurrentSatisfaction = Satisfaction.Low;
-                        }
-                        else if (consumer.pairData?.partner == consumer)
-                        {
-                            consumer.pairData.owner.FSM.CurrentSatisfaction = Satisfaction.Low;
-                        }
+                        satisfactionIcon.SetIcon(currentSatisfaction);
+                        
                     });
                     break;
                 case ConsumerState.None:
@@ -475,6 +462,20 @@ public class ConsumerFSM : MonoBehaviour
                 break;
             case var t when t < satisfactionChangeLimit[2]:
                 CurrentStatus = ConsumerState.TalkingAbout;
+                CurrentSatisfaction = Satisfaction.Low;
+                if (consumerData.GuestType == GuestType.BadGuest)
+                {
+                    CurrentStatus = ConsumerState.Exit;
+                    return;
+                }
+                if (consumer.pairData?.owner == consumer)
+                {
+                    consumer.pairData.partner.FSM.CurrentSatisfaction = Satisfaction.Low;
+                }
+                else if (consumer.pairData?.partner == consumer)
+                {
+                    consumer.pairData.owner.FSM.CurrentSatisfaction = Satisfaction.Low;
+                }
                 break;
         }
         FillSatisfactionGage();
