@@ -11,9 +11,13 @@ public static class UserDataDAC
         return response;
     }
     
-    public static async UniTask<ApiResponse<string>> SaveUserName()
+    public static async UniTask<ApiResponse<string>> SaveUserName(string name)
     {
-        ApiResponse<string> response = await RestApiService.PostAsyncWithToken<string>(Endpoints.GetUserName);
+        Dictionary<string, string> payload = new Dictionary<string, string>()
+        {
+            ["name"] = name
+        };
+        ApiResponse<string> response = await RestApiService.PostAsyncWithToken<string>(Endpoints.SaveUserName, payload);
         return response;
     }
 }

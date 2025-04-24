@@ -35,8 +35,6 @@ public class PromotionBase : IPromotion
     public int currentLimitBuy;
     public int currentLimitAD;
     public PromotionUI promotionUi;
-    private readonly string promotionNameFormat = "Promotion{0}Name";
-    private readonly string promotionDescriptionFormat = "Promotion{0}Description";
 
     public string promotionName;
     public string promotionDescription;
@@ -68,8 +66,8 @@ public class PromotionBase : IPromotion
     {
         currentLimitBuy = LimitBuy;
         currentLimitAD = LimitAD;
-        promotionName = LZString.GetUIString(string.Format(promotionNameFormat, PromotionID));
-        promotionDescription = LZString.GetUIString(string.Format(promotionDescriptionFormat, PromotionID));
+        promotionName = LZString.GetUIString(string.Format(Strings.promotionNameFormat, PromotionID));
+        promotionDescription = LZString.GetUIString(string.Format(Strings.promotionDescriptionFormat, PromotionID));
     }
 
     public virtual void LimitCounting(bool needAd)

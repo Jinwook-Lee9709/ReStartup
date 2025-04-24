@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 public class LobbySceneManager : MonoBehaviour
 {
+    [SerializeField] private GameObject NamePanel;
     [SerializeField] private TextMeshProUGUI text;
     [SerializeField] private List<Button> themeSelectButtons;
     [SerializeField] private SceneIds sceneId = SceneIds.Dev0;
@@ -22,7 +23,10 @@ public class LobbySceneManager : MonoBehaviour
             int id = i+1;
             button.onClick.AddListener(() => OnThemeSelectButtonTouched(id));
         }
-        
+        if (UserDataManager.Instance.CurrentUserData.Name == null)
+        {
+            NamePanel.SetActive(true);
+        }
     }
 
     private void OnThemeSelectButtonTouched(int id)

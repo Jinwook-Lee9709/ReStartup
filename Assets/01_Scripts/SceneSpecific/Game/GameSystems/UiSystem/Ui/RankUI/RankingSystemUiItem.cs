@@ -22,10 +22,10 @@ public class RankingSystemUiItem : MonoBehaviour
 
     public void UpdateUI()
     {
-        if (rankingData.RestaurantName == "Player")
+        if (rankingData.RestaurantName == UserDataManager.Instance.CurrentUserData.Name)
         {
             rankingData.rankingPoint = (int)UserDataManager.Instance.CurrentUserData.CurrentRankPoint;
-            nameText.text = LZString.GetUIString(Strings.PlayerTag);
+            nameText.text = UserDataManager.Instance.CurrentUserData.Name;
         }
         else
         {
