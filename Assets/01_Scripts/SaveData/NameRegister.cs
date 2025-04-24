@@ -12,8 +12,10 @@ public class NameRegister : MonoBehaviour
 
     private void Start()
     {
+        nameInput.characterLimit = 8;
         registButton.onClick.RemoveAllListeners();
         registButton.onClick.AddListener(OnRegistButtonTouch);
+        RegexFilter.Init();
     }
 
     private void OnRegistButtonTouch()

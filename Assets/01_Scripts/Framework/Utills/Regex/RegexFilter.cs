@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 public static class RegexFilter
@@ -13,6 +15,24 @@ public static class RegexFilter
         @"개새끼",
     };
 
+    private static readonly List<string> adjustRegexBadWords = new();
+    private static readonly string badWordFilterFormat = @"{0}\w*\d*[가-힣]*[ㄱ-ㅎ]*[^a-zA-Z0-9]*";
+
+    public static void Init()
+    {
+        for (int i = 0; i < tempBadWords.Length; i++)
+        {
+            char[] strings = tempBadWords[i].ToCharArray();
+            string adjustPattern = @"\w*\d*[가-힣]*[ㄱ-ㅎ]*[^a-zA-Z0-9]*";
+            for (int j = 0; j < strings.Length; j++)
+            {
+                var currentStr = string.Format(badWordFilterFormat, strings[j]);
+                adjustPattern = string.Concat(adjustPattern, currentStr);
+                //adjustPattern.Concat(currentStr);
+            }
+            adjustRegexBadWords.Add(adjustPattern);
+        }
+    }
     public static bool SpecialStringFilter(string value)
     {
         string check = value;
@@ -32,9 +52,9 @@ public static class RegexFilter
             check = StringNormalize(check, specialWordFilters[i]);
         }
 
-        for (int i = 0; i < tempBadWords.Length; i++)
+        foreach(var word in adjustRegexBadWords)
         {
-            if (check.Contains(tempBadWords[i]))
+            if (StringMatch(check, word))
                 return result;
         }
 
@@ -46,5 +66,10 @@ public static class RegexFilter
     {
         check = Regex.Replace(check, value, "", RegexOptions.Singleline);
         return check;
+    }
+
+    private static bool StringMatch(string check, string pattern)
+    {
+        return Regex.IsMatch(check, pattern);
     }
 }
