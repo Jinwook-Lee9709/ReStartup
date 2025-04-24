@@ -470,10 +470,12 @@ public class ConsumerFSM : MonoBehaviour
                 }
                 if (consumer.pairData?.owner == consumer)
                 {
+                    consumer.pairData.partner.FSM.CurrentStatus = ConsumerState.TalkingAbout;
                     consumer.pairData.partner.FSM.CurrentSatisfaction = Satisfaction.Low;
                 }
                 else if (consumer.pairData?.partner == consumer)
                 {
+                    consumer.pairData.owner.FSM.CurrentStatus = ConsumerState.TalkingAbout;
                     consumer.pairData.owner.FSM.CurrentSatisfaction = Satisfaction.Low;
                 }
                 break;

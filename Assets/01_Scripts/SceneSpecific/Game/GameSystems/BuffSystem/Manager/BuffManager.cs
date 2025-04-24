@@ -158,12 +158,25 @@ public class BuffManager : MonoBehaviour
     
     public void StartBuff(Buff buff)
     {
-        buff.Init();
-        buffs[buff.BuffType] = buff;
+        if(ContainType(buff.BuffType))
+        {
+            if(ContainID(buff))
+            {
+                UserDataManager.Instance.OnUseBuff(buff);
+                OnBuffUsed?.Invoke(buff);
+                buffs[buff.BuffType].remainBuffTime += buff.remainBuffTime;
+                UpdateBuffInfoUIList();
+                return;
+            }
+        }
+        else
+        {
+            buff.Init();
+            buffs[buff.BuffType] = buff; 
+            UserDataManager.Instance.OnUseBuff(buff);
+            OnBuffUsed?.Invoke(buff);
+        }
 
-        UserDataManager.Instance.OnUseBuff(buff); 
-        OnBuffUsed?.Invoke(buff);
-        
         var buffInfoUI = Instantiate(buffInfoPrefab, buffInfoPrefabParent.transform, false).GetComponent<BuffInfoUI>();
         buffInfoUI.Init(buff);
         buffInfoUIList.Add(buffInfoUI);

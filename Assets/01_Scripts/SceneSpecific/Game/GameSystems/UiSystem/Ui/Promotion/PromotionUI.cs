@@ -2,17 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
 
 public class PromotionUI : MonoBehaviour
 {
-    private string cntFormat = "{0} / {1}";
+    private readonly string costFormat = "#,##0";
+    private readonly string cntFormat = "{0} / {1}";
+    [SerializeField] private Image costImage;
     public BuffManager buffManager;
     public ConsumerManager consumerManager;
     public Button payButton;
     public Button adButton;
     public PromotionBase promotionData;
-    public TextMeshProUGUI buyCntText, adCntText, promotionNameText, promotionEffectText;
+    public TextMeshProUGUI buyCntText, adCntText, promotionNameText, promotionEffectText, costText;
     private void Start()
     {
         payButton.onClick.AddListener(OnPayButtonClick);
@@ -21,9 +24,31 @@ public class PromotionUI : MonoBehaviour
     public void Init(PromotionBase promotion)
     {
         promotionData = promotion;
-        promotionNameText.text = $"{promotionData.PromotionType.ToString()}";
-        promotionEffectText.text = LZString.GetUIString(promotionData.PromotionEffectText);
+        promotionNameText.text = $"{promotionData.promotionName}";
+        promotionEffectText.text = $"{promotionData.promotionDescription}";
+        switch (promotionData.CostType)
+        {
+            case CostType.Free:
+                costImage.sprite = LoadCostImage("Free");
+                costText.gameObject.SetActive(false);
+                break;
+            case CostType.Money:
+                costImage.sprite = LoadCostImage("Cash");
+                costText.text = promotionData.CostQty.ToString(costFormat);
+                break;
+            case CostType.Gold:
+                costImage.sprite = LoadCostImage("Gold");
+                costText.text = promotionData.CostQty.ToString(costFormat);
+                break;
+        }
         UpdateUI();
+    }
+
+    private Sprite LoadCostImage(string key)
+    {
+        var handle = Addressables.LoadAssetAsync<Sprite>(key);
+        handle.WaitForCompletion();
+        return handle.Result;
     }
 
     public void OnPayButtonClick()
