@@ -22,7 +22,6 @@ public class Mission
         {
             if (targetId != this.targetId)
             {
-                Debug.LogError("ID다름");
                 return false;
             }
         }
