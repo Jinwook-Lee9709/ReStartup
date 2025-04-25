@@ -8,10 +8,12 @@ using UnityEngine.UI;
 public class NameRegister : MonoBehaviour
 {
     [SerializeField] private TMP_InputField nameInput;
+    [SerializeField] private TextMeshProUGUI warningText;
     [SerializeField] private Button registButton, theme1Button;
 
     private void Start()
     {
+        warningText.gameObject.SetActive(false);
         nameInput.characterLimit = 8;
         registButton.onClick.RemoveAllListeners();
         registButton.onClick.AddListener(OnRegistButtonTouch);
@@ -28,12 +30,14 @@ public class NameRegister : MonoBehaviour
         var check = nameInput.text;
         if (!RegexFilter.SpecialStringFilter(check))
         {
-            Debug.Log("특수문자 존재!");
+            warningText.gameObject.SetActive(true);
+            warningText.text = "특수문자 존재!";
             return;
         }
         if (!RegexFilter.BadWordFilter(check))
         {
-            Debug.Log("욕설 금지!!");
+            warningText.gameObject.SetActive(true);
+            warningText.text = "욕설 금지!!";
             return;
         }
         Debug.Log("훌륭합니다!!");
