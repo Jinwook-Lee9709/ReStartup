@@ -274,7 +274,7 @@ MonoBehaviour:
   model: {fileID: 61083321}
   animationCategory: 6
   animationID: 1
-  animationInterval: 0
+  animationInterval: 0.33
 --- !u!1 &106243747
 GameObject:
   m_ObjectHideFlags: 0
@@ -897,8 +897,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   model: {fileID: 415944108}
   animationCategory: 6
-  animationID: 1
-  animationInterval: 0
+  animationID: 0
+  animationInterval: 0.33
 --- !u!114 &415944108 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4802987220883493683, guid: 03c57c4ad680f43bd8daaea442d09c51, type: 3}
@@ -2573,6 +2573,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2076538436}
     m_Modifications:
+    - target: {fileID: -331783273565732169, guid: c36a8521de05b4be8935e51700160e37, type: 3}
+      propertyPath: animationInterval
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 742772514797471542, guid: c36a8521de05b4be8935e51700160e37, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

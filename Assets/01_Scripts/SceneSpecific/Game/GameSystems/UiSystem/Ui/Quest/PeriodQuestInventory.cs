@@ -21,7 +21,7 @@ public class PeriodQuestInventory : MonoBehaviour
 
     [SerializeField] public GameObject dailyQuestScrollview, weeklyQuestScrollview, mainQuestScrollview, AchievementScrollview;
 
-    public void AddPeriodQuest(MissionData data)
+    public void AddPeriodQuest(MissionData data, Mission mission)
     {
         if (missionManager == null)
         {
@@ -33,27 +33,27 @@ public class PeriodQuestInventory : MonoBehaviour
             case MissionType.Main:
                 newCard = Addressables.InstantiateAsync(questCard, MainMissionContents).WaitForCompletion();
                 var newMainCard = newCard.GetComponent<QuestCard>();
-                newMainCard.Init(data);
+                newMainCard.Init(data, mission);
                 missionManager.missionCards.Add(data.MissionId,newMainCard);
                 break;
             case MissionType.Daily:
                 newCard = Addressables.InstantiateAsync(questCard, dailyMissionContents).WaitForCompletion();
                 var newDailyCard = newCard.GetComponent<QuestCard>();
-                newDailyCard.Init(data);
+                newDailyCard.Init(data, mission);
                 dalilQuestList.Add(newDailyCard);
                 missionManager.missionCards.Add(data.MissionId, newDailyCard);
                 break;
             case MissionType.Weekly:
                 newCard = Addressables.InstantiateAsync(questCard, weeklyMissionContents).WaitForCompletion();
                 var newWeeklyCard = newCard.GetComponent<QuestCard>();
-                newWeeklyCard.Init(data);
+                newWeeklyCard.Init(data, mission);
                 weeklyQuestList.Add(newWeeklyCard);
                 missionManager.missionCards.Add(data.MissionId, newWeeklyCard);
                 break;
             case MissionType.Achievements:
                 newCard = Addressables.InstantiateAsync(questCard, achievementsMissionContents).WaitForCompletion();
                 var newAchievementsCard = newCard.GetComponent<QuestCard>();
-                newAchievementsCard.Init(data);
+                newAchievementsCard.Init(data, mission);
                 missionManager.missionCards.Add(data.MissionId, newAchievementsCard);
                 break;
         }

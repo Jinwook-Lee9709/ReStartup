@@ -1,6 +1,4 @@
 using UnityEngine;
-using static UnityEditor.Progress;
-
 public class UiManager : MonoBehaviour
 {
     public GameObject uiHUD;

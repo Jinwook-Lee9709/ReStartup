@@ -4,14 +4,14 @@ using Newtonsoft.Json;
 
 public static class MissionSaveDataDAC
 {
-    public static async UniTask<ApiResponse<MissionData[]>> GetAllMissionSaveData()
+    public static async UniTask<ApiResponse<MissionSaveData[]>> GetAllMissionSaveData()
     {
-        ApiResponse<MissionData[]> response =
-            await RestApiService.GetAsyncWithToken<MissionData[]>(Endpoints.GetMissionsUrl);
+        ApiResponse<MissionSaveData[]> response =
+            await RestApiService.GetAsyncWithToken<MissionSaveData[]>(Endpoints.GetMissionsUrl);
         return response;
     }
 
-    public static async UniTask<ApiResponse<bool>> UpdateMissionSaveData(MissionData missionData)
+    public static async UniTask<ApiResponse<bool>> UpdateMissionSaveData(MissionSaveData missionData)
     {
         Dictionary<string, string> payload = new Dictionary<string, string>()
         {
