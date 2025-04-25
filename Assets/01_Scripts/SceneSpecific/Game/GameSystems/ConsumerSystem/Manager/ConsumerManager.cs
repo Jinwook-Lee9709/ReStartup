@@ -261,6 +261,7 @@ public class ConsumerManager : MonoBehaviour
             return;
         currentSpawnedConsumerDictionary[state].Add(consumer);
         currentSpawnedConsumerDictionary[prevState].Remove(consumer);
+        UpdateWaitingText();
     }
 
     public void OnWaitingLineUpdate(Consumer consumer)
@@ -436,19 +437,5 @@ public class ConsumerManager : MonoBehaviour
 
     }
 
-    #endregion
-
-
-    #region test
-    [ContextMenu("인플루언서 소환술!")]
-    public void TestSpawn()
-    {
-        var consumer = consumerPool.Get().GetComponent<Consumer>();
-        AfterSpawnInit(consumer);
-        var currentConsumerData = consumer.FSM.consumerData;
-        currentConsumerData = DataTableManager.Get<ConsumerDataTable>(DataTableIds.Consumer.ToString()).GetRandomConsumerForType(GuestType.Influencer);
-        var timerBuff = DataTableManager.Get<BuffDataTable>(DataTableIds.Buff.ToString()).GetBuffForBuffID(currentConsumerData.BuffId1);
-        buffManager.StartBuff(timerBuff);
-    }
     #endregion
 }
