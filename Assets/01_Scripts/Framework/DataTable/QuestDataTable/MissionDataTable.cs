@@ -6,7 +6,7 @@ public class MissionDataTable : DataTable
 {
     public Dictionary<int, MissionData> Data = new();
 
-public MissionData GetFoodData(int id)
+public MissionData GetMissionData(int id)
 {
     Data.TryGetValue(id, out var data);
     return data;

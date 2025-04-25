@@ -66,7 +66,6 @@ public class FoodUpgradePopup : MonoBehaviour
         if (currentCard.foodData.upgradeCount < 5)
         {
             currentCard.OnBuy();
-            //업그레이드 완료 텍스트 띄워주기
         }
         else
         {

@@ -54,6 +54,7 @@ public class MissionManager
             missions[item.MissionCategory].Add(newMission);
             questInventory.AddPeriodQuest(item, newMission);
         }
+        AllReorderMissionCard();
     }
     public void OnEventInvoked(MissionMainCategory category, int args, int id = 0)
     {
@@ -72,18 +73,36 @@ public class MissionManager
     }
     public void ReorderMissionCard(int id)
     {
+        var data = DataTableManager.Get<MissionDataTable>(DataTableIds.Mission.ToString()).GetMissionData(id);
         var sortedList = missionCards
-            .OrderBy(pair => pair.Value.clear)
+            .Where(pair => pair.Value.missionData.MissionType == data.MissionType)
+            .OrderBy(pair => pair.Value.clear ? 0 : 1)
+            .ThenBy(pair => pair.Value.missionData.MissionId)
             .ToList();
-
-
         for (int i = 0; i < sortedList.Count; i++)
         {
             var questCard = sortedList[i].Value;
 
-            questCard.transform.SetSiblingIndex(sortedList.Count - 1 - i);
+            questCard.transform.SetSiblingIndex(i);
         }
+    }
+    public void AllReorderMissionCard()
+    {
+        foreach (MissionType type in Enum.GetValues(typeof(MissionType)))
+        {
+            var sortedList = missionCards
+            .Where(pair => pair.Value.missionData.MissionType == type)
+            .OrderBy(pair => pair.Value.clear ? 0 : 1)
+            .ThenBy(pair => pair.Value.missionData.MissionId)
+            .ToList();
 
+            for (int i = 0; i < sortedList.Count; i++)
+            {
+                var questCard = sortedList[i].Value;
+
+                questCard.transform.SetSiblingIndex(i);
+            }
+        }
     }
     private void UpdateMissionUICard(int args, Mission mission)
     {

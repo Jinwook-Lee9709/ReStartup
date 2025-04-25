@@ -42,7 +42,6 @@ public class FoodUpgradeUIItem : MonoBehaviour
                 Debug.LogError($"{gameObject.name}의 부모 중 foodUpgradeListUi를 찾을 수 없습니다.");
                 return;
             }
-            foodUpgradeListUi.AddButtonList(button);
         }
     }
     public void Init(FoodData data, FoodUpgradePopup popup)
