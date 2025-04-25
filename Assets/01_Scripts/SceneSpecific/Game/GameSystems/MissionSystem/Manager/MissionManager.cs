@@ -34,7 +34,7 @@ public class MissionManager
         foreach (var item in questdata.Values)
         {
             bool isExist = UserDataManager.Instance.CurrentUserData.MissionSaveData.TryGetValue(item.MissionId, out var saveData);
-            if (isExist && saveData.isCleared)
+            if (isExist)
                 continue;
 
 
@@ -71,7 +71,8 @@ public class MissionManager
         var data = DataTableManager.Get<MissionDataTable>(DataTableIds.Mission.ToString()).GetMissionData(id);
         var sortedList = missionCards
             .Where(pair => pair.Value.missionData.MissionType == data.MissionType)
-            .OrderBy(pair => pair.Value.clear ? 0 : 1)
+            .OrderBy(pair => pair.Value.rewardClaimed ? 1 : 0)
+            .ThenBy(pair => pair.Value.clear ? 0 : 1)
             .ThenBy(pair => pair.Value.missionData.MissionId)
             .ToList();
         for (int i = 0; i < sortedList.Count; i++)
@@ -87,7 +88,8 @@ public class MissionManager
         {
             var sortedList = missionCards
             .Where(pair => pair.Value.missionData.MissionType == type)
-            .OrderBy(pair => pair.Value.clear ? 0 : 1)
+            .OrderBy(pair => pair.Value.rewardClaimed ? 1 : 0)
+            .ThenBy(pair => pair.Value.clear ? 0 : 1)
             .ThenBy(pair => pair.Value.missionData.MissionId)
             .ToList();
 
@@ -99,6 +101,8 @@ public class MissionManager
             }
         }
     }
+    
+
     private void UpdateMissionUICard(int args, Mission mission)
     {
         if (missionCards.TryGetValue(mission.ID, out var card))
