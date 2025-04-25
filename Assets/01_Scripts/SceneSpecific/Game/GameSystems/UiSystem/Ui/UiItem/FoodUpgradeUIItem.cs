@@ -85,6 +85,7 @@ public class FoodUpgradeUIItem : MonoBehaviour
         {
             ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.UpgradeFood, 1, (int)foodData.FoodID);
             foodData.upgradeCount++;
+            foodUpgradePopup.SetInfo(this);
             levelText.text = foodData.upgradeCount.ToString();
             userData.Money -= foodData.BasicCost * foodData.upgradeCount;
             ingameGoodsUi.SetCostUi();
