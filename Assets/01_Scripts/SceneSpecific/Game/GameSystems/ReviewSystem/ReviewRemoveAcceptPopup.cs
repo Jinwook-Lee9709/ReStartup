@@ -13,13 +13,22 @@ public class ReviewRemoveAcceptPopup : PopUp
     protected override void Start()
     {
         base.Start();
-        cancleButton.onClick.AddListener(OnCancle);
+        acceptButton.interactable = true;
+        cancleButton.interactable = true;
+        cancleButton.onClick.AddListener(() =>
+        {
+            cancleButton.interactable = false;
+            acceptButton.interactable = false;
+            OnCancle();
+        });
     }
 
     public void Init(Review review)
     {
         acceptButton.onClick.AddListener(() =>
         {
+            acceptButton.interactable = false;
+            cancleButton.interactable = false;
             review.Remove();
             OnCancle();
         });

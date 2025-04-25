@@ -13,6 +13,8 @@ public class BuffOverrideAcceptPopup : PopUp
     public bool needAd = false;
     public void Init(Buff currentBuff, Buff nextBuff, Action callBack)
     {
+        cancleButton.interactable = true;
+        acceptButton.interactable = true;
         adPanel.SetActive(needAd);
         this.currentBuff = currentBuff;
         this.nextBuff = nextBuff;
@@ -24,6 +26,8 @@ public class BuffOverrideAcceptPopup : PopUp
                 AdvertisementManager.Instance.ShowRewardedAd(() =>
                 {
                     callBack.Invoke();
+                    cancleButton.interactable = false;
+                    acceptButton.interactable = false;
                     OnCancle();
                 });
             });
@@ -33,6 +37,8 @@ public class BuffOverrideAcceptPopup : PopUp
             acceptButton.onClick.AddListener(() =>
             {
                 callBack.Invoke();
+                cancleButton.interactable = false;
+                acceptButton.interactable = false;
                 OnCancle();
             });
         }
@@ -46,7 +52,12 @@ public class BuffOverrideAcceptPopup : PopUp
     {
         cancleButton.onClick.RemoveAllListeners();
         acceptButton.onClick.RemoveAllListeners();
-        cancleButton.onClick.AddListener(OnCancle);
+        cancleButton.onClick.AddListener(() =>
+        {
+            cancleButton.interactable = false;
+            acceptButton.interactable = false;
+            OnCancle();
+        });
     }
 
 
