@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using TMPro;
+using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -31,7 +32,7 @@ public class QuestCard : MonoBehaviour
         conditionText.text = string.Format(LZString.GetUIString(string.Format(missionName, missionData.MissionId)), missionData.CompleteTimes);
         currentProgress.text = $"{Math.Clamp(mission.Count, 0, missionData.CompleteTimes)} / {missionData.CompleteTimes}";
         button.GetComponentInChildren<TextMeshProUGUI>().text = mission.Count < missionData.CompleteTimes ? "미완료" : "완료 \n 보상 받기";
-
+        clear = mission.Count >= missionData.CompleteTimes;
         //currentProgress.text <- 현재 진행 상황 로드해주기
     }
     public void OnButtonClick()
