@@ -36,6 +36,8 @@ public class UserDataManager : Singleton<UserDataManager>
     public event Action<int, int> OnInteriorUpgradeEvent;
     public event Action<bool> OnReviewCntFullEvent;
     
+    public event Action<int> OnRankChangedEvent;
+    
     public void OnRankPointUp(int getRankPoint)
     {
         currentUserData.CurrentRankPoint += getRankPoint;
@@ -55,7 +57,7 @@ public class UserDataManager : Singleton<UserDataManager>
         var currentTheme = ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme;
         CurrentUserData.CurrentRank = rank;
         await ThemeRecordDAC.UpdateThemeRank((int)currentTheme, rank);
-
+        OnRankChangedEvent?.Invoke(rank);
     }
 
     public void AdjustMoney(int money)

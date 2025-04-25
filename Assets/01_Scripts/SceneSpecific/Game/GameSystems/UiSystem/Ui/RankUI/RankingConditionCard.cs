@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using TMPro.Examples;
@@ -13,15 +14,21 @@ public class RankingConditionCard : MonoBehaviour
     private Button button;
     private Slider slider;
     public GameObject lockImage;
+    public TextMeshProUGUI prevConditionText;
     public TextMeshProUGUI conditionText;
+    public TextMeshProUGUI currentRankPointText;
     public TextMeshProUGUI explanationText;
+    public RectTransform sliderGauge;
     private RankingConditionListUI rankConditionListUI;
 
+
     public int index;
+
     private void Start()
     {
         rankConditionListUI = gameObject.GetComponentInParent<RankingConditionListUI>();
     }
+
     private void OnEnable()
     {
         var currentUserRankPoint = UserDataManager.Instance.CurrentUserData.CurrentRankPoint;
@@ -30,8 +37,10 @@ public class RankingConditionCard : MonoBehaviour
         {
             Unlock();
         }
+
         CheckComplete((int)currentUserRankPoint);
     }
+
     public void Init(RankConditionData data)
     {
         rankConditionData = data;
@@ -44,21 +53,57 @@ public class RankingConditionCard : MonoBehaviour
         {
             Unlock();
         }
+
         CheckComplete((int)currentUserRankPoint);
     }
+
     public void CheckComplete(int currentRankPoint)
     {
-        if (currentRankPoint >= rankConditionData.GoalRanking)
+        currentRankPointText.gameObject.SetActive(false);
+        var table = DataTableManager.Get<RankConditionDataTable>(DataTableIds.RankCondition.ToString());
+        if (rankConditionData.Rank < UserDataManager.Instance.CurrentUserData.CurrentRank)
         {
             conditionText.text = $"{rankConditionData.GoalRanking}/{rankConditionData.GoalRanking}";
             slider.value = 1f;
             button.interactable = true;
+            if (rankConditionData.Rank == 1)
+            {
+                prevConditionText.text = "0";
+            }
+            else
+            {
+                var prevRankData = table.Data.First(x => x.Value.Rank == rankConditionData.Rank - 1);
+                prevConditionText.text = prevRankData.Value.GoalRanking.ToString();
+            }
+            conditionText.text = rankConditionData.GoalRanking.ToString();
         }
         else
         {
-            slider.value = (float)currentRankPoint / rankConditionData.GoalRanking;
-            conditionText.text = $"{currentRankPoint}/{rankConditionData.GoalRanking}";
-            button.interactable = false;
+            if (rankConditionData.Rank != 1)
+            {
+                var prevRankData = table.Data.First(x => x.Value.Rank == rankConditionData.Rank - 1);
+                if (UserDataManager.Instance.CurrentUserData.CurrentRank == rankConditionData.Rank)
+                {
+                    currentRankPointText.gameObject.SetActive(true);
+                    currentRankPointText.text = currentRankPoint.ToString();
+                    currentRankPointText.ForceMeshUpdate();
+                    slider.value = (float)(currentRankPoint - prevRankData.Value.GoalRanking) /
+                                   (rankConditionData.GoalRanking - prevRankData.Value.GoalRanking);
+                    Canvas.ForceUpdateCanvases();
+                    UpdateTextPosition().Forget();
+                }
+                prevConditionText.text = prevRankData.Value.GoalRanking.ToString();
+                conditionText.text = rankConditionData.GoalRanking.ToString();
+            }
+            else
+            {
+                currentRankPointText.gameObject.SetActive(true);
+                slider.value = (float)currentRankPoint / rankConditionData.GoalRanking;
+                prevConditionText.text = "0";
+            }
+            
+            
+            button.interactable = currentRankPoint >= rankConditionData.GoalRanking;
         }
 
         if (UserDataManager.Instance.CurrentUserData.CurrentRank > rankConditionData.Rank)
@@ -66,13 +111,33 @@ public class RankingConditionCard : MonoBehaviour
             button.interactable = false;
         }
     }
+
+    private async UniTask UpdateTextPosition()
+    {
+        await UniTask.Yield(PlayerLoopTiming.LastPostLateUpdate);
+        var bounds = currentRankPointText.textBounds.size;
+        var sliderGaugeWidth = sliderGauge.rect.width;
+        if (bounds.x < sliderGaugeWidth)
+        {
+            currentRankPointText.rectTransform.anchoredPosition = new Vector2(sliderGaugeWidth - bounds.x,
+                currentRankPointText.rectTransform.anchoredPosition.y);
+        }
+        else
+        {
+            currentRankPointText.rectTransform.anchoredPosition = new Vector2(0,
+                currentRankPointText.rectTransform.anchoredPosition.y);
+        }
+    }
+
     public void OnButtonClick()
     {
         UserDataManager.Instance.SetRankWithSave(rankConditionData.Rank + 1).Forget();
-        ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.GainRanking, 1);
+        ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager
+            .OnEventInvoked(MissionMainCategory.GainRanking, 1);
         CheckComplete((int)UserDataManager.Instance.CurrentUserData.CurrentRankPoint);
-        rankConditionListUI.CheakUnlock(index);
+        rankConditionListUI.CheckUnlock(index);
     }
+
     public void Unlock()
     {
         lockImage.SetActive(false);

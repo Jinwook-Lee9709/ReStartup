@@ -15,7 +15,8 @@ public class RankingConditionListUI : MonoBehaviour
 
     private void Start()
     {
-        UserDataManager.Instance.ChangeRankPointAction += RankPointCheak;
+        UserDataManager.Instance.ChangeRankPointAction += RankPointCheck;
+        UserDataManager.Instance.OnRankChangedEvent += RankCheck;
     }
 
     private void OnEnable()
@@ -30,14 +31,23 @@ public class RankingConditionListUI : MonoBehaviour
         newrankingConditionCard.Init(data);
         cards.Add(newrankingConditionCard);
     }
-    public void RankPointCheak(int val)
+    public void RankPointCheck(int val)
     {
         foreach (var card in cards)
         {
             card.CheckComplete((int)val);
         }
     }
-    public void CheakUnlock(int index)
+
+    public void RankCheck(int Rank)
+    {
+        var point = (int)UserDataManager.Instance.CurrentUserData.CurrentRankPoint;
+        foreach (var card in cards)
+        {
+            card.CheckComplete(point);
+        }
+    }
+    public void CheckUnlock(int index)
     {
         int nextindex = index + 1;
         if(nextindex > cards.Count)
