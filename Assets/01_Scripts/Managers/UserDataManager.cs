@@ -35,11 +35,7 @@ public class UserDataManager : Singleton<UserDataManager>
     public event Action<int> ChangeRankPointAction;
     public event Action<int, int> OnInteriorUpgradeEvent;
     public event Action<bool> OnReviewCntFullEvent;
-
-    public bool SaveDB()
-    {
-        throw new NotImplementedException();
-    }
+    
     public void OnRankPointUp(int getRankPoint)
     {
         currentUserData.CurrentRankPoint += getRankPoint;

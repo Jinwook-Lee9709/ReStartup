@@ -16,7 +16,6 @@ public class FoodResearchUIItem : MonoBehaviour
     [SerializeField] private TextMeshProUGUI CostText;
     [SerializeField] private TextMeshProUGUI RankPointText;
     [SerializeField] private Button lockButton;
-    private static readonly float researchInterval = 3f;   
 
     //Fortest
     public FoodData foodData;
@@ -127,7 +126,7 @@ public class FoodResearchUIItem : MonoBehaviour
         }
         lockImage.SetActive(false);
         consumerManager.foodIds.Add(foodData.FoodID);
-        float targetTime = Time.time + researchInterval;
+        float targetTime = Time.time + Constants.POP_UP_DURATION;
         var alertPopup = ServiceLocator.Instance.GetGlobalService<AlertPopup>();
         alertPopup.PopUp("음식 연구중!", "어떤 음식이 나오려나?", SpumCharacter.FoodResearch, false);
         bool isComplete = await UserDataManager.Instance.AddRankPointWithSave(foodData.GetRankPoints);

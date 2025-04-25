@@ -10,8 +10,8 @@ using UnityEngine.Networking;
 
 public static class RestApiService
 {
-    private static readonly int DefaultTimeout = 5;
-    private static readonly int RetryCount = 3;
+    private static readonly int DefaultTimeout = 3;
+    private static readonly int RetryCount = 5;
     
     
     public static UnityWebRequest CreateGetRequest(string url, Dictionary<string, string> data = null)

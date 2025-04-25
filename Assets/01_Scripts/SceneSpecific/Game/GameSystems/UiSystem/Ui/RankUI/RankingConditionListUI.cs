@@ -34,7 +34,7 @@ public class RankingConditionListUI : MonoBehaviour
     {
         foreach (var card in cards)
         {
-            card.CheakComplete((int)val);
+            card.CheckComplete((int)val);
         }
     }
     public void CheakUnlock(int index)

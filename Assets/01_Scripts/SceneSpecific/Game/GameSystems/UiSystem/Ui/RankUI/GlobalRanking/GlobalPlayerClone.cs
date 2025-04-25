@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -59,7 +60,8 @@ public class GlobalPlayerClone : MonoBehaviour
     {
         if (playerData.rank > 50)
             return;
-        rect.DOVerticalNormalizedPos(Mathf.InverseLerp(rankerCount, 0, playerData.rank),1f);
+        var target = Math.Clamp(playerData.rank + 3, 0, rankerCount);
+        rect.DOVerticalNormalizedPos(Mathf.InverseLerp(rankerCount, 0, target),1f);
     }
 
 

@@ -11,7 +11,6 @@ public class RankingGlobalController : MonoBehaviour
 {
     private static readonly string PrefabName = "RankingGlobalItem";
     private static readonly int MaxRanking = 50;
-    private static readonly float LOAD_RANKING_DELAY = 3f;
     
     [SerializeField] private Transform contents;
     [SerializeField] private GlobalPlayerClone globalPlayerClone;
@@ -61,7 +60,7 @@ public class RankingGlobalController : MonoBehaviour
 
     private async UniTask LoadRankingWithPopup()
     {
-        float targetTime = Time.time + LOAD_RANKING_DELAY;
+        float targetTime = Time.time + Constants.POP_UP_DURATION;
         ShowLoadingPopup();
         var response = await LoadDataFromServer();
         var userResponse = await LoadUserDataFromServer();

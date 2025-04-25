@@ -238,6 +238,8 @@ public static class Constants
 
     public static readonly int BUFF_SAVE_INTERVAL = 30;
     public static readonly int EMPLOYEE_SAVE_INTERVAL = 30;
+
+    public static readonly float POP_UP_DURATION = 1f;
 }
 
 public static class Variables

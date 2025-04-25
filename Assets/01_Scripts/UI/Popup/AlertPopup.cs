@@ -130,6 +130,7 @@ public class AlertPopup : MonoBehaviour
     
     public void ClosePopup(Action action = null)
     {
+        background.interactable = false;
         var backgroundImage = background.GetComponent<Image>();
         backgroundImage.FadeOutAnimation();
         panel.transform.PopdownAnimation(onComplete: () =>

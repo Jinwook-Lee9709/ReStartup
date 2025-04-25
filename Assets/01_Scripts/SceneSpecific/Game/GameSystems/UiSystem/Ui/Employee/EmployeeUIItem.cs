@@ -19,7 +19,7 @@ public class EmployeeUIItem : MonoBehaviour
     static readonly string cashierStaff = "CashierStaff";
     static readonly string employment = "Employment";
     static readonly string education = "Education";
-    private static readonly float buyInterval = 3f;   
+
 
     [SerializeField] private Image image;
 
@@ -214,7 +214,7 @@ public class EmployeeUIItem : MonoBehaviour
         
         int cost = employeeData.Cost * (employeeSaveData[employeeId].level + 1);
         
-        float targetTime = Time.time + buyInterval;
+        float targetTime = Time.time + Constants.POP_UP_DURATION;
         var alertPopup = ServiceLocator.Instance.GetGlobalService<AlertPopup>();
         
         if(employeeSaveData[employeeId].level == 0)

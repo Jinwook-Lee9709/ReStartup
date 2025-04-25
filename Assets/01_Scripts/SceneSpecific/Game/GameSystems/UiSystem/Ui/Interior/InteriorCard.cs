@@ -13,7 +13,6 @@ public class InteriorCard : MonoBehaviour
     private static readonly string BuyStringID = "Buy";
     private static readonly string NewProductStringID = "GodProduct";
     private static readonly string PurchaseCompleteStringID = "PurchaseComplete";
-    private static readonly float constructInterval = 3f;
 
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI costText;
@@ -100,7 +99,7 @@ public class InteriorCard : MonoBehaviour
 
     public async UniTask OnBuy()
     {
-        float targetTime = Time.time + constructInterval;
+        float targetTime = Time.time + Constants.POP_UP_DURATION;
         var alertPopup = ServiceLocator.Instance.GetGlobalService<AlertPopup>();
         alertPopup.PopUp("인테리어 구매중!", "영차 영차!", SpumCharacter.Construct, false);
         await UserDataManager.Instance.AdjustMoneyWithSave(-Data.GetSellingCost());

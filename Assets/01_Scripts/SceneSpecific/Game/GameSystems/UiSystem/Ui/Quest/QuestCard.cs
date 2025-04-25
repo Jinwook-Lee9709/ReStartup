@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -51,7 +52,7 @@ public class QuestCard : MonoBehaviour
             case RewardType.MissionPoint:
                 break;
             case RewardType.RankPoint:
-                UserDataManager.Instance.OnRankPointUp(missionData.RewardAmount);
+                UserDataManager.Instance.AddRankPointWithSave(missionData.RewardAmount).Forget();
                 break;
         }
 
@@ -61,7 +62,6 @@ public class QuestCard : MonoBehaviour
     }
     public void UpdateMissionUICard(int count)
     {
-        Debug.Log("구매확인됨");
         currentProgress.text = $"{Math.Clamp(count, 0, missionData.CompleteTimes)} / {missionData.CompleteTimes}";
         progressSlider.value = (float)count / missionData.CompleteTimes;
         clear = count >= missionData.CompleteTimes;

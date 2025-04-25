@@ -30,7 +30,7 @@ public class RankingConditionCard : MonoBehaviour
         {
             Unlock();
         }
-        CheakComplete((int)currentUserRankPoint);
+        CheckComplete((int)currentUserRankPoint);
     }
     public void Init(RankConditionData data)
     {
@@ -44,9 +44,9 @@ public class RankingConditionCard : MonoBehaviour
         {
             Unlock();
         }
-        CheakComplete((int)currentUserRankPoint);
+        CheckComplete((int)currentUserRankPoint);
     }
-    public void CheakComplete(int currentRankPoint)
+    public void CheckComplete(int currentRankPoint)
     {
         if (currentRankPoint >= rankConditionData.GoalRanking)
         {
@@ -56,7 +56,7 @@ public class RankingConditionCard : MonoBehaviour
         }
         else
         {
-            slider.value = rankConditionData.GoalRanking / rankConditionData.GoalRanking;
+            slider.value = (float)currentRankPoint / rankConditionData.GoalRanking;
             conditionText.text = $"{currentRankPoint}/{rankConditionData.GoalRanking}";
             button.interactable = false;
         }
@@ -70,7 +70,7 @@ public class RankingConditionCard : MonoBehaviour
     {
         UserDataManager.Instance.SetRankWithSave(rankConditionData.Rank + 1).Forget();
         ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.GainRanking, 1);
-        CheakComplete((int)UserDataManager.Instance.CurrentUserData.CurrentRankPoint);
+        CheckComplete((int)UserDataManager.Instance.CurrentUserData.CurrentRankPoint);
         rankConditionListUI.CheakUnlock(index);
     }
     public void Unlock()
