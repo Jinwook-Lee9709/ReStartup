@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using Cysharp.Threading.Tasks;
 using DG.Tweening.Core.Easing;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class MissionManager
 {
@@ -38,7 +39,7 @@ public class MissionManager
         foreach (var item in questdata.Values)
         {
             bool isExist = UserDataManager.Instance.CurrentUserData.MissionSaveData.TryGetValue(item.MissionId, out var saveData);
-            if(isExist && saveData.isCleared)
+            if (isExist && saveData.isCleared)
                 continue;
 
 
@@ -48,7 +49,7 @@ public class MissionManager
             }
             var newMission = new Mission();
             newMission.Init(item.CompleteTimes, item.MissionId, item.TargetId);
-            if(isExist)
+            if (isExist)
                 newMission.SetCount(saveData.count);
             missions[item.MissionCategory].Add(newMission);
             questInventory.AddPeriodQuest(item, newMission);
@@ -65,12 +66,24 @@ public class MissionManager
 
     public void OnMissionCleared(MissionData data)
     {
+        missionCards.Remove(data.MissionId);
         var mission = missions[data.MissionCategory].Find(x => x.ID == data.MissionId);
         Mission.SavePrgoress(true, mission).Forget();
     }
-    public void RemoveMissionCard(int id)
+    public void ReorderMissionCard(int id)
     {
-        missionCards.Remove(id);
+        var sortedList = missionCards
+            .OrderBy(pair => pair.Value.clear)
+            .ToList();
+
+
+        for (int i = 0; i < sortedList.Count; i++)
+        {
+            var questCard = sortedList[i].Value;
+
+            questCard.transform.SetSiblingIndex(sortedList.Count - 1 - i);
+        }
+
     }
     private void UpdateMissionUICard(int args, Mission mission)
     {
