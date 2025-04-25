@@ -66,6 +66,7 @@ public class EmployeeUpgradePopup : MonoBehaviour
     }
     private void OnEnable()
     {
+        background.interactable = false;
         if (background != null)
         {
             var backgroundImage = background.GetComponent<Image>();
@@ -74,7 +75,7 @@ public class EmployeeUpgradePopup : MonoBehaviour
 
         if (panel != null)
         {
-            panel.transform.PopupAnimation();
+            panel.transform.PopupAnimation(onComplete:() => background.interactable = true);
         }
     }
 
@@ -94,6 +95,7 @@ public class EmployeeUpgradePopup : MonoBehaviour
 
     private void OnClose()
     {
+        background.interactable = false;
         var backgroundImage = background.GetComponent<Image>();
         backgroundImage.FadeOutAnimation();
         panel.transform.PopdownAnimation(onComplete: () => { gameObject.SetActive(false); });

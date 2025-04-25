@@ -47,7 +47,7 @@ public class FoodUpgradePopup : MonoBehaviour
     }
     private void OnEnable()
     {
-        mainButton.interactable = true;
+        background.interactable = false;
         if (background != null)
         {
             var backgroundImage = background.GetComponent<Image>();
@@ -56,7 +56,7 @@ public class FoodUpgradePopup : MonoBehaviour
 
         if (panel != null)
         {
-            panel.transform.PopupAnimation();
+            panel.transform.PopupAnimation(onComplete:()=> background.interactable = true);
         }
     }
 
@@ -76,6 +76,7 @@ public class FoodUpgradePopup : MonoBehaviour
 
     private void OnClose()
     {
+        background.interactable = false;
         var backgroundImage = background.GetComponent<Image>();
         backgroundImage.FadeOutAnimation();
         panel.transform.PopdownAnimation(onComplete: () => { gameObject.SetActive(false); });
