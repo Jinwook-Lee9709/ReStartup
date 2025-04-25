@@ -16,7 +16,7 @@ public class FoodResearchUIItem : MonoBehaviour
     [SerializeField] private TextMeshProUGUI CostText;
     [SerializeField] private TextMeshProUGUI RankPointText;
     [SerializeField] private Button lockButton;
-
+    [SerializeField] private GameObject notEnoughCostPopUp;
     //Fortest
     public FoodData foodData;
     private FoodResearchListUI foodUpgradeListUi;
@@ -115,6 +115,10 @@ public class FoodResearchUIItem : MonoBehaviour
         if (userData.Money > foodData.BasicCost)
         {
             Unlock().Forget();
+        }
+        else
+        {
+            Instantiate(notEnoughCostPopUp, GameObject.FindWithTag("UIManager").GetComponentInChildren<Canvas>().transform);
         }
     }
 

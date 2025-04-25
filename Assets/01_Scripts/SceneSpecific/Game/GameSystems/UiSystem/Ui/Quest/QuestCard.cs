@@ -14,8 +14,9 @@ public class QuestCard : MonoBehaviour
     private readonly string missionName = "MissionName{0}";
     [SerializeField] private TextMeshProUGUI rewardValue, conditionText, currentProgress, buttonText;
     [SerializeField] private Slider progressSlider;
-    [SerializeField] private Image rewardImage;
+    [SerializeField] private Image rewardImage, completeImage;
     public bool clear;
+    public bool rewardClaimed;
     public MissionData missionData;
     private MissionManager missionManager;
     private Button button;
@@ -58,7 +59,10 @@ public class QuestCard : MonoBehaviour
         }
 
         missionManager.OnMissionCleared(missionData);
-        Destroy(gameObject);
+        rewardClaimed = true;
+        completeImage.gameObject.SetActive(true);
+        missionManager.ReorderMissionCard(missionData.MissionId);
+        button.GetComponentInChildren<TextMeshProUGUI>().text = "수령 완료";
         //보상지급
     }
     public void UpdateMissionUICard(int count)
