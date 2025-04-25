@@ -14,7 +14,7 @@ public class BuffManager : MonoBehaviour
     [SerializeField] private GameObject buffInfoPanel;
     [SerializeField] private GameObject buffInfoPrefabParent;
     [SerializeField] private GameObject buffInfoPrefab;
-    private List<BuffInfoUI> buffInfoUIList = new();
+    public List<BuffInfoUI> buffInfoUIList = new();
     
     public event Action<Buff> OnBuffUsed;
     public event Action<Buff> OnBuffExpired;
@@ -99,7 +99,7 @@ public class BuffManager : MonoBehaviour
 
             buffs[newBuff.BuffType] = newBuff;
             var buffInfoUI = Instantiate(buffInfoPrefab, buffInfoPrefabParent.transform, false).GetComponent<BuffInfoUI>();
-            buffInfoUI.Init(newBuff);
+            buffInfoUI.Init(newBuff, this);
             buffInfoUIList.Add(buffInfoUI);
             UpdateBuffInfoUIList();
             limitCountAction?.Invoke();
@@ -136,7 +136,7 @@ public class BuffManager : MonoBehaviour
                     UserDataManager.Instance.OnUseBuff(newBuff);   
                     buffs[newBuff.BuffType] = newBuff;
                     var buffInfoUI = Instantiate(buffInfoPrefab, buffInfoPrefabParent.transform, false).GetComponent<BuffInfoUI>();
-                    buffInfoUI.Init(newBuff);
+                    buffInfoUI.Init(newBuff, this);
                     buffInfoUIList.Add(buffInfoUI);
                     UpdateBuffInfoUIList();
                     limitCountAction?.Invoke();
@@ -147,7 +147,7 @@ public class BuffManager : MonoBehaviour
                 UserDataManager.Instance.OnUseBuff(newBuff);   
                 buffs[newBuff.BuffType] = newBuff;
                 var buffInfoUI = Instantiate(buffInfoPrefab, buffInfoPrefabParent.transform, false).GetComponent<BuffInfoUI>();
-                buffInfoUI.Init(newBuff);
+                buffInfoUI.Init(newBuff, this);
                 buffInfoUIList.Add(buffInfoUI);
                 UpdateBuffInfoUIList();
                 limitCountAction?.Invoke();
@@ -178,7 +178,7 @@ public class BuffManager : MonoBehaviour
         }
 
         var buffInfoUI = Instantiate(buffInfoPrefab, buffInfoPrefabParent.transform, false).GetComponent<BuffInfoUI>();
-        buffInfoUI.Init(buff);
+        buffInfoUI.Init(buff, this);
         buffInfoUIList.Add(buffInfoUI);
         UpdateBuffInfoUIList();
     }
@@ -192,7 +192,7 @@ public class BuffManager : MonoBehaviour
 
         buff.remainBuffTime = remainTime;
         var buffInfoUI = Instantiate(buffInfoPrefab, buffInfoPrefabParent.transform, false).GetComponent<BuffInfoUI>();
-        buffInfoUI.Init(buff);
+        buffInfoUI.Init(buff, this);
         buffInfoUIList.Add(buffInfoUI);
         UpdateBuffInfoUIList();
     }

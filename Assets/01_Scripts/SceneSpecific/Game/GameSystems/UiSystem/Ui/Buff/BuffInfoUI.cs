@@ -7,6 +7,7 @@ using UnityEngine;
 public class BuffInfoUI : MonoBehaviour, IComparable<BuffInfoUI>
 {
     public Buff currentBuff;
+    private BuffManager buffManager;
     [SerializeField] private GameObject buffImage;
     [SerializeField] private TextMeshProUGUI buffRemainTimeText, buffInfoText;
 
@@ -15,9 +16,10 @@ public class BuffInfoUI : MonoBehaviour, IComparable<BuffInfoUI>
         return currentBuff.remainBuffTime > other.currentBuff.remainBuffTime ? 1 : -1;
     }
 
-    public void Init(Buff buff)
+    public void Init(Buff buff, BuffManager buffManager)
     {
         currentBuff = buff;
+        this.buffManager = buffManager;
         //TODO : buffImage
         buffRemainTimeText.text = $"{Mathf.CeilToInt(currentBuff.remainBuffTime)} 초";
         buffInfoText.text = currentBuff.buffDescription;
@@ -30,6 +32,7 @@ public class BuffInfoUI : MonoBehaviour, IComparable<BuffInfoUI>
         if (currentBuff.remainBuffTime < 0f)
         {
             Destroy(gameObject);
+            buffManager.buffInfoUIList.Remove(this);
         }
     }
 }
