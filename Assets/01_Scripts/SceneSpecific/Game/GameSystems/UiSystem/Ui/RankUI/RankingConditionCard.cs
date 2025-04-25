@@ -69,7 +69,7 @@ public class RankingConditionCard : MonoBehaviour
     public void OnButtonClick()
     {
         UserDataManager.Instance.SetRankWithSave(rankConditionData.Rank + 1).Forget();
-        ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.HireStaff, 1, (int)rankConditionData.RangkingID);
+        ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.GainRanking, 1);
         CheakComplete((int)UserDataManager.Instance.CurrentUserData.CurrentRankPoint);
         rankConditionListUI.CheakUnlock(index);
     }
