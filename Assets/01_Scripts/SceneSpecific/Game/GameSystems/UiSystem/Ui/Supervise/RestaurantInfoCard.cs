@@ -12,12 +12,13 @@ public class RestaurantInfoCard : MonoBehaviour
     [SerializeField] private TextMeshProUGUI costText;
     [SerializeField] private Image shopImage;
     [SerializeField] private Button buyButton;
-
-    public void SetInfo(string shopName, int cost, Sprite shopImage)
+    
+    public void SetInfo(string shopName, int cost, Sprite shopImage, bool showButton)
     {
         shopNameText.text = shopName;
         costText.text = cost.ToString();
         this.shopImage.sprite = shopImage;
+        buyButton.gameObject.SetActive(showButton);
     }
 
     public void RegisterAction(UnityAction action)
