@@ -344,8 +344,12 @@ public static class Strings
     public static readonly string promotionNameFormat = "Promotion{0}Name";
     public static readonly string promotionDescriptionFormat = "Promotion{0}Description";
 
+    public static readonly string buffCountFormat = "+{0} Buff";
+
     public static readonly string costFormat = "#,##0";
     public static readonly string cntFormat = "{0} / {1}";
+
+    public static readonly string badWordTableFileName = "badwords";
 }
 
 public static class Colors

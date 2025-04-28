@@ -6329,7 +6329,7 @@ Transform:
   m_GameObject: {fileID: 484832185}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: -4.62, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6681,7 +6681,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Buff
+  m_text: +0 Buff
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -6708,7 +6708,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 37.8
+  m_fontSize: 29.75
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -7847,7 +7847,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 150, y: -380}
+  m_AnchoredPosition: {x: 150, y: -280}
   m_SizeDelta: {x: 180, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &610650696
@@ -20236,7 +20236,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2097127975}
   m_HandleRect: {fileID: 2097127974}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -23066,13 +23066,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d865bc0c9bdac094db2edb7b5cbd6ad1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buffPopupPrefab: {fileID: 1481361520132361886, guid: f3767419d44b9e245b6d02a9d401794d, type: 3}
-  popupParent: {fileID: 706047261}
   buffInfoButton: {fileID: 1778517830}
   buffInfoBackground: {fileID: 993097473}
+  popupParent: {fileID: 706047261}
+  buffPopupPrefab: {fileID: 1481361520132361886, guid: f3767419d44b9e245b6d02a9d401794d, type: 3}
   buffInfoPanel: {fileID: 1999676190}
   buffInfoPrefabParent: {fileID: 783088393}
   buffInfoPrefab: {fileID: 8956226327241441913, guid: 1f9795c28a230204b9282e26b33a9adf, type: 3}
+  buffCountText: {fileID: 498483005}
   buffInfoUIList: []
 --- !u!1 &1713731644
 GameObject:
@@ -24364,7 +24365,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 150, y: -280}
+  m_AnchoredPosition: {x: 150, y: -380}
   m_SizeDelta: {x: 180, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1778517830

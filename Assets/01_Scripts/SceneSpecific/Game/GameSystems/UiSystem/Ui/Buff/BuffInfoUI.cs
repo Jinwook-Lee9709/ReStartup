@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -31,8 +32,13 @@ public class BuffInfoUI : MonoBehaviour, IComparable<BuffInfoUI>
 
         if (currentBuff.remainBuffTime < 0f)
         {
-            Destroy(gameObject);
-            buffManager.buffInfoUIList.Remove(this);
+            transform.DOLocalMoveX(-50f, 2f).SetEase(Ease.InElastic).OnComplete(()=>OnBuffTimeOver());
         }
+    }
+
+    private void OnBuffTimeOver()
+    {
+        Destroy(gameObject);
+        buffManager.buffInfoUIList.Remove(this);
     }
 }

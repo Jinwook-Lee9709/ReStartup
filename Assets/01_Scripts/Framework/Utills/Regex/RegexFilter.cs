@@ -1,6 +1,13 @@
+using CsvHelper;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using UnityEditor.VersionControl;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 public static class RegexFilter
 {
@@ -9,20 +16,32 @@ public static class RegexFilter
         @"[^a-zA-Z0-9가-힣]",
         @"[^\w\.@-]"
     };
-    private static readonly string[] tempBadWords =
-    {
-        @"씨발",
-        @"개새끼",
-    };
+    private static List<string> badWords = new();
 
     private static readonly List<string> adjustRegexBadWords = new();
     private static readonly string badWordFilterFormat = @"{0}\w*\d*[가-힣]*[ㄱ-ㅎ]*[^a-zA-Z0-9]*";
 
+    private static void InitStringTable()
+    {
+        badWords = LoadFirstColumn("badwords");
+    }
+    public static List<string> LoadFirstColumn(string filePath)
+    {
+        var handle = Addressables.LoadAssetAsync<TextAsset>(filePath);
+        handle.WaitForCompletion();
+
+        if (handle.Status != AsyncOperationStatus.Succeeded) Debug.LogError("Failed to load csv");
+        var result = handle.Result.text;
+        List<string> firstColumn = result.Split("\r\n").ToList();
+
+        return firstColumn;
+    }
     public static void Init()
     {
-        for (int i = 0; i < tempBadWords.Length; i++)
+        InitStringTable();
+        for (int i = 0; i < badWords.Count; i++)
         {
-            char[] strings = tempBadWords[i].ToCharArray();
+            char[] strings = badWords[i].ToCharArray();
             string adjustPattern = @"\w*\d*[가-힣]*[ㄱ-ㅎ]*[^a-zA-Z0-9]*";
             for (int j = 0; j < strings.Length; j++)
             {
@@ -52,7 +71,7 @@ public static class RegexFilter
             check = StringNormalize(check, specialWordFilters[i]);
         }
 
-        foreach(var word in adjustRegexBadWords)
+        foreach (var word in adjustRegexBadWords)
         {
             if (StringMatch(check, word))
                 return result;
@@ -62,7 +81,7 @@ public static class RegexFilter
         return result;
     }
 
-    private static string StringNormalize(string check ,string value)
+    private static string StringNormalize(string check, string value)
     {
         check = Regex.Replace(check, value, "", RegexOptions.Singleline);
         return check;

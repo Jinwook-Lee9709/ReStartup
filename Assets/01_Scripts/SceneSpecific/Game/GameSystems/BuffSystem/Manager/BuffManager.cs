@@ -1,21 +1,19 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class BuffManager : MonoBehaviour
 {
     private readonly Dictionary<BuffType, Buff> buffs = new();
-    
-    [SerializeField] private GameObject buffPopupPrefab;
-    [SerializeField] private GameObject popupParent;
+
     [SerializeField] private Button buffInfoButton, buffInfoBackground;
-    [SerializeField] private GameObject buffInfoPanel;
-    [SerializeField] private GameObject buffInfoPrefabParent;
-    [SerializeField] private GameObject buffInfoPrefab;
+    [SerializeField] private GameObject popupParent, buffPopupPrefab, buffInfoPanel, buffInfoPrefabParent, buffInfoPrefab;
+    [SerializeField] private TextMeshProUGUI buffCountText;
     public List<BuffInfoUI> buffInfoUIList = new();
-    
+
     public event Action<Buff> OnBuffUsed;
     public event Action<Buff> OnBuffExpired;
 
@@ -54,7 +52,7 @@ public class BuffManager : MonoBehaviour
 
     private void Update()
     {
-        buffInfoButton.gameObject.SetActive(buffs.Count != 0); 
+        buffInfoButton.interactable = buffs.Count != 0;
         if (buffs.Count == 0)
         {
             return;
@@ -80,6 +78,8 @@ public class BuffManager : MonoBehaviour
                 return;
             }
         }
+
+        buffCountText.text = string.Format(Strings.buffCountFormat, buffInfoUIList.Count);
     }
     public void BuffOverridePopup(Buff newBuff, Action limitCountAction, bool needAd = false)
     {
@@ -115,7 +115,7 @@ public class BuffManager : MonoBehaviour
                 ExtendBuffTimer(newBuff, () =>
                 {
                     limitCountAction?.Invoke();
-                    UserDataManager.Instance.OnUseBuff(newBuff);   
+                    UserDataManager.Instance.OnUseBuff(newBuff);
                 }, needAd);
             }
             else
@@ -123,7 +123,7 @@ public class BuffManager : MonoBehaviour
                 BuffOverridePopup(newBuff, () =>
                 {
                     limitCountAction?.Invoke();
-                    UserDataManager.Instance.OnUseBuff(newBuff);   
+                    UserDataManager.Instance.OnUseBuff(newBuff).Forget();
                 }, needAd);
             }
         }
@@ -133,7 +133,7 @@ public class BuffManager : MonoBehaviour
             {
                 AdvertisementManager.Instance.ShowRewardedAd(() =>
                 {
-                    UserDataManager.Instance.OnUseBuff(newBuff);   
+                    UserDataManager.Instance.OnUseBuff(newBuff).Forget();
                     buffs[newBuff.BuffType] = newBuff;
                     var buffInfoUI = Instantiate(buffInfoPrefab, buffInfoPrefabParent.transform, false).GetComponent<BuffInfoUI>();
                     buffInfoUI.Init(newBuff, this);
@@ -144,7 +144,7 @@ public class BuffManager : MonoBehaviour
             }
             else
             {
-                UserDataManager.Instance.OnUseBuff(newBuff);   
+                UserDataManager.Instance.OnUseBuff(newBuff).Forget();
                 buffs[newBuff.BuffType] = newBuff;
                 var buffInfoUI = Instantiate(buffInfoPrefab, buffInfoPrefabParent.transform, false).GetComponent<BuffInfoUI>();
                 buffInfoUI.Init(newBuff, this);
@@ -155,14 +155,14 @@ public class BuffManager : MonoBehaviour
         }
 
     }
-    
+
     public void StartBuff(Buff buff)
     {
-        if(ContainType(buff.BuffType))
+        if (ContainType(buff.BuffType))
         {
-            if(ContainID(buff))
+            if (ContainID(buff))
             {
-                UserDataManager.Instance.OnUseBuff(buff);
+                UserDataManager.Instance.OnUseBuff(buff).Forget();
                 OnBuffUsed?.Invoke(buff);
                 buffs[buff.BuffType].remainBuffTime += buff.remainBuffTime;
                 UpdateBuffInfoUIList();
@@ -172,8 +172,8 @@ public class BuffManager : MonoBehaviour
         else
         {
             buff.Init();
-            buffs[buff.BuffType] = buff; 
-            UserDataManager.Instance.OnUseBuff(buff);
+            buffs[buff.BuffType] = buff;
+            UserDataManager.Instance.OnUseBuff(buff).Forget();
             OnBuffUsed?.Invoke(buff);
         }
 
@@ -187,7 +187,7 @@ public class BuffManager : MonoBehaviour
     {
         buff.Init();
         buffs[buff.BuffType] = buff;
-        
+
         OnBuffUsed?.Invoke(buff);
 
         buff.remainBuffTime = remainTime;
@@ -196,7 +196,15 @@ public class BuffManager : MonoBehaviour
         buffInfoUIList.Add(buffInfoUI);
         UpdateBuffInfoUIList();
     }
-    
+
+    public bool RemoveBuff(BuffType buffType)
+    {
+        if (buffs.ContainsKey(buffType))
+        {
+            return buffs.Remove(buffType);
+        }
+        return false;
+    }
 
     public Buff GetBuff(BuffType type)
     {
@@ -230,15 +238,5 @@ public class BuffManager : MonoBehaviour
             UpdateBuffInfoUIList();
             limitCountAction.Invoke();
         }
-    }
-
-    [ContextMenu("TempBuffOn!!!")]
-    public void TempBuffOn()
-    {
-        var buffDatas = DataTableManager.Get<BuffDataTable>("Buff");
-        var buff = buffDatas.GetBuffForBuffID(990100);
-        buff.Init();
-        StartBuff(buff);
-        Debug.Log($"Buff On{buff.BuffType.ToString()}");
     }
 }

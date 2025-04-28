@@ -32,7 +32,7 @@ public class TextBubble : MonoBehaviour
 
         transform.PopdownAnimation(0f, 1f, () =>
         {
-            OnBubblePopEvent.Invoke();
+            OnBubblePopEvent?.Invoke();
             StopAllCoroutines();
             Destroy(gameObject);
         });
