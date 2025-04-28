@@ -1,18 +1,15 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Newtonsoft.Json;
-using UnityEngine;
-
-[Serializable]
 public class StageStatusData
 {
     [JsonConverter(typeof(ThemeIdConverter))]
     public ThemeIds theme;
     [JsonProperty("is_cleared")]
     public bool isCleared;
-    [JsonProperty("last_Played")]
-    public DateTime lastPlayed;
+    [JsonProperty("last_claim")]
+    public DateTime lastClaim;
+    [JsonProperty("manager_count")]
+    public int managerCount;
 }
 
 public class ThemeIdConverter : JsonConverter<ThemeIds>

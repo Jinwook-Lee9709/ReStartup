@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
+using UnityEngine;
 
 public static class StageStatusDataDAC
 {
@@ -16,7 +18,7 @@ public static class StageStatusDataDAC
         {
             ["info"] = JsonConvert.SerializeObject(stageStatus)
         };
-        ApiResponse<StageStatusData[]> response = await RestApiService.PostAsyncWithToken<StageStatusData[]>(Endpoints.SaveStageStatusUrl, data);
+        ApiResponse<StageStatusData> response = await RestApiService.PostAsyncWithToken<StageStatusData>(Endpoints.SaveStageStatusUrl, data);
         return response != null && response.ResponseCode == ResponseType.Success;
     }
 }

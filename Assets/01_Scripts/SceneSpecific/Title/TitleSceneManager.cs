@@ -134,8 +134,9 @@ public class TitleSceneManager : MonoBehaviour
         var data = new StageStatusData
         {
             theme = ThemeIds.Theme1,
-            isCleared = false,
-            lastPlayed = DateTime.Now
+            isCleared = false, 
+            lastClaim = DateTime.Now,
+            managerCount = 0,
         };
         return data;
     }
