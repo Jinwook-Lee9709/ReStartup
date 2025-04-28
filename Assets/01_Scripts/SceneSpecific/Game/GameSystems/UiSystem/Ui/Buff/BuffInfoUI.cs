@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -31,8 +32,17 @@ public class BuffInfoUI : MonoBehaviour, IComparable<BuffInfoUI>
 
         if (currentBuff.remainBuffTime < 0f)
         {
-            Destroy(gameObject);
-            buffManager.buffInfoUIList.Remove(this);
+            OnBuffTimeOver();
         }
+    }
+
+    private void OnBuffTimeOver()
+    {
+        GetComponent<RectTransform>().DOMoveX(-GetComponent<RectTransform>().sizeDelta.x, 1.5f).OnComplete(() =>
+        {
+            transform.DOKill();
+            buffManager.buffInfoUIList.Remove(this);
+            Destroy(gameObject);
+        });
     }
 }

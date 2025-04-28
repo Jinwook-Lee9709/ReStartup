@@ -61,6 +61,10 @@ public class Table : InteractableObjectBase, IInterior
         iconBubble.ShowIcon(icon, targetRendererTransform.position, flipBackground);
         return true;
     }
+    public void ShowIcon()
+    {
+        iconBubble.ShowIcon();
+    }
 
     public override void HideIcon()
     {

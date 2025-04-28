@@ -11,7 +11,7 @@ public class NameRegister : MonoBehaviour
     [SerializeField] private TextMeshProUGUI warningText;
     [SerializeField] private Button registButton, theme1Button;
 
-    private void Start()
+    private void OnEnable()
     {
         warningText.gameObject.SetActive(false);
         nameInput.characterLimit = 8;

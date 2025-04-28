@@ -1,5 +1,6 @@
 using System;
 using DG.Tweening;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -60,6 +61,14 @@ public static class Extends
         transform.DOScale(scale, duration).SetEase(Ease.InOutElastic).OnComplete(() => onComplete?.Invoke());
     }
 
+    public static void PopupAnimation(this Transform transform, Vector3 scale, float duration = 0.5f, Action onComplete = null)
+    {
+        transform.gameObject.SetActive(true);
+        transform.DOScale(scale, duration).SetEase(Ease.InOutElastic).OnComplete(() => onComplete?.Invoke());
+    }
+
+
+
     public static void PopdownAnimation(this Transform transform, float scale = 0f, float duration = 0.5f,
         Action onComplete = null)
     {
@@ -80,8 +89,8 @@ public static class Extends
             .OnComplete(() => image.gameObject.SetActive(false))
             .OnComplete(() => onComplete?.Invoke());
     }
-    
-    
+
+
     public static bool CheckOverlap(this RectTransform rect, RectTransform canvas)
     {
         Vector3[] corners = new Vector3[4];
@@ -90,13 +99,24 @@ public static class Extends
         foreach (var corner in corners)
         {
             Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(Camera.main, corner);
-            if(RectTransformUtility.RectangleContainsScreenPoint(canvas, screenPoint,Camera.main))
+            if (RectTransformUtility.RectangleContainsScreenPoint(canvas, screenPoint, Camera.main))
             {
                 return true;
             }
         }
         return false;
     }
-    
-   
+
+    public static void FlipXWithChildren(this Transform transform)
+    {
+        Vector3 scale = transform.localScale;
+        scale.x *= -1;
+        transform.localScale = scale;
+
+        // 자식들에 대해서 재귀 호출
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            transform.GetChild(i).FlipXWithChildren();
+        }
+    }
 }

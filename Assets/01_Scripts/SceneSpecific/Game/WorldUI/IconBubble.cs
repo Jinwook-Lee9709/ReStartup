@@ -30,6 +30,11 @@ public class IconBubble : MonoBehaviour
 
     }
 
+    public void ShowIcon()
+    {
+        baseTransform.PopupAnimation();
+    }
+
     public void HideIcon()
     {
         baseTransform.PopdownAnimation();
@@ -38,6 +43,11 @@ public class IconBubble : MonoBehaviour
     private void SetIcon(Sprite sprite)
     {
         icon.sprite = sprite;
+    }
+
+    public Sprite GetIcon()
+    {
+        return icon.sprite;
     }
 
     public void FillingSatisfation(float fillAmount)
@@ -53,7 +63,8 @@ public class IconBubble : MonoBehaviour
     public IEnumerator ShowText(string text, float animationTime)
     {
         var prevIcon = icon.sprite;
-        satisfactionText.text = text;
+        satisfactionText.text = LZString.GetUIString(text);
+
 
         SetIcon(null);
         satisfactionText.gameObject.SetActive(true);

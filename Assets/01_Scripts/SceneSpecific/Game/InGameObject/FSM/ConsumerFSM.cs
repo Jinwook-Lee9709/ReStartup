@@ -27,6 +27,7 @@ public class ConsumerFSM : MonoBehaviour
 
     public enum Satisfaction
     {
+        None = -1,
         High,
         Middle,
         Low
@@ -53,7 +54,7 @@ public class ConsumerFSM : MonoBehaviour
 
 
     [SerializeField] public ConsumerState currentStatus = ConsumerState.Waiting;
-    [SerializeField] private Satisfaction currentSatisfaction = Satisfaction.High;
+    [SerializeField] private Satisfaction currentSatisfaction = Satisfaction.None;
     [SerializeField] private PaymentText paymentTextPrefab;
     [SerializeField] public SatisfactionIcon satisfactionIcon;
     [SerializeField] public GameObject modelParent;
@@ -66,6 +67,8 @@ public class ConsumerFSM : MonoBehaviour
     public SPUM_Prefabs Model { get => model; set => model = value; }
     private bool isOnSeat;
     private bool isPaying;
+    public bool isTip;
+    public bool alreadyTip;
     private Vector2 targetPivot;
     private float prevXPos;
     public Satisfaction CurrentSatisfaction
@@ -78,10 +81,29 @@ public class ConsumerFSM : MonoBehaviour
             switch (currentSatisfaction)
             {
                 case Satisfaction.High:
+                    switch (consumerData.GuestType)
+                    {
+                        case GuestType.Influencer:
+                        case GuestType.BadGuest:
+                        case GuestType.PromotionGuest:
+                            ConsumerScriptActive(string.Format(Strings.orderTextFormat, UnityEngine.Random.Range(0, 2), consumerData.GuestId), () =>
+                            {
+                                consumer.currentTable.HideIcon();
+                            }, () =>
+                            {
+                                consumer.currentTable.ShowIcon();
+                            });
+                            break;
+                    }
                     break;
                 case Satisfaction.Middle:
-                    // TODO : Serving Delay Script Play
-                    StartCoroutine(consumer.currentTable.IconBubble.ShowText("테스트용 문자열",2f));
+                    ConsumerScriptActive(string.Format(Strings.servingDelayTextFormat, UnityEngine.Random.Range(0, 2), consumerData.GuestId), () =>
+                    {
+                        consumer.currentTable.HideIcon();
+                    }, () =>
+                    {
+                        consumer.currentTable.ShowIcon();
+                    });
                     break;
                 case Satisfaction.Low:
                     break;
@@ -122,7 +144,6 @@ public class ConsumerFSM : MonoBehaviour
                     break;
                 case ConsumerState.AfterOrder:
                     consumerManager.OnChangeConsumerState(consumer, ConsumerState.AfterOrder);
-                    consumer.currentTable.IconBubble.SetColorSatisfaction(Color.white, Color.blue, 1f);
                     break;
                 case ConsumerState.Eatting:
                     consumerManager.OnChangeConsumerState(consumer, ConsumerState.Eatting);
@@ -160,11 +181,9 @@ public class ConsumerFSM : MonoBehaviour
                     break;
                 case ConsumerState.TalkingAbout:
                     consumer.currentTable.HideIcon();
-                    var text = Instantiate(textBubblePrefab, transform).GetComponent<TextBubble>();
-                    text.Init("테스트 문자열", () =>
+                    ConsumerScriptActive(string.Format(Strings.badTextFormat, UnityEngine.Random.Range(0, 2), consumerData.GuestId), () =>
                     {
                         satisfactionIcon.SetIcon(currentSatisfaction);
-                        
                     });
                     break;
                 case ConsumerState.None:
@@ -226,6 +245,8 @@ public class ConsumerFSM : MonoBehaviour
         consumerData.Init();
         isPaying = false;
         isOnSeat = false;
+        isTip = false;
+        alreadyTip = false;
     }
 
     public void SetModel()
@@ -236,13 +257,20 @@ public class ConsumerFSM : MonoBehaviour
         Model.OverrideControllerInit();
     }
 
+    public void ConsumerScriptActive(string script, Action startAction = null, Action endAction = null)
+    {
+        var text = Instantiate(textBubblePrefab, transform).GetComponent<TextBubble>();
+        text.Init(LZString.GetUIString(script), startAction, endAction);
+    }
+
 
     public void OnStartPayment()
     {
         CurrentStatus = ConsumerState.Paying;
     }
-    private bool IsTip()
+    public bool IsTip()
     {
+        alreadyTip = true;
         if (consumerData.GuestType != GuestType.BadGuest)
         {
             if (consumer.needFood.FoodID == consumerData.LoveFoodId)
@@ -251,6 +279,7 @@ public class ConsumerFSM : MonoBehaviour
                 {
                     if (UnityEngine.Random.Range(0, 4) == 0)
                     {
+                        ConsumerScriptActive(string.Format(Strings.paidverygoodTextFormat, UnityEngine.Random.Range(0, 2), consumerData.GuestId));
                         return true;
                     }
                 }
@@ -258,10 +287,9 @@ public class ConsumerFSM : MonoBehaviour
         }
         return false;
     }
+
     public void OnEndPayment()
     {
-        bool isTip = IsTip();
-        //bool isTip = true;
         int Cost = consumer.needFood.SellingCost;
         int rankPoint = consumer.needFood.GetRankPoints;
         ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.GainMoney, consumer.needFood.SellingCost);
@@ -445,19 +473,29 @@ public class ConsumerFSM : MonoBehaviour
         {
             return;
         }
+        switch (consumerData.GuestType)
+        {
+            case GuestType.Guest:
+            case GuestType.Regular1:
+            case GuestType.Regular2:
+            case GuestType.Regular3:
+            case GuestType.BadGuest:
+                var deltaTime = buffManager.GetBuff(BuffType.TimerSpeed)?.isOnBuff ?? false ? Time.deltaTime * buffManager.GetBuff(BuffType.TimerSpeed).BuffEffect : Time.deltaTime;
 
-        var deltaTime = buffManager.GetBuff(BuffType.TimerSpeed)?.isOnBuff ?? false ? Time.deltaTime * buffManager.GetBuff(BuffType.TimerSpeed).BuffEffect : Time.deltaTime;
+                consumerData.orderWaitTimer -= deltaTime;
 
-        consumerData.orderWaitTimer -= deltaTime;
-
-        if (consumerData.GuestType == GuestType.BadGuest)
-            consumerData.orderWaitTimer -= deltaTime;
+                if (consumerData.GuestType == GuestType.BadGuest)
+                    consumerData.orderWaitTimer -= deltaTime;
+                break;
+        }
 
         switch (consumerData.orderWaitTimer)
         {
-            case var t when t < satisfactionChangeLimit[0] && t > satisfactionChangeLimit[1]:
+            case var t when t <= satisfactionChangeLimit[0] && t > satisfactionChangeLimit[1]:
                 if (CurrentSatisfaction != Satisfaction.High)
+                {
                     CurrentSatisfaction = Satisfaction.High;
+                }
                 break;
             case var t when t < satisfactionChangeLimit[1] && t > satisfactionChangeLimit[2] &&
                             CurrentSatisfaction != Satisfaction.Middle:
@@ -493,7 +531,7 @@ public class ConsumerFSM : MonoBehaviour
         iconBubble.FillingSatisfation(normalTimer);
         switch (consumerData.orderWaitTimer)
         {
-            case var t when t < satisfactionColorChangeFlagTimes[0] && t > satisfactionColorChangeFlagTimes[1]:
+            case var t when t <= satisfactionColorChangeFlagTimes[0] && t > satisfactionColorChangeFlagTimes[1]:
                 var highLerp = Mathf.InverseLerp(satisfactionColorChangeFlagTimes[0], satisfactionColorChangeFlagTimes[1], consumerData.orderWaitTimer);
                 iconBubble.SetColorSatisfaction(Colors.satisfactionColors[0], Colors.satisfactionColors[1], highLerp);
                 break;
