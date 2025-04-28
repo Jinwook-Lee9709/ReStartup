@@ -115,7 +115,7 @@ public abstract class InteractWorkBase : WorkBase
 
     protected abstract void HandlePostInteraction();
 
-    private void StartInteraction()
+    protected virtual void StartInteraction()
     {
         workPhase = WorkPhase.Working;
         interactor.PlayWorkAnimation();

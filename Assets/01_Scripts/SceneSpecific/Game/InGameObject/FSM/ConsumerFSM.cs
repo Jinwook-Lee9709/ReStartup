@@ -27,7 +27,7 @@ public class ConsumerFSM : MonoBehaviour
 
     public enum Satisfaction
     {
-        None,
+        None = -1,
         High,
         Middle,
         Low
@@ -67,7 +67,8 @@ public class ConsumerFSM : MonoBehaviour
     public SPUM_Prefabs Model { get => model; set => model = value; }
     private bool isOnSeat;
     private bool isPaying;
-    private bool isTip;
+    public bool isTip;
+    public bool alreadyTip;
     private Vector2 targetPivot;
     private float prevXPos;
     public Satisfaction CurrentSatisfaction
@@ -85,13 +86,24 @@ public class ConsumerFSM : MonoBehaviour
                         case GuestType.Influencer:
                         case GuestType.BadGuest:
                         case GuestType.PromotionGuest:
-                            StartCoroutine(consumer.currentTable.IconBubble.ShowText("특수 손님 문자열", 2f));
+                            ConsumerScriptActive(string.Format(Strings.orderTextFormat, UnityEngine.Random.Range(0, 2), consumerData.GuestId), () =>
+                            {
+                                consumer.currentTable.HideIcon();
+                            }, () =>
+                            {
+                                consumer.currentTable.ShowIcon();
+                            });
                             break;
                     }
                     break;
                 case Satisfaction.Middle:
-                    // TODO : Serving Delay Script Play
-                    StartCoroutine(consumer.currentTable.IconBubble.ShowText("딜레이 문자열",2f));
+                    ConsumerScriptActive(string.Format(Strings.servingDelayTextFormat, UnityEngine.Random.Range(0, 2), consumerData.GuestId), () =>
+                    {
+                        consumer.currentTable.HideIcon();
+                    }, () =>
+                    {
+                        consumer.currentTable.ShowIcon();
+                    });
                     break;
                 case Satisfaction.Low:
                     break;
@@ -132,7 +144,6 @@ public class ConsumerFSM : MonoBehaviour
                     break;
                 case ConsumerState.AfterOrder:
                     consumerManager.OnChangeConsumerState(consumer, ConsumerState.AfterOrder);
-                    consumer.currentTable.IconBubble.SetColorSatisfaction(Color.white, Color.blue, 1f);
                     break;
                 case ConsumerState.Eatting:
                     consumerManager.OnChangeConsumerState(consumer, ConsumerState.Eatting);
@@ -146,7 +157,6 @@ public class ConsumerFSM : MonoBehaviour
                     break;
                 case ConsumerState.Paying:
                     consumerManager.OnChangeConsumerState(consumer, ConsumerState.Paying);
-                    isTip = IsTip();
                     break;
                 case ConsumerState.Exit:
                     model.PlayAnimation(PlayerState.IDLE, 0);
@@ -171,7 +181,7 @@ public class ConsumerFSM : MonoBehaviour
                     break;
                 case ConsumerState.TalkingAbout:
                     consumer.currentTable.HideIcon();
-                    ConsumerScriptActive("불만족 문자열", () =>
+                    ConsumerScriptActive(string.Format(Strings.badTextFormat, UnityEngine.Random.Range(0, 2), consumerData.GuestId), () =>
                     {
                         satisfactionIcon.SetIcon(currentSatisfaction);
                     });
@@ -236,6 +246,7 @@ public class ConsumerFSM : MonoBehaviour
         isPaying = false;
         isOnSeat = false;
         isTip = false;
+        alreadyTip = false;
     }
 
     public void SetModel()
@@ -246,10 +257,10 @@ public class ConsumerFSM : MonoBehaviour
         Model.OverrideControllerInit();
     }
 
-    private void ConsumerScriptActive(string script, Action action = null)
+    public void ConsumerScriptActive(string script, Action startAction = null, Action endAction = null)
     {
         var text = Instantiate(textBubblePrefab, transform).GetComponent<TextBubble>();
-        text.Init(script, action);
+        text.Init(LZString.GetUIString(script), startAction, endAction);
     }
 
 
@@ -257,8 +268,9 @@ public class ConsumerFSM : MonoBehaviour
     {
         CurrentStatus = ConsumerState.Paying;
     }
-    private bool IsTip()
+    public bool IsTip()
     {
+        alreadyTip = true;
         if (consumerData.GuestType != GuestType.BadGuest)
         {
             if (consumer.needFood.FoodID == consumerData.LoveFoodId)
@@ -267,7 +279,7 @@ public class ConsumerFSM : MonoBehaviour
                 {
                     if (UnityEngine.Random.Range(0, 4) == 0)
                     {
-                        ConsumerScriptActive("계산 후 문자열");
+                        ConsumerScriptActive(string.Format(Strings.paidverygoodTextFormat, UnityEngine.Random.Range(0, 2), consumerData.GuestId));
                         return true;
                     }
                 }
@@ -479,7 +491,7 @@ public class ConsumerFSM : MonoBehaviour
 
         switch (consumerData.orderWaitTimer)
         {
-            case var t when t < satisfactionChangeLimit[0] && t > satisfactionChangeLimit[1]:
+            case var t when t <= satisfactionChangeLimit[0] && t > satisfactionChangeLimit[1]:
                 if (CurrentSatisfaction != Satisfaction.High)
                 {
                     CurrentSatisfaction = Satisfaction.High;
@@ -519,7 +531,7 @@ public class ConsumerFSM : MonoBehaviour
         iconBubble.FillingSatisfation(normalTimer);
         switch (consumerData.orderWaitTimer)
         {
-            case var t when t < satisfactionColorChangeFlagTimes[0] && t > satisfactionColorChangeFlagTimes[1]:
+            case var t when t <= satisfactionColorChangeFlagTimes[0] && t > satisfactionColorChangeFlagTimes[1]:
                 var highLerp = Mathf.InverseLerp(satisfactionColorChangeFlagTimes[0], satisfactionColorChangeFlagTimes[1], consumerData.orderWaitTimer);
                 iconBubble.SetColorSatisfaction(Colors.satisfactionColors[0], Colors.satisfactionColors[1], highLerp);
                 break;

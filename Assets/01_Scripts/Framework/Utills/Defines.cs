@@ -350,6 +350,11 @@ public static class Strings
     public static readonly string cntFormat = "{0} / {1}";
 
     public static readonly string badWordTableFileName = "badwords";
+
+    public static readonly string orderTextFormat = "{0}{1}order";
+    public static readonly string servingDelayTextFormat = "{0}{1}servingdelay";
+    public static readonly string paidverygoodTextFormat = "{0}{1}paidverygood";
+    public static readonly string badTextFormat = "{0}{1}bad";
 }
 
 public static class Colors

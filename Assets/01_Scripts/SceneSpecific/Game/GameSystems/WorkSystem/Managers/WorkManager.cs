@@ -94,16 +94,7 @@ public class WorkManager
             stoppedWorkQueues[type].Remove(work);
             workerManager.AssignWork(work);
             assignedWorks[work.workType].Add(work);
-            switch (work.workType)
-            {
-                case WorkType.Payment:
-                case WorkType.Hall:
-                    RemoveAlarmWorks(needHallAlarmWorks, work);
-                    break;
-                case WorkType.Kitchen:
-                    RemoveAlarmWorks(needKitchenAlarmWorks, work);
-                    break;
-            }
+            RemoveAlarmWorks(work);
             return;
         }
 
@@ -113,32 +104,14 @@ public class WorkManager
             workQueues[type].Remove(work);
             workerManager.AssignWork(work);
             assignedWorks[work.workType].Add(work);
-            switch (work.workType)
-            {
-                case WorkType.Payment:
-                case WorkType.Hall:
-                    RemoveAlarmWorks(needHallAlarmWorks, work);
-                    break;
-                case WorkType.Kitchen:
-                    RemoveAlarmWorks(needKitchenAlarmWorks, work);
-                    break;
-            }
+            RemoveAlarmWorks(work);
         }
     }
 
     public void OnWorkFinished(WorkBase work)
     {
         assignedWorks[work.workType].Remove(work);
-        switch (work.workType)
-        {
-            case WorkType.Payment:
-            case WorkType.Hall:
-                RemoveAlarmWorks(needHallAlarmWorks, work);
-                break;
-            case WorkType.Kitchen:
-                RemoveAlarmWorks(needKitchenAlarmWorks, work);
-                break;
-        }
+
         consumerWorkList.RemoveAll(x => x.Value == work);
 
         if (work.NextWork != null)
@@ -167,24 +140,41 @@ public class WorkManager
 
                 if (work.registeredTime > 2f)
                 {
-                    switch (work.workType)
-                    {
-                        case WorkType.Payment:
-                        case WorkType.Hall:
-                            AddAlarmWorks(needHallAlarmWorks, work);
-                            break;
-                        case WorkType.Kitchen:
-                            AddAlarmWorks(needKitchenAlarmWorks, work);
-                            break;
-                    }
+                    AddAlarmWorks(work);
                 }
             }
         }
     }
-
+    private void RemoveAlarmWorks(WorkBase work)
+    {
+        switch (work.workType)
+        {
+            case WorkType.Payment:
+            case WorkType.Hall:
+                RemoveAlarmWorks(needHallAlarmWorks, work);
+                break;
+            case WorkType.Kitchen:
+                RemoveAlarmWorks(needKitchenAlarmWorks, work);
+                break;
+        }
+    }
     private void RemoveAlarmWorks(HashSet<WorkBase> needAlarmWorks, WorkBase work)
     {
         needAlarmWorks.Remove(work);
+    }
+
+    private void AddAlarmWorks(WorkBase work)
+    {
+        switch (work.workType)
+        {
+            case WorkType.Payment:
+            case WorkType.Hall:
+                AddAlarmWorks(needHallAlarmWorks, work);
+                break;
+            case WorkType.Kitchen:
+                AddAlarmWorks(needKitchenAlarmWorks, work);
+                break;
+        }
     }
     private void AddAlarmWorks(HashSet<WorkBase> needAlarmWorks, WorkBase work)
     {
@@ -210,6 +200,7 @@ public class WorkManager
         var workType = work.workType;
         workQueues[workType].Remove(work);
         stoppedWorkQueues[workType].Remove(work);
+        RemoveAlarmWorks(work);
     }
 
 

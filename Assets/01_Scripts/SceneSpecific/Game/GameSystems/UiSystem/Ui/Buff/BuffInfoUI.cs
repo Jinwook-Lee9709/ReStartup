@@ -32,13 +32,17 @@ public class BuffInfoUI : MonoBehaviour, IComparable<BuffInfoUI>
 
         if (currentBuff.remainBuffTime < 0f)
         {
-            transform.DOLocalMoveX(-50f, 2f).SetEase(Ease.InElastic).OnComplete(()=>OnBuffTimeOver());
+            OnBuffTimeOver();
         }
     }
 
     private void OnBuffTimeOver()
     {
-        Destroy(gameObject);
-        buffManager.buffInfoUIList.Remove(this);
+        GetComponent<RectTransform>().DOMoveX(-GetComponent<RectTransform>().sizeDelta.x, 1.5f).OnComplete(() =>
+        {
+            transform.DOKill();
+            buffManager.buffInfoUIList.Remove(this);
+            Destroy(gameObject);
+        });
     }
 }

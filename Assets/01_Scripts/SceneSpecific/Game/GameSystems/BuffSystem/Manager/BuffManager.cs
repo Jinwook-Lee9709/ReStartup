@@ -53,6 +53,7 @@ public class BuffManager : MonoBehaviour
     private void Update()
     {
         buffInfoButton.interactable = buffs.Count != 0;
+        buffCountText.text = string.Format(Strings.buffCountFormat, buffInfoUIList.Count);
         if (buffs.Count == 0)
         {
             return;
@@ -79,7 +80,6 @@ public class BuffManager : MonoBehaviour
             }
         }
 
-        buffCountText.text = string.Format(Strings.buffCountFormat, buffInfoUIList.Count);
     }
     public void BuffOverridePopup(Buff newBuff, Action limitCountAction, bool needAd = false)
     {

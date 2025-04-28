@@ -33,6 +33,22 @@ public class WorkPayment : InteractWorkBase
         this.context = context;
     }
 
+    protected override void StartInteraction()
+    {
+        base.StartInteraction();
+        #region test
+
+        if (!context.Consumer.FSM.alreadyTip)
+        {
+            context.Consumer.FSM.alreadyTip = !context.Consumer.FSM.alreadyTip;
+            context.Consumer.FSM.ConsumerScriptActive(string.Format(Strings.paidverygoodTextFormat, UnityEngine.Random.Range(0, 2), context.Consumer.FSM.consumerData.GuestId));
+        }
+        #endregion
+        if (!context.Consumer.FSM.alreadyTip)
+            context.Consumer.FSM.isTip = context.Consumer.FSM.IsTip();
+
+    }
+
     protected override void HandlePostInteraction()
     {
         var counter = target as CashierCounter;
