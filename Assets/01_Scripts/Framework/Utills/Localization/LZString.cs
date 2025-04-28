@@ -30,7 +30,9 @@ public static class LZString
             var stringOperation =
                 args != null ? lzString.GetLocalizedStringAsync(args) : lzString.GetLocalizedStringAsync();
             stringOperation.WaitForCompletion();    
-            if (stringOperation.Status == AsyncOperationStatus.Succeeded) return stringOperation.Result;
+            if (stringOperation.Status == AsyncOperationStatus.Succeeded)
+                return stringOperation.Result;
+            
             Debug.Log("GetLZStringSync failed: " + key + "");
             return ERROR_STRING;
         }
