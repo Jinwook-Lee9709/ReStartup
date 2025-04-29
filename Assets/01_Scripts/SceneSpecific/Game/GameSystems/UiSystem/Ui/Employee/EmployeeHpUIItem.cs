@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -37,6 +38,54 @@ public class EmployeeHpUIItem : MonoBehaviour
             });
             GameObject.FindWithTag("UIManager").GetComponent<UiManager>().uiEmployeeHp.GetComponent<EmployeeHpUi>().buttons.Add(button);
         }
+    }
+    public void EmployeeAllRecovery(int val, CostType type, int costVal)
+    {
+        var userDataManager = UserDataManager.Instance;
+        switch (type)
+        {
+            case CostType.Free:
+                AdvertisementManager.Instance.ShowRewardedAd(() =>
+                {
+                    if (employeeData.currentHealth == employeeData.Health)
+                    {
+                        return;
+                    }
+                    ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.Recover, 1);
+                    employee.IncreaseHp(val);
+                    if (employeeData.currentHealth > employeeData.Health)
+                    {
+                        employeeData.currentHealth = employeeData.Health;
+                    }
+                    HpSet();
+                });
+                return;
+            case CostType.Money:
+                if (costVal > userDataManager.CurrentUserData.Money)
+                {
+                    return;
+                }
+                userDataManager.AdjustMoneyWithSave(costVal).Forget();
+                break;
+            case CostType.Gold:
+                if (costVal > userDataManager.CurrentUserData.Gold)
+                {
+                    return;
+                }
+                userDataManager.AdjustGoldWithSave(costVal).Forget();
+                break;
+        }
+        if (employeeData.currentHealth == employeeData.Health)
+        {
+            return;
+        }
+        ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.Recover, 1);
+        employee.IncreaseHp(val);
+        if (employeeData.currentHealth > employeeData.Health)
+        {
+            employeeData.currentHealth = employeeData.Health;
+        }
+        HpSet();
     }
     public void SetEmployeeHpUiItem(EmployeeFSM employee)
     {
