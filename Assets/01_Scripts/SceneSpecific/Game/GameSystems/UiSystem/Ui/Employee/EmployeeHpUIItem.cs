@@ -15,16 +15,21 @@ public class EmployeeHpUIItem : MonoBehaviour
     public Slider hpbar;
     public EmployeeFSM employee;
     public EmployeeTableGetData employeeData;
+    public int buyCost = 2000;
+    [SerializeField] private GameObject notEnoughCostPopUp;
+    [SerializeField] private GameObject employeeHpFullPopUp;
+
     private void Start()
     {
         hpbar.interactable = false;
+        HpSet();
         if (employeeData != null)
         {
             StartCoroutine(LoadSpriteCoroutine(employeeData.Icon));
             var button = GetComponentInChildren<Button>();
             button.onClick.AddListener(() =>
             {
-                if (employeeData.currentHealth == employeeData.Health)
+                if(!CheakRecoverHelth())
                 {
                     return;
                 }
@@ -36,47 +41,27 @@ public class EmployeeHpUIItem : MonoBehaviour
                 }
                 HpSet();
             });
-            GameObject.FindWithTag("UIManager").GetComponent<UiManager>().uiEmployeeHp.GetComponent<EmployeeHpUi>().buttons.Add(button);
         }
     }
-    public void EmployeeAllRecovery(int val, CostType type, int costVal)
+    public void EmployeeAllRecovery(int val, CostType type)
     {
         var userDataManager = UserDataManager.Instance;
-        switch (type)
+        if(CostType.Free == type)
         {
-            case CostType.Free:
-                AdvertisementManager.Instance.ShowRewardedAd(() =>
-                {
-                    if (employeeData.currentHealth == employeeData.Health)
-                    {
-                        return;
-                    }
-                    ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.Recover, 1);
-                    employee.IncreaseHp(val);
-                    if (employeeData.currentHealth > employeeData.Health)
-                    {
-                        employeeData.currentHealth = employeeData.Health;
-                    }
-                    HpSet();
-                });
-                return;
-            case CostType.Money:
-                if (costVal > userDataManager.CurrentUserData.Money)
+            AdvertisementManager.Instance.ShowRewardedAd(() =>
+            {
+                if (employeeData.currentHealth == employeeData.Health)
                 {
                     return;
                 }
-                userDataManager.AdjustMoneyWithSave(costVal).Forget();
-                break;
-            case CostType.Gold:
-                if (costVal > userDataManager.CurrentUserData.Gold)
+                ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.Recover, 1);
+                employee.IncreaseHp(val);
+                if (employeeData.currentHealth > employeeData.Health)
                 {
-                    return;
+                    employeeData.currentHealth = employeeData.Health;
                 }
-                userDataManager.AdjustGoldWithSave(costVal).Forget();
-                break;
-        }
-        if (employeeData.currentHealth == employeeData.Health)
-        {
+                HpSet();
+            });
             return;
         }
         ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.Recover, 1);
@@ -86,6 +71,50 @@ public class EmployeeHpUIItem : MonoBehaviour
             employeeData.currentHealth = employeeData.Health;
         }
         HpSet();
+    }
+    public bool CheakRecoverHelthHelth(int currentHelth, int maxHelth)
+    {
+        if (currentHelth >= maxHelth)
+        {
+            Debug.Log("체력꽉참");
+            return false;
+        }
+        return true;
+    }
+    public bool CheakRecoverHelthCost(int cost, int haveGoods)
+    {
+        if (cost > haveGoods)
+        {
+            Instantiate(notEnoughCostPopUp, GameObject.FindWithTag("UIManager").GetComponentInChildren<Canvas>().transform);
+            Debug.Log("돈모자람");
+            return false;
+        }
+        return true;
+    }
+    public bool CheakRecoverHelth()
+    {
+        if (buyCost > (int)UserDataManager.Instance.CurrentUserData.Money)
+        {
+            OnNotEnoughCostPopUp();
+            Debug.Log("돈모자람");
+            return false;
+        }
+        if (employeeData.currentHealth >= employeeData.Health)
+        {
+            OnEmployeeHpFullPopUp();
+            Debug.Log("체력꽉참");
+
+            return false;
+        }
+        return true;
+    }
+    public void OnNotEnoughCostPopUp()
+    {
+        Instantiate(notEnoughCostPopUp, GameObject.FindWithTag("UIManager").GetComponentInChildren<Canvas>().transform);
+    }
+    public void OnEmployeeHpFullPopUp()
+    {
+        Instantiate(employeeHpFullPopUp, GameObject.FindWithTag("UIManager").GetComponentInChildren<Canvas>().transform);
     }
     public void SetEmployeeHpUiItem(EmployeeFSM employee)
     {

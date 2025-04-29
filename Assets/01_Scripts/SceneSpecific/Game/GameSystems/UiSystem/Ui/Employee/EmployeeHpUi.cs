@@ -10,7 +10,9 @@ public class EmployeeHpUi : MonoBehaviour
     public GameObject employeeHpItem;
     public Transform employeeHpItemParent;
     private List<EmployeeHpUIItem> items = new();
-    public List<Button> buttons = new();
+    [SerializeField] private GameObject notEnoughCostPopUp;
+    [SerializeField] private GameObject employeeHpFullPopUp;
+    [SerializeField] private GameObject donHaveEmployeePopUp;
 
     private void OnEnable()
     {
@@ -61,19 +63,69 @@ public class EmployeeHpUi : MonoBehaviour
             }
         }
     }
-    public void OnButtonClickEmployeeAll()
-    {
-        foreach (var item in buttons)
-        {
-            item.onClick.Invoke();
-        }
-    }
 
     public void EmployeeAllRecovery(int val, CostType type, int costVal)
     {
+        if (items.Count == 0)
+        {
+            Instantiate(donHaveEmployeePopUp, GameObject.FindWithTag("UIManager").GetComponentInChildren<Canvas>().transform);
+            return;
+        }
+
+
+        int hpFullCount = 0;
+        switch (type)
+        {
+            case CostType.Free:
+                break;
+            case CostType.Money:
+                foreach (var item in items)
+                {
+                    if (costVal > (int)UserDataManager.Instance.CurrentUserData.Money)
+                    {
+                        Instantiate(notEnoughCostPopUp, GameObject.FindWithTag("UIManager").GetComponentInChildren<Canvas>().transform);
+                        return;
+                    }
+                    if (!item.CheakRecoverHelthHelth(item.employeeData.currentHealth, item.employeeData.Health))
+                    {
+                        hpFullCount++;
+                    }
+                }
+                break;
+            case CostType.Gold:
+                foreach (var item in items)
+                {
+                    if (costVal > (int)UserDataManager.Instance.CurrentUserData.Gold)
+                    {
+                        Instantiate(notEnoughCostPopUp, GameObject.FindWithTag("UIManager").GetComponentInChildren<Canvas>().transform);
+                        return;
+                    }
+                    if (!item.CheakRecoverHelthHelth(item.employeeData.currentHealth, item.employeeData.Health))
+                    {
+                        hpFullCount++;
+                    }
+                }
+                break;
+        }
+        if (hpFullCount == items.Count)
+        {
+            Instantiate(employeeHpFullPopUp, GameObject.FindWithTag("UIManager").GetComponentInChildren<Canvas>().transform);
+            return;
+        }
+        switch (type)
+        {
+            case CostType.Free:
+                break;
+            case CostType.Money:
+                UserDataManager.Instance.AdjustMoney(-costVal);
+                break;
+            case CostType.Gold:
+                UserDataManager.Instance.AdjustGold(-costVal);
+                break;
+        }
         foreach (var item in items)
         {
-            item.EmployeeAllRecovery(val, type, costVal);
+            item.EmployeeAllRecovery(val, type);
         }
     }
 
