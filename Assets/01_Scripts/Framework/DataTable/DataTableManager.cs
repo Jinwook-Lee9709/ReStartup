@@ -46,6 +46,10 @@ public static class DataTableManager
         var missionDataTable = new MissionDataTable();
         missionDataTable.Load();
         tables.Add(DataTableIds.Mission.ToString(), missionDataTable);
+        
+        var themeConditionDataTable = new ThemeConditionDataTable();
+        themeConditionDataTable.Load();
+        tables.Add(DataTableIds.ThemeCondition.ToString(), themeConditionDataTable);
     }
 
     public static T Get<T>(string id) where T : DataTable

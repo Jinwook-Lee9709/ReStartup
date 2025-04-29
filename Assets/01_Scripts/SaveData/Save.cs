@@ -16,7 +16,7 @@ public class UserData
     public int? PositiveCnt { get; set; } = new(); //�ſ츸�� �մ� ī��Ʈ
     public int? NegativeCnt { get; set; } = new(); //�Ҹ��� �մ� ī��Ʈ\
     public long Cumulative { get; set; } = 0;
-    public List<StageStatusData> ThemeStatus { get; set; } = new();
+    public Dictionary<ThemeIds, StageStatusData> ThemeStatus { get; set; } = new();
     public Dictionary<int, FoodSaveData> FoodSaveData { get; set; } = new();
 
     public Dictionary<int, EmployeeSaveData> EmployeeSaveData { get; set; } = new();
