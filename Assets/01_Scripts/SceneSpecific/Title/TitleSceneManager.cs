@@ -115,7 +115,11 @@ public class TitleSceneManager : MonoBehaviour
         {
             alarmText.text = "Stage Status Data Load Failed";
         }
-        UserDataManager.Instance.CurrentUserData.ThemeStatus = stageStatus.Data.ToList();
+        
+        foreach (var data in stageStatus.Data)
+        {
+            UserDataManager.Instance.CurrentUserData.ThemeStatus[data.theme] = data;   
+        }
     }
 
     private async UniTask SaveInitialStatusData()
@@ -126,7 +130,7 @@ public class TitleSceneManager : MonoBehaviour
         {
             //TODO: ReturnToTitleScene
         }
-        UserDataManager.Instance.CurrentUserData.ThemeStatus.Add(data);
+        UserDataManager.Instance.CurrentUserData.ThemeStatus.Add(data.theme, data);
     }
 
     private StageStatusData CreateStageInitialStatusData()

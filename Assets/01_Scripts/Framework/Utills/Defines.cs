@@ -40,6 +40,7 @@ public enum DataTableIds
     Promoiton,
     RankCondition,
     Mission,
+    ThemeCondition,
 }
 
 public enum IconPivots

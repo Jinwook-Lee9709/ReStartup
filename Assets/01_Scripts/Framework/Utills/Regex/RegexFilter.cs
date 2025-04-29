@@ -29,8 +29,6 @@ public static class RegexFilter
     {
         var handle = Addressables.LoadAssetAsync<TextAsset>(filePath);
         handle.WaitForCompletion();
-
-        if (handle.Status != AsyncOperationStatus.Succeeded) Debug.LogError("Failed to load csv");
         var result = handle.Result.text;
         List<string> firstColumn = result.Split("\r\n").ToList();
 
