@@ -7,14 +7,20 @@ using System.Collections.Generic;
 [Serializable]
 public class UserData
 {
-    public string UID { get; set; } //���� UID
-    public string Name { get; set; } //���� �̸�
-    public int? Money { get; set; } = 0; //�ΰ��� ��ȭ
+    public string UID { get; set; } 
+    public string Name { get; set; } 
+    public int? Money { get; set; } = 0;
     public int Gold { get; set; } = 0;
-    public int? CurrentRankPoint { get; set; } = 2000; //���� ��ŷ ����Ʈ
+    public int? CurrentRankPoint { get; set; } = 2000;
     public int CurrentRank { get; set; }
-    public int? PositiveCnt { get; set; } = new(); //�ſ츸�� �մ� ī��Ʈ
-    public int? NegativeCnt { get; set; } = new(); //�Ҹ��� �մ� ī��Ʈ\
+    public int? PositiveCnt { get; set; } = new(); 
+    public int? NegativeCnt { get; set; } = new();
+    public Dictionary<ThemeIds, (int positive, int negative)> reviewCountForTheme = new()
+    {
+        {ThemeIds.Theme1, (0,0) },
+        {ThemeIds.Theme2, (0,0) },
+        {ThemeIds.Theme3, (0,0) },
+    };
     public long Cumulative { get; set; } = 0;
     public Dictionary<ThemeIds, StageStatusData> ThemeStatus { get; set; } = new();
     public Dictionary<int, FoodSaveData> FoodSaveData { get; set; } = new();

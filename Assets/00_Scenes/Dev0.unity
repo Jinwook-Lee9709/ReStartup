@@ -2572,7 +2572,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &179119077
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3214,6 +3214,7 @@ GameObject:
   - component: {fileID: 201363991}
   - component: {fileID: 201363993}
   - component: {fileID: 201363992}
+  - component: {fileID: 201363994}
   m_Layer: 5
   m_Name: BestMenuTop1
   m_TagString: Untagged
@@ -3279,6 +3280,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201363990}
   m_CullTransparentMesh: 1
+--- !u!114 &201363994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 201363990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c72823a6f2d5f04e9692101d27ddb70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  foodImage: {fileID: 1784562692}
+  foodCount: {fileID: 799489912}
 --- !u!1 &202753416
 GameObject:
   m_ObjectHideFlags: 0
@@ -6486,6 +6501,7 @@ GameObject:
   - component: {fileID: 383002114}
   - component: {fileID: 383002116}
   - component: {fileID: 383002115}
+  - component: {fileID: 383002117}
   m_Layer: 5
   m_Name: BestMenuTop2
   m_TagString: Untagged
@@ -6551,6 +6567,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 383002113}
   m_CullTransparentMesh: 1
+--- !u!114 &383002117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 383002113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c72823a6f2d5f04e9692101d27ddb70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  foodImage: {fileID: 272966126}
+  foodCount: {fileID: 34278536}
 --- !u!1 &397250962
 GameObject:
   m_ObjectHideFlags: 0
@@ -7861,7 +7891,7 @@ Transform:
   m_GameObject: {fileID: 484832185}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: -4.62, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -24090,6 +24120,7 @@ GameObject:
   - component: {fileID: 1481931805}
   - component: {fileID: 1481931807}
   - component: {fileID: 1481931806}
+  - component: {fileID: 1481931808}
   m_Layer: 5
   m_Name: BestMenuTop3
   m_TagString: Untagged
@@ -24155,6 +24186,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1481931804}
   m_CullTransparentMesh: 1
+--- !u!114 &1481931808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1481931804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c72823a6f2d5f04e9692101d27ddb70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  foodImage: {fileID: 1248988912}
+  foodCount: {fileID: 1153635824}
 --- !u!1 &1490973916
 GameObject:
   m_ObjectHideFlags: 0
@@ -26973,7 +27018,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1671933083
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27063,11 +27108,12 @@ MonoBehaviour:
   rankingTitle: {fileID: 331497352}
   themeRanking: {fileID: 897056843}
   globalRanking: {fileID: 1029748179}
+  themePlayerRankingClone: {fileID: 365854684}
   bestMenuTitle: {fileID: 1979160109}
-  bestFoodSellingCounts:
-  - {fileID: 799489912}
-  - {fileID: 34278536}
-  - {fileID: 1153635824}
+  bestFoodSellingInfos:
+  - {fileID: 201363994}
+  - {fileID: 383002117}
+  - {fileID: 1481931808}
 --- !u!1 &1680636373
 GameObject:
   m_ObjectHideFlags: 0

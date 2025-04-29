@@ -1,11 +1,14 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
 public class MyRestaurantInfoUI : MonoBehaviour
 {
     private UserData currentUserData;
+    private ThemeIds currentThemeId;
 
     [VInspector.Foldout("CurrentUserInfo")]
     [SerializeField] private TextMeshProUGUI userName;
@@ -21,10 +24,11 @@ public class MyRestaurantInfoUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI rankingTitle;
     [SerializeField] private TextMeshProUGUI themeRanking;
     [SerializeField] private TextMeshProUGUI globalRanking;
+    [SerializeField] private PlayerClone themePlayerRankingClone;
 
     [VInspector.Foldout("BestMenu")]
     [SerializeField] private TextMeshProUGUI bestMenuTitle;
-    [SerializeField] private List<TextMeshProUGUI> bestFoodSellingCounts = new();
+    [SerializeField] private List<BestMenuInfo> bestFoodSellingInfos = new();
     [VInspector.EndFoldout]
 
     #region Keys
@@ -34,22 +38,18 @@ public class MyRestaurantInfoUI : MonoBehaviour
     private string currentThemeRankingKey = "CurrentThemeRanking";
     private string currentGlobalRankingKey = "CurrentGlobalRanking";
     private string bestMenuTitleKey = "BestMenuTitle";
-    private string bestMenuCountKey = "BestMenuCount";
     #endregion
 
     #region Format
     private string themeNameKeyFormat = "RestaurantName{0}";
     private string reviewCountFormat = "X {0}";
+    private string totalReviewCountFormat;
     #endregion
 
     private void OnEnable()
     {
-        UpdateUI();
-    }
-
-    private void Start()
-    {
         currentUserData = UserDataManager.Instance.CurrentUserData;
+        currentThemeId = ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme;
         Init();
         UpdateUI();
     }
@@ -64,46 +64,61 @@ public class MyRestaurantInfoUI : MonoBehaviour
     private void Init()
     {
         userName.text = currentUserData.Name;
-        themeName.text = LZString.GetUIString(string.Format(themeNameKeyFormat, (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme));
+        themeName.text = LZString.GetUIString(string.Format(themeNameKeyFormat, (int)currentThemeId));
+
+        totalReviewTitle.text = LZString.GetUIString(totalReviewTitleKey);
+        rankingTitle.text = LZString.GetUIString(currentRankingTitleKey);
+        bestMenuTitle.text = LZString.GetUIString(bestMenuTitleKey);
+
+        totalReviewCountFormat = LZString.GetUIString(totalReviewCountKey);
+
+        foreach (var item in bestFoodSellingInfos)
+            item.Init();
     }
 
     private void UpdateBestFoodRanking()
     {
+        var bestFoods = (from food in currentUserData.FoodSaveData.Values
+                        where food.theme == currentThemeId
+                        orderby food.sellCount descending
+                        select food).ToList();
 
+        for (int i = 0; i < bestFoodSellingInfos.Count; i++)
+        {
+            bestFoodSellingInfos[i].UpdateFoodInfo(bestFoods[i]);
+        }
     }
 
     private void UpdateCurrentRanking()
     {
         UpdateCurrentThemeRanking();
-        UpdateCurrentGlobalRanking();
+        UpdateCurrentGlobalRanking().Forget();
     }
     private void UpdateCurrentThemeRanking()
     {
-
+        themeRanking.text = themePlayerRankingClone?.playerData.rank.ToString();
     }
 
-    private void UpdateCurrentGlobalRanking()
+    private async UniTask UpdateCurrentGlobalRanking()
     {
-
+        var rank = await RankerDataDAC.GetUserRank();
+        globalRanking.text = rank.Data.rank.ToString();
     }
 
     private void UpdateTotalReviewCount()
     {
         UpdateTotalPositiveReviewCount();
         UpdateTotalNegativeReviewCount();
+        totalReviewCount.text = string.Format(totalReviewCountFormat, currentUserData.reviewCountForTheme[currentThemeId].positive + currentUserData.reviewCountForTheme[currentThemeId].negative);
     }
 
     private void UpdateTotalPositiveReviewCount()
     {
-
+        positiveReviewCount.text = string.Format(reviewCountFormat, currentUserData.reviewCountForTheme[currentThemeId].positive);
     }
     private void UpdateTotalNegativeReviewCount()
     {
-
+        negativeReviewCount.text = string.Format(reviewCountFormat, currentUserData.reviewCountForTheme[currentThemeId].negative);
     }
-
-    private void UpdateThemeName()
-    {
-
-    }
+    
 }

@@ -35,9 +35,9 @@ public class UserDataManager : Singleton<UserDataManager>
     public event Action<int> ChangeRankPointAction;
     public event Action<int, int> OnInteriorUpgradeEvent;
     public event Action<bool> OnReviewCntFullEvent;
-    
+
     public event Action<int> OnRankChangedEvent;
-    
+
     public void OnRankPointUp(int getRankPoint)
     {
         currentUserData.CurrentRankPoint += getRankPoint;
@@ -71,7 +71,7 @@ public class UserDataManager : Singleton<UserDataManager>
         AdjustMoney(money);
         await SaveMoneyData();
     }
-    
+
     public async UniTask SaveMoneyData()
     {
         List<CurrencyData> list = new();
@@ -138,6 +138,13 @@ public class UserDataManager : Singleton<UserDataManager>
         await FoodSaveDataDAC.UpdateFoodData(payload);
     }
 
+    public async UniTask OnSellingFood(int foodId)
+    {
+        currentUserData.FoodSaveData[foodId].sellCount++;
+        var payload = currentUserData.FoodSaveData[foodId];
+        await FoodSaveDataDAC.UpdateFoodData(payload);
+    }
+
     public async UniTask<bool> OnUsePromotion(PromotionBase promotion, bool isAd)
     {
         if (isAd)
@@ -174,7 +181,7 @@ public class UserDataManager : Singleton<UserDataManager>
         var result = await BuffSaveDataDAC.DeleteBuffSaveData(buff.BuffType);
         return result;
     }
-    
+
     public void AddConsumerCnt(bool isPositive)
     {
         if (isPositive)
@@ -185,6 +192,7 @@ public class UserDataManager : Singleton<UserDataManager>
                 OnReviewCntFullEvent?.Invoke(isPositive);
                 currentUserData.PositiveCnt = 0;
                 ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.GoodReview, 1);
+                ReviewCountUp(isPositive);
             }
         }
         else
@@ -193,8 +201,40 @@ public class UserDataManager : Singleton<UserDataManager>
             if (currentUserData.NegativeCnt >= 4)
             {
                 if (Random.Range(0f, 1f) < 0.6f) OnReviewCntFullEvent?.Invoke(isPositive);
+                ReviewCountUp(isPositive);
                 currentUserData.NegativeCnt = 0;
             }
+        }
+    }
+
+    public void ReviewCountUp(bool isPositive)
+    {
+        var currentTheme = ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme;
+        if (isPositive)
+        {
+            if (currentUserData.reviewCountForTheme.TryGetValue(currentTheme, out var counts))
+            {
+                counts.positive++;
+                currentUserData.reviewCountForTheme[currentTheme] = (counts.positive, counts.negative);
+            }
+        }
+        else
+        {
+            if (currentUserData.reviewCountForTheme.TryGetValue(currentTheme, out var counts))
+            {
+                counts.negative++;
+                currentUserData.reviewCountForTheme[currentTheme] = (counts.positive, counts.negative);
+            }
+        }
+    }
+
+    public void OnNegativeReviewRemove()
+    {
+        var currentTheme = ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme;
+        if (currentUserData.reviewCountForTheme.TryGetValue(currentTheme, out var counts))
+        {
+            counts.negative--;
+            currentUserData.reviewCountForTheme[currentTheme] = (counts.positive, counts.negative);
         }
     }
 
