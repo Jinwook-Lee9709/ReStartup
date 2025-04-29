@@ -28,9 +28,8 @@ public class MyRestaurantInfoUI : MonoBehaviour
     [VInspector.EndFoldout]
 
     #region Keys
-    private string themeNameKey = "ThemeName";
     private string totalReviewTitleKey = "TotalReviewTitle";
-    private string totalReviewCountKey = "TotlaReviewCount";
+    private string totalReviewCountKey = "TotalReviewCount";
     private string currentRankingTitleKey = "CurrentRankingTitle";
     private string currentThemeRankingKey = "CurrentThemeRanking";
     private string currentGlobalRankingKey = "CurrentGlobalRanking";
@@ -39,6 +38,7 @@ public class MyRestaurantInfoUI : MonoBehaviour
     #endregion
 
     #region Format
+    private string themeNameKeyFormat = "RestaurantName{0}";
     private string reviewCountFormat = "X {0}";
     #endregion
 
@@ -63,7 +63,8 @@ public class MyRestaurantInfoUI : MonoBehaviour
 
     private void Init()
     {
-
+        userName.text = currentUserData.Name;
+        themeName.text = LZString.GetUIString(string.Format(themeNameKeyFormat, (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme));
     }
 
     private void UpdateBestFoodRanking()
