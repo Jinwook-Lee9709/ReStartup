@@ -8,10 +8,9 @@ public class RestaurantSuperviseUIManager : MonoBehaviour
     [SerializeField] RestaurantListPanel restaurantListPanel;
     [SerializeField] SupervisorListPanel supervisorListPanel;
     
-    
     public void InitRestaurantListPanel(Action action)
     {
-        restaurantListPanel.Init(action);
+        restaurantListPanel.Init(action, this);
     }
     
     public void InitSupervisorListPanel(Action<int, int> action)
@@ -19,6 +18,10 @@ public class RestaurantSuperviseUIManager : MonoBehaviour
         supervisorListPanel.Init(action);
     }
 
-
+    [VInspector.Button]
+    public void ChangeSupervisorList(int themeID)
+    {
+        supervisorListPanel.ChangeSupervisor(themeID);
+    }
 
 }

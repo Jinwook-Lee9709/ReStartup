@@ -9,51 +9,85 @@ public class SupervisorInfoCard : MonoBehaviour
 {
     public static readonly string HiredStringID = "Hired";
     
-    private TextMeshProUGUI nameText;
-    private TextMeshProUGUI costText;
-    private Image moneyImage;
-    private Button buyButton;
+    [SerializeField] private TextMeshProUGUI nameText;
+    [SerializeField] private TextMeshProUGUI costText;
+    [SerializeField] private Image moneyImage;
+    [SerializeField] private Button buyButton;
+    private SupervisorInfo supervisorInfo;
 
-    public void Init(string supervisorName, int cost, bool isHired, Action onBuy)
+    public void Init(SupervisorInfo info, Action<int> onBuy)
     {
-        nameText.text = supervisorName;
+        supervisorInfo = info;
+        InitHireButton(onBuy);
+        UpdateDisplay();
+    }
+
+    private void UpdateDisplay()
+    {
+        nameText.text = supervisorInfo.name;
+        SetCostText(supervisorInfo.isHired);
+    }
+
+    private void InitHireButton(Action<int> onBuy)
+    {
+        SetHireButton();
+        buyButton.onClick.RemoveAllListeners();
+        buyButton.onClick.AddListener(
+            () =>
+            {
+                onBuy?.Invoke(supervisorInfo.number);
+                OnBuy();
+            });
+
+    }
+
+    private void SetHireButton()
+    {
+        buyButton.gameObject.SetActive(!supervisorInfo.isHired && supervisorInfo.isHireable);
+        buyButton.interactable = supervisorInfo.cost < UserDataManager.Instance.CurrentUserData.Money;
+    }
+
+    public void ChangeInfo(SupervisorInfo info)
+    {
+        supervisorInfo = info;
         
-        if (isHired)
-        {
-            SetHiredText();
-        }
-        SetHireButton(isHired, onBuy);
+        SetHireButton();
+        UpdateDisplay();
     }
 
-    private void SetHireButton(bool isHired, Action onBuy)
+    public void OnMoneyChanged(int money)
     {
-        buyButton.gameObject.SetActive(!isHired);
-        if (!isHired)
-        {
-            buyButton.onClick.AddListener(
-                () =>
-                {
-                    onBuy?.Invoke();
-                    OnBuy();
-                });
-        }
+        if (supervisorInfo.isHired || !supervisorInfo.isHireable)
+            return;
+        buyButton.interactable = supervisorInfo.cost < money;
     }
 
-
-    public void UpdateInteractable(bool isInteractable)
+    public void OnRankReached()
     {
-        buyButton.interactable = isInteractable;
+        supervisorInfo.isHireable = true;
+        OnMoneyChanged((int)UserDataManager.Instance.CurrentUserData.Money);
     }
 
     public void OnBuy()
     {
-        SetHiredText();
+        SetCostText(true);
+        buyButton.gameObject.SetActive(false);
     }
 
-    public void SetHiredText()
+    public void SetCostText(bool isHired)
     {
-        var hiredString = LZString.GetUIString(HiredStringID);
-        costText.text = hiredString;
-    }
+        if (isHired)
+        {
+            var hiredString = LZString.GetUIString(HiredStringID);
+            costText.text = hiredString;
+            costText.color = Color.black;
+        }
+        else
+        {
+            costText.text = supervisorInfo.cost.ToString();
+            
+            costText.color = Color.red;
+        }
     
+    }
 }

@@ -18841,23 +18841,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 962447174812790665, guid: baca63c4fc38747ada796618795d768d, type: 3}
   m_PrefabInstance: {fileID: 856204147804681783}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1379485457 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 466115620739233790, guid: baca63c4fc38747ada796618795d768d, type: 3}
-  m_PrefabInstance: {fileID: 856204147804681783}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1379485458
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1379485457}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39e1dd42b681a4a36913779177e56587, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1382448446 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3264348479837019340, guid: 95f333af2287e2b49b5fbff7146af504, type: 3}
@@ -29434,14 +29417,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: RestaurantSupervise
       objectReference: {fileID: 0}
-    - target: {fileID: 2919704517261307006, guid: baca63c4fc38747ada796618795d768d, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3311413053830298506, guid: baca63c4fc38747ada796618795d768d, type: 3}
-      propertyPath: m_StringReference.m_TableEntryReference.m_KeyId
-      value: 6643117129195520
-      objectReference: {fileID: 0}
     - target: {fileID: 3412744790966046193, guid: baca63c4fc38747ada796618795d768d, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -29496,10 +29471,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6741099376855598748, guid: baca63c4fc38747ada796618795d768d, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6741099376855598748, guid: baca63c4fc38747ada796618795d768d, type: 3}
-      propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7067925986010028096, guid: baca63c4fc38747ada796618795d768d, type: 3}
@@ -29565,6 +29536,14 @@ PrefabInstance:
     - target: {fileID: 7274979703613508310, guid: baca63c4fc38747ada796618795d768d, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7379485903746557802, guid: baca63c4fc38747ada796618795d768d, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7379485903746557802, guid: baca63c4fc38747ada796618795d768d, type: 3}
+      propertyPath: m_Horizontal
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7433282292417465467, guid: baca63c4fc38747ada796618795d768d, type: 3}
       propertyPath: m_AnchorMax.y
@@ -29661,37 +29640,17 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2919704517261307006, guid: baca63c4fc38747ada796618795d768d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 856204147804681787}
-    - targetCorrespondingSourceObject: {fileID: 3392767923965656376, guid: baca63c4fc38747ada796618795d768d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 856204147804681788}
-    - targetCorrespondingSourceObject: {fileID: 466115620739233790, guid: baca63c4fc38747ada796618795d768d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1379485458}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: baca63c4fc38747ada796618795d768d, type: 3}
 --- !u!1 &856204147804681784 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2919704517261307006, guid: baca63c4fc38747ada796618795d768d, type: 3}
   m_PrefabInstance: {fileID: 856204147804681783}
   m_PrefabAsset: {fileID: 0}
---- !u!224 &856204147804681785 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 6741099376855598748, guid: baca63c4fc38747ada796618795d768d, type: 3}
-  m_PrefabInstance: {fileID: 856204147804681783}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &856204147804681786 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3392767923965656376, guid: baca63c4fc38747ada796618795d768d, type: 3}
-  m_PrefabInstance: {fileID: 856204147804681783}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &856204147804681787
+--- !u!114 &856204147804681787 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 4661532750690643130, guid: baca63c4fc38747ada796618795d768d, type: 3}
+  m_PrefabInstance: {fileID: 856204147804681783}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 856204147804681784}
   m_Enabled: 1
@@ -29699,25 +29658,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f31121523d8047a5ac2978393ca1eb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  restaurantListPanel: {fileID: 856204147804681788}
---- !u!114 &856204147804681788
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 856204147804681786}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99ab71182a1134e10a1d07451552036f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  restaurantInfoCard:
-    m_AssetGUID: 110069b1a76f64398a79f63ac59949d0
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
-  parent: {fileID: 856204147804681785}
 --- !u!222 &1013131027607721111
 CanvasRenderer:
   m_ObjectHideFlags: 0

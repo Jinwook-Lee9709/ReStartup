@@ -1,9 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using VInspector;
+using UnityEngine.UI;
+
 
 public class RestaurantListPanel : MonoBehaviour
 {
@@ -11,14 +12,24 @@ public class RestaurantListPanel : MonoBehaviour
     private static readonly string SPRITE_FORMAT = "RestaurantSprite{0}";
     private static readonly string NAME_FORMAT = "RestaurantName{0}";
     
-    
     [SerializeField] private AssetReference restaurantInfoCard;
     [SerializeField] private Transform parent;
+    [SerializeField] private Button lButton, rButton;
+    
+    [SerializeField] private ScrollRect scrollRect;
+    [SerializeField] private RectTransform content;
+    [SerializeField] private float animationDuration = 0.3f;
+
+    private List<Image> indicators;
+    
+    private RestaurantSuperviseUIManager uiManager;
+    
     private Dictionary<int, RestaurantInfoCard> cards = new();
     private int currentTheme;
     
-    public void Init(Action action)
+    public void Init(Action action, RestaurantSuperviseUIManager manager)
     {
+        uiManager = manager;
         currentTheme = (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme;
         foreach (var id in Enum.GetValues(typeof(ThemeIds)))
         {
@@ -27,7 +38,10 @@ public class RestaurantListPanel : MonoBehaviour
 
         UserDataManager.Instance.OnRankChangedEvent += OnRankChanged;
         UserDataManager.Instance.ChangeGoldAction += OnGoldChanged;
-
+        lButton.onClick.AddListener(() => OnButtonClick(false));
+        rButton.onClick.AddListener(() => OnButtonClick(true));
+        MovePanelToCenter(currentTheme);
+        SetButtonActive();
     }
 
     private void InstantiateCardAndSetInfo(Action action, object id)
@@ -46,32 +60,37 @@ public class RestaurantListPanel : MonoBehaviour
             );
         cards.Add(number, card);
     }
-    
-    private RestaurantInfoCard InstantiateCard()
+
+    private void OnButtonClick(bool isRight)
     {
-        var obj = Addressables.InstantiateAsync(restaurantInfoCard, parent).WaitForCompletion();
-        return obj.GetComponent<RestaurantInfoCard>();
-    }
-    
-    private Sprite LoadSprite(int number)
-    {
-        return Addressables.LoadAssetAsync<Sprite>(string.Format(SPRITE_FORMAT, number)).WaitForCompletion();
-    }
-    
-    private string GetShopName(int number)
-    {
-        string shopNameId = string.Format(NAME_FORMAT, number);
-        return LZString.GetUIString(shopNameId);
+        currentTheme += isRight ? 1 : -1;
+        uiManager.ChangeSupervisorList(currentTheme);
+        MovePanelToCenter(currentTheme);
+        SetButtonActive();
     }
 
-    private int GetShopCost(int number)
+    private void MovePanelToCenter(int index)
     {
-        return DataTableManager.Get<ThemeConditionDataTable>(DataTableIds.ThemeCondition.ToString())
-            .GetConditionData(number).Requirements1;
+        Vector3 contentPosition = content.anchoredPosition;
+        Vector3 itemPosition = cards[index].transform.localPosition;
+        float contentWidth = content.rect.size.x;           
+        float viewportWidth = scrollRect.viewport.rect.size.x;
+        float targetX = itemPosition.x - (viewportWidth / 2);
+        float minX = 0;
+        float maxX = contentWidth - viewportWidth / 2;
+        targetX = Mathf.Clamp(targetX, minX, maxX);
+        Vector2 targetPosition = new Vector2(-targetX, contentPosition.y);
+        DOTween.To(() => content.anchoredPosition, x => content.anchoredPosition = x, targetPosition, animationDuration)
+            .SetEase(Ease.OutCubic).onComplete += () => { scrollRect.horizontal = false; }; 
+
     }
 
-
-    public void OnRankChanged(int rank)
+    private void SetButtonActive()
+    {
+        lButton.gameObject.SetActive(currentTheme != 1);
+        rButton.gameObject.SetActive(currentTheme != cards.Count);
+    }
+    private void OnRankChanged(int rank)
     {
         UpdateInteractable();
     }
@@ -96,6 +115,29 @@ public class RestaurantListPanel : MonoBehaviour
         return isRankEnough && isGoldEnough && isManagerEnough;
     }
 
+    private RestaurantInfoCard InstantiateCard()
+    {
+        var obj = Addressables.InstantiateAsync(restaurantInfoCard, parent).WaitForCompletion();
+        return obj.GetComponent<RestaurantInfoCard>();
+    }
+    
+    private Sprite LoadSprite(int number)
+    {
+        return Addressables.LoadAssetAsync<Sprite>(string.Format(SPRITE_FORMAT, number)).WaitForCompletion();
+    }
+    
+    private string GetShopName(int number)
+    {
+        string shopNameId = string.Format(NAME_FORMAT, number);
+        return LZString.GetUIString(shopNameId);
+    }
+
+    private int GetShopCost(int number)
+    {
+        return DataTableManager.Get<ThemeConditionDataTable>(DataTableIds.ThemeCondition.ToString())
+            .GetConditionData(number).Requirements1;
+    }
+    
     private RestaurantInfoCard.ShopType CalculateShopType(int themeId)
     {
         if (themeId < currentTheme) 
@@ -106,4 +148,6 @@ public class RestaurantListPanel : MonoBehaviour
             return RestaurantInfoCard.ShopType.Next;
         return RestaurantInfoCard.ShopType.Post;
     }
+
+
 }

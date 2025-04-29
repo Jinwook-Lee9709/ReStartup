@@ -8,9 +8,15 @@ public class RestaurantSuperviseManager : MonoBehaviour
     private void Start()
     {
         restaurantSuperviseUIManager.InitRestaurantListPanel(OnThemeChanged);
+        restaurantSuperviseUIManager.InitSupervisorListPanel(OnHireEmployee);
     }
 
     private void OnThemeChanged()
+    {
+        
+    }
+
+    private void OnHireEmployee(int theme, int number)
     {
         
     }
