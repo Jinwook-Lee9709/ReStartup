@@ -167,6 +167,16 @@ public class ConsumerFSM : MonoBehaviour
                         case Satisfaction.High:
                             UserDataManager.Instance.AddConsumerCnt(true);
                             ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.GuestSatisfied, 1);
+
+                            switch (consumerData.GuestType)
+                            {
+                                case GuestType.Influencer:
+
+                                    break;
+                                case GuestType.BadGuest:
+
+                                    break;
+                            }
                             break;
                         case Satisfaction.Low:
                             UserDataManager.Instance.AddConsumerCnt(false);
