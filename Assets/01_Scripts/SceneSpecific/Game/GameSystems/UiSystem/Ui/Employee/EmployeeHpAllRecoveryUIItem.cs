@@ -42,10 +42,6 @@ public class EmployeeHpAllRecoveryUIItem : MonoBehaviour
         float newWidth = GetComponent<RectTransform>().rect.size.x * widthRatio;
         float newheigth = GetComponent<RectTransform>().rect.size.y * heigthRatio;
         Vector2 newSize = new(newWidth, objectsTransform.rect.size.y);
-        if(newSize.x < 100)
-        {
-            newSize.x = 100;
-        }
         objectsTransform.sizeDelta = newSize;
         float newXPos = newSize.x / 2f;
         Vector2 newImageSize = new(newheigth, newheigth);
