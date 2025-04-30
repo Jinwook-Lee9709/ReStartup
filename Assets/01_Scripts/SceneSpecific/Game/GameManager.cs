@@ -147,6 +147,7 @@ public class GameManager : MonoBehaviour
     {
         InitInteriorDictionary();
         InitEmployeeDictionary();
+        InitCookWareDictionary();
         InitFoodDictionary();
     }
     private void InitInteriorDictionary()

@@ -42,8 +42,7 @@ public class UserData
                 { CookwareType.CharcoalGrill, 0 },
                 { CookwareType.GriddleGrill, 0 },
                 { CookwareType.Pot, 0 },
-                { CookwareType.KitchenTable, 0 },
-                { CookwareType.Refrigerator, 0 }
+                { CookwareType.KitchenTable, 0 }
             }
         },
         { ThemeIds.Theme2, new Dictionary<CookwareType, int>() },

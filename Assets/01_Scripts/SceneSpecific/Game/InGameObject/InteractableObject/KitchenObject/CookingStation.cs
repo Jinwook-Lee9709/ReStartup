@@ -21,8 +21,8 @@ public class CookingStation : InteractableObjectBase, IInterior
         
     }
 
-    public void ChangeSpirte(Sprite sprite)
+    public void ChangeSpirte(params Sprite[] sprite)
     {  
-        objectRenderer.sprite = sprite;
+        objectRenderer.sprite = sprite[0];
     }
 }

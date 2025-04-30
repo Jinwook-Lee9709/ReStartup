@@ -1,9 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using VInspector;
+using UnityEngine.UI;
+
 
 public class RestaurantListPanel : MonoBehaviour
 {
@@ -11,14 +12,24 @@ public class RestaurantListPanel : MonoBehaviour
     private static readonly string SPRITE_FORMAT = "RestaurantSprite{0}";
     private static readonly string NAME_FORMAT = "RestaurantName{0}";
     
-    
     [SerializeField] private AssetReference restaurantInfoCard;
     [SerializeField] private Transform parent;
+    [SerializeField] private Button lButton, rButton;
+    
+    [SerializeField] private ScrollRect scrollRect;
+    [SerializeField] private RectTransform content;
+    [SerializeField] private float animationDuration = 0.3f;
+
+    private List<Image> indicators;
+    
+    private RestaurantSuperviseUIManager uiManager;
+    
     private Dictionary<int, RestaurantInfoCard> cards = new();
     private int currentTheme;
     
-    public void Init(Action action)
+    public void Init(Action action, RestaurantSuperviseUIManager manager)
     {
+        uiManager = manager;
         currentTheme = (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme;
         foreach (var id in Enum.GetValues(typeof(ThemeIds)))
         {
@@ -26,8 +37,11 @@ public class RestaurantListPanel : MonoBehaviour
         }
 
         UserDataManager.Instance.OnRankChangedEvent += OnRankChanged;
-        UserDataManager.Instance.ChangeGoldAction += OnGoldChanged;
-
+        UserDataManager.Instance.ChangeMoneyAction += OnMoneyChanged;
+        lButton.onClick.AddListener(() => OnButtonClick(false));
+        rButton.onClick.AddListener(() => OnButtonClick(true));
+        MovePanelToCenter(currentTheme);
+        SetButtonActive();
     }
 
     private void InstantiateCardAndSetInfo(Action action, object id)
@@ -40,13 +54,62 @@ public class RestaurantListPanel : MonoBehaviour
         var cost = GetShopCost(number);
         
         card.SetInfo(shopName, cost, sprite, type);
-        if(number == currentTheme)
+        if(number == currentTheme + 1)
             card.RegisterAction(
-                () => { action(); }
+                () =>
+                {
+                    action();
+                    Debug.Log("action");
+                }
             );
         cards.Add(number, card);
     }
-    
+
+    private void OnButtonClick(bool isRight)
+    {
+        currentTheme += isRight ? 1 : -1;
+        uiManager.ChangeSupervisorList(currentTheme);
+        MovePanelToCenter(currentTheme);
+        SetButtonActive();
+    }
+
+    private void MovePanelToCenter(int index)
+    {
+        Vector3 contentPosition = content.anchoredPosition;
+        Vector3 itemPosition = cards[index].transform.localPosition;
+        float contentWidth = content.rect.size.x;           
+        float viewportWidth = scrollRect.viewport.rect.size.x;
+        float targetX = itemPosition.x - (viewportWidth / 2);
+        float minX = 0;
+        float maxX = contentWidth - viewportWidth / 2;
+        targetX = Mathf.Clamp(targetX, minX, maxX);
+        Vector2 targetPosition = new Vector2(-targetX, contentPosition.y);
+        DOTween.To(() => content.anchoredPosition, x => content.anchoredPosition = x, targetPosition, animationDuration)
+            .SetEase(Ease.OutCubic).onComplete += () => { scrollRect.horizontal = false; }; 
+
+    }
+
+    private void SetButtonActive()
+    {
+        lButton.gameObject.SetActive(currentTheme != 1);
+        rButton.gameObject.SetActive(currentTheme != cards.Count);
+    }
+    private void OnRankChanged(int rank)
+    {
+        UpdateInteractable();
+    }
+
+    public void OnMoneyChanged(int? money)
+    {
+        UpdateInteractable();
+        Debug.Log(money);
+    }
+
+    private void UpdateInteractable()
+    {
+        cards[(int)currentTheme].UpdateInteractable();
+    }
+
     private RestaurantInfoCard InstantiateCard()
     {
         var obj = Addressables.InstantiateAsync(restaurantInfoCard, parent).WaitForCompletion();
@@ -69,33 +132,7 @@ public class RestaurantListPanel : MonoBehaviour
         return DataTableManager.Get<ThemeConditionDataTable>(DataTableIds.ThemeCondition.ToString())
             .GetConditionData(number).Requirements1;
     }
-
-
-    public void OnRankChanged(int rank)
-    {
-        UpdateInteractable();
-    }
-
-    public void OnGoldChanged(int? gold)
-    {
-        UpdateInteractable();
-    }
-
-    private void UpdateInteractable()
-    {
-        var interactable = CheckCondition();
-        cards[(int)currentTheme].UpdateInteractable(interactable);
-        
-    }
-
-    private bool CheckCondition()
-    {
-        bool isRankEnough = UserDataManager.Instance.CurrentUserData.CurrentRank >= CLEAR_RANK_CONDITION;
-        bool isGoldEnough = UserDataManager.Instance.CurrentUserData.Gold >= 1000000;
-        bool isManagerEnough = UserDataManager.Instance.CurrentUserData.ThemeStatus[(ThemeIds)currentTheme].managerCount > 0;
-        return isRankEnough && isGoldEnough && isManagerEnough;
-    }
-
+    
     private RestaurantInfoCard.ShopType CalculateShopType(int themeId)
     {
         if (themeId < currentTheme) 
@@ -106,4 +143,6 @@ public class RestaurantListPanel : MonoBehaviour
             return RestaurantInfoCard.ShopType.Next;
         return RestaurantInfoCard.ShopType.Post;
     }
+
+
 }

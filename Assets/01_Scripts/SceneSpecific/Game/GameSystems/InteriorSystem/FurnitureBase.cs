@@ -6,8 +6,8 @@ public class FurnitureBase : MonoBehaviour, IInterior
 {
     [SerializeField] private SpriteRenderer spriteRenderer;
 
-    public void ChangeSpirte(Sprite sprite)
+    public void ChangeSpirte(params Sprite[] sprite)
     {
-        spriteRenderer.sprite = sprite;
+        spriteRenderer.sprite = sprite[0];
     }
 }

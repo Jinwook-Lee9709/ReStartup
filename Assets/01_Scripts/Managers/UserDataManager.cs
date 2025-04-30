@@ -113,6 +113,13 @@ public class UserDataManager : Singleton<UserDataManager>
         OnInteriorUpgradeEvent?.Invoke(interiorId, upgradeCount);
     }
 
+    public async UniTask<bool> UpdateStageStatus(ThemeIds themeId)
+    {
+        var dataToUpload = CurrentUserData.ThemeStatus[themeId];
+        var result = await StageStatusDataDAC.UpdateStageStatusData(dataToUpload);
+        return result;
+    }
+
     public async UniTask SaveInteriorUpgrade(int interiorId)
     {
         var table = DataTableManager.Get<InteriorDataTable>(DataTableIds.Interior.ToString());

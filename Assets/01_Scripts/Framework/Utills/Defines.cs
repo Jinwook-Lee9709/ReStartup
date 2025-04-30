@@ -241,6 +241,9 @@ public static class Constants
     public static readonly int EMPLOYEE_SAVE_INTERVAL = 30;
 
     public static readonly float POP_UP_DURATION = 1f;
+    
+    public static readonly int MAX_SUPERVISOR_COUNT = 3;
+    public static readonly int SUPERVISOR_HIRE_REQUIREMENTS = 15;
 }
 
 public static class Variables
@@ -275,17 +278,16 @@ public enum CookwareType
     CharcoalGrill,
     GriddleGrill,
     Pot,
-    KitchenTable,
-    Refrigerator
+    KitchenTable
 }
 
 public enum InteriorCategory
 {
-    테이블,
-    카운터,
-    인테리어,
-    조리대,
-    싱크대
+    Table,
+    Counter,
+    Interior,
+    Cookware,
+    Sink
 }
 
 public enum InteriorEffectType

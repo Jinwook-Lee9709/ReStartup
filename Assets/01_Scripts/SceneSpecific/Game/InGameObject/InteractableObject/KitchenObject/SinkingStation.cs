@@ -26,9 +26,9 @@ public class SinkingStation : InteractableObjectBase, IInterior
     }
 
 
-    public void ChangeSpirte(Sprite sprite)
+    public void ChangeSpirte(params Sprite[] sprite)
     {
-        objectRenderer.sprite = sprite;
+        objectRenderer.sprite = sprite[0];
     }
 
     public event Action OnSinkVacated;
