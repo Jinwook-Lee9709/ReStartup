@@ -15,7 +15,8 @@ public class Review : MonoBehaviour
     [SerializeField] private TextMeshProUGUI reviewScriptText;
     [SerializeField] private TextMeshProUGUI dateText;
     [SerializeField] private TextMeshProUGUI rankPointText;
-
+    [SerializeField] private TextMeshProUGUI reviewUserID;
+ 
     public event Action OnRemoveAdEvent;
 
     public void Init(ReviewData data)
@@ -25,6 +26,7 @@ public class Review : MonoBehaviour
         reviewScriptText.text = data.reviewMessage;
         dateText.text = data.date;
         rankPointText.text = $"{data.addPoint:▲0;▼0;0} 점";
+        reviewUserID.text = data.userID;
 
         removeButton.gameObject.SetActive(data.addPoint < 0);
         if(removeButton.enabled )
