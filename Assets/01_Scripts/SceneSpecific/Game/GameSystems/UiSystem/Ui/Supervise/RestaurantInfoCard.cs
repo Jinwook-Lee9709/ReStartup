@@ -73,7 +73,7 @@ public class RestaurantInfoCard : MonoBehaviour
 
     public bool CheckCondition()
     {
-        if (shopType != ShopType.Current)
+        if (shopType != ShopType.Next)
             return false;
         var currentTheme = ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme;
         bool isMoneyEnough = cost < UserDataManager.Instance.CurrentUserData.Money;
