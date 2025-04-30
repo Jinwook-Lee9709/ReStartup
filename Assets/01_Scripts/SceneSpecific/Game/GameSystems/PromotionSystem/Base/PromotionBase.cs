@@ -60,6 +60,7 @@ public class PromotionBase : IPromotion
     {
         UserDataManager.Instance.AddRankPointWithSave(10).Forget();
         ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.Promotion, 1, PromotionID);
+        ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.Promotion, 1);
     }
 
     public virtual void Init()

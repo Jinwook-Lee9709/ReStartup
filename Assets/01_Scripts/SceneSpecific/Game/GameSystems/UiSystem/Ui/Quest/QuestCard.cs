@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -18,11 +19,14 @@ public class QuestCard : MonoBehaviour
     public MissionData missionData;
     private MissionManager missionManager;
     private Button button;
+    private Mission mission;
 
-    public void Init(MissionData data, Mission mission)
-    {
+    public void Init(MissionData data, Mission mis)
+    { 
         missionData = data;
+        mission = mis;
         button = GetComponentInChildren<Button>();
+        button.onClick.RemoveAllListeners();
         button.onClick.AddListener(OnButtonClick);
         button.interactable = mission.Count >= missionData.CompleteTimes;
         missionManager = ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager;
@@ -32,8 +36,8 @@ public class QuestCard : MonoBehaviour
         currentProgress.text = $"{Math.Clamp(mission.Count, 0, missionData.CompleteTimes)} / {missionData.CompleteTimes}";
         button.GetComponentInChildren<TextMeshProUGUI>().text = mission.Count < missionData.CompleteTimes ? "미완료" : "완료 \n 보상 받기";
         clear = mission.Count >= missionData.CompleteTimes;
-        //currentProgress.text <- 현재 진행 상황 로드해주기
     }
+
     public void OnButtonClick()
     {
         button.interactable = false;
@@ -55,13 +59,25 @@ public class QuestCard : MonoBehaviour
                 UserDataManager.Instance.AddRankPointWithSave(missionData.RewardAmount).Forget();
                 break;
         }
+        if (missionData.MissionType == MissionType.Achievements)
+        {
+            if(missionData.NextMissionId != 0)
+            {
+                missionManager.OnMissionCleared(missionData, mission);
+                rewardClaimed = true;
+                return;
+            }
+        }
 
-        missionManager.OnMissionCleared(missionData);
+        missionManager.OnMissionCleared(missionData, mission);
         rewardClaimed = true;
         completeImage.gameObject.SetActive(true);
         missionManager.ReorderMissionCard(missionData.MissionId);
         button.GetComponentInChildren<TextMeshProUGUI>().text = "수령 완료";
-        //보상지급
+    }
+    public void NextMissionCreate()
+    {
+
     }
     public void UpdateMissionUICard(int count)
     {
