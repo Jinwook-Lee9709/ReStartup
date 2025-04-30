@@ -364,6 +364,8 @@ public static class Strings
 
     public static readonly string randomReviewIDFormat = "{0}**{1}";
     public static readonly string alphaNums = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM0123456789";
+
+    public static readonly string tutorialCompeleteKey = "TUTORIAL_ORDER_COMPLETE";
 }
 
 public static class Colors
