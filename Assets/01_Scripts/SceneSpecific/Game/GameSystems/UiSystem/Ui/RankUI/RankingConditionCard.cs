@@ -63,7 +63,6 @@ public class RankingConditionCard : MonoBehaviour
         var table = DataTableManager.Get<RankConditionDataTable>(DataTableIds.RankCondition.ToString());
         if (rankConditionData.Rank < UserDataManager.Instance.CurrentUserData.CurrentRank)
         {
-            conditionText.text = $"{rankConditionData.GoalRanking}/{rankConditionData.GoalRanking}";
             slider.value = 1f;
             button.interactable = true;
             if (rankConditionData.Rank == 1)
@@ -93,15 +92,15 @@ public class RankingConditionCard : MonoBehaviour
                     UpdateTextPosition().Forget();
                 }
                 prevConditionText.text = prevRankData.Value.GoalRanking.ToString();
-                conditionText.text = rankConditionData.GoalRanking.ToString();
             }
             else
             {
                 currentRankPointText.gameObject.SetActive(true);
                 slider.value = (float)currentRankPoint / rankConditionData.GoalRanking;
                 prevConditionText.text = "0";
+                
             }
-            
+            conditionText.text = rankConditionData.GoalRanking.ToString();
             
             button.interactable = currentRankPoint >= rankConditionData.GoalRanking;
         }
