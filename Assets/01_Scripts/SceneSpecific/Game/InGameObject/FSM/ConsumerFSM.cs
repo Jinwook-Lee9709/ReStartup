@@ -37,15 +37,13 @@ public class ConsumerFSM : MonoBehaviour
     public ConsumerManager consumerManager;
     public BuffManager buffManager;
 
-    [SerializeField]
-    private List<float> satisfactionChangeLimit = new()
+    [SerializeField] private List<float> satisfactionChangeLimit = new()
     {
         15f,
         0f
     };
 
-    [SerializeField]
-    private List<float> satisfactionColorChangeFlagTimes = new()
+    [SerializeField] private List<float> satisfactionColorChangeFlagTimes = new()
     {
         30f,
         25f,
@@ -64,13 +62,20 @@ public class ConsumerFSM : MonoBehaviour
     private Consumer consumer;
     public ConsumerData consumerData = new();
     private SPUM_Prefabs model;
-    public SPUM_Prefabs Model { get => model; set => model = value; }
+
+    public SPUM_Prefabs Model
+    {
+        get => model;
+        set => model = value;
+    }
+
     private bool isOnSeat;
     private bool isPaying;
     public bool isTip;
     public bool alreadyTip;
     private Vector2 targetPivot;
     private float prevXPos;
+
     public Satisfaction CurrentSatisfaction
     {
         get => currentSatisfaction;
@@ -86,29 +91,23 @@ public class ConsumerFSM : MonoBehaviour
                         case GuestType.Influencer:
                         case GuestType.BadGuest:
                         case GuestType.PromotionGuest:
-                            ConsumerScriptActive(string.Format(Strings.orderTextFormat, UnityEngine.Random.Range(0, 2), consumerData.GuestId), () =>
-                            {
-                                consumer.currentTable.HideIcon();
-                            }, () =>
-                            {
-                                consumer.currentTable.ShowIcon();
-                            });
+                            ConsumerScriptActive(
+                                string.Format(Strings.orderTextFormat, UnityEngine.Random.Range(0, 2),
+                                    consumerData.GuestId), () => { consumer.currentTable.HideIcon(); },
+                                () => { consumer.currentTable.ShowIcon(); });
                             break;
                     }
+
                     break;
                 case Satisfaction.Middle:
-                    ConsumerScriptActive(string.Format(Strings.servingDelayTextFormat, UnityEngine.Random.Range(0, 2), consumerData.GuestId), () =>
-                    {
-                        consumer.currentTable.HideIcon();
-                    }, () =>
-                    {
-                        consumer.currentTable.ShowIcon();
-                    });
+                    ConsumerScriptActive(
+                        string.Format(Strings.servingDelayTextFormat, UnityEngine.Random.Range(0, 2),
+                            consumerData.GuestId), () => { consumer.currentTable.HideIcon(); },
+                        () => { consumer.currentTable.ShowIcon(); });
                     break;
                 case Satisfaction.Low:
                     break;
             }
-
         }
     }
 
@@ -131,14 +130,17 @@ public class ConsumerFSM : MonoBehaviour
                     {
                         break;
                     }
+
                     consumerManager.OnWaitingLineUpdate(consumer);
                     var permission = InteractPermission.Consumer;
                     if (consumer.pairData?.owner == consumer)
                     {
                         consumer.pairData.partner.FSM.CurrentStatus = ConsumerState.BeforeOrder;
-                        targetPivot = consumer.pairData.partner.currentTable.GetInteractablePoints(permission)[0].transform.position;
+                        targetPivot = consumer.pairData.partner.currentTable.GetInteractablePoints(permission)[0]
+                            .transform.position;
                         consumer.pairData.partner.GetComponent<NavMeshAgent>().SetDestination(targetPivot);
                     }
+
                     targetPivot = consumer.currentTable.GetInteractablePoints(permission)[0].transform.position;
                     agent.SetDestination(targetPivot);
                     break;
@@ -166,25 +168,28 @@ public class ConsumerFSM : MonoBehaviour
                     {
                         case Satisfaction.High:
                             UserDataManager.Instance.AddConsumerCnt(true);
-                            ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.GuestSatisfied, 1);
+                            ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager
+                                .OnEventInvoked(MissionMainCategory.GuestSatisfied, 1);
                             break;
                         case Satisfaction.Low:
                             UserDataManager.Instance.AddConsumerCnt(false);
-                            if (consumerData.GuestType == GuestType.BadGuest)
+                            if (consumer.pairData == null)
                             {
                                 consumerManager.workFlowController.CancelOrder(consumer);
                                 consumerManager.workFlowController.ReturnTable(consumer.currentTable);
                             }
+                      
+
                             break;
                     }
+
                     agent.SetDestination(consumerManager.spawnPoint.position);
                     break;
                 case ConsumerState.TalkingAbout:
                     consumer.currentTable.HideIcon();
-                    ConsumerScriptActive(string.Format(Strings.badTextFormat, UnityEngine.Random.Range(0, 2), consumerData.GuestId), () =>
-                    {
-                        satisfactionIcon.SetIcon(currentSatisfaction);
-                    });
+                    ConsumerScriptActive(
+                        string.Format(Strings.badTextFormat, UnityEngine.Random.Range(0, 2), consumerData.GuestId),
+                        () => { satisfactionIcon.SetIcon(currentSatisfaction); });
                     break;
                 case ConsumerState.None:
                     model.PlayAnimation(PlayerState.MOVE, 0);
@@ -268,6 +273,7 @@ public class ConsumerFSM : MonoBehaviour
     {
         CurrentStatus = ConsumerState.Paying;
     }
+
     public bool IsTip()
     {
         alreadyTip = true;
@@ -279,12 +285,14 @@ public class ConsumerFSM : MonoBehaviour
                 {
                     if (UnityEngine.Random.Range(0, 4) == 0)
                     {
-                        ConsumerScriptActive(string.Format(Strings.paidverygoodTextFormat, UnityEngine.Random.Range(0, 2), consumerData.GuestId));
+                        ConsumerScriptActive(string.Format(Strings.paidverygoodTextFormat,
+                            UnityEngine.Random.Range(0, 2), consumerData.GuestId));
                         return true;
                     }
                 }
             }
         }
+
         return false;
     }
 
@@ -292,19 +300,25 @@ public class ConsumerFSM : MonoBehaviour
     {
         int Cost = consumer.needFood.SellingCost;
         int rankPoint = consumer.needFood.GetRankPoints;
-        ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.GainMoney, consumer.needFood.SellingCost);
-        ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.SellingFood, 1, (int)consumer.needFood.FoodID);
-        ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.SellingFood, 1);
+        ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager
+            .OnEventInvoked(MissionMainCategory.GainMoney, consumer.needFood.SellingCost);
+        ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager
+            .OnEventInvoked(MissionMainCategory.SellingFood, 1, (int)consumer.needFood.FoodID);
+        ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager
+            .OnEventInvoked(MissionMainCategory.SellingFood, 1);
         if (isTip)
         {
             Cost += Mathf.CeilToInt(consumer.needFood.SellingCost * (consumerData.SellTipPercent / 100f));
-            ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.GetTip, 1);
+            ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager
+                .OnEventInvoked(MissionMainCategory.GetTip, 1);
             //TODO : Get Tip
         }
+
         UserDataManager.Instance.AdjustMoneyWithSave(Cost).Forget();
         UserDataManager.Instance.OnSellingFood(consumer.needFood.FoodID).Forget();
         Vector3 paymentTextPosition = new Vector3(transform.position.x, transform.position.y + 1f, 0);
-        var paymentText = Instantiate(paymentTextPrefab, paymentTextPosition, Quaternion.identity).GetComponent<PaymentText>();
+        var paymentText = Instantiate(paymentTextPrefab, paymentTextPosition, Quaternion.identity)
+            .GetComponent<PaymentText>();
         paymentText.Init(consumer, isTip);
 
 
@@ -325,6 +339,7 @@ public class ConsumerFSM : MonoBehaviour
             consumer.currentTable.HideIcon();
             satisfactionIcon.SetIcon(currentSatisfaction);
         }
+
         while (eattingTimer < consumerData.MaxEattingLimit)
         {
             eattingTimer += Time.deltaTime;
@@ -385,6 +400,7 @@ public class ConsumerFSM : MonoBehaviour
             else
                 CurrentStatus = ConsumerState.WaitingPayLine;
         }
+
         StopAllCoroutines();
     }
 
@@ -454,8 +470,10 @@ public class ConsumerFSM : MonoBehaviour
                     model.PlayAnimation(PlayerState.OTHER, 0);
                 }
             }
+
             return;
         }
+
         if (agent.IsArrive(targetPivot))
         {
             model.PlayAnimation(PlayerState.IDLE, 2);
@@ -474,6 +492,7 @@ public class ConsumerFSM : MonoBehaviour
         {
             return;
         }
+
         switch (consumerData.GuestType)
         {
             case GuestType.Guest:
@@ -481,7 +500,9 @@ public class ConsumerFSM : MonoBehaviour
             case GuestType.Regular2:
             case GuestType.Regular3:
             case GuestType.BadGuest:
-                var deltaTime = buffManager.GetBuff(BuffType.TimerSpeed)?.isOnBuff ?? false ? Time.deltaTime * buffManager.GetBuff(BuffType.TimerSpeed).BuffEffect : Time.deltaTime;
+                var deltaTime = buffManager.GetBuff(BuffType.TimerSpeed)?.isOnBuff ?? false
+                    ? Time.deltaTime * buffManager.GetBuff(BuffType.TimerSpeed).BuffEffect
+                    : Time.deltaTime;
 
                 consumerData.orderWaitTimer -= deltaTime;
 
@@ -497,6 +518,7 @@ public class ConsumerFSM : MonoBehaviour
                 {
                     CurrentSatisfaction = Satisfaction.High;
                 }
+
                 break;
             case var t when t < satisfactionChangeLimit[1] && t > satisfactionChangeLimit[2] &&
                             CurrentSatisfaction != Satisfaction.Middle:
@@ -505,11 +527,8 @@ public class ConsumerFSM : MonoBehaviour
             case var t when t < satisfactionChangeLimit[2]:
                 CurrentStatus = ConsumerState.TalkingAbout;
                 CurrentSatisfaction = Satisfaction.Low;
-                if (consumerData.GuestType == GuestType.BadGuest)
-                {
+                if (consumer.pairData == null)
                     CurrentStatus = ConsumerState.Exit;
-                    return;
-                }
                 if (consumer.pairData?.owner == consumer)
                 {
                     consumer.pairData.partner.FSM.CurrentStatus = ConsumerState.TalkingAbout;
@@ -520,24 +539,29 @@ public class ConsumerFSM : MonoBehaviour
                     consumer.pairData.owner.FSM.CurrentStatus = ConsumerState.TalkingAbout;
                     consumer.pairData.owner.FSM.CurrentSatisfaction = Satisfaction.Low;
                 }
+
                 break;
         }
+
         FillSatisfactionGage();
     }
 
     private void FillSatisfactionGage()
     {
-        float normalTimer = Mathf.Lerp(0.25f, 0.75f, Mathf.InverseLerp(0, consumerData.MaxOrderWaitLimit, consumerData.orderWaitTimer));
+        float normalTimer = Mathf.Lerp(0.25f, 0.75f,
+            Mathf.InverseLerp(0, consumerData.MaxOrderWaitLimit, consumerData.orderWaitTimer));
         var iconBubble = consumer.currentTable.IconBubble;
         iconBubble.FillingSatisfation(normalTimer);
         switch (consumerData.orderWaitTimer)
         {
             case var t when t <= satisfactionColorChangeFlagTimes[0] && t > satisfactionColorChangeFlagTimes[1]:
-                var highLerp = Mathf.InverseLerp(satisfactionColorChangeFlagTimes[0], satisfactionColorChangeFlagTimes[1], consumerData.orderWaitTimer);
+                var highLerp = Mathf.InverseLerp(satisfactionColorChangeFlagTimes[0],
+                    satisfactionColorChangeFlagTimes[1], consumerData.orderWaitTimer);
                 iconBubble.SetColorSatisfaction(Colors.satisfactionColors[0], Colors.satisfactionColors[1], highLerp);
                 break;
             case var t when t < satisfactionColorChangeFlagTimes[1] && t > satisfactionColorChangeFlagTimes[2]:
-                var middleLerp = Mathf.InverseLerp(satisfactionColorChangeFlagTimes[1], satisfactionColorChangeFlagTimes[2], consumerData.orderWaitTimer);
+                var middleLerp = Mathf.InverseLerp(satisfactionColorChangeFlagTimes[1],
+                    satisfactionColorChangeFlagTimes[2], consumerData.orderWaitTimer);
                 iconBubble.SetColorSatisfaction(Colors.satisfactionColors[1], Colors.satisfactionColors[2], middleLerp);
                 break;
         }
@@ -578,6 +602,7 @@ public class ConsumerFSM : MonoBehaviour
         //���� ������ƮǮ�� ��ȯ��.
         if (agent.IsArrive(consumerManager.spawnPoint)) consumerManager.consumerPool.Release(gameObject);
     }
+
     private void UpdateWaitingPayLine()
     {
         if (consumerManager.IsPayWaitingLineVacated)
@@ -589,5 +614,4 @@ public class ConsumerFSM : MonoBehaviour
             }
         }
     }
-
 }

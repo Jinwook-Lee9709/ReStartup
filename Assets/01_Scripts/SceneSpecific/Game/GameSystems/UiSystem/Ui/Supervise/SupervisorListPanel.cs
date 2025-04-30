@@ -1,18 +1,110 @@
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.UI;
 using VInspector;
 
 public class SupervisorListPanel : MonoBehaviour
 {
     private static readonly string ManagerStringKey = "ManagerFormat";
+    private static readonly string CompensationSoKey = "SupervisorCompensationSO";
     [SerializeField] private AssetReference supervisorInfoPanel;
     [SerializeField] private Transform supervisorInfoParent;
     [SerializeField] private SerializedDictionary<int, int> costMultiplier = new() { { 1, 1 }, { 2, 3 }, { 3, 4 } };
+    private SupervisorCompensationSO compensation; 
     private List<SupervisorInfoCard> cards = new();
 
+    [SerializeField] private Button claimButton;
+    [SerializeField] private TextMeshProUGUI compensationText;
+
     private int cursorThemeID = 1;
+
+    private void Awake()
+    {
+        compensation = Addressables.LoadAssetAsync<SupervisorCompensationSO>(CompensationSoKey).WaitForCompletion();
+    }
+
+    private void Start()
+    {
+        claimButton.onClick.RemoveAllListeners();
+        claimButton.onClick.AddListener(OnClaim);
+    }
+
+    private void OnEnable()
+    {
+        UpdateClaimButton();
+    }
+
+    private void UpdateClaimButton(bool animate = false)
+    {
+        bool canClaim = CanClaim(out StageStatusData themeStatus);
+        if (!canClaim)
+        {
+            claimButton.interactable = false;
+            if (animate)
+            {
+                claimButton.transform.PopdownAnimation();
+            }
+            else
+            {
+                claimButton.gameObject.SetActive(false);    
+            }
+            return;
+        }
+        compensationText.text = CalculateCompensation(themeStatus).ToString();
+        if (animate)
+        {
+            claimButton.transform.PopupAnimation();
+        }
+        else
+        {
+            claimButton.gameObject.SetActive(true);
+        }
+    }
+    
+    private bool CanClaim(out StageStatusData themeStatus)
+    {
+        if (cursorThemeID > (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme)
+        {
+            themeStatus = null;
+            return false; 
+        }
+        UserDataManager.Instance.CurrentUserData.ThemeStatus.TryGetValue((ThemeIds)cursorThemeID, out var status);
+        themeStatus = status;
+        if (themeStatus == null || themeStatus.managerCount == 0)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private void OnClaim()
+    {
+        if (cursorThemeID > (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme)
+            return;
+        var themeStatus  = UserDataManager.Instance.CurrentUserData.ThemeStatus[(ThemeIds)cursorThemeID];
+        if (themeStatus.managerCount == 0)
+            return;
+        var compensationAmount = CalculateCompensation(themeStatus);
+        UserDataManager.Instance.AdjustMoneyWithSave(compensationAmount).Forget();
+        
+    }
+
+    private int CalculateCompensation(StageStatusData themeStatus)
+    {
+        var currentTheme = (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme;
+        DateTime lastClaimTime = themeStatus.lastClaim;
+        DateTime now = DateTime.Now;
+        var interval = lastClaimTime - now;
+        var clampedInterval = Math.Clamp((int)interval.TotalHours, 0, 24);
+        int multiplier = compensation.multipliers[themeStatus.managerCount];
+        int finalCompensation = compensation.baseCompensation[currentTheme] * clampedInterval / 24 * multiplier;
+        return finalCompensation;
+    }
 
     public void Init(Action<int, int> action)
     {
@@ -34,6 +126,18 @@ public class SupervisorListPanel : MonoBehaviour
 
         UserDataManager.Instance.ChangeMoneyAction += OnMoneyChanged;
         UserDataManager.Instance.OnRankChangedEvent += OnRankChanged;
+        
+        claimButton.onClick.RemoveAllListeners();
+        claimButton.onClick.AddListener(OnClaim);
+    }
+    
+    public void OnSupervisorHire()
+    {
+        int currentManager = UserDataManager.Instance.CurrentUserData.ThemeStatus[(ThemeIds)cursorThemeID].managerCount;
+        if (currentManager < Constants.MAX_SUPERVISOR_COUNT)
+        {
+            cards[currentManager].ChangeToHireable();
+        }
     }
 
     public void ChangeSupervisor(int themeID)
@@ -52,8 +156,10 @@ public class SupervisorListPanel : MonoBehaviour
                 ChangeToPostRestaurantSupervisor(themeID);
                 break;
         }
+        
+        UpdateClaimButton(true);
     }
-
+    
     private void ChangeToPrevRestaurantSupervisor(int themeID)
     {
         var themeStatus = UserDataManager.Instance.CurrentUserData.ThemeStatus[(ThemeIds)themeID];
@@ -95,6 +201,7 @@ public class SupervisorListPanel : MonoBehaviour
     private SupervisorInfo CreateDefaultInfo(int themeID, int number)
     {
         SupervisorInfo info = new();
+        info.number = number;
         info.cost = SupervisorCost(number, themeID);
         info.name = LZString.GetUIString(ManagerStringKey, args: number.ToString());
         return info;
@@ -123,7 +230,7 @@ public class SupervisorListPanel : MonoBehaviour
             int currentManager = UserDataManager.Instance.CurrentUserData.ThemeStatus[(ThemeIds)cursorThemeID].managerCount;
             if (currentManager < Constants.MAX_SUPERVISOR_COUNT)
             {
-                cards[currentManager].OnRankReached();
+                cards[currentManager].ChangeToHireable();
             }
         }
     }

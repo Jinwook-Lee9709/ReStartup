@@ -73,6 +73,7 @@ public class RestaurantListPanel : MonoBehaviour
         SetButtonActive();
     }
 
+
     private void MovePanelToCenter(int index)
     {
         Vector3 contentPosition = content.anchoredPosition;
@@ -85,7 +86,7 @@ public class RestaurantListPanel : MonoBehaviour
         targetX = Mathf.Clamp(targetX, minX, maxX);
         Vector2 targetPosition = new Vector2(-targetX, contentPosition.y);
         DOTween.To(() => content.anchoredPosition, x => content.anchoredPosition = x, targetPosition, animationDuration)
-            .SetEase(Ease.OutCubic).onComplete += () => { scrollRect.horizontal = false; }; 
+            .SetEase(Ease.OutCubic); 
 
     }
 
@@ -105,9 +106,9 @@ public class RestaurantListPanel : MonoBehaviour
         Debug.Log(money);
     }
 
-    private void UpdateInteractable()
+    public void UpdateInteractable()
     {
-        cards[(int)currentTheme].UpdateInteractable();
+        cards[currentTheme].UpdateInteractable();
     }
 
     private RestaurantInfoCard InstantiateCard()

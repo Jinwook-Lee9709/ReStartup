@@ -84,7 +84,7 @@ public class RankingConditionCard : MonoBehaviour
                 if (UserDataManager.Instance.CurrentUserData.CurrentRank == rankConditionData.Rank)
                 {
                     currentRankPointText.gameObject.SetActive(true);
-                    currentRankPointText.text = currentRankPoint.ToString();
+
                     currentRankPointText.ForceMeshUpdate();
                     slider.value = (float)(currentRankPoint - prevRankData.Value.GoalRanking) /
                                    (rankConditionData.GoalRanking - prevRankData.Value.GoalRanking);
@@ -100,6 +100,7 @@ public class RankingConditionCard : MonoBehaviour
                 prevConditionText.text = "0";
                 
             }
+            currentRankPointText.text = currentRankPoint.ToString();
             conditionText.text = rankConditionData.GoalRanking.ToString();
             
             button.interactable = currentRankPoint >= rankConditionData.GoalRanking;
@@ -130,11 +131,20 @@ public class RankingConditionCard : MonoBehaviour
 
     public void OnButtonClick()
     {
-        UserDataManager.Instance.SetRankWithSave(rankConditionData.Rank + 1).Forget();
-        ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager
-            .OnEventInvoked(MissionMainCategory.GainRanking, 1);
-        CheckComplete((int)UserDataManager.Instance.CurrentUserData.CurrentRankPoint);
-        rankConditionListUI.CheckUnlock(index);
+        var table = DataTableManager.Get<RankConditionDataTable>(DataTableIds.RankCondition.ToString());
+        var count = table.Count(x=>x.Type == (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme);
+        if (count != rankConditionData.Rank)
+        {
+            UserDataManager.Instance.SetRankWithSave(rankConditionData.Rank + 1).Forget();
+            ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager
+                .OnEventInvoked(MissionMainCategory.GainRanking, 1);
+            CheckComplete((int)UserDataManager.Instance.CurrentUserData.CurrentRankPoint);
+            rankConditionListUI.CheckUnlock(index);
+        }
+        else
+        {
+            button.interactable = false;
+        }
     }
 
     public void Unlock()

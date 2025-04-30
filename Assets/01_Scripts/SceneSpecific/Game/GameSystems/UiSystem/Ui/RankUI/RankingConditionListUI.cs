@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -21,8 +23,32 @@ public class RankingConditionListUI : MonoBehaviour
 
     private void OnEnable()
     {
-        scrollRect.GetComponent<ScrollRect>().DOHorizontalNormalizedPos(Mathf.InverseLerp(0,cards.Count, UserDataManager.Instance.CurrentUserData.CurrentRank - 1),1f);
+        MovePanelToCenterTask(UserDataManager.Instance.CurrentUserData.CurrentRank-1).Forget();
     }
+
+    private async UniTask MovePanelToCenterTask(int index)
+    {
+        await UniTask.Yield(PlayerLoopTiming.PostLateUpdate);
+        MovePanelToCenter(index);
+    }
+    [VInspector.Button]
+    private void MovePanelToCenter(int index)
+    {
+        var contentRect = contents.GetComponent<RectTransform>();
+        Vector3 contentPosition = contentRect.anchoredPosition;
+        Vector3 itemPosition = cards[index].transform.localPosition;
+        float contentWidth = contentRect.rect.size.x;           
+        float viewportWidth = scrollRect.viewport.rect.size.x;
+        float targetX = itemPosition.x - (viewportWidth / 2);
+        float minX = 0;
+        float maxX = contentWidth - viewportWidth / 2;
+        targetX = Mathf.Clamp(targetX, minX, maxX);
+        Vector2 targetPosition = new Vector2(-targetX, contentPosition.y);
+        scrollRect.velocity = Vector2.zero;
+        DOTween.To(() => contentRect.anchoredPosition, x => contentRect.anchoredPosition = x, targetPosition, 0.5f)
+            .SetEase(Ease.OutCubic).onComplete += ()=>{ scrollRect.velocity = Vector2.zero; }; 
+    }
+
     public void RankConditionCardAdd(RankConditionData data)
     {
         var newCard = Addressables.InstantiateAsync(rankingConditionCard, contents).WaitForCompletion();
@@ -52,6 +78,9 @@ public class RankingConditionListUI : MonoBehaviour
         int nextindex = index + 1;
         if(nextindex > cards.Count)
             return;
-        cards[index + 1].Unlock();
+        var table = DataTableManager.Get<RankConditionDataTable>(DataTableIds.RankCondition.ToString());
+        var count = table.Count(x=>x.Type == (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme);
+        if(index != count)
+            cards[index + 1].Unlock();
     }
 }
