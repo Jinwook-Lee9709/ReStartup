@@ -27,7 +27,7 @@ public class ReviewManager : MonoBehaviour
 
     private void Start()
     {
-        var query = UserDataManager.Instance.CurrentUserData.ReviewSaveData.OrderBy(x=>x.orderIndex);
+        var query = UserDataManager.Instance.CurrentUserData.ReviewSaveData.OrderBy(x => x.orderIndex);
         foreach (var data in query)
         {
             CreateReviewObject(data);
@@ -39,8 +39,8 @@ public class ReviewManager : MonoBehaviour
     private void CreateReviewObject(ReviewSaveData data)
     {
         ReviewData tempData = new();
-        
-        tempData.Init(data.isPositive, data.createdTime);
+
+        tempData.Init(data.isPositive, data.createdTime, data.reviewId);
         var gameObj = Instantiate(reviewPrefab);
         gameObj.transform.SetParent(reviewContent.transform);
         gameObj.transform.localPosition = Vector2.zero;
@@ -73,7 +73,7 @@ public class ReviewManager : MonoBehaviour
     public IEnumerator AddReviewCoroutine(bool isBest)
     {
         var loadingObj = Instantiate(loadingDot);
-        
+
         reviews.AddFirst(loadingObj);
         loadingObj.transform.SetParent(reviewContent.transform);
         loadingObj.transform.localPosition = Vector2.zero;
@@ -102,8 +102,8 @@ public class ReviewManager : MonoBehaviour
             var reviewObj = gameObj.GetComponent<Review>();
             reviewObj.Init(tempData);
             reviewObj.reviewManager = this;
-            
-            ReviewSaveDataDAC.InsertReviewData(isBest, 0, timeStamp).Forget();
+
+            ReviewSaveDataDAC.InsertReviewData(isBest, tempData.stringID, timeStamp).Forget();
             UserDataManager.Instance.AddRankPointWithSave(reviewObj.data.addPoint);
 
             reviews.AddFirst(reviewObj.gameObject);
@@ -120,7 +120,7 @@ public class ReviewManager : MonoBehaviour
 
     public void OnRemoveButtonClick(Review review)
     {
-        var removePopup = Instantiate(popup, popupParent.transform,false);
+        var removePopup = Instantiate(popup, popupParent.transform, false);
         removePopup.reviewManager = this;
         removePopup.Init(review);
     }

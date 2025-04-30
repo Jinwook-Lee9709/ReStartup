@@ -358,6 +358,12 @@ public static class Strings
     public static readonly string servingDelayTextFormat = "{0}{1}servingdelay";
     public static readonly string paidverygoodTextFormat = "{0}{1}paidverygood";
     public static readonly string badTextFormat = "{0}{1}bad";
+
+    public static readonly string positiveReviewFormat = "{0}1{1}";
+    public static readonly string negativeReviewFormat = "{0}0{1}";
+
+    public static readonly string randomReviewIDFormat = "{0}**{1}";
+    public static readonly string alphaNums = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM0123456789";
 }
 
 public static class Colors
