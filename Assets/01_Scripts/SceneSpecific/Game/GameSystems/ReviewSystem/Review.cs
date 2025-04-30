@@ -48,6 +48,7 @@ public class Review : MonoBehaviour
 
             reviewManager.RemoveAt(gameObject);
             UserDataManager.Instance.AddRankPointWithSave(-data.addPoint).Forget();
+            UserDataManager.Instance.OnNegativeReviewRemove();
             ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.BadReviewDelete, 1);
         };
     }

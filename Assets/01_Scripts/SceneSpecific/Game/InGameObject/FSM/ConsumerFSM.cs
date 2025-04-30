@@ -302,6 +302,7 @@ public class ConsumerFSM : MonoBehaviour
             //TODO : Get Tip
         }
         UserDataManager.Instance.AdjustMoneyWithSave(Cost).Forget();
+        UserDataManager.Instance.OnSellingFood(consumer.needFood.FoodID).Forget();
         Vector3 paymentTextPosition = new Vector3(transform.position.x, transform.position.y + 1f, 0);
         var paymentText = Instantiate(paymentTextPrefab, paymentTextPosition, Quaternion.identity).GetComponent<PaymentText>();
         paymentText.Init(consumer, isTip);

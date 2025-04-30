@@ -12,12 +12,6 @@ public class FoodResearchListUI : MonoBehaviour
     private FoodData data;
     private Dictionary<int, FoodResearchUIItem> foodResearchItems = new();
 
-    void Update()
-    {
-        float newWidth = Screen.width * 0.3f;
-        float newHeight = Screen.width * 0.2f;
-        gameObject.GetComponent<GridLayoutGroup>().cellSize = new Vector2(newWidth, newHeight);
-    }
     void Start()
     {
         var userDataManager = UserDataManager.Instance;

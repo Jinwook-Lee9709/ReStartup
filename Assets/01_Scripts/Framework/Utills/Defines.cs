@@ -278,17 +278,16 @@ public enum CookwareType
     CharcoalGrill,
     GriddleGrill,
     Pot,
-    KitchenTable,
-    Refrigerator
+    KitchenTable
 }
 
 public enum InteriorCategory
 {
-    테이블,
-    카운터,
-    인테리어,
-    조리대,
-    싱크대
+    Table,
+    Counter,
+    Interior,
+    Cookware,
+    Sink
 }
 
 public enum InteriorEffectType

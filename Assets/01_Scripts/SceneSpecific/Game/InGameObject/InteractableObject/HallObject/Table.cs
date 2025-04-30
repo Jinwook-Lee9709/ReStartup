@@ -22,9 +22,9 @@ public class Table : InteractableObjectBase, IInterior
     public TableType TableType => tableType;
     public Table PairTable => pairTable;
     public IconBubble IconBubble => iconBubble;
-    public void ChangeSpirte(Sprite sprite)
+    public void ChangeSpirte(params Sprite[] sprite)
     {
-        objectRenderer.sprite = sprite;
+        objectRenderer.sprite = sprite[0];
     }
 
     public GameObject GetFood()

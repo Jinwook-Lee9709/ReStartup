@@ -34,6 +34,7 @@ public class RestaurantInfoCard : MonoBehaviour
         this.shopImage.sprite = shopImage;
         this.cost = cost;
         SetLayout(type);
+        UpdateInteractable();
     }
 
     public void SetLayout(ShopType type)
@@ -65,19 +66,19 @@ public class RestaurantInfoCard : MonoBehaviour
         buyButton.onClick.AddListener(action);
     }
 
-    public void UpdateInteractable(bool isInteractable)
+    public void UpdateInteractable()
     {
-        buyButton.interactable = isInteractable;
+        buyButton.interactable = CheckCondition();
     }
 
-    public void CheckCondition()
+    public bool CheckCondition()
     {
         if (shopType != ShopType.Current)
-            return;
+            return false;
         var currentTheme = ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme;
         bool isMoneyEnough = cost < UserDataManager.Instance.CurrentUserData.Money;
         bool isManagerHired = UserDataManager.Instance.CurrentUserData.ThemeStatus[currentTheme].managerCount != 0;
-        buyButton.interactable = isMoneyEnough && isManagerHired;
-        
+        // buyButton.interactable = isMoneyEnough && isManagerHired;
+        return true;
     }
 }

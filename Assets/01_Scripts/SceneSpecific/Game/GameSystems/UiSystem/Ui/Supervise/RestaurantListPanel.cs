@@ -37,7 +37,7 @@ public class RestaurantListPanel : MonoBehaviour
         }
 
         UserDataManager.Instance.OnRankChangedEvent += OnRankChanged;
-        UserDataManager.Instance.ChangeGoldAction += OnGoldChanged;
+        UserDataManager.Instance.ChangeMoneyAction += OnMoneyChanged;
         lButton.onClick.AddListener(() => OnButtonClick(false));
         rButton.onClick.AddListener(() => OnButtonClick(true));
         MovePanelToCenter(currentTheme);
@@ -54,9 +54,13 @@ public class RestaurantListPanel : MonoBehaviour
         var cost = GetShopCost(number);
         
         card.SetInfo(shopName, cost, sprite, type);
-        if(number == currentTheme)
+        if(number == currentTheme + 1)
             card.RegisterAction(
-                () => { action(); }
+                () =>
+                {
+                    action();
+                    Debug.Log("action");
+                }
             );
         cards.Add(number, card);
     }
@@ -95,24 +99,15 @@ public class RestaurantListPanel : MonoBehaviour
         UpdateInteractable();
     }
 
-    public void OnGoldChanged(int? gold)
+    public void OnMoneyChanged(int? money)
     {
         UpdateInteractable();
+        Debug.Log(money);
     }
 
     private void UpdateInteractable()
     {
-        var interactable = CheckCondition();
-        cards[(int)currentTheme].UpdateInteractable(interactable);
-        
-    }
-
-    private bool CheckCondition()
-    {
-        bool isRankEnough = UserDataManager.Instance.CurrentUserData.CurrentRank >= CLEAR_RANK_CONDITION;
-        bool isGoldEnough = UserDataManager.Instance.CurrentUserData.Gold >= 1000000;
-        bool isManagerEnough = UserDataManager.Instance.CurrentUserData.ThemeStatus[(ThemeIds)currentTheme].managerCount > 0;
-        return isRankEnough && isGoldEnough && isManagerEnough;
+        cards[(int)currentTheme].UpdateInteractable();
     }
 
     private RestaurantInfoCard InstantiateCard()

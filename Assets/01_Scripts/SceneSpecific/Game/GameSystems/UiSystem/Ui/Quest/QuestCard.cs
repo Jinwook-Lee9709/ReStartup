@@ -3,13 +3,14 @@ using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using VInspector;
 
 public class QuestCard : MonoBehaviour
 {
     //[SerializeField] private GameObject CompleteImage;
     private readonly string categoryFormat = "MainCategory{0}";
     private readonly string missionName = "MissionName{0}";
-    [SerializeField] private TextMeshProUGUI rewardValue, conditionText, currentProgress, buttonText;
+    [SerializeField] private TextMeshProUGUI  rewardValue, conditionText, currentProgress, buttonText;
     [SerializeField] private Slider progressSlider;
     [SerializeField] private Image rewardImage, completeImage;
     public bool clear;

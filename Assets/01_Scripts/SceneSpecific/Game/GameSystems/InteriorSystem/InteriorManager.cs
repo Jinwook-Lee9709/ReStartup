@@ -37,7 +37,7 @@ public class InteriorManager
         cookwareTable = DataTableManager.Get<CookwareDataTable>(DataTableIds.Cookware.ToString());
         var tableQuery = interiorTable.Where(x =>
             x.RestaurantType == (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme &&
-            x.Category == InteriorCategory.테이블);
+            x.Category == InteriorCategory.Table);
         var interiorUpgradeDictionary = UserDataManager.Instance.CurrentUserData.InteriorSaveData;
         foreach (var item in tableQuery)
         {
@@ -71,7 +71,7 @@ public class InteriorManager
     {
         workStationManager.AddSinkingStation();
         var data = interiorTable.First(x =>
-            x.RestaurantType == (int)gameManager.CurrentTheme && x.Category == InteriorCategory.싱크대);
+            x.RestaurantType == (int)gameManager.CurrentTheme && x.Category == InteriorCategory.Sink);
         UpgradeSink(data, 1);
     }
 
@@ -79,7 +79,7 @@ public class InteriorManager
     {
         workStationManager.AddCounter();
         var data = interiorTable.First(x =>
-            x.RestaurantType == (int)gameManager.CurrentTheme && x.Category == InteriorCategory.카운터);
+            x.RestaurantType == (int)gameManager.CurrentTheme && x.Category == InteriorCategory.Counter);
         UpgradeCounter(data, 1);
     }
 
@@ -88,7 +88,7 @@ public class InteriorManager
         var interiorUpgradeDictionary = UserDataManager.Instance.CurrentUserData.InteriorSaveData;
         var interiorQuery = interiorTable.Where(x =>
                 x.RestaurantType == (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme)
-            .Where(x => x.Category == InteriorCategory.인테리어);
+            .Where(x => x.Category == InteriorCategory.Interior);
         foreach (var data in interiorQuery)
         {
             if(interiorUpgradeDictionary[data.InteriorID].Equals(0)) 
@@ -120,19 +120,19 @@ public class InteriorManager
         UserDataManager.Instance.AddRankPointWithSave(interiorData.Reward).Forget();
         switch (interiorData.Category)
         {
-            case InteriorCategory.테이블:
+            case InteriorCategory.Table:
                 UpgradeTable(interiorData, level);
                 break;
-            case InteriorCategory.카운터:
+            case InteriorCategory.Counter:
                 UpgradeCounter(interiorData, level);
                 break;
-            case InteriorCategory.인테리어:
+            case InteriorCategory.Interior:
                 UpgradeInterior(interiorData, level);
                 break;
-            case InteriorCategory.조리대:
+            case InteriorCategory.Cookware:
                 UpgradeCookware(interiorId, level);
                 break;
-            case InteriorCategory.싱크대:
+            case InteriorCategory.Sink:
                 UpgradeSink(interiorData, level);
                 break;
         }
@@ -142,7 +142,7 @@ public class InteriorManager
     {
         var isCurrentThemeTable = interiorTable
             .Where(x => x.RestaurantType == (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme)
-            .Any(x => x.InteriorID == interiorData.InteriorID && x.Category == InteriorCategory.테이블);
+            .Any(x => x.InteriorID == interiorData.InteriorID && x.Category == InteriorCategory.Table);
         if (isCurrentThemeTable)
         {
             if (level == 1) workStationManager.AddTable(interiorData.InteriorID % 10);
