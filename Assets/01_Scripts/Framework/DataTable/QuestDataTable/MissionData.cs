@@ -7,6 +7,8 @@ public class MissionData
     public int MissionId { get; set; }
     public MissionType MissionType { get; set; }
     public int Theme { get; set; }
+    public int StartMission { get; set; }
+    public int NextMissionId  { get; set; }
     public MissionMainCategory MissionCategory { get; set; }
     public int TargetId { get; set; }
     public int CompleteTimes { get; set; }
