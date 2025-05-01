@@ -10,9 +10,11 @@ public class RankingSystemListUi : MonoBehaviour
     public Transform parent;
     public PlayerClone playerClone;
     public List<RankingSystemUiItem> items = new();
+    private List<int> hatContisions = new();
 
     public void AddRankingSystemItem(RankingData data, List<int> hatContisions)
     {
+        this.hatContisions = hatContisions;
         var ui = Instantiate(upgradeItemObject, parent).GetComponent<RankingSystemUiItem>();
         ui.Init(data, hatContisions);
         items.Add(ui);
@@ -52,7 +54,15 @@ public class RankingSystemListUi : MonoBehaviour
         {
             player.rankingData.rankingPoint += points;
             RankUpdate();
-            playerClone.UpdatePlayerData(player.rankingData);
+            int hat = 0;
+            for (int i = 1; i <= hatContisions.Count; i++)
+            {
+                if (hatContisions[i - 1] < player.rankingData.rankingPoint)
+                {
+                    hat = i;
+                }
+            }
+            playerClone.UpdatePlayerData(player.rankingData,hat);
         }
     }
 

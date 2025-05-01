@@ -14,6 +14,7 @@ public class PlayerClone : MonoBehaviour
     [SerializeField] private TextMeshProUGUI playerName;
     [SerializeField] private TextMeshProUGUI playerRank;
     [SerializeField] private TextMeshProUGUI playerRankPoint;
+    [SerializeField] private HatListController hats;
 
     private bool isActive = true;
 
@@ -24,6 +25,13 @@ public class PlayerClone : MonoBehaviour
 
     public void UpdatePlayerData(RankingData data)
     {
+        playerName.text = UserDataManager.Instance.CurrentUserData.Name;
+        playerRank.text = data.rank.ToString();
+        playerRankPoint.text = data.rankingPoint.ToString();
+    }
+    public void UpdatePlayerData(RankingData data, int hatCount)
+    {
+        hats.SetHat(hatCount);
         playerName.text = UserDataManager.Instance.CurrentUserData.Name;
         playerRank.text = data.rank.ToString();
         playerRankPoint.text = data.rankingPoint.ToString();
