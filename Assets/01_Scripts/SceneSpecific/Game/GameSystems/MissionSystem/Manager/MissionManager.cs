@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using static UnityEditor.Progress;
 public class MissionManager
 {
     private PeriodQuestInventory questInventory;
@@ -34,10 +35,30 @@ public class MissionManager
         foreach (var item in questdata.Values)
         {
             bool isExist = UserDataManager.Instance.CurrentUserData.MissionSaveData.TryGetValue(item.MissionId, out var saveData);
-            if (isExist)
-                continue;
-
-
+            if (item.MissionType == MissionType.Achievements)
+            {
+                if (item.PrevMissionId != 0)
+                {
+                    if (!isExist)
+                    {
+                        continue;
+                    }
+                    if (saveData.isCleared)
+                    {
+                        continue;
+                    }
+                }
+                else
+                {
+                    if (isExist)
+                    {
+                        if (saveData.isCleared)
+                        {
+                            continue;
+                        }
+                    }
+                }
+            }
             if (item.Theme != (int)gameManager.CurrentTheme && item.Theme != 0)
             {
                 continue;
@@ -60,11 +81,32 @@ public class MissionManager
         }
     }
 
-    public void OnMissionCleared(MissionData data)
+    public void OnMissionCleared(MissionData data, Mission prevMission)
     {
-        missionCards.Remove(data.MissionId);
-        var mission = missions[data.MissionCategory].Find(x => x.ID == data.MissionId);
-        Mission.SavePrgoress(true, mission).Forget();
+        if (data.MissionType == MissionType.Achievements && data.NextMissionId != 0)
+        {
+            var newMission = new Mission();
+            var newMissionData = DataTableManager.Get<MissionDataTable>(DataTableIds.Mission.ToString()).Data[data.NextMissionId];
+            newMission.Init(newMissionData.CompleteTimes, newMissionData.MissionId, newMissionData.TargetId);
+            newMission.SetCount(prevMission.Count);
+            missions[newMissionData.MissionCategory].Add(newMission);
+            missionCards.Add(newMissionData.MissionId, missionCards[data.MissionId]);
+            missionCards.Remove(data.MissionId);
+            missionCards[newMissionData.MissionId].Init(newMissionData, newMission);
+
+            var mission = missions[data.MissionCategory].Find(x => x.ID == data.MissionId);
+            Mission.SavePrgoress(true, mission).Forget();
+            mission = missions[newMissionData.MissionCategory].Find(x => x.ID == newMissionData.MissionId);
+            Mission.SavePrgoress(false, mission).Forget();
+        }
+        else
+        {
+            missionCards.Remove(data.MissionId);
+
+            var mission = missions[data.MissionCategory].Find(x => x.ID == data.MissionId);
+            Mission.SavePrgoress(true, mission).Forget();
+        }
+
     }
     public void ReorderMissionCard(int id)
     {
@@ -101,7 +143,7 @@ public class MissionManager
             }
         }
     }
-    
+
 
     private void UpdateMissionUICard(int args, Mission mission)
     {
