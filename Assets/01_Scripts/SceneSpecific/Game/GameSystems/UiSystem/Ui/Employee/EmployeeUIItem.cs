@@ -66,9 +66,7 @@ public class EmployeeUIItem : MonoBehaviour
                 Debug.LogError($"{gameObject.name}의 부모 중 employeeUIManagerr를 찾을 수 없습니다.");
                 return;
             }
-            employeeUIManager.EmployeeAllBuy += OnBuy;
         }
-
         UserDataManager.Instance.ChangeMoneyAction += OnConditionChanged;
         GameObject.FindWithTag("UIManager").GetComponent<UiManager>().EmployeeHpRenewal(employeeData);
     }
@@ -76,6 +74,7 @@ public class EmployeeUIItem : MonoBehaviour
     public void Init(EmployeeTableGetData data, EmployeeUpgradePopup employeeUpgradePopup)
     {
         employeeData = data;
+        employeeData.StartValueSet();
         employeeId = employeeData.StaffID;
 
         this.employeeUpgradePopup = employeeUpgradePopup;
@@ -94,10 +93,7 @@ public class EmployeeUIItem : MonoBehaviour
                 break;
         }
         button = GetComponentInChildren<Button>();
-        workSpeedValue.text = employeeData.WorkSpeed.ToString();
-        moveSpeedValue.text = employeeData.MoveSpeed.ToString();
-        HealthValue.text = employeeData.Health.ToString();
-        
+        employeeData.UpdateUpgradeStats(employeeSaveData[employeeId].level);
         SetButtonInteractable();
         SetInfoText();
         SetUpgradeButtonText(employeeSaveData[employeeId].level);
@@ -163,16 +159,14 @@ public class EmployeeUIItem : MonoBehaviour
 
     private void SetInfoText()
     {
-        int payLevel = UserDataManager.Instance.CurrentUserData.EmployeeSaveData[employeeData.StaffID].level + 1;
-        if (payLevel > 5)
+        int payLevel = UserDataManager.Instance.CurrentUserData.EmployeeSaveData[employeeData.StaffID].level;
+        if (payLevel >= 5)
         {
             uiUpgradeCostText.text = LZString.GetUIString(employeeUpgradeFix);
-
         }
         else
         {
-            uiUpgradeCostText.text = $"{employeeData.Cost * (employeeSaveData[employeeId].level + 1)}";
-
+            uiUpgradeCostText.text = $"{employeeData.Cost}";
         }
         switch ((WorkType)employeeData.StaffType)
         {
@@ -188,6 +182,9 @@ public class EmployeeUIItem : MonoBehaviour
                 uiNameText.text = $"{LZString.GetUIString(kitchenStaff)}:\n{LZString.GetUIString(string.Format(Strings.employeeNameKeyFormat, employeeData.StaffID))}:{employeeSaveData[employeeId].level}";
                 break;
         }
+        workSpeedValue.text = employeeData.WorkSpeed.ToString();
+        moveSpeedValue.text = employeeData.MoveSpeed.ToString();
+        HealthValue.text = employeeData.Health.ToString();
     }
 
     private void SetUpgradeButtonText(int level)
@@ -212,8 +209,6 @@ public class EmployeeUIItem : MonoBehaviour
         if (!IsPayable(employeeData))
             return;
         
-        int cost = employeeData.Cost * (employeeSaveData[employeeId].level + 1);
-        
         float targetTime = Time.time + Constants.POP_UP_DURATION;
         var alertPopup = ServiceLocator.Instance.GetGlobalService<AlertPopup>();
         
@@ -222,8 +217,9 @@ public class EmployeeUIItem : MonoBehaviour
         else
             alertPopup.PopUp("직원 교육중" ,"교육 교육!", SpumCharacter.HireEmployee, false);
         
-        await UserDataManager.Instance.AdjustMoneyWithSave(-cost);
+        await UserDataManager.Instance.AdjustMoneyWithSave(-employeeData.Cost);
         await UserDataManager.Instance.UpgradeEmployee(employeeId);
+        employeeData.UpdateUpgradeStats(employeeSaveData[employeeId].level);
         if (targetTime > Time.time)
         {
             await UniTask.WaitForSeconds(targetTime - Time.time);
@@ -244,7 +240,6 @@ public class EmployeeUIItem : MonoBehaviour
 
         employeeManager.UpgradeEmployee(employeeId);
 
-        employeeData.Health = employeeData.Health + (10 * employeeSaveData[employeeId].level);
         GameObject.FindWithTag("UIManager").GetComponent<UiManager>().EmployeeHpRenewal(employeeData);
         UserDataManager.Instance.AddRankPointWithSave(employeeData.RankPoint).Forget();
         SetInfoText();
@@ -265,6 +260,6 @@ public class EmployeeUIItem : MonoBehaviour
             uiUpgradeCostText.text = LZString.GetUIString(employeeUpgradeFix);
             return false;
         }
-        return payLevel * data.Cost <= UserDataManager.Instance.CurrentUserData.Money;
+        return data.Cost <= UserDataManager.Instance.CurrentUserData.Money;
     }
 }

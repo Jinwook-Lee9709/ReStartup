@@ -4,8 +4,10 @@ using UnityEngine.UI;
 
 public class EmployeeTableGetData
 {
-    public int upgradeCount = 0;
-    public float upgradeSpeed = 0.5f;
+    private float upgradeCostValue = 1.5f;
+    public float upgradeMoveSpeed = 0.5f;
+    public float upgradeWorkSpeed = 0.4f;
+    public int upgradeHealth = 10;
     public int StaffID { get; set; }
     public int StaffNameKey { get; set; }
     public int Description { get; set; }
@@ -21,9 +23,35 @@ public class EmployeeTableGetData
 
     public event Action OnUpgradeEvent;
     public int currentHealth;
+    public float defaultWorkSpeed;
+    public float defaultMoveSpeed;
+    public int defaultHealth;
+    public float defaultCost;
+    public float defaultRankPoint;
 
     public void OnUpgrade()
     {
         OnUpgradeEvent?.Invoke();
+    }
+    public void StartValueSet()
+    {
+        defaultWorkSpeed = WorkSpeed;
+        defaultMoveSpeed = MoveSpeed;
+        defaultHealth = Health;
+        defaultCost = Cost;
+        defaultRankPoint = RankPoint;
+    }
+    public void UpdateUpgradeStats(int upgradeCount)
+    {
+        WorkSpeed = defaultWorkSpeed - (upgradeCount * upgradeWorkSpeed);
+        MoveSpeed = defaultMoveSpeed - (upgradeCount * upgradeMoveSpeed);
+        Health = defaultHealth + (upgradeCount * upgradeHealth);
+        float upgradeSquareValue = upgradeCostValue;
+        for (int i = 1; i < upgradeCount; i++)
+        {
+            upgradeSquareValue = upgradeSquareValue * upgradeCostValue;
+        }
+        Cost = (int)(defaultCost * upgradeSquareValue);
+        RankPoint = (int)(defaultRankPoint * upgradeSquareValue);
     }
 }

@@ -56,13 +56,13 @@ public class EmployeeUpgradePopup : MonoBehaviour
         currentLevelText.text = $"{upgradeCount} LV";
         nextLevelText.text = $"{upgradeCount + 1} LV";
         nameText.text = LZString.GetUIString(string.Format(Strings.employeeNameKeyFormat, data.StaffID));
-        priceText.text = (data.Cost * (upgradeCount + 1)).ToString();
+        priceText.text = data.Cost.ToString();
         currentMoveSpeedValue.text = data.MoveSpeed.ToString();
         currentWorkSpeedValue.text = data.WorkSpeed.ToString();
         currentHealthValue.text = data.Health.ToString();
-        nextLevelMoveSpeedValue.text = data.MoveSpeed.ToString();
-        nextLevelWorkSpeedValue.text = data.WorkSpeed.ToString();
-        nextLevelHealthValue.text = data.Health.ToString();
+        nextLevelMoveSpeedValue.text = (data.MoveSpeed - data.upgradeMoveSpeed).ToString();
+        nextLevelWorkSpeedValue.text = (data.WorkSpeed - data.upgradeWorkSpeed).ToString();
+        nextLevelHealthValue.text = (data.Health + data.upgradeHealth).ToString();
     }
     private void OnEnable()
     {

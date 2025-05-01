@@ -34,7 +34,7 @@ public class QuestCard : MonoBehaviour
         progressSlider.value = (float)mission.Count / missionData.CompleteTimes;
         conditionText.text = string.Format(LZString.GetUIString(string.Format(missionName, missionData.MissionId)), missionData.CompleteTimes);
         currentProgress.text = $"{Math.Clamp(mission.Count, 0, missionData.CompleteTimes)} / {missionData.CompleteTimes}";
-        button.GetComponentInChildren<TextMeshProUGUI>().text = mission.Count < missionData.CompleteTimes ? "미완료" : "완료 \n 보상 받기";
+        button.GetComponentInChildren<TextMeshProUGUI>().text = mission.Count < missionData.CompleteTimes ? "미완료" : "완료\n보상 받기";
         clear = mission.Count >= missionData.CompleteTimes;
         rewardClaimed = false;
         missionManager.ReorderMissionCard(missionData.MissionId);

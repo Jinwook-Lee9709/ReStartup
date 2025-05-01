@@ -28,12 +28,4 @@ public class EmployeeUIManager : MonoBehaviour
             foreach (var item in pair.Value) line.AddEmployeeUpgradeItem(item.Value, employeeUpgradePopup);
         }
     }
-
-    public event Action EmployeeAllBuy;
-
-    public void OnClickEmployeeAllBuy()
-    {
-        if (EmployeeAllBuy != null)
-            EmployeeAllBuy.Invoke();
-    }
 }
