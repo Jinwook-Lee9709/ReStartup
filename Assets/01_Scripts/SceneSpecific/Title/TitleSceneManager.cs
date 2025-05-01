@@ -30,6 +30,7 @@ public class TitleSceneManager : MonoBehaviour
 
     private void OnStartButtonClick()
     {
+        startButton.interactable = false;
         GameStartTask().Forget();
     }
 
