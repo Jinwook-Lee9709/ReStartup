@@ -50,16 +50,7 @@ public class FoodUpgradeUIItem : MonoBehaviour
         foodUpgradePopup = popup;
         levelUpImage.SetActive(false);
         button = GetComponentInChildren<Button>();
-        var gameManager = ServiceLocator.Instance.GetSceneService<GameManager>();
-        consumerManager = gameManager.consumerManager;
-#if UNITY_EDITOR
-        if (foodData.FoodID == 301001)
-        {
-            consumerManager.foodIds.Add(foodData.FoodID);
-            foodData.upgradeCount = 1;
-            lockImage.SetActive(false);
-        }
-#endif
+
         if (UserDataManager.Instance.CurrentUserData.FoodSaveData[foodData.FoodID].level != 0)
         {
             lockImage.SetActive(false);
