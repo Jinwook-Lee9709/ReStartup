@@ -68,8 +68,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 9ef2d00fbf70f7d47a09f193cb244e70, type: 2}
-  m_sharedMaterial: {fileID: 4406667159696839006, guid: 9ef2d00fbf70f7d47a09f193cb244e70, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 0c7bbded0b5a243beb970f73fe12ad1c, type: 2}
+  m_sharedMaterial: {fileID: -5397116246888319091, guid: 0c7bbded0b5a243beb970f73fe12ad1c, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -894,8 +894,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 146.66501, y: -40}
-  m_SizeDelta: {x: 144.73, y: 80}
+  m_AnchoredPosition: {x: 156.805, y: -40}
+  m_SizeDelta: {x: 165.01, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &9018658947204916404
 MonoBehaviour:
@@ -1128,6 +1128,8 @@ MonoBehaviour:
       isKeyRepeated: 0
       isKeyNull: 0
     dividerPos: 0.33
+  claimButton: {fileID: 0}
+  compensationText: {fileID: 0}
 --- !u!1 &6196787530216698748
 GameObject:
   m_ObjectHideFlags: 0
@@ -1673,8 +1675,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 72.365, y: -21.72}
-  m_SizeDelta: {x: 144.73, y: 0}
+  m_AnchoredPosition: {x: 82.505, y: -19.150002}
+  m_SizeDelta: {x: 165.01, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6857527407079306819
 CanvasRenderer:
@@ -1706,8 +1708,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uC9C0\uC810 \uC815\uC0B0\uAE08"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 9ef2d00fbf70f7d47a09f193cb244e70, type: 2}
-  m_sharedMaterial: {fileID: 4406667159696839006, guid: 9ef2d00fbf70f7d47a09f193cb244e70, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 0c7bbded0b5a243beb970f73fe12ad1c, type: 2}
+  m_sharedMaterial: {fileID: -5397116246888319091, guid: 0c7bbded0b5a243beb970f73fe12ad1c, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1822,8 +1824,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 72.365, y: -60.95}
-  m_SizeDelta: {x: 120.56, y: 0}
+  m_AnchoredPosition: {x: 82.505, y: -57.850006}
+  m_SizeDelta: {x: 108.01, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &543190560854927277
 CanvasRenderer:
@@ -1855,8 +1857,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 100000
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 0c7bbded0b5a243beb970f73fe12ad1c, type: 2}
+  m_sharedMaterial: {fileID: -5397116246888319091, guid: 0c7bbded0b5a243beb970f73fe12ad1c, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2288,6 +2290,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6789013590970965393, guid: 24c8b2550cce1477d8d5ad4bf8a14022, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 0c7bbded0b5a243beb970f73fe12ad1c, type: 2}
+    - target: {fileID: 6789013590970965393, guid: 24c8b2550cce1477d8d5ad4bf8a14022, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -5397116246888319091, guid: 0c7bbded0b5a243beb970f73fe12ad1c, type: 2}
+    - target: {fileID: 6789013590970965393, guid: 24c8b2550cce1477d8d5ad4bf8a14022, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7493202119629448927, guid: 24c8b2550cce1477d8d5ad4bf8a14022, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -2361,6 +2375,8 @@ MonoBehaviour:
       isKeyRepeated: 0
       isKeyNull: 0
     dividerPos: 0.33
+  claimButton: {fileID: 0}
+  compensationText: {fileID: 0}
 --- !u!224 &3673249576949397316 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2386356951802762304, guid: 24c8b2550cce1477d8d5ad4bf8a14022, type: 3}
