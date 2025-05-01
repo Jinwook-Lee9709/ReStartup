@@ -21,11 +21,14 @@ public enum TutorialPhase
 
 public class TutorialManager : MonoBehaviour
 {
+    [VInspector.Foldout("Public")]
     [SerializeField] private List<ECEasyTutorial> tutorials;
     [SerializeField] private TutorialSkipPopup tutorialSkipPopupPrefab;
+    [SerializeField] private EatrandAlarmPopup eatrandAlarmPopupPrefab;
     [SerializeField] private GameObject touchShield;
+    [SerializeField] private GameObject smartPhone;
     private TutorialPhase currentPhase = TutorialPhase.Phase1;
-
+    [VInspector.EndFoldout]
     private void Start()
     {
         TutorialInit();
@@ -71,13 +74,16 @@ public class TutorialManager : MonoBehaviour
     {
         PlayerPrefs.SetInt("ECET_CLEAR_ALL", 0);
     }
+    public void ShakeSmartPhone()
+    {
+        StartCoroutine(ShakePhoneCoroutine(smartPhone));
+        Handheld.Vibrate();
+    }
     #region Phase1
     [VInspector.Foldout("Phase1")]
-    [SerializeField] private GameObject smartPhone;
     [SerializeField][Range(0f, 3f)] private float shakeDuration;
     [SerializeField][Range(0f, 3f)] private float shakeAmount;
     [SerializeField] private CreateNamePopup createNamePopupPrefab;
-    [SerializeField] private EatrandSignInPopup eatrandSignInPopupPrefab;
     [SerializeField] private TutorialPhase1RewardPopup tutorialPhase1RewardPopupPrefab;
     [VInspector.EndFoldout]
     public void CreateName()
@@ -86,11 +92,6 @@ public class TutorialManager : MonoBehaviour
         popup.Init(gameObject);
     }
 
-    public void ShakeSmartPhone()
-    {
-        StartCoroutine(ShakePhoneCoroutine(smartPhone));
-        Handheld.Vibrate();
-    }
 
     public IEnumerator ShakePhoneCoroutine(GameObject phone)
     {
@@ -105,10 +106,10 @@ public class TutorialManager : MonoBehaviour
         phone.transform.position = prevPos;
     }
 
-    public void OnTouchPhone()
+    public void OnTouchPhonePhase1()
     {
-        var popup = Instantiate(eatrandSignInPopupPrefab, transform);
-        popup.Init();
+        var popup = Instantiate(eatrandAlarmPopupPrefab, transform);
+        popup.Init("식당 사장님들은 주목!\r\n식당 운영이 막막한가요?\r\n잇트랜드 맛집 랭킹에 가입해보세요!");
         popup.transform.SetSiblingIndex(0);
     }
 
@@ -118,5 +119,14 @@ public class TutorialManager : MonoBehaviour
         popup.Init();
         popup.transform.SetSiblingIndex(0);
     }
+    #endregion
+    #region Phase2
+    public void OnTouchPhonePhase2()
+    {
+        var popup = Instantiate(eatrandAlarmPopupPrefab, transform);
+        popup.Init("손님을 많이 끌어들이는 법!\r\n맛집 랭킹을 올리는 방법은\r\n이 가이드에서 확인하실 수 있습니다!");
+        popup.transform.SetSiblingIndex(0);
+    }
+
     #endregion
 }

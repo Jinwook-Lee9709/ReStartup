@@ -87,7 +87,7 @@ GameObject:
   - component: {fileID: 4811581675190515084}
   - component: {fileID: 4978540159489562041}
   m_Layer: 5
-  m_Name: EatrandSignInTitleArea
+  m_Name: EatrandAlarmTitleArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -162,9 +162,9 @@ GameObject:
   - component: {fileID: 1607671529750972723}
   - component: {fileID: 6855056589693025883}
   - component: {fileID: 7330318048528421304}
-  - component: {fileID: 5799605886339265933}
   - component: {fileID: 4412187888561691944}
   - component: {fileID: 8948053796796263830}
+  - component: {fileID: 1144685332459295645}
   m_Layer: 5
   m_Name: Panel
   m_TagString: Untagged
@@ -232,19 +232,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5799605886339265933
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4959217701746280537}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e046b9c4fe13543c5aaab35a8d9c4c75, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Key: EatrandSignInPopup
 --- !u!114 &4412187888561691944
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -315,6 +302,19 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &1144685332459295645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4959217701746280537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e046b9c4fe13543c5aaab35a8d9c4c75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Key: EatrandAlarmPopup
 --- !u!1 &5423652263520142047
 GameObject:
   m_ObjectHideFlags: 0
@@ -327,7 +327,7 @@ GameObject:
   - component: {fileID: 7075358956807685528}
   - component: {fileID: 2167661808032195925}
   m_Layer: 5
-  m_Name: EatrandSignInTextArea
+  m_Name: EatrandAlarmTextArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -598,7 +598,7 @@ GameObject:
   - component: {fileID: 6564387544493289322}
   - component: {fileID: 8644475918331629069}
   m_Layer: 5
-  m_Name: EatrandSignInPopup
+  m_Name: EatranAlarmPopup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -639,6 +639,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   backGround: {fileID: 8939020044195847299}
   popupUi: {fileID: 4959217701746280537}
+  alarmText: {fileID: 932244426510806391}
 --- !u!1 &9042081519882006636
 GameObject:
   m_ObjectHideFlags: 0
