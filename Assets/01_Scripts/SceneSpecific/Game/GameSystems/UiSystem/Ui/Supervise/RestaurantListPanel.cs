@@ -108,7 +108,10 @@ public class RestaurantListPanel : MonoBehaviour
 
     public void UpdateInteractable()
     {
-        cards[currentTheme].UpdateInteractable();
+        foreach (var card in cards.Values)
+        {
+            card.UpdateInteractable();
+        }
     }
 
     private RestaurantInfoCard InstantiateCard()

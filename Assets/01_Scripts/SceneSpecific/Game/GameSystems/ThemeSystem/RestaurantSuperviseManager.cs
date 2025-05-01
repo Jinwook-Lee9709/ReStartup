@@ -3,14 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 public class RestaurantSuperviseManager : MonoBehaviour
 {
     [SerializeField] RestaurantSuperviseUIManager restaurantSuperviseUIManager;
+    private SupervisorCompensationSO compensation;
     private void Start()
     {
         restaurantSuperviseUIManager.InitRestaurantListPanel(OnThemeChanged);
         restaurantSuperviseUIManager.InitSupervisorListPanel(OnHireEmployee);
+        compensation = Addressables.LoadAssetAsync<SupervisorCompensationSO>(Strings.CompensationSoKey).WaitForCompletion();
+        
     }
 
     private void OnThemeChanged()
@@ -55,7 +59,19 @@ public class RestaurantSuperviseManager : MonoBehaviour
 
     private void OnHireEmployee(int theme, int number)
     {
-        UserDataManager.Instance.CurrentUserData.ThemeStatus[(ThemeIds)theme].managerCount = number;
+        var themeStatus = UserDataManager.Instance.CurrentUserData.ThemeStatus[(ThemeIds)theme];
+        themeStatus.managerCount = number;
+        if (number != 1)
+        {
+            var ratio = compensation.multipliers[number - 1] / compensation.multipliers[number];
+            var currentHour = Math.Clamp(DateTime.Now.Hour - themeStatus.lastClaim.Hour, 0, 24);
+            themeStatus.lastClaim = themeStatus.lastClaim.AddHours(currentHour * ratio);
+        }
+        else
+        {
+            themeStatus.lastClaim = DateTime.Now;
+        }
+
         UserDataManager.Instance.UpdateStageStatus((ThemeIds)theme).Forget();
         restaurantSuperviseUIManager.UpdateRestaurantButton();
         restaurantSuperviseUIManager.OnSupervisorHire();

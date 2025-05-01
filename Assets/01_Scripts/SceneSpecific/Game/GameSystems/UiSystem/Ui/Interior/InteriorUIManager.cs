@@ -49,7 +49,7 @@ public class InteriorUIManager : MonoBehaviour
         var targetList = area == ObjectArea.Hall ? hallCardGroups : kitchenCardGroups;
         var dict = dataList
             .Where(x => x.CookwareType == area)
-            .GroupBy(x => x.Category)
+            .GroupBy(x => x.UICategory)
             .ToDictionary(group => group.Key, group => group.ToList());
         foreach (var pair in dict)
         {

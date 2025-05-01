@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
@@ -7,14 +8,14 @@ using UnityEngine.AddressableAssets;
 public class InteriorManager
 {
     private static readonly string FurnitureStringID = "FurnitureBase";
-    
+
     private CookwareDataTable cookwareTable;
     private GameManager gameManager;
     private InteriorDataTable interiorTable;
     private WorkStationManager workStationManager;
 
     private Dictionary<int, FurnitureBase> furnitureList = new();
-        
+
     public void Init(GameManager gameManager)
     {
         this.gameManager = gameManager;
@@ -24,17 +25,23 @@ public class InteriorManager
 
     public void Start()
     {
+        ReferenceDataTable();
         InitTable();
         InitCookwares();
         InitSinkingStation();
         InitCounter();
         InitInterior();
+        InitDecor();
+    }
+
+    public void ReferenceDataTable()
+    {
+        interiorTable = DataTableManager.Get<InteriorDataTable>(DataTableIds.Interior.ToString());
+        cookwareTable = DataTableManager.Get<CookwareDataTable>(DataTableIds.Cookware.ToString());
     }
 
     public void InitTable()
     {
-        interiorTable = DataTableManager.Get<InteriorDataTable>(DataTableIds.Interior.ToString());
-        cookwareTable = DataTableManager.Get<CookwareDataTable>(DataTableIds.Cookware.ToString());
         var tableQuery = interiorTable.Where(x =>
             x.RestaurantType == (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme &&
             x.Category == InteriorCategory.Table);
@@ -88,19 +95,46 @@ public class InteriorManager
         var interiorUpgradeDictionary = UserDataManager.Instance.CurrentUserData.InteriorSaveData;
         var interiorQuery = interiorTable.Where(x =>
                 x.RestaurantType == (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme)
-            .Where(x => x.Category == InteriorCategory.Interior);
+            .Where(x =>
+                x.Category == InteriorCategory.Interior ||
+                x.Category == InteriorCategory.Wallpaper ||
+                x.Category == InteriorCategory.Floor);
         foreach (var data in interiorQuery)
         {
-            if(interiorUpgradeDictionary[data.InteriorID].Equals(0)) 
+            if (interiorUpgradeDictionary[data.InteriorID].Equals(0))
                 continue;
-            AddInterior(data);
+            if (data.Category == InteriorCategory.Wallpaper)
+            {
+                AddWallpaper(data);
+            }
+            else if (data.Category == InteriorCategory.Floor)
+            {
+                AddFloor(data);
+            }
+            else
+            {
+                AddInterior(data);
+            }
         }
+    }
+
+    private void InitDecor()
+    {
+        var parent = gameManager.ObjectPivotManager.GetDecorPivot();
+        foreach (Transform child in parent.transform)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
+
+        var assetId = String.Format(Strings.DecorTileIdFormat, (int)gameManager.CurrentTheme);
+        var objHandle = Addressables.InstantiateAsync(assetId, parent);
+        objHandle.WaitForCompletion();
     }
 
     private void AddInterior(InteriorData data)
     {
         //ForTest
-        if(data.IconID == "Dummy") return;
+        if (data.IconID == "Dummy") return;
         //ForTest
         var parent = gameManager.ObjectPivotManager.GetInteriorPivot(data.InteriorID);
         var spriteHandle = Addressables.LoadAssetAsync<Sprite>(data.IconID + 1);
@@ -110,8 +144,54 @@ public class InteriorManager
         var sprite = spriteHandle.Result;
         var obj = objHandle.Result;
         var furnitureBase = obj.GetComponent<FurnitureBase>();
-        furnitureList.Add(data.InteriorID, furnitureBase); 
+        furnitureList.Add(data.InteriorID, furnitureBase);
         furnitureBase.ChangeSpirte(sprite);
+    }
+
+    private void AddWallpaper(InteriorData data)
+    {
+        Transform pivot;
+        String assetId;
+        pivot = gameManager.ObjectPivotManager.GetWallPivot(data.CookwareType);
+        if (data.CookwareType == ObjectArea.Hall)
+        {
+            assetId = String.Format(Strings.HallWallTileIdFormat, data.RestaurantType, 1);
+        }
+        else
+        {
+            assetId = String.Format(Strings.KitchenWallTileIdFormat, data.RestaurantType, 1);
+        }
+
+        foreach (Transform child in pivot.transform)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
+
+        var objHandle = Addressables.InstantiateAsync(assetId, pivot);
+        objHandle.WaitForCompletion();
+    }
+
+    private void AddFloor(InteriorData data)
+    {
+        Transform pivot;
+        String assetId;
+        pivot = gameManager.ObjectPivotManager.GetFloorPivot(data.CookwareType);
+        if (data.CookwareType == ObjectArea.Hall)
+        {
+            assetId = String.Format(Strings.HallFloorTileIdFormat, data.RestaurantType, 1);
+        }
+        else
+        {
+            assetId = String.Format(Strings.KitchenFloorTileIdFormat, data.RestaurantType, 1);
+        }
+
+        foreach (Transform child in pivot.transform)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
+
+        var objHandle = Addressables.InstantiateAsync(assetId, pivot);
+        objHandle.WaitForCompletion();
     }
 
     private void OnInteriorUpgrade(int interiorId, int level)
@@ -134,6 +214,10 @@ public class InteriorManager
                 break;
             case InteriorCategory.Sink:
                 UpgradeSink(interiorData, level);
+                break;
+            case InteriorCategory.Wallpaper:
+                break;
+            case InteriorCategory.Floor:
                 break;
         }
     }

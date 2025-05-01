@@ -10,7 +10,6 @@ using VInspector;
 public class SupervisorListPanel : MonoBehaviour
 {
     private static readonly string ManagerStringKey = "ManagerFormat";
-    private static readonly string CompensationSoKey = "SupervisorCompensationSO";
     [SerializeField] private AssetReference supervisorInfoPanel;
     [SerializeField] private Transform supervisorInfoParent;
     [SerializeField] private SerializedDictionary<int, int> costMultiplier = new() { { 1, 1 }, { 2, 3 }, { 3, 4 } };
@@ -24,7 +23,7 @@ public class SupervisorListPanel : MonoBehaviour
 
     private void Awake()
     {
-        compensation = Addressables.LoadAssetAsync<SupervisorCompensationSO>(CompensationSoKey).WaitForCompletion();
+        compensation = Addressables.LoadAssetAsync<SupervisorCompensationSO>(Strings.CompensationSoKey).WaitForCompletion();
     }
 
     private void Start()
@@ -54,7 +53,11 @@ public class SupervisorListPanel : MonoBehaviour
             }
             return;
         }
+
+        var calculatedCompensation = CalculateCompensation(themeStatus);
         compensationText.text = CalculateCompensation(themeStatus).ToString();
+        claimButton.interactable = calculatedCompensation != 0;
+        
         if (animate)
         {
             claimButton.transform.PopupAnimation();
@@ -90,8 +93,10 @@ public class SupervisorListPanel : MonoBehaviour
         if (themeStatus.managerCount == 0)
             return;
         var compensationAmount = CalculateCompensation(themeStatus);
+        themeStatus.lastClaim = DateTime.Now;
         UserDataManager.Instance.AdjustMoneyWithSave(compensationAmount).Forget();
-        
+        StageStatusDataDAC.UpdateStageStatusData(themeStatus).Forget();
+        UpdateClaimButton(true);
     }
 
     private int CalculateCompensation(StageStatusData themeStatus)
@@ -99,7 +104,7 @@ public class SupervisorListPanel : MonoBehaviour
         var currentTheme = (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme;
         DateTime lastClaimTime = themeStatus.lastClaim;
         DateTime now = DateTime.Now;
-        var interval = lastClaimTime - now;
+        var interval = now - lastClaimTime;
         var clampedInterval = Math.Clamp((int)interval.TotalHours, 0, 24);
         int multiplier = compensation.multipliers[themeStatus.managerCount];
         int finalCompensation = compensation.baseCompensation[currentTheme] * clampedInterval / 24 * multiplier;
