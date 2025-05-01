@@ -9,6 +9,7 @@ public class RankSystemManager : MonoBehaviour
     [SerializeField] private RectTransform canvas;
     [SerializeField] private GameObject playerClone;
     [SerializeField] private GameObject localRankingPanel;
+    private RankingData playerData;
     private RankingSystemUiItem playerUiItem;
     private void Start()
     {
@@ -22,7 +23,7 @@ public class RankSystemManager : MonoBehaviour
         }
         var currentUserData = UserDataManager.Instance.CurrentUserData;
         // 플레이어 데이터 추가 (예제)
-        RankingData playerData = new RankingData
+        playerData = new RankingData
         {
             RestaurantName = currentUserData.Name,
             rank = (int)currentUserData.CurrentRank,
@@ -57,6 +58,10 @@ public class RankSystemManager : MonoBehaviour
             }
         }
         return false;
+    }
+    public void InitPlayerName()
+    {
+        rankingListUi.SetPlayerRankUIItem(playerData);
     }
     private void Update()
     {

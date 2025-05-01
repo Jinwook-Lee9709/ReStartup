@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     public AudioManager AudioManager { get; private set; }
     public EmployeeManager EmployeeManager { get; private set; }
     public MissionManager MissionManager { get; private set; }
+    public RankSystemManager rankSystemManager;
 
     public Alarm alarm;
     public ConsumerManager consumerManager;
