@@ -6,6 +6,8 @@ using Cysharp.Threading.Tasks;
 using TMPro;
 using TMPro.Examples;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class RankingConditionCard : MonoBehaviour
@@ -20,6 +22,8 @@ public class RankingConditionCard : MonoBehaviour
     public TextMeshProUGUI currentRankPointText;
     public TextMeshProUGUI explanationText;
     public RectTransform sliderGauge;
+    public Image emblemImage;
+    public HatListController hatController;
     private RankingConditionListUI rankConditionListUI;
 
 
@@ -48,6 +52,9 @@ public class RankingConditionCard : MonoBehaviour
         button = gameObject.GetComponentInChildren<Button>();
         slider = gameObject.GetComponentInChildren<Slider>();
         button.onClick.AddListener(OnButtonClick);
+        var sprite = Addressables.LoadAssetAsync<Sprite>(Strings.EmblemIdFormat).WaitForCompletion();
+        emblemImage.sprite = sprite;
+        hatController.SetHat(rankConditionData.Rank);
         var currentUserRankPoint = UserDataManager.Instance.CurrentUserData.CurrentRankPoint;
         var currentRank = UserDataManager.Instance.CurrentUserData.CurrentRank;
         if (index < currentRank)
