@@ -52,7 +52,7 @@ public class RankingConditionCard : MonoBehaviour
         button = gameObject.GetComponentInChildren<Button>();
         slider = gameObject.GetComponentInChildren<Slider>();
         button.onClick.AddListener(OnButtonClick);
-        var sprite = Addressables.LoadAssetAsync<Sprite>(Strings.EmblemIdFormat).WaitForCompletion();
+        var sprite = Addressables.LoadAssetAsync<Sprite>(String.Format(Strings.EmblemIdFormat, data.Rank)).WaitForCompletion();
         emblemImage.sprite = sprite;
         hatController.SetHat(rankConditionData.Rank);
         var currentUserRankPoint = UserDataManager.Instance.CurrentUserData.CurrentRankPoint;
