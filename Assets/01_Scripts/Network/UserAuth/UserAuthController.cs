@@ -79,7 +79,7 @@ public static class UserAuthController
     {
         CurrencyData gold = new CurrencyData(CurrencyType.Gold, 0);
         //CurrencyData money = new CurrencyData(CurrencyType.Money, 0);
-        CurrencyData money = new CurrencyData(CurrencyType.Money, 1000000);
+        CurrencyData money = new CurrencyData(CurrencyType.Money, 0);
         List<CurrencyData> currencyDataList = new List<CurrencyData>() { gold, money };
         return currencyDataList;
     }

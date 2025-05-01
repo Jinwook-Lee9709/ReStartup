@@ -14,7 +14,6 @@ public class UserDataManager : Singleton<UserDataManager>
     private UserData currentUserData = new();
     private UserDataManager()
     {
-        if (currentUserData.Money == 0) currentUserData.Money = 1000000000;
     }
 
     public UserData CurrentUserData
