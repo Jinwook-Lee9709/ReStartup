@@ -11,7 +11,7 @@ public class UserData
     public string Name { get; set; } 
     public int? Money { get; set; } = 0;
     public int Gold { get; set; } = 0;
-    public int? CurrentRankPoint { get; set; } = 2000;
+    public int? CurrentRankPoint { get; set; }
     public int CurrentRank { get; set; }
     public int? PositiveCnt { get; set; } = new(); 
     public int? NegativeCnt { get; set; } = new();

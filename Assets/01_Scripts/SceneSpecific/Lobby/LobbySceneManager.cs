@@ -30,7 +30,4 @@ public class LobbySceneManager : MonoBehaviour
         var sceneManager = ServiceLocator.Instance.GetGlobalService<SceneController>();
         sceneManager.LoadSceneWithLoading(sceneId, GameSceneLoader.BeforeGameSceneLoad);
     }
-
-    
-    
 }

@@ -7,6 +7,7 @@ public class IngameGoodsUi : MonoBehaviour
 {
     public TextMeshProUGUI moneyText, goldText;
     public TextMeshProUGUI upgradeUIMoeny, upgradeUIGold;
+    public TextMeshProUGUI rankPointText;
     private UserDataManager userDataManager;
 
     private void Start()
@@ -16,8 +17,10 @@ public class IngameGoodsUi : MonoBehaviour
         upgradeUIMoeny.text = userDataManager.CurrentUserData.Money.ToString();
         //upgradeUIRankingPoint.text = userDataManager.CurrentUserData.CurrentRankPoint.ToString();
         upgradeUIGold.text = userDataManager.CurrentUserData.Gold.ToString();
+        rankPointText.text = userDataManager.CurrentUserData.CurrentRankPoint.ToString();
         userDataManager.ChangeMoneyAction += MoneyUiValueSet;
         userDataManager.ChangeGoldAction += GoldUiValueSet;
+        userDataManager.OnRankChangedEvent += RankPointUiValueSet;
         SetCostUi();
         LocalizationSettings.SelectedLocaleChanged += OnLanguageChanged;
     }
@@ -30,6 +33,7 @@ public class IngameGoodsUi : MonoBehaviour
         // 유저 데이터 이벤트도 해제
         userDataManager.ChangeMoneyAction -= MoneyUiValueSet;
         userDataManager.ChangeGoldAction -= GoldUiValueSet;
+        userDataManager.OnRankChangedEvent -= RankPointUiValueSet;
     }
 
     public void MoneyUiValueSet(int? money)
@@ -46,6 +50,11 @@ public class IngameGoodsUi : MonoBehaviour
     {
         MoneyUiValueSet(userDataManager.CurrentUserData.Money);
         GoldUiValueSet(userDataManager.CurrentUserData.Gold);
+    }
+
+    public void RankPointUiValueSet(int rankPoint)
+    {
+        rankPointText.text = rankPoint.ToString();
     }
 
     private void OnLanguageChanged(Locale locale)

@@ -13,6 +13,7 @@ public static class ThemeRecordDAC
         var result = await RestApiService.GetAsyncWithToken<ThemeRecordData[]>(Endpoints.GetThemeRecordsUrl, payload);
         return result;
     }
+    
 
     public static async UniTask<bool> UpdateThemeRecordData(ThemeRecordData saveData)
     {
