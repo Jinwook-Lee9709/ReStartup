@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.AI;
+using VInspector.Libs;
 
 public class ConsumerFSM : MonoBehaviour
 {
@@ -36,7 +37,7 @@ public class ConsumerFSM : MonoBehaviour
     public event Action<Consumer> OnSeatEvent;
     public ConsumerManager consumerManager;
     public BuffManager buffManager;
-
+    
     [SerializeField] private List<float> satisfactionChangeLimit = new()
     {
         15f,
@@ -178,7 +179,6 @@ public class ConsumerFSM : MonoBehaviour
                                 consumerManager.workFlowController.CancelOrder(consumer);
                                 consumerManager.workFlowController.ReturnTable(consumer.currentTable);
                             }
-                      
 
                             break;
                     }
