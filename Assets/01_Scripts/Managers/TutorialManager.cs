@@ -60,7 +60,11 @@ public class TutorialManager : MonoBehaviour
     public void OnTutorialSkipButton(UnityAction action)
     {
         var popup = Instantiate(tutorialSkipPopupPrefab, transform);
-        popup.Init(action);
+        popup.Init(() =>
+        {
+            action?.Invoke();
+            consumerManager.StartSpawnRoutine();
+        });
     }
 
     public void TutorialOrderComplete()
@@ -144,6 +148,8 @@ public class TutorialManager : MonoBehaviour
         popup.Init();
     }
     #endregion
+
+
     #region Phase2
     [VInspector.Foldout("Phase2")]
     [SerializeField] private TutorialGuidePopup tutorialGuidePopupPrefab;
@@ -162,6 +168,7 @@ public class TutorialManager : MonoBehaviour
     }
 
     #endregion
+
 
     #region Phase6
     [VInspector.Foldout("Phase6")]
