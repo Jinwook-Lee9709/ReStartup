@@ -1,7 +1,4 @@
 using Cysharp.Threading.Tasks;
-using GoogleMobileAds.Editor;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class RectScalerer : MonoBehaviour

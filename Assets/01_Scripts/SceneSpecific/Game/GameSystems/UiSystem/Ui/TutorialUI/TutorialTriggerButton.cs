@@ -1,7 +1,4 @@
 using Excellcube.EasyTutorial.Utils;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class TutorialTriggerButton : MonoBehaviour
