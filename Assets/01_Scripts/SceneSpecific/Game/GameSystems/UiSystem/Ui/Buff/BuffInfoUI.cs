@@ -46,6 +46,7 @@ public class BuffInfoUI : MonoBehaviour, IComparable<BuffInfoUI>
         {
             transform.DOKill();
             buffManager.buffInfoUIList.Remove(this);
+            buffManager.UpdateBuffCntUI();
             Destroy(gameObject);
         });
     }

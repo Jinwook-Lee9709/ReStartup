@@ -2,6 +2,7 @@ using System;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
 
 public class Review : MonoBehaviour
@@ -9,9 +10,9 @@ public class Review : MonoBehaviour
     public ReviewData data;
 
     public ReviewManager reviewManager;
-
     [SerializeField] private Button removeButton;
-    [SerializeField] private TextMeshProUGUI starText;
+    [SerializeField] private Image profileIcon;
+    [SerializeField] private Image star;
     [SerializeField] private TextMeshProUGUI reviewScriptText;
     [SerializeField] private TextMeshProUGUI dateText;
     [SerializeField] private TextMeshProUGUI rankPointText;
@@ -22,7 +23,12 @@ public class Review : MonoBehaviour
     public void Init(ReviewData data)
     {
         this.data = data;
-        starText.text = $"별점 : {data.stars}점";
+        var starhandler = Addressables.LoadAssetAsync<Sprite>(data.addPoint > 0 ? Strings.positiveReviewFileName : Strings.negativeReviewFileName);
+        var iconhandler = Addressables.LoadAssetAsync<Sprite>(data.iconID);
+        starhandler.WaitForCompletion();
+        iconhandler.WaitForCompletion();
+        star.sprite = starhandler.Result;
+        profileIcon.sprite = iconhandler.Result;
         reviewScriptText.text = data.reviewMessage;
         dateText.text = data.date;
         rankPointText.text = $"{data.addPoint:▲0;▼0;0} 점";

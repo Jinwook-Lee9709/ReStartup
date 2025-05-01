@@ -78,6 +78,7 @@ public class WorkManager
         foreach (var work in workList)
         {
             stoppedWorkQueues[work.workType].Remove(work);
+            RemoveAlarmWorks(work);
         }
         workQueues.Values.ToList().ForEach(x => x.RemoveWhere(y => workList.Contains(y)));
         consumerWorkList

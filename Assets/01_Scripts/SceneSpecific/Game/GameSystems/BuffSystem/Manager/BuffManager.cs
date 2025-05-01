@@ -49,16 +49,18 @@ public class BuffManager : MonoBehaviour
             buffInfoUIList[i].transform.SetSiblingIndex(i);
         }
     }
-
+    public void UpdateBuffCntUI()
+    {
+        buffCountText.text = string.Format(Strings.buffCountFormat, buffInfoUIList.Count);
+    }
     private void Update()
     {
         buffInfoButton.interactable = buffs.Count != 0;
-        buffCountText.text = string.Format(Strings.buffCountFormat, buffInfoUIList.Count);
+        UpdateBuffCntUI();
         if (buffs.Count == 0)
         {
             return;
         }
-
         foreach (var buff in buffs.Values)
         {
             float prev = buff.remainBuffTime;

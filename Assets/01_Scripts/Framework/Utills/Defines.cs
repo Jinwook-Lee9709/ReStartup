@@ -399,6 +399,9 @@ public static class Strings
     public static readonly string EmblemIdFormat = "Emblem{0}";
 
     public static readonly string tutorialCompeleteKey = "TUTORIAL_ORDER_COMPLETE";
+
+    public static readonly string positiveReviewFileName = "PositiveReview";
+    public static readonly string negativeReviewFileName = "NegativeReview";
 }
 
 public static class Colors
