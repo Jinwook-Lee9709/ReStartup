@@ -114,7 +114,7 @@ public class TutorialManager : MonoBehaviour
     public void CreateName()
     {
         var popup = Instantiate(createNamePopupPrefab, transform);
-        popup.Init(gameObject);
+        popup.Init(gameObject).Forget();
     }
 
 
@@ -145,11 +145,20 @@ public class TutorialManager : MonoBehaviour
     }
     #endregion
     #region Phase2
+    [VInspector.Foldout("Phase2")]
+    [SerializeField] private TutorialGuidePopup tutorialGuidePopupPrefab;
+    [VInspector.EndFoldout]
     public void OnTouchPhonePhase2()
     {
         var popup = Instantiate(eatrandAlarmPopupPrefab, transform);
         popup.Init("손님을 많이 끌어들이는 법!\r\n맛집 랭킹을 올리는 방법은\r\n이 가이드에서 확인하실 수 있습니다!");
         popup.transform.SetSiblingIndex(0);
+    }
+
+    public void TutorialGuideImagePopup()
+    {
+        var popup = Instantiate(tutorialGuidePopupPrefab, transform);
+        popup.Init();
     }
 
     #endregion
