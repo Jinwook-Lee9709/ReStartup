@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -57,20 +58,24 @@ public class SupervisorInfoCard : MonoBehaviour
 
     public void OnMoneyChanged(int money)
     {
+        SetCostText(supervisorInfo.isHired);
         if (supervisorInfo.isHired || !supervisorInfo.isHireable)
             return;
+        
         buyButton.interactable = supervisorInfo.cost < money;
     }
-
-    public void OnRankReached()
+    
+    public void ChangeToHireable()
     {
         supervisorInfo.isHireable = true;
+        buyButton.gameObject.SetActive(true);
         OnMoneyChanged((int)UserDataManager.Instance.CurrentUserData.Money);
     }
 
     public void OnBuy()
     {
         SetCostText(true);
+        UserDataManager.Instance.AdjustMoneyWithSave(-supervisorInfo.cost).Forget();
         buyButton.gameObject.SetActive(false);
     }
 
@@ -85,8 +90,7 @@ public class SupervisorInfoCard : MonoBehaviour
         else
         {
             costText.text = supervisorInfo.cost.ToString();
-            
-            costText.color = Color.red;
+            costText.color = UserDataManager.Instance.CurrentUserData.Money >= supervisorInfo.cost ? Color.black : Color.red;
         }
     
     }

@@ -12,14 +12,14 @@ public class InteriorCardGroup : MonoBehaviour
     [SerializeField] private TextMeshProUGUI categoryText;
 
     private List<InteriorCard> cards = new();
-    private InteriorCategory category;
+    private InteriorUICategory category;
 
-    public void InitializeGroup(List<InteriorData> interiorDataList, InteriorCategory category,
+    public void InitializeGroup(List<InteriorData> interiorDataList, InteriorUICategory category,
         InteriorUpgradePopup popup, InteriorUpgradeAuthorityNotifyPopup notifyPopup)
     {
         ClearGroup();
         this.category = category;
-        categoryText.text = category.ToString();
+        categoryText.text =  LZString.GetUIString(category.ToString());
         foreach (var data in interiorDataList)
         {
             GameObject cardObject = Addressables.InstantiateAsync(cardPrefab, cardParent).WaitForCompletion();

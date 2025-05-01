@@ -78,7 +78,6 @@ public class RestaurantInfoCard : MonoBehaviour
         var currentTheme = ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme;
         bool isMoneyEnough = cost < UserDataManager.Instance.CurrentUserData.Money;
         bool isManagerHired = UserDataManager.Instance.CurrentUserData.ThemeStatus[currentTheme].managerCount != 0;
-        // buyButton.interactable = isMoneyEnough && isManagerHired;
-        return true;
+        return isMoneyEnough && isManagerHired;
     }
 }

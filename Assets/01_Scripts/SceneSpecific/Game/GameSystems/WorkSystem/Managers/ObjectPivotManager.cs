@@ -6,9 +6,11 @@ public class ObjectPivotManager
 {
     public static readonly string PivotFormat = "Pivot{0}";
     private PivotLocator pivotLocator;
+    private MapPivotLocator mapPivotLocator;
 
-    public void Init(ThemeIds themeId)
+    public void Init(ThemeIds themeId, MapPivotLocator mapPivotLocator)
     {
+        this.mapPivotLocator = mapPivotLocator;
         LoadAndInstantiatePivots(themeId);
         AdjustPivots();
     }
@@ -75,10 +77,33 @@ public class ObjectPivotManager
         return pivotLocator.PickupCounterPivots;
     }
 
-    public List<Transform> GetPayWaitingPibots()
+    public List<Transform> GetPayWaitingPivots()
     {
         return pivotLocator.PayWaitingPivots;
     }
+
+    public Transform GetWallPivot(ObjectArea area)
+    {
+        if (area == ObjectArea.Hall)
+            return mapPivotLocator.hallWall;
+        else
+            return mapPivotLocator.kitchenWall;
+    }
+
+    public Transform GetFloorPivot(ObjectArea area)
+    {
+        if (area == ObjectArea.Hall)
+            return mapPivotLocator.hallFloor;
+        else
+            return mapPivotLocator.kitchenFloor;
+    }
+    
+
+    public Transform GetDecorPivot()
+    {
+        return mapPivotLocator.decor;
+    }
+    
     
        private void AdjustPivots()
     {

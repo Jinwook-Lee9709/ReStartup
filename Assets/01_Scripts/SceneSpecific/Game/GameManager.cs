@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     
     [SerializeField] private Transform poolParent;
     [SerializeField] private NavMeshSurface surface2D;
+    [SerializeField] private MapPivotLocator mapPivotLocator;
 
     private ThemeIds currentTheme;
     public ThemeIds CurrentTheme => currentTheme;
@@ -32,6 +33,7 @@ public class GameManager : MonoBehaviour
     public ConsumerManager consumerManager;
     public FoodManager foodManager;
     public BuffManager buffManager;
+    
     #region InitializeClasses
     private void Awake()
     {
@@ -71,7 +73,7 @@ public class GameManager : MonoBehaviour
         WorkFlowController = new WorkFlowController();
         WorkStationManager = new WorkStationManager();
         
-        ObjectPivotManager.Init(currentTheme);
+        ObjectPivotManager.Init(currentTheme, mapPivotLocator);
         WorkManager.Init(WorkerManager, alarm);
         WorkerManager.Init(WorkManager);
         WorkFlowController.Init(this, WorkManager);

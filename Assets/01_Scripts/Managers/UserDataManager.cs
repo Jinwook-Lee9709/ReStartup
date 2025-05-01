@@ -3,13 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class UserDataManager : Singleton<UserDataManager>
 {
     private UserData currentUserData = new();
-
     private UserDataManager()
     {
         if (currentUserData.Money == 0) currentUserData.Money = 1000000000;
