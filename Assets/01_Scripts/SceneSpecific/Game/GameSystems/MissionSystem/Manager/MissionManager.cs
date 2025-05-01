@@ -47,20 +47,18 @@ public class MissionManager
                     {
                         continue;
                     }
-
                 }
                 else
                 {
                     if (isExist)
                     {
-                        if (saveData.isCleared == true)
+                        if (saveData.isCleared)
                         {
                             continue;
                         }
                     }
                 }
             }
-
             if (item.Theme != (int)gameManager.CurrentTheme && item.Theme != 0)
             {
                 continue;
@@ -89,17 +87,26 @@ public class MissionManager
         {
             var newMission = new Mission();
             var newMissionData = DataTableManager.Get<MissionDataTable>(DataTableIds.Mission.ToString()).Data[data.NextMissionId];
-            newMission.Init(data.CompleteTimes, data.MissionId, data.TargetId);
+            newMission.Init(newMissionData.CompleteTimes, newMissionData.MissionId, newMissionData.TargetId);
             newMission.SetCount(prevMission.Count);
-            missions[data.MissionCategory].Add(newMission);
-            missionCards[data.MissionId].Init(newMissionData, newMission);
+            missions[newMissionData.MissionCategory].Add(newMission);
+            missionCards.Add(newMissionData.MissionId, missionCards[data.MissionId]);
+            missionCards.Remove(data.MissionId);
+            missionCards[newMissionData.MissionId].Init(newMissionData, newMission);
+
+            var mission = missions[data.MissionCategory].Find(x => x.ID == data.MissionId);
+            Mission.SavePrgoress(true, mission).Forget();
+            mission = missions[newMissionData.MissionCategory].Find(x => x.ID == newMissionData.MissionId);
+            Mission.SavePrgoress(false, mission).Forget();
         }
         else
         {
             missionCards.Remove(data.MissionId);
+
+            var mission = missions[data.MissionCategory].Find(x => x.ID == data.MissionId);
+            Mission.SavePrgoress(true, mission).Forget();
         }
-        var mission = missions[data.MissionCategory].Find(x => x.ID == data.MissionId);
-        Mission.SavePrgoress(true, mission).Forget();
+
     }
     public void ReorderMissionCard(int id)
     {

@@ -11,7 +11,7 @@ public class QuestCard : MonoBehaviour
     //[SerializeField] private GameObject CompleteImage;
     private readonly string categoryFormat = "MainCategory{0}";
     private readonly string missionName = "MissionName{0}";
-    [SerializeField] private TextMeshProUGUI  rewardValue, conditionText, currentProgress, buttonText;
+    [SerializeField] private TextMeshProUGUI rewardValue, conditionText, currentProgress, buttonText;
     [SerializeField] private Slider progressSlider;
     [SerializeField] private Image rewardImage, completeImage;
     public bool clear;
@@ -22,7 +22,7 @@ public class QuestCard : MonoBehaviour
     private Mission mission;
 
     public void Init(MissionData data, Mission mis)
-    { 
+    {
         missionData = data;
         mission = mis;
         button = GetComponentInChildren<Button>();
@@ -36,8 +36,9 @@ public class QuestCard : MonoBehaviour
         currentProgress.text = $"{Math.Clamp(mission.Count, 0, missionData.CompleteTimes)} / {missionData.CompleteTimes}";
         button.GetComponentInChildren<TextMeshProUGUI>().text = mission.Count < missionData.CompleteTimes ? "미완료" : "완료 \n 보상 받기";
         clear = mission.Count >= missionData.CompleteTimes;
+        rewardClaimed = false;
+        missionManager.ReorderMissionCard(missionData.MissionId);
     }
-
     public void OnButtonClick()
     {
         button.interactable = false;
@@ -61,7 +62,7 @@ public class QuestCard : MonoBehaviour
         }
         if (missionData.MissionType == MissionType.Achievements)
         {
-            if(missionData.NextMissionId != 0)
+            if (missionData.NextMissionId != 0)
             {
                 missionManager.OnMissionCleared(missionData, mission);
                 rewardClaimed = true;
@@ -74,10 +75,6 @@ public class QuestCard : MonoBehaviour
         completeImage.gameObject.SetActive(true);
         missionManager.ReorderMissionCard(missionData.MissionId);
         button.GetComponentInChildren<TextMeshProUGUI>().text = "수령 완료";
-    }
-    public void NextMissionCreate()
-    {
-
     }
     public void UpdateMissionUICard(int count)
     {
