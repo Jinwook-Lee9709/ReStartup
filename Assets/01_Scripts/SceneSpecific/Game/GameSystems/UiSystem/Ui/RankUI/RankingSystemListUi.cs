@@ -11,10 +11,10 @@ public class RankingSystemListUi : MonoBehaviour
     public PlayerClone playerClone;
     public List<RankingSystemUiItem> items = new();
 
-    public void AddRankingSystemItem(RankingData data)
+    public void AddRankingSystemItem(RankingData data, List<int> hatContisions)
     {
         var ui = Instantiate(upgradeItemObject, parent).GetComponent<RankingSystemUiItem>();
-        ui.Init(data);
+        ui.Init(data, hatContisions);
         items.Add(ui);
         RankUpdate();
     }
@@ -42,6 +42,7 @@ public class RankingSystemListUi : MonoBehaviour
             items[i].rankingData.rank = i + 1;
             items[i].rankingText.text = items[i].rankingData.rank.ToString();
             items[i].transform.SetSiblingIndex(i);
+            items[i].SetHat();
         }
     }
     public void AddPlayerPoints(int points)

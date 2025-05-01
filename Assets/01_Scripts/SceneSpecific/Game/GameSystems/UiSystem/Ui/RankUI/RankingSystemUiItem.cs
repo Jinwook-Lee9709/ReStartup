@@ -13,9 +13,12 @@ public class RankingSystemUiItem : MonoBehaviour
     public TextMeshProUGUI rankingText;
     public TextMeshProUGUI rankingPointText;
     public RankingData rankingData;
+    private List<int> hatConditions = new List<int>();
+    [SerializeField] HatListController hats;
 
-    public void Init(RankingData data)
+    public void Init(RankingData data, List<int> hatConditions)
     {
+        this.hatConditions = hatConditions;
         rankingData = data;
         UpdateUI();
     }
@@ -39,6 +42,18 @@ public class RankingSystemUiItem : MonoBehaviour
         rankingData.RestaurantName = UserDataManager.Instance.CurrentUserData.Name;
         rankingData.rankingPoint = (int)UserDataManager.Instance.CurrentUserData.CurrentRankPoint;
         nameText.text = UserDataManager.Instance.CurrentUserData.Name;
+    }
+    public void SetHat()
+    {
+        int hat = 0;
+        for (int i = 1; i <= hatConditions.Count; i++)
+        {
+            if (hatConditions[i - 1] < rankingData.rankingPoint)
+            {
+                hat = i;
+            }
+        }
+        hats.SetHat(hat);
     }
 
     //private void Start()
