@@ -135,7 +135,9 @@ public static class GameSceneLoader
             data.level = 1;
             payload.Add(data);
         }
-
+        if(payload.Count == 0) 
+            return;
+        
         var result = await InteriorSaveDataDAC.UpdateInteriorData(payload);
         if (!result)
         {
