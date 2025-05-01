@@ -1,3 +1,4 @@
+using Excellcube.EasyTutorial.Utils;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -60,6 +61,10 @@ public class PromotionManager : MonoBehaviour
             {
                 var promotionUi = Instantiate(promotionPrefab).GetComponent<PromotionUI>();
                 promotionUi.Init(promotion);
+                
+                if (promotionUi.promotionData.PromotionType == PromotionType.SNS)
+                    promotionUi.gameObject.AddComponent<TutorialSelectionTarget>().Key = "PromoitonTutorial";
+
                 promotionUi.transform.SetParent(promotionContent.transform);
                 promotionUi.transform.localScale = Vector3.one;
                 promotionUi.buffManager = buffManager;

@@ -395,6 +395,8 @@ public static class Strings
     public static readonly string KitchenWallTileIdFormat = "T{0}KitchenWall{1}";
     public static readonly string KitchenFloorTileIdFormat = "T{0}KitchenFloor{1}";
     public static readonly string DecorTileIdFormat = "T{0}ThemeDecoration";
+
+    public static readonly string tutorialCompeleteKey = "TUTORIAL_ORDER_COMPLETE";
 }
 
 public static class Colors

@@ -600,6 +600,7 @@ GameObject:
   - component: {fileID: 5359263464902691887}
   - component: {fileID: 9027766968563871778}
   - component: {fileID: 4163083271680654670}
+  - component: {fileID: 738570606295247150}
   m_Layer: 0
   m_Name: PayButton
   m_TagString: Untagged
@@ -709,7 +710,31 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 9027766968563871778}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 738570606295247150}
+        m_TargetAssemblyTypeName: TutorialTriggerButton, Assembly-CSharp
+        m_MethodName: OnTutorialTriggerButtonTouch
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &738570606295247150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3235986640663281513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 334886fe7623e104a9aef0253d0cf717, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4170744421356256397
 GameObject:
   m_ObjectHideFlags: 0

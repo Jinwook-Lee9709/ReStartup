@@ -1,3 +1,4 @@
+using Excellcube.EasyTutorial.Utils;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -21,6 +22,11 @@ public class EmployeeUpgradeListUi : MonoBehaviour
         employeeData = data;
         var ui = Instantiate(upgradeItemObject, contents).GetComponent<EmployeeUIItem>();
         ui.Init(data, employeeUpgradePopup);
+
+        if(employeeData.StaffID == 101201)
+        {
+            ui.gameObject.AddComponent<TutorialSelectionTarget>().Key = "EmployeeTutorial";
+        }
     }
     public void SetWorkType(WorkType worktype)
     {
