@@ -412,7 +412,7 @@ public class ConsumerManager : MonoBehaviour
             if (list.Contains(consumer.GetComponent<Consumer>()))
                 list.Remove(consumer.GetComponent<Consumer>());
 
-        Destroy(consumer.GetComponentInChildren<TextBubble>().gameObject);
+        Destroy(consumer.GetComponentInChildren<TextBubble>()?.gameObject);
         Destroy(consumer.GetComponent<ConsumerFSM>().Model.gameObject);
         consumer.SetActive(false);
     }
