@@ -229,7 +229,10 @@ public class EmployeeUIItem : MonoBehaviour
 
 
         alertPopup.ChangeCharacter(SpumCharacter.HireEmployeeComplete);
-        alertPopup.ChangeText("교육 완료!","만세!");
+        if(employeeSaveData[employeeId].level == 1)
+            alertPopup.ChangeText("고용 완료!","만세!");
+        else
+            alertPopup.ChangeText("교육 완료!","만세!");
         alertPopup.EnableTouch();
 
     }

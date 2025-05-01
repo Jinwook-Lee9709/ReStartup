@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
@@ -13,6 +14,9 @@ public class InteriorUIManager : MonoBehaviour
     [SerializeField] private Transform cardGroupParent;
     [SerializeField] private AssetReference interiorCardGroupPrefab;
 
+    [SerializeField] private TextMeshProUGUI moneyText;
+    [SerializeField] private TextMeshProUGUI goldText;
+    
     [SerializeField] private List<InteriorCardGroup> hallCardGroups;
     [SerializeField] private List<InteriorCardGroup> kitchenCardGroups;
 
@@ -32,6 +36,8 @@ public class InteriorUIManager : MonoBehaviour
         InitCardGroups(dataList, ObjectArea.Hall);
         InitCardGroups(dataList, ObjectArea.Kitchen);
         InitButtonEvent();
+
+        UpdateTexts();
 
         UserDataManager.Instance.ChangeMoneyAction -= OnMoneyChanged;
         UserDataManager.Instance.ChangeMoneyAction += OnMoneyChanged;
@@ -74,6 +80,13 @@ public class InteriorUIManager : MonoBehaviour
     private void OnMoneyChanged(int? gold)
     {
         UpdateCards();
+        UpdateTexts();
+    }
+
+    private void UpdateTexts()
+    {
+        moneyText.text = UserDataManager.Instance.CurrentUserData.Money.ToString();
+        goldText.text = UserDataManager.Instance.CurrentUserData.Gold.ToString();
     }
 
     private void OnRankpointChanged(int rankpoint)

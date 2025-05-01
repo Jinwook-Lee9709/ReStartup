@@ -55,9 +55,11 @@ public class TitleSceneManager : MonoBehaviour
                 alarmText.text = "Refresh Token Expired, Please Login Again";
             return;
         }
+        
+        GameSceneLoadTask().Forget();
 
-        var sceneManager = ServiceLocator.Instance.GetGlobalService<SceneController>();
-        sceneManager.LoadSceneWithLoading(SceneIds.Lobby, BeforeLobbySceneLoad);
+        // var sceneManager = ServiceLocator.Instance.GetGlobalService<SceneController>();
+        // sceneManager.LoadSceneWithLoading(SceneIds.Lobby, BeforeLobbySceneLoad);
     }
 
     private void OnGuestLoginButtonClick()
@@ -101,6 +103,37 @@ public class TitleSceneManager : MonoBehaviour
         UserDataManager.Instance.CurrentUserData.Money = response.Data.First(x=>x.currencyType == CurrencyType.Money).amount;
         UserDataManager.Instance.CurrentUserData.Name = nameResponse.Data;
         await InitializeStageStatus();
+    }
+
+    private async UniTask GameSceneLoadTask()
+    {
+        var nameResponse = await UserDataDAC.GetUserName();
+        var response = await CurrencyDataDAC.GetCurrencyData();
+        UserDataManager.Instance.CurrentUserData.Gold = response.Data.First(x=>x.currencyType == CurrencyType.Gold).amount;
+        UserDataManager.Instance.CurrentUserData.Money = response.Data.First(x=>x.currencyType == CurrencyType.Money).amount;
+        UserDataManager.Instance.CurrentUserData.Name = nameResponse.Data;
+        
+        var stageStatus = await StageStatusDataDAC.GetStageStatusData();
+        ThemeIds currentTheme = ThemeIds.Theme1;
+        if (stageStatus.ResponseCode == ResponseType.Success && stageStatus.Data.Length == 0)
+        {
+            await SaveInitialStatusData();
+            currentTheme = ThemeIds.Theme1;
+        }
+        else
+        {
+            foreach (var data in stageStatus.Data)
+            {
+                UserDataManager.Instance.CurrentUserData.ThemeStatus[data.theme] = data;   
+            }
+            currentTheme = stageStatus.Data.Max(x => x.theme);
+            PlayerPrefs.SetInt("Theme", (int)currentTheme);
+        }
+        PlayerPrefs.SetInt("Theme", (int)currentTheme);
+        var sceneManager = ServiceLocator.Instance.GetGlobalService<SceneController>();
+        sceneManager.LoadSceneWithLoading(SceneIds.Dev0, GameSceneLoader.BeforeGameSceneLoad);
+        
+        
     }
 
     private async UniTask InitializeStageStatus()

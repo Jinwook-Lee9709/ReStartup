@@ -2,11 +2,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
+using UnityEngine.Serialization;
 
 public class IngameGoodsUi : MonoBehaviour
 {
     public TextMeshProUGUI moneyText, goldText;
-    public TextMeshProUGUI upgradeUIMoeny, upgradeUIGold;
+    public TextMeshProUGUI upgradeUIMoney;
+    public TextMeshProUGUI upgradeUIGold;
     public TextMeshProUGUI rankPointText;
     private UserDataManager userDataManager;
 
@@ -14,7 +16,7 @@ public class IngameGoodsUi : MonoBehaviour
     {
         userDataManager = UserDataManager.Instance;
         MoneyUiValueSet(userDataManager.CurrentUserData.Money);
-        upgradeUIMoeny.text = userDataManager.CurrentUserData.Money.ToString();
+        upgradeUIMoney.text = userDataManager.CurrentUserData.Money.ToString();
         //upgradeUIRankingPoint.text = userDataManager.CurrentUserData.CurrentRankPoint.ToString();
         upgradeUIGold.text = userDataManager.CurrentUserData.Gold.ToString();
         rankPointText.text = userDataManager.CurrentUserData.CurrentRankPoint.ToString();
@@ -39,7 +41,7 @@ public class IngameGoodsUi : MonoBehaviour
     public void MoneyUiValueSet(int? money)
     {
         moneyText.text = money.ToString();
-        upgradeUIMoeny.text = money.ToString();
+        upgradeUIMoney.text = money.ToString();
     }
     public void GoldUiValueSet(int? gold)
     {

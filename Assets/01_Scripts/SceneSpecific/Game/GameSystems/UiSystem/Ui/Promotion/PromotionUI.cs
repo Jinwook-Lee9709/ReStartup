@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -7,6 +8,7 @@ using UnityEngine.UI;
 
 public class PromotionUI : MonoBehaviour
 {
+    [SerializeField] private Image promotionImage;
     [SerializeField] private Image costImage;
     public BuffManager buffManager;
     public ConsumerManager consumerManager;
@@ -24,6 +26,10 @@ public class PromotionUI : MonoBehaviour
         promotionData = promotion;
         promotionNameText.text = $"{promotionData.promotionName}";
         promotionEffectText.text = $"{promotionData.promotionDescription}";
+        
+        var sprite = Addressables.LoadAssetAsync<Sprite>(String.Format(Strings.promotionIconFormat,promotionData.PromotionType)).WaitForCompletion();
+        promotionImage.sprite = sprite;
+        
         switch (promotionData.CostType)
         {
             case CostType.Free:
@@ -39,6 +45,8 @@ public class PromotionUI : MonoBehaviour
                 costText.text = promotionData.CostQty.ToString(Strings.costFormat);
                 break;
         }
+        
+        
         UpdateUI();
     }
 
