@@ -28,11 +28,19 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private EatrandAlarmPopup eatrandAlarmPopupPrefab;
     [SerializeField] private GameObject touchShield;
     [SerializeField] private GameObject smartPhone;
+    [SerializeField] private ConsumerManager consumerManager;
     private TutorialPhase currentPhase = TutorialPhase.Phase1;
     [VInspector.EndFoldout]
+    static public bool IsCompleteTutorial
+    {
+        get
+        {
+            return (PlayerPrefs.GetInt("ECET_CLEAR_ALL", 0) == 1);
+        }
+    }
     private void Start()
     {
-        TutorialInit();
+        TutorialInit().Forget();
     }
 
     public void ActiveTouchShield()
@@ -66,9 +74,10 @@ public class TutorialManager : MonoBehaviour
 
         if (currentPhase == TutorialPhase.Phase7)
         {
+            consumerManager.StartSpawnRoutine();
             Destroy(gameObject);
         }
-        TutorialInit();
+        PlayerPrefs.SetInt("ECET_CLEAR_ALL", 0);
         currentPhase++;
         tutorials[(int)currentPhase].gameObject.SetActive(true);
         tutorials[(int)currentPhase].StartTutorial();
@@ -79,15 +88,14 @@ public class TutorialManager : MonoBehaviour
         EndPhaseCoroutine().Forget();
     }
 
-    public void TutorialInit()
+    public async UniTask TutorialInit()
     {
-        PlayerPrefs.SetInt("ECET_CLEAR_ALL", 0);
-    }
-
-    public async UniTask NextTutorialIsAlive()
-    {
-        await UniTask.Yield(PlayerLoopTiming.LastPostLateUpdate);
-        PlayerPrefs.SetInt("ECET_CLEAR_ALL", 0);
+        await UniTask.NextFrame();
+        if(IsCompleteTutorial)
+        {
+            consumerManager.StartSpawnRoutine();
+            Destroy(gameObject);
+        }
     }
 
     public void ShakeSmartPhone()

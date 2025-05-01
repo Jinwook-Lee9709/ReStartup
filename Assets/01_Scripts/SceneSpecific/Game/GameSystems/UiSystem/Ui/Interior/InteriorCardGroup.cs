@@ -1,3 +1,4 @@
+using Excellcube.EasyTutorial.Utils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -26,8 +27,25 @@ public class InteriorCardGroup : MonoBehaviour
             var card = cardObject.GetComponent<InteriorCard>();
             card.Init(data, popup, notifyPopup);
             cards.Add(card);
+
+            switch (data.InteriorID)
+            {
+                case 401101:
+                    gameObject.AddComponent<TutorialSelectionTarget>().Key = "TableTutorial";
+                    break;
+                case 401109:
+                    gameObject.AddComponent<TutorialSelectionTarget>().Key = "CounterTutorial";
+                    break;
+                case 401202:
+                    gameObject.AddComponent<TutorialSelectionTarget>().Key = "CoffeeMachineTutorial";
+                    break;
+                case 401201:
+                    gameObject.AddComponent<TutorialSelectionTarget>().Key = "KitchenSinkTutorial";
+                    break;
+            }
         }
     }
+
 
     public void UpdateCards()
     {

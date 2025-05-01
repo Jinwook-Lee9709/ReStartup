@@ -158,13 +158,6 @@ public class GameManager : MonoBehaviour
         var table = DataTableManager.Get<InteriorDataTable>(DataTableIds.Interior.ToString());
         var list = table.Where(x=>x.RestaurantType.Equals((int)currentTheme)).ToList();
         
-#if UNITY_EDITOR
-        var query = table.Where(x => x.RestaurantType == (int)CurrentTheme && x.SellingCost == 0);
-        foreach (var data in query)
-        {
-            interiorDictionary.TryAdd(data.InteriorID, 1);
-        }
-#endif
         foreach (var data in list)
         {
             interiorDictionary.TryAdd(data.InteriorID, 0);

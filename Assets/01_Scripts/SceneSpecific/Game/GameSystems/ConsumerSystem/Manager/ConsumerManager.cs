@@ -105,6 +105,12 @@ public class ConsumerManager : MonoBehaviour
         AfterSpawnInit(consumer1);
     }
 
+    public void StartSpawnRoutine()
+    {
+        StartCoroutine(SpawnCoroutine());
+    }
+
+
     private void SetFood(ref Consumer consumer)
     {
         var loveFoodId = consumer.FSM.consumerData.LoveFoodId;
@@ -249,8 +255,6 @@ public class ConsumerManager : MonoBehaviour
         consumerDataTable = DataTableManager.Get<ConsumerDataTable>(DataTableIds.Consumer.ToString());
         consumerSpawnPercent = CsvToDictionaryLoader.LoadCsvToDictionary(consumerSpawnPercentCsvFileName);
 
-
-        StartCoroutine(SpawnCoroutine());
         UpdateWaitingText();
     }
 
