@@ -31,16 +31,16 @@ public class InteriorCardGroup : MonoBehaviour
             switch (data.InteriorID)
             {
                 case 401101:
-                    gameObject.AddComponent<TutorialSelectionTarget>().Key = "TableTutorial";
+                    card.gameObject.AddComponent<TutorialSelectionTarget>().Key = "TableTutorial";
                     break;
                 case 401109:
-                    gameObject.AddComponent<TutorialSelectionTarget>().Key = "CounterTutorial";
+                    card.gameObject.AddComponent<TutorialSelectionTarget>().Key = "CounterTutorial";
                     break;
                 case 401202:
-                    gameObject.AddComponent<TutorialSelectionTarget>().Key = "CoffeeMachineTutorial";
+                    card.gameObject.AddComponent<TutorialSelectionTarget>().Key = "CoffeeMachineTutorial";
                     break;
                 case 401201:
-                    gameObject.AddComponent<TutorialSelectionTarget>().Key = "KitchenSinkTutorial";
+                    card.gameObject.AddComponent<TutorialSelectionTarget>().Key = "KitchenSinkTutorial";
                     break;
             }
         }

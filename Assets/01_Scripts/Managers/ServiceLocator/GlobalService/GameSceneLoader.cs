@@ -51,7 +51,8 @@ public static class GameSceneLoader
 
             if (getFoodResponse?.Data.Length == 0)
             {
-                await SaveInitialFoodData(theme);
+                if(theme != 1)
+                    await SaveInitialFoodData(theme);
             }
             else
             {

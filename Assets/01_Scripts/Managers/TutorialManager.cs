@@ -17,7 +17,6 @@ public enum TutorialPhase
     Phase4,
     Phase5,
     Phase6,
-    Phase7,
 }
 
 public class TutorialManager : MonoBehaviour
@@ -72,10 +71,11 @@ public class TutorialManager : MonoBehaviour
     {
         await UniTask.NextFrame();
 
-        if (currentPhase == TutorialPhase.Phase7)
+        if (currentPhase == TutorialPhase.Phase6)
         {
             consumerManager.StartSpawnRoutine();
             Destroy(gameObject);
+            return;
         }
         PlayerPrefs.SetInt("ECET_CLEAR_ALL", 0);
         currentPhase++;
@@ -152,5 +152,19 @@ public class TutorialManager : MonoBehaviour
         popup.transform.SetSiblingIndex(0);
     }
 
+    #endregion
+
+    #region Phase6
+    [VInspector.Foldout("Phase6")]
+
+    [SerializeField] private TutorialCompletePopup completePopup;
+
+    [VInspector.EndFoldout]
+
+    public void TutorialCompletePopup()
+    {
+        var popup = Instantiate(completePopup, transform);
+        popup.Init();
+    }
     #endregion
 }

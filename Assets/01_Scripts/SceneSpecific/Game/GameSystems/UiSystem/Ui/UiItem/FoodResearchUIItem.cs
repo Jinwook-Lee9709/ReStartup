@@ -61,17 +61,7 @@ public class FoodResearchUIItem : MonoBehaviour
         button = GetComponentInChildren<Button>();
         gameManager = ServiceLocator.Instance.GetSceneService<GameManager>();
         consumerManager = gameManager.consumerManager;
-#if UNITY_EDITOR
-        if (foodData.FoodID == 301001)
-        {
-            chackCookWareUnlock = true;
-            consumerManager.foodIds.Add(foodData.FoodID);
-            foodData.upgradeCount = 1;
-            lockImage.SetActive(false);
-            button.interactable = false;
-            button.GetComponentInChildren<TextMeshProUGUI>().text = LZString.GetUIString(Strings.complete);
-        }
-#endif
+
         if (UserDataManager.Instance.CurrentUserData.FoodSaveData[foodData.FoodID].level != 0)
         {
             lockImage.SetActive(false);
@@ -91,7 +81,7 @@ public class FoodResearchUIItem : MonoBehaviour
 
     public void UnlockFood()
     {
-        if (chackCookWareUnlock && userData.CurrentRankPoint > foodData.Requirements)
+        if (chackCookWareUnlock && userData.CurrentRankPoint >= foodData.Requirements)
             lockImage.SetActive(false);
     }
     public void UnlockCookwareAmount()

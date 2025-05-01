@@ -82,6 +82,10 @@ public class UiManager : MonoBehaviour
     {
         uiInterior.SetActive(true);
     }
+    public  void OnClickButtonExitInteriorUI()
+    {
+        uiInterior.SetActive(false);
+    }
     public void OnClickButtonOpenPromotionUI()
     {
         uiPromotion.SetActive(true);
