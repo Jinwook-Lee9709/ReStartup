@@ -16,6 +16,8 @@ public class InteriorData
     public int StringID { get; set; }
     public string IconID { get; set; }
     public InteriorCategory Category { get; set; }
+    public InteriorUICategory UICategory { get; set; }
+    public bool DefaultFurniture { get; set; }
 
     public int GetSellingCost()
     {

@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     
     [SerializeField] private Transform poolParent;
     [SerializeField] private NavMeshSurface surface2D;
+    [SerializeField] private MapPivotLocator mapPivotLocator;
 
     private ThemeIds currentTheme;
     public ThemeIds CurrentTheme => currentTheme;
@@ -32,6 +33,7 @@ public class GameManager : MonoBehaviour
     public ConsumerManager consumerManager;
     public FoodManager foodManager;
     public BuffManager buffManager;
+    
     #region InitializeClasses
     private void Awake()
     {
@@ -71,7 +73,7 @@ public class GameManager : MonoBehaviour
         WorkFlowController = new WorkFlowController();
         WorkStationManager = new WorkStationManager();
         
-        ObjectPivotManager.Init(currentTheme);
+        ObjectPivotManager.Init(currentTheme, mapPivotLocator);
         WorkManager.Init(WorkerManager, alarm);
         WorkerManager.Init(WorkManager);
         WorkFlowController.Init(this, WorkManager);
@@ -156,13 +158,6 @@ public class GameManager : MonoBehaviour
         var table = DataTableManager.Get<InteriorDataTable>(DataTableIds.Interior.ToString());
         var list = table.Where(x=>x.RestaurantType.Equals((int)currentTheme)).ToList();
         
-#if UNITY_EDITOR
-        var query = table.Where(x => x.RestaurantType == (int)CurrentTheme && x.SellingCost == 0);
-        foreach (var data in query)
-        {
-            interiorDictionary.TryAdd(data.InteriorID, 1);
-        }
-#endif
         foreach (var data in list)
         {
             interiorDictionary.TryAdd(data.InteriorID, 0);

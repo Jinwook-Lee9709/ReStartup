@@ -287,7 +287,18 @@ public enum InteriorCategory
     Counter,
     Interior,
     Cookware,
-    Sink
+    Sink,
+    Wallpaper,
+    Floor,
+    Decor,
+}
+
+public enum InteriorUICategory
+{
+    Furniture,
+    Decor,
+    BuiltInFurniture,
+    KitchenEquipment
 }
 
 public enum InteriorEffectType
@@ -364,6 +375,14 @@ public static class Strings
 
     public static readonly string randomReviewIDFormat = "{0}**{1}";
     public static readonly string alphaNums = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM0123456789";
+    
+    public static readonly string CompensationSoKey = "SupervisorCompensationSO";
+
+    public static readonly string HallWallTileIdFormat = "T{0}HallWall{1}";
+    public static readonly string HallFloorTileIdFormat = "T{0}HallFloor{1}";
+    public static readonly string KitchenWallTileIdFormat = "T{0}KitchenWall{1}";
+    public static readonly string KitchenFloorTileIdFormat = "T{0}KitchenFloor{1}";
+    public static readonly string DecorTileIdFormat = "T{0}ThemeDecoration";
 }
 
 public static class Colors

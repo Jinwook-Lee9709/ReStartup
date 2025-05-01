@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RankConditionDataTable : DataTable
+public class RankConditionDataTable : DataTable, IEnumerable<RankConditionData>
 {
     public Dictionary<int, RankConditionData> Data = new();
 
@@ -20,5 +20,15 @@ public class RankConditionDataTable : DataTable
             if (Data.ContainsKey(row.RangkingID)) continue;
             Data.Add(row.RangkingID, row);
         }
+    }
+
+    public IEnumerator<RankConditionData> GetEnumerator()
+    {
+        return Data.Values.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }

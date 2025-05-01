@@ -51,7 +51,7 @@ public class ConsumerManager : MonoBehaviour
         var pivotManager = ServiceLocator.Instance.GetSceneService<GameManager>().ObjectPivotManager;
         spawnPoint = pivotManager.GetConsumerSpawnPoint();
         waitingConsumerSeats = pivotManager.GetWatingLines();
-        payWaitingPivots = pivotManager.GetPayWaitingPibots();
+        payWaitingPivots = pivotManager.GetPayWaitingPivots();
     }
 
     private void UpdateWaitingText()

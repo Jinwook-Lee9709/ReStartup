@@ -18,6 +18,16 @@ public class RestaurantSuperviseUIManager : MonoBehaviour
         supervisorListPanel.Init(action);
     }
 
+    public void UpdateRestaurantButton()
+    {
+        restaurantListPanel.UpdateInteractable();
+    }
+
+    public void OnSupervisorHire()
+    {
+        supervisorListPanel.OnSupervisorHire();
+    }
+
     [VInspector.Button]
     public void ChangeSupervisorList(int themeID)
     {
