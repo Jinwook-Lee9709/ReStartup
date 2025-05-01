@@ -21,6 +21,7 @@ public class UserReset : MonoBehaviour
 
     private async UniTask DeleteUserTask()
     {
+        PlayerPrefs.SetInt("ECET_CLEAR_ALL", 0);
         TokenManager.ReadToken();
         bool isUUIDExist = GuestLoginManager.ReadUUID();
         
