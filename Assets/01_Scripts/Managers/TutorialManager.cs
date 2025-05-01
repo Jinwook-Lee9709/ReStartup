@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using Excellcube.EasyTutorial;
 using Excellcube.EasyTutorial.Utils;
 using System.Collections;
@@ -59,26 +60,42 @@ public class TutorialManager : MonoBehaviour
     {
         TutorialEvent.Instance.Broadcast(Strings.tutorialCompeleteKey);
     }
-
-    public void TutorialPhaseDone()
+    private async UniTask EndPhaseCoroutine()
     {
+        await UniTask.NextFrame();
+
         if (currentPhase == TutorialPhase.Phase7)
         {
             Destroy(gameObject);
         }
+        TutorialInit();
         currentPhase++;
         tutorials[(int)currentPhase].gameObject.SetActive(true);
+        tutorials[(int)currentPhase].StartTutorial();
+    }
+
+    public void TutorialPhaseDone()
+    {
+        EndPhaseCoroutine().Forget();
     }
 
     public void TutorialInit()
     {
         PlayerPrefs.SetInt("ECET_CLEAR_ALL", 0);
     }
+
+    public async UniTask NextTutorialIsAlive()
+    {
+        await UniTask.Yield(PlayerLoopTiming.LastPostLateUpdate);
+        PlayerPrefs.SetInt("ECET_CLEAR_ALL", 0);
+    }
+
     public void ShakeSmartPhone()
     {
         StartCoroutine(ShakePhoneCoroutine(smartPhone));
         Handheld.Vibrate();
     }
+
     #region Phase1
     [VInspector.Foldout("Phase1")]
     [SerializeField][Range(0f, 3f)] private float shakeDuration;
@@ -117,7 +134,6 @@ public class TutorialManager : MonoBehaviour
     {
         var popup = Instantiate(tutorialPhase1RewardPopupPrefab, transform);
         popup.Init();
-        popup.transform.SetSiblingIndex(0);
     }
     #endregion
     #region Phase2
