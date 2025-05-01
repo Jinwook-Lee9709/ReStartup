@@ -63,7 +63,7 @@ public class PromotionManager : MonoBehaviour
                 promotionUi.Init(promotion);
                 
                 if (promotionUi.promotionData.PromotionType == PromotionType.SNS)
-                    promotionUi.gameObject.AddComponent<TutorialSelectionTarget>().Key = "PromoitonTutorial";
+                    promotionUi.payButton.gameObject.AddComponent<TutorialSelectionTarget>().Key = "PromoitonTutorial";
 
                 promotionUi.transform.SetParent(promotionContent.transform);
                 promotionUi.transform.localScale = Vector3.one;

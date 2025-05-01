@@ -114,7 +114,7 @@ public class TutorialManager : MonoBehaviour
     public void CreateName()
     {
         var popup = Instantiate(createNamePopupPrefab, transform);
-        popup.Init(gameObject);
+        popup.Init(gameObject).Forget();
     }
 
 
