@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using Excellcube.EasyTutorial.Utils;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -8,42 +9,45 @@ using UnityEngine.UI;
 public class NameRegister : MonoBehaviour
 {
     [SerializeField] private TMP_InputField nameInput;
-    [SerializeField] private TextMeshProUGUI warningText;
-    [SerializeField] private Button registButton, theme1Button;
-
+    [SerializeField] private CreateNameWarningPopup warningTextPrefab;
+    [SerializeField] private Button registButton;
+    [SerializeField] private int nameLengthLimit;
+    public GameObject rootParent;
+    public CreateNamePopup parent;
     private void OnEnable()
     {
-        warningText.gameObject.SetActive(false);
-        nameInput.characterLimit = 8;
+        nameInput.lineLimit = 10;
         registButton.onClick.RemoveAllListeners();
         registButton.onClick.AddListener(OnRegistButtonTouch);
         RegexFilter.Init();
-
-        if(UserDataManager.Instance.CurrentUserData.Name == null)
-        {
-            theme1Button.interactable = false;
-        }
     }
 
     private void OnRegistButtonTouch()
     {
+        if(nameInput.text.Length >= nameLengthLimit)
+        {
+            WarningMessageActive("글자 수가 초과되었습니다.");
+            return;
+        }
+        if(nameInput.text == "")
+        {
+            WarningMessageActive("이름을 입력해주세요.");
+            return;
+        }
         var check = nameInput.text;
         if (!RegexFilter.SpecialStringFilter(check))
         {
-            warningText.gameObject.SetActive(true);
-            warningText.text = "특수문자 존재!";
+            WarningMessageActive("특수문자가 존재합니다.");
             return;
         }
         if (!RegexFilter.BadWordFilter(check))
         {
-            warningText.gameObject.SetActive(true);
-            warningText.text = "욕설 금지!!";
+            WarningMessageActive("비속어가 포함 되어 있습니다.");
             return;
         }
-        Debug.Log("훌륭합니다!!");
         SaveName(check).Forget();
-        theme1Button.interactable = true;
-        transform.PopdownAnimation();
+        TutorialEvent.Instance.Broadcast(Strings.tutorialCompeleteKey);
+        parent.OnCancleAction?.Invoke();
         return;
     }
 
@@ -52,5 +56,11 @@ public class NameRegister : MonoBehaviour
         await UserDataDAC.SaveUserName(name);
         UserDataManager.Instance.CurrentUserData.Name = name;
         ServiceLocator.Instance.GetSceneService<GameManager>().rankSystemManager.InitPlayerName();
+    }
+
+    private void WarningMessageActive(string message)
+    {
+        var warning = Instantiate(warningTextPrefab, parent.transform);
+        warning.Init(message);
     }
 }

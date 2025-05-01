@@ -56,7 +56,7 @@ namespace Excellcube.EasyTutorial
         private DialogTutorialPage m_DialogTutorialPage;
         private ActionTutorialPage m_ActionTutorialPage;
         private DetailTutorialPage m_DetailTutorialPage;
-
+        
         private TutorialPageData m_CurrTutorialData = null;
         
         static public  bool IsCompleteTutorial

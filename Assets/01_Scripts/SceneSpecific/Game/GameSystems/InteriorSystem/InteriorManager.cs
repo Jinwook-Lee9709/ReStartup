@@ -76,18 +76,32 @@ public class InteriorManager
 
     private void InitSinkingStation()
     {
-        workStationManager.AddSinkingStation();
-        var data = interiorTable.First(x =>
-            x.RestaurantType == (int)gameManager.CurrentTheme && x.Category == InteriorCategory.Sink);
-        UpgradeSink(data, 1);
+        var interiorUpgradeDictionary = UserDataManager.Instance.CurrentUserData.InteriorSaveData;
+        var interiorQuery = interiorTable.Where(x =>
+                x.RestaurantType == (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme)
+            .Where(x =>
+                x.Category == InteriorCategory.Sink).ToList().First();
+        if (interiorUpgradeDictionary[interiorQuery.InteriorID] != 0)
+        {
+            var data = interiorTable.First(x =>
+                x.RestaurantType == (int)gameManager.CurrentTheme && x.Category == InteriorCategory.Sink);
+            UpgradeSink(data, interiorUpgradeDictionary[interiorQuery.InteriorID]);
+        }
     }
 
     private void InitCounter()
     {
-        workStationManager.AddCounter();
-        var data = interiorTable.First(x =>
-            x.RestaurantType == (int)gameManager.CurrentTheme && x.Category == InteriorCategory.Counter);
-        UpgradeCounter(data, 1);
+        var interiorUpgradeDictionary = UserDataManager.Instance.CurrentUserData.InteriorSaveData;
+        var interiorQuery = interiorTable.Where(x =>
+                x.RestaurantType == (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme)
+            .Where(x =>
+                x.Category == InteriorCategory.Counter).ToList().First();
+        if (interiorUpgradeDictionary[interiorQuery.InteriorID] != 0)
+        {
+            var data = interiorTable.First(x =>
+                x.RestaurantType == (int)gameManager.CurrentTheme && x.Category == InteriorCategory.Counter);
+            UpgradeCounter(data, interiorUpgradeDictionary[interiorQuery.InteriorID]);
+        }
     }
 
     private void InitInterior()
@@ -249,6 +263,8 @@ public class InteriorManager
 
     private void UpgradeCounter(InteriorData interiorData, int level)
     {
+        if(level == 1)
+            workStationManager.AddCounter();
         workStationManager.UpgradeCounter(interiorData, level);
     }
 
@@ -273,6 +289,8 @@ public class InteriorManager
 
     private void UpgradeSink(InteriorData interiorData, int level)
     {
+        if (level == 1)
+            workStationManager.AddSinkingStation();
         workStationManager.UpgradeSinkingStation(interiorData, level);
     }
 }

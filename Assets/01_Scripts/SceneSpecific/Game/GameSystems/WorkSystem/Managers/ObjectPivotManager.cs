@@ -7,10 +7,11 @@ public class ObjectPivotManager
     public static readonly string PivotFormat = "Pivot{0}";
     private PivotLocator pivotLocator;
     private MapPivotLocator mapPivotLocator;
-
-    public void Init(ThemeIds themeId, MapPivotLocator mapPivotLocator)
+    public GameManager gameManager;
+    public void Init(GameManager gameManager, ThemeIds themeId, MapPivotLocator mapPivotLocator)
     {
         this.mapPivotLocator = mapPivotLocator;
+        this.gameManager = gameManager;
         LoadAndInstantiatePivots(themeId);
         AdjustPivots();
     }
@@ -21,6 +22,7 @@ public class ObjectPivotManager
         var instantiateHandle = Addressables.InstantiateAsync(assetName);
         instantiateHandle.WaitForCompletion();
         pivotLocator = instantiateHandle.Result.GetComponent<PivotLocator>();
+        instantiateHandle.Result.transform.SetParent(gameManager.transform);
     }
 
  

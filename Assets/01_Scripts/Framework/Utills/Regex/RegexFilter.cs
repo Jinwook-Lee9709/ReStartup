@@ -1,14 +1,9 @@
-using CsvHelper;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
+
 using System.Linq;
 using System.Text.RegularExpressions;
-using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
-
 public static class RegexFilter
 {
     private static readonly string[] specialWordFilters =

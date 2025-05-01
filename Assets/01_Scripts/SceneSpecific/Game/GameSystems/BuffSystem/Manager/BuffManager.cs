@@ -30,7 +30,7 @@ public class BuffManager : MonoBehaviour
         }
     }
 
-    private void OnBuffInfoCancleButton()
+    public void OnBuffInfoCancleButton()
     {
         buffInfoPanel.SetActive(false);
         buffInfoBackground.gameObject.SetActive(false);

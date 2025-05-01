@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviour
         WorkFlowController = new WorkFlowController();
         WorkStationManager = new WorkStationManager();
         
-        ObjectPivotManager.Init(currentTheme, mapPivotLocator);
+        ObjectPivotManager.Init(this, currentTheme, mapPivotLocator);
         WorkManager.Init(WorkerManager, alarm);
         WorkerManager.Init(WorkManager);
         WorkFlowController.Init(this, WorkManager);
@@ -204,19 +204,7 @@ public class GameManager : MonoBehaviour
         var foodDictionary = UserDataManager.Instance.CurrentUserData.FoodSaveData;
         var table = DataTableManager.Get<FoodDataTable>(DataTableIds.Food.ToString());
         var list = table.Where(x=>x.Type.Equals((int)currentTheme)).ToList();
-        
-#if UNITY_EDITOR
-        var query = table.Where(x => x.Type == (int)CurrentTheme && x.Requirements == 0);
-        foreach (var data in query)
-        {
-            FoodSaveData buffer = new FoodSaveData();
-            buffer.id = data.FoodID;
-            buffer.level = 1;
-            buffer.theme = (ThemeIds)data.Type;
-            buffer.sellCount = 0;
-            foodDictionary.TryAdd(data.FoodID, buffer);
-        }
-#endif
+
 
         foreach (var data in list)
         {
