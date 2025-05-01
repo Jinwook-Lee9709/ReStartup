@@ -34,6 +34,12 @@ public class RankingSystemUiItem : MonoBehaviour
         }
         rankingPointText.text = rankingData.rankingPoint.ToString();
     }
+    public void PlayerUiSet()
+    {
+        rankingData.RestaurantName = UserDataManager.Instance.CurrentUserData.Name;
+        rankingData.rankingPoint = (int)UserDataManager.Instance.CurrentUserData.CurrentRankPoint;
+        nameText.text = UserDataManager.Instance.CurrentUserData.Name;
+    }
 
     //private void Start()
     //{

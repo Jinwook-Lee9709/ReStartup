@@ -51,5 +51,6 @@ public class NameRegister : MonoBehaviour
     {
         await UserDataDAC.SaveUserName(name);
         UserDataManager.Instance.CurrentUserData.Name = name;
+        ServiceLocator.Instance.GetSceneService<GameManager>().rankSystemManager.InitPlayerName();
     }
 }

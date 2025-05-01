@@ -18,6 +18,16 @@ public class RankingSystemListUi : MonoBehaviour
         items.Add(ui);
         RankUpdate();
     }
+    public void SetPlayerRankUIItem(RankingData data)
+    {
+        foreach (var item in items)
+        {
+            if(item.rankingData == data)
+            {
+                item.PlayerUiSet();
+            }
+        }
+    }
 
     public void RankUpdate()
     {
