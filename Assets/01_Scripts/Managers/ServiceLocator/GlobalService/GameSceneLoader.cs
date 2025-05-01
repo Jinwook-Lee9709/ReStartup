@@ -75,6 +75,23 @@ public static class GameSceneLoader
                 UserDataManager.Instance.CurrentUserData.CurrentRank = themeRecordResponse.Data[0].ranking;
                 UserDataManager.Instance.CurrentUserData.CurrentRankPoint = themeRecordResponse.Data[0].rank_point;
                 UserDataManager.Instance.CurrentUserData.Cumulative = themeRecordResponse.Data[0].cumulative;
+
+                var table = DataTableManager.Get<RankConditionDataTable>(DataTableIds.RankCondition.ToString());
+                var query = table.Where(x =>
+                    x.Rank <= UserDataManager.Instance.CurrentUserData.CurrentRank &&
+                    x.RewardType1 == RankRewardType.InflowRate || x.RewardType2 == RankRewardType.InflowRate
+                );
+                foreach (var item in query)
+                {
+                    if (item.RewardType1 == RankRewardType.InflowRate)
+                    {
+                        UserDataManager.Instance.CurrentUserData.InflowRate += item.RewardAmount1;
+                    }
+                    if(item.RewardType2 == RankRewardType.InflowRate)
+                    {
+                        UserDataManager.Instance.CurrentUserData.InflowRate += item.RewardAmount2;
+                    }
+                }
             }
 
             if (promotionResponse.Data.Length == 0)

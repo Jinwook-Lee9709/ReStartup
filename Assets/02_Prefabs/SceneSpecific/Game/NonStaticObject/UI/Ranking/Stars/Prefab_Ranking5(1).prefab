@@ -1062,6 +1062,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3239891594360979318}
   - component: {fileID: 8994872125186651180}
+  - component: {fileID: 9028276717602296248}
   m_Layer: 0
   m_Name: CockHat1
   m_TagString: Untagged
@@ -1069,24 +1070,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3239891594360979318
-Transform:
+--- !u!224 &3239891594360979318
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7555793756508961334}
-  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.94949996, y: -0.62371755, z: 0.008670224}
+  m_LocalPosition: {x: 0, y: 0, z: 0.008670224}
   m_LocalScale: {x: 0.17, y: 0.18717, z: 0.17}
-  m_ConstrainProportionsScale: 1
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3461303388384536174}
   - {fileID: 2850066403356247776}
   - {fileID: 8879966285522776815}
   m_Father: {fileID: 7245593600593576061}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0.94949996, y: -0.62371755}
+  m_SizeDelta: {x: 1, y: 0.8235294}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!212 &8994872125186651180
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1139,6 +1144,14 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!222 &9028276717602296248
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7555793756508961334}
+  m_CullTransparentMesh: 1
 --- !u!1 &8424799588085658005
 GameObject:
   m_ObjectHideFlags: 0

@@ -15,6 +15,7 @@ public class UserData
     public int CurrentRank { get; set; }
     public int? PositiveCnt { get; set; } = new(); 
     public int? NegativeCnt { get; set; } = new();
+    public int InflowRate { get; set; } = 0;
     public Dictionary<ThemeIds, (int positive, int negative)> reviewCountForTheme = new()
     {
         {ThemeIds.Theme1, (0,0) },

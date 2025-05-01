@@ -4,12 +4,15 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.UI;
 
 public class BuffInfoUI : MonoBehaviour, IComparable<BuffInfoUI>
 {
+    public static readonly string BuffIconFormat = "BuffIcon{0}";
     public Buff currentBuff;
     private BuffManager buffManager;
-    [SerializeField] private GameObject buffImage;
+    [SerializeField] private Image buffImage;
     [SerializeField] private TextMeshProUGUI buffRemainTimeText, buffInfoText;
 
     public int CompareTo(BuffInfoUI other)
@@ -21,7 +24,8 @@ public class BuffInfoUI : MonoBehaviour, IComparable<BuffInfoUI>
     {
         currentBuff = buff;
         this.buffManager = buffManager;
-        //TODO : buffImage
+        var sprite = Addressables.LoadAssetAsync<Sprite>(string.Format(BuffIconFormat, (int)buff.BuffType)).WaitForCompletion();
+        buffImage.sprite = sprite;
         buffRemainTimeText.text = $"{Mathf.CeilToInt(currentBuff.remainBuffTime)} 초";
         buffInfoText.text = currentBuff.buffDescription;
     }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -136,6 +137,8 @@ public class RankingConditionCard : MonoBehaviour
         if (count != rankConditionData.Rank)
         {
             UserDataManager.Instance.SetRankWithSave(rankConditionData.Rank + 1).Forget();
+            
+            
             ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager
                 .OnEventInvoked(MissionMainCategory.GainRanking, 1);
             CheckComplete((int)UserDataManager.Instance.CurrentUserData.CurrentRankPoint);
@@ -145,7 +148,32 @@ public class RankingConditionCard : MonoBehaviour
         {
             button.interactable = false;
         }
+        var data = table.Data.First(x => x.Value.Rank == rankConditionData.Rank);
+        GetRankReward(data.Value.RewardType1, data.Value.RewardAmount1);
+        GetRankReward(data.Value.RewardType2, data.Value.RewardAmount2);
     }
+
+    public void GetRankReward(RankRewardType type, int amount)
+    {
+        switch (type)
+        {
+            case RankRewardType.None:
+                return;
+            case RankRewardType.Money:
+                UserDataManager.Instance.AdjustMoneyWithSave(amount).Forget();
+                break;
+            case RankRewardType.Gold:
+                UserDataManager.Instance.AdjustGoldWithSave(amount).Forget();
+                break;
+            case RankRewardType.InflowRate:
+                UserDataManager.Instance.CurrentUserData.InflowRate += amount;
+                break;
+            case RankRewardType.AdDelete:
+                break;
+        }
+        
+    }
+    
 
     public void Unlock()
     {

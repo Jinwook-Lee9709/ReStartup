@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -40,9 +41,20 @@ public class RestaurantListPanel : MonoBehaviour
         UserDataManager.Instance.ChangeMoneyAction += OnMoneyChanged;
         lButton.onClick.AddListener(() => OnButtonClick(false));
         rButton.onClick.AddListener(() => OnButtonClick(true));
-        MovePanelToCenter(currentTheme);
         SetButtonActive();
     }
+
+    private void Start()
+    {
+        MovePanelToCenterTask().Forget();
+    }
+
+    private async UniTask MovePanelToCenterTask()
+    {
+        await UniTask.Yield(PlayerLoopTiming.PostLateUpdate);
+        MovePanelToCenter(currentTheme);
+    }
+
 
     private void InstantiateCardAndSetInfo(Action action, object id)
     {
@@ -98,12 +110,12 @@ public class RestaurantListPanel : MonoBehaviour
     private void OnRankChanged(int rank)
     {
         UpdateInteractable();
+        cards[(int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme].SetLayout(RestaurantInfoCard.ShopType.Current);
     }
 
     public void OnMoneyChanged(int? money)
     {
         UpdateInteractable();
-        Debug.Log(money);
     }
 
     public void UpdateInteractable()

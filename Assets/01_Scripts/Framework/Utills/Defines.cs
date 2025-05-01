@@ -244,6 +244,16 @@ public static class Constants
     
     public static readonly int MAX_SUPERVISOR_COUNT = 3;
     public static readonly int SUPERVISOR_HIRE_REQUIREMENTS = 15;
+    public static readonly int MAX_RANK = 15;
+}
+
+public enum RankRewardType
+{
+    None,
+    Money,
+    Gold,
+    InflowRate,
+    AdDelete
 }
 
 public static class Variables
@@ -339,7 +349,9 @@ public static class Strings
     public static readonly string WashDish = "WashDish";
     public static readonly string Cash = "Cash";
     public static readonly string Gold = "Gold";
+    public static readonly string Golds = "Golds";
     public static readonly string Free = "Free";
+    public static readonly string Pay = "PayIcon";
 
     public static readonly string Check = "Check";
     public static readonly string Upgrade = "Upgrade";

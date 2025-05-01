@@ -191,6 +191,8 @@ public class ConsumerManager : MonoBehaviour
             var buff = buffManager.GetBuff(BuffType.FootTraffic);
             var basicTime = 40f;
             basicTime *= buff?.BuffEffect ?? 1f;
+            var inflowRate = UserDataManager.Instance.CurrentUserData.InflowRate;
+            basicTime /= inflowRate == 0 ? 1 : (1 + 1 / (float)UserDataManager.Instance.CurrentUserData.InflowRate);
 
             UpdateWaitingText();
             yield return new WaitForSeconds(basicTime);

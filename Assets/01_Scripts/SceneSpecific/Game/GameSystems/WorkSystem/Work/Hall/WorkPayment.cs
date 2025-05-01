@@ -14,7 +14,7 @@ public class WorkPayment : InteractWorkBase
     {
         base.OnWorkRegistered();
 
-        var iconHandle = Addressables.LoadAssetAsync<Sprite>(Strings.Cash);
+        var iconHandle = Addressables.LoadAssetAsync<Sprite>(Strings.Pay);
         var backgroundHandle = Addressables.LoadAssetAsync<Sprite>(Strings.Bubble);
 
         iconHandle.WaitForCompletion();

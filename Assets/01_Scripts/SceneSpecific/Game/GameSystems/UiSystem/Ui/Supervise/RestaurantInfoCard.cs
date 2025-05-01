@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class RestaurantInfoCard : MonoBehaviour
@@ -22,8 +24,9 @@ public class RestaurantInfoCard : MonoBehaviour
     [SerializeField] private GameObject alertPanel;
     [SerializeField] private Image shopImage;
     [SerializeField] private Button buyButton;
-    [SerializeField] private Transform starParent;
+    [SerializeField] private HatListController hatController;
     [SerializeField] private List<Image> starImages;
+    [SerializeField] private Image finishStamp;
     private ShopType shopType = ShopType.Post;
     private int cost;
     
@@ -40,15 +43,20 @@ public class RestaurantInfoCard : MonoBehaviour
     public void SetLayout(ShopType type)
     {
         shopType = type;
-        starParent.gameObject.SetActive(false);
+        hatController.gameObject.SetActive(false);
         buyPanel.SetActive(false);
         alertPanel.SetActive(false);
+        finishStamp.gameObject.SetActive(false);
         switch (type)
         {
             case ShopType.Previous:
+                finishStamp.gameObject.SetActive(true);
+                hatController.gameObject.SetActive(true);
+                hatController.SetHat(Constants.MAX_RANK);
                 break;
             case ShopType.Current:
-                starParent.gameObject.SetActive(true);
+                hatController.gameObject.SetActive(true);
+                hatController.SetHat(UserDataManager.Instance.CurrentUserData.CurrentRank);
                 break;
             case ShopType.Next:
                 buyPanel.gameObject.SetActive(true);
