@@ -13,7 +13,7 @@ public class MyRestaurantInfoUI : MonoBehaviour
     [VInspector.Foldout("CurrentUserInfo")]
     [SerializeField] private TextMeshProUGUI userName;
     [SerializeField] private TextMeshProUGUI themeName;
-
+    [SerializeField] private HatListController controller;
     [VInspector.Foldout("Reviews")]
     [SerializeField] private TextMeshProUGUI totalReviewTitle;
     [SerializeField] private TextMeshProUGUI totalReviewCount;
@@ -48,6 +48,7 @@ public class MyRestaurantInfoUI : MonoBehaviour
 
     private void OnEnable()
     {
+        controller.SetHat(UserDataManager.Instance.CurrentUserData.CurrentRank);
         currentUserData = UserDataManager.Instance.CurrentUserData;
         currentThemeId = ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme;
         Init();

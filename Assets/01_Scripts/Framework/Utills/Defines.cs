@@ -397,6 +397,9 @@ public static class Strings
     public static readonly string DecorTileIdFormat = "T{0}ThemeDecoration";
 
     public static readonly string tutorialCompeleteKey = "TUTORIAL_ORDER_COMPLETE";
+
+    public static readonly string positiveReviewFileName = "PositiveReview";
+    public static readonly string negativeReviewFileName = "NegativeReview";
 }
 
 public static class Colors
