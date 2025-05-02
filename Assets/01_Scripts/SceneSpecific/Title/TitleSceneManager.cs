@@ -30,21 +30,23 @@ public class TitleSceneManager : MonoBehaviour
 
     private void OnStartButtonClick()
     {
-        startButton.interactable = false;
         GameStartTask().Forget();
     }
 
     private async UniTask GameStartTask()
     {
+        startButton.interactable = false;
         if (!GuestLoginManager.ReadUUID())
         {
             alarmText.text = "Need To Register Fisrt";
+            startButton.interactable = true;
             return;
         }
 
         if (!TokenManager.ReadToken())
         {
             alarmText.text = "Need To Login Fisrt";
+            startButton.interactable = true;
             return;
         }
         bool isLoginSucceed = await UserAuthController.VerifyToken();
@@ -54,6 +56,7 @@ public class TitleSceneManager : MonoBehaviour
             bool isSucceed = await UserAuthController.RefreshToken();
             if (!isSucceed)
                 alarmText.text = "Refresh Token Expired, Please Login Again";
+            startButton.interactable = true;
             return;
         }
         
@@ -133,7 +136,7 @@ public class TitleSceneManager : MonoBehaviour
         PlayerPrefs.SetInt("Theme", (int)currentTheme);
         var sceneManager = ServiceLocator.Instance.GetGlobalService<SceneController>();
         sceneManager.LoadSceneWithLoading(SceneIds.Dev0, GameSceneLoader.BeforeGameSceneLoad);
-        
+        startButton.interactable = true;
         
     }
 

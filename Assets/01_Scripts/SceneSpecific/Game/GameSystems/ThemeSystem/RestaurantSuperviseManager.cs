@@ -25,11 +25,15 @@ public class RestaurantSuperviseManager : MonoBehaviour
     private async UniTask ThemeChangeTask()
     {
         float endTime = Time.time + Constants.POP_UP_DURATION;
-
-        var popup = ServiceLocator.Instance.GetGlobalService<AlertPopup>();
-        popup.PopUp("서버와 통신중", "다음 식당으로 이동!", SpumCharacter.HireEmployee, false);
         
         var currentTheme = ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme;
+        var conditionData= DataTableManager.Get<ThemeConditionDataTable>(DataTableIds.ThemeCondition.ToString()).GetConditionData((int)currentTheme + 1);
+        
+        var popup = ServiceLocator.Instance.GetGlobalService<AlertPopup>();
+        popup.PopUp("서버와 통신중", "다음 식당으로 이동!", SpumCharacter.HireEmployee, false);
+
+        await UserDataManager.Instance.AdjustMoneyWithSave(-conditionData.Requirements1);
+
         var data = CreateInitialThemeData(currentTheme);
         UserDataManager.Instance.CurrentUserData.ThemeStatus.Add(data.theme, data);
         var isSucceed = await UserDataManager.Instance.UpdateStageStatus(data.theme);
