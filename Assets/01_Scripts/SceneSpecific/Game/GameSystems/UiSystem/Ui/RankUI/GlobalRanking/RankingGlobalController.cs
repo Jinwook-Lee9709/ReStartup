@@ -110,7 +110,7 @@ public class RankingGlobalController : MonoBehaviour
         for (int i = 0; i < arr.Length; i++)
         {
             var data = arr[i];
-            rankingGlobalUiItems[i].SetInfo(rank, String.IsNullOrEmpty(data.name) ? "알수없음": data.name, "식당이름",
+            rankingGlobalUiItems[i].SetInfo(rank, String.IsNullOrEmpty(data.name) ? "알수없음": data.name,
                 data.rankPoint, data.uuid);
             rankingGlobalUiItems[i].gameObject.SetActive(true);
             if (i + 1 < arr.Length && arr[i].rankPoint == arr[i + 1].rankPoint)
