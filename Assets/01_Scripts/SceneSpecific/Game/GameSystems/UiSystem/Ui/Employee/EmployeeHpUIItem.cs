@@ -29,7 +29,7 @@ public class EmployeeHpUIItem : MonoBehaviour
         if (employeeData != null)
         {
             StartCoroutine(LoadSpriteCoroutine(employeeData.Icon));
-            buyCostText.text = $"{buyCost}원";
+            buyCostText.text = $"{buyCost}";
             recoveryValueText.text = $"{recoveryValue}회복";
             var button = GetComponentInChildren<Button>();
             button.onClick.AddListener(() =>
@@ -40,6 +40,7 @@ public class EmployeeHpUIItem : MonoBehaviour
                 }
                 ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.Recover, 1);
                 employee.IncreaseHp(recoveryValue);
+                UserDataManager.Instance.AdjustMoney(-buyCost);
                 if (employeeData.currentHealth > employeeData.Health)
                 {
                     employeeData.currentHealth = employeeData.Health;
