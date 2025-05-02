@@ -12,10 +12,13 @@ public class EmployeeHpUIItem : MonoBehaviour
     public Image image;
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI hpText;
+    public TextMeshProUGUI buyCostText;
+    public TextMeshProUGUI recoveryValueText;
     public Slider hpbar;
     public EmployeeFSM employee;
     public EmployeeTableGetData employeeData;
     public int buyCost = 2000;
+    public int recoveryValue = 20;
     [SerializeField] private GameObject notEnoughCostPopUp;
     [SerializeField] private GameObject employeeHpFullPopUp;
 
@@ -26,6 +29,8 @@ public class EmployeeHpUIItem : MonoBehaviour
         if (employeeData != null)
         {
             StartCoroutine(LoadSpriteCoroutine(employeeData.Icon));
+            buyCostText.text = $"{buyCost}원";
+            recoveryValueText.text = $"{recoveryValue}회복";
             var button = GetComponentInChildren<Button>();
             button.onClick.AddListener(() =>
             {
@@ -34,7 +39,7 @@ public class EmployeeHpUIItem : MonoBehaviour
                     return;
                 }
                 ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.Recover, 1);
-                employee.IncreaseHp(100);
+                employee.IncreaseHp(recoveryValue);
                 if (employeeData.currentHealth > employeeData.Health)
                 {
                     employeeData.currentHealth = employeeData.Health;
