@@ -22,7 +22,7 @@ public class IngameGoodsUi : MonoBehaviour
         rankPointText.text = userDataManager.CurrentUserData.CurrentRankPoint.ToString();
         userDataManager.ChangeMoneyAction += MoneyUiValueSet;
         userDataManager.ChangeGoldAction += GoldUiValueSet;
-        userDataManager.OnRankChangedEvent += RankPointUiValueSet;
+        userDataManager.ChangeRankPointAction += RankPointUiValueSet;
         SetCostUi();
         LocalizationSettings.SelectedLocaleChanged += OnLanguageChanged;
     }
@@ -35,7 +35,7 @@ public class IngameGoodsUi : MonoBehaviour
         // 유저 데이터 이벤트도 해제
         userDataManager.ChangeMoneyAction -= MoneyUiValueSet;
         userDataManager.ChangeGoldAction -= GoldUiValueSet;
-        userDataManager.OnRankChangedEvent -= RankPointUiValueSet;
+        userDataManager.ChangeRankPointAction -= RankPointUiValueSet;
     }
 
     public void MoneyUiValueSet(int? money)
