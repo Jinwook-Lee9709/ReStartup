@@ -94,6 +94,8 @@ public class FoodUpgradeUIItem : MonoBehaviour
     public void UnlockFoodUpgrade()
     {
         lockImage.SetActive(false);
+        foodData.upgradeCount = 1;
+        levelText.text = foodData.upgradeCount.ToString();
     }
     private IEnumerator LoadSpriteCoroutine(string iconAddress)
     {

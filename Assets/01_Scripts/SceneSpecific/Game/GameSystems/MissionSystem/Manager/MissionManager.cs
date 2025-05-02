@@ -65,9 +65,15 @@ public class MissionManager
             var newMission = new Mission();
             newMission.Init(item.CompleteTimes, item.MissionId, item.TargetId);
             if (isExist)
+            {
                 newMission.SetCount(saveData.count);
+                questInventory.AddPeriodQuest(item, newMission, saveData.isCleared);
+            }
+            else
+            {
+                questInventory.AddPeriodQuest(item, newMission);
+            }
             missions[item.MissionCategory].Add(newMission);
-            questInventory.AddPeriodQuest(item, newMission);
         }
         AllReorderMissionCard();
     }
@@ -91,11 +97,10 @@ public class MissionManager
             missions[newMissionData.MissionCategory].Add(newMission);
             missionCards.Add(newMissionData.MissionId, missionCards[data.MissionId]);
             missionCards.Remove(data.MissionId);
-            missionCards[newMissionData.MissionId].Init(newMissionData, newMission);
+            missionCards[newMissionData.MissionId].Init(newMissionData, newMission, false);
 
-            var mission = missions[data.MissionCategory].Find(x => x.ID == data.MissionId);
-            Mission.SavePrgoress(true, mission).Forget();
-            mission = missions[newMissionData.MissionCategory].Find(x => x.ID == newMissionData.MissionId);
+            Mission.SavePrgoress(true, prevMission).Forget();
+            var mission = missions[newMissionData.MissionCategory].Find(x => x.ID == newMissionData.MissionId);
             Mission.SavePrgoress(false, mission).Forget();
         }
         else

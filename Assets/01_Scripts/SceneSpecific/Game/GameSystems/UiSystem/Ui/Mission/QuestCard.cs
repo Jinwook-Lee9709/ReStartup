@@ -21,6 +21,29 @@ public class QuestCard : MonoBehaviour
     private Button button;
     private Mission mission;
 
+    public void Init(MissionData data, Mission mis, bool saveClear)
+    {
+        missionData = data;
+        mission = mis;
+        button = GetComponentInChildren<Button>();
+        button.onClick.RemoveAllListeners();
+        button.onClick.AddListener(OnButtonClick);
+        button.interactable = mission.Count >= missionData.CompleteTimes;
+        missionManager = ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager;
+        rewardValue.text = $"X {missionData.RewardAmount}";
+        progressSlider.value = (float)mission.Count / missionData.CompleteTimes;
+        conditionText.text = string.Format(LZString.GetUIString(string.Format(missionName, missionData.MissionId)), missionData.CompleteTimes);
+        currentProgress.text = $"{Math.Clamp(mission.Count, 0, missionData.CompleteTimes)} / {missionData.CompleteTimes}";
+        button.GetComponentInChildren<TextMeshProUGUI>().text = mission.Count < missionData.CompleteTimes ? "미완료" : "완료\n보상 받기";
+        clear = mission.Count >= missionData.CompleteTimes;
+        rewardClaimed = false;
+        if (saveClear && missionData.MissionType != MissionType.Achievements)
+        {
+            rewardClaimed = true;
+            completeImage.gameObject.SetActive(true);
+        }
+        missionManager.ReorderMissionCard(missionData.MissionId);
+    }
     public void Init(MissionData data, Mission mis)
     {
         missionData = data;

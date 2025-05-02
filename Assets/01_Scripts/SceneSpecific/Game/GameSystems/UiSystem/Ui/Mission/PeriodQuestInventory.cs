@@ -21,6 +21,43 @@ public class PeriodQuestInventory : MonoBehaviour
 
     [SerializeField] public GameObject dailyQuestScrollview, weeklyQuestScrollview, mainQuestScrollview, AchievementScrollview;
 
+    public void AddPeriodQuest(MissionData data, Mission mission, bool saveClear)
+    {
+        if (missionManager == null)
+        {
+            missionManager = ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager;
+        }
+        GameObject newCard = null;
+        switch (data.MissionType)
+        {
+            case MissionType.Main:
+                newCard = Addressables.InstantiateAsync(questCard, MainMissionContents).WaitForCompletion();
+                var newMainCard = newCard.GetComponent<QuestCard>();
+                newMainCard.Init(data, mission, saveClear);
+                missionManager.missionCards.Add(data.MissionId,newMainCard);
+                break;
+            case MissionType.Daily:
+                newCard = Addressables.InstantiateAsync(questCard, dailyMissionContents).WaitForCompletion();
+                var newDailyCard = newCard.GetComponent<QuestCard>();
+                newDailyCard.Init(data, mission, saveClear);
+                dalilQuestList.Add(newDailyCard);
+                missionManager.missionCards.Add(data.MissionId, newDailyCard);
+                break;
+            case MissionType.Weekly:
+                newCard = Addressables.InstantiateAsync(questCard, weeklyMissionContents).WaitForCompletion();
+                var newWeeklyCard = newCard.GetComponent<QuestCard>();
+                newWeeklyCard.Init(data, mission, saveClear);
+                weeklyQuestList.Add(newWeeklyCard);
+                missionManager.missionCards.Add(data.MissionId, newWeeklyCard);
+                break;
+            case MissionType.Achievements:
+                newCard = Addressables.InstantiateAsync(questCard, achievementsMissionContents).WaitForCompletion();
+                var newAchievementsCard = newCard.GetComponent<QuestCard>();
+                newAchievementsCard.Init(data, mission, saveClear);
+                missionManager.missionCards.Add(data.MissionId, newAchievementsCard);
+                break;
+        }
+    }
     public void AddPeriodQuest(MissionData data, Mission mission)
     {
         if (missionManager == null)
