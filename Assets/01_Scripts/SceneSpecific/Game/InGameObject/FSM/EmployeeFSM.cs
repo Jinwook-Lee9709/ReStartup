@@ -19,8 +19,7 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     public float InteractionSpeed => interactionSpeed;
     public Transform HandPivot => handPivot;
     public int CurrentLevel => UserDataManager.Instance.CurrentUserData.EmployeeSaveData[EmployeeData.StaffID].level;
-    public float CalculatedMoveSpeed => EmployeeData.MoveSpeed + EmployeeData.upgradeMoveSpeed * (CurrentLevel - 1);
-    public float CalculatedWorkSpeed => EmployeeData.WorkSpeed - upgradeWorkSpeedValue * CurrentLevel;
+
     public UiManager uiManager;
     
     private SPUM_Prefabs model;
@@ -66,8 +65,8 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
 
     public void OnUpgrade()
     {
-        defaultMoveSpeed = CalculatedMoveSpeed;
-        defaultWorkSpeed = CalculatedWorkSpeed;
+        defaultMoveSpeed = EmployeeData.MoveSpeed;
+        defaultWorkSpeed = EmployeeData.WorkSpeed;
         agent.speed = defaultMoveSpeed;
         interactionSpeed = defaultWorkSpeed;
     }

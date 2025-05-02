@@ -34,6 +34,7 @@ public class MissionManager
         foreach (var item in questdata.Values)
         {
             bool isExist = UserDataManager.Instance.CurrentUserData.MissionSaveData.TryGetValue(item.MissionId, out var saveData);
+            bool isNextExist = UserDataManager.Instance.CurrentUserData.MissionSaveData.TryGetValue(item.NextMissionId, out var nextMissionsaveData);
             if (item.MissionType == MissionType.Achievements)
             {
                 if (item.PrevMissionId != 0)
@@ -42,7 +43,7 @@ public class MissionManager
                     {
                         continue;
                     }
-                    if (saveData.isCleared)
+                    if (isNextExist)
                     {
                         continue;
                     }
