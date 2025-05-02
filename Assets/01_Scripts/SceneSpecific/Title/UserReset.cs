@@ -29,11 +29,9 @@ public class UserReset : MonoBehaviour
             return;
         button.interactable = false;
         var response = await RestApiService.PostAsyncWithToken<bool>(Endpoints.DeleteUserUrl);
-        if (response.ResponseCode == ResponseType.Success)
-        {
-            TokenManager.DeleteToken();
-            GuestLoginManager.DeleteUUID();
-        }
+        TokenManager.DeleteToken();
+        GuestLoginManager.DeleteUUID();
+        
         button.interactable = true;
     }
 

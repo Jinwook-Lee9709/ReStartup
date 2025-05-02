@@ -85,6 +85,8 @@ public class InteriorManager
         {
             var data = interiorTable.First(x =>
                 x.RestaurantType == (int)gameManager.CurrentTheme && x.Category == InteriorCategory.Sink);
+            if( interiorUpgradeDictionary[interiorQuery.InteriorID]!= 1)
+                workStationManager.AddSinkingStation();
             UpgradeSink(data, interiorUpgradeDictionary[interiorQuery.InteriorID]);
         }
     }
@@ -100,6 +102,8 @@ public class InteriorManager
         {
             var data = interiorTable.First(x =>
                 x.RestaurantType == (int)gameManager.CurrentTheme && x.Category == InteriorCategory.Counter);
+            if( interiorUpgradeDictionary[interiorQuery.InteriorID]!= 1)
+                workStationManager.AddCounter();
             UpgradeCounter(data, interiorUpgradeDictionary[interiorQuery.InteriorID]);
         }
     }
