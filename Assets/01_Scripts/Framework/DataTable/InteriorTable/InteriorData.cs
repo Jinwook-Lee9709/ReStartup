@@ -23,6 +23,8 @@ public class InteriorData
     {
         var userData = UserDataManager.Instance.CurrentUserData;
         var upgradeLevel = userData.InteriorSaveData[InteriorID];
+        if(upgradeLevel == 0)
+            return SellingCost;
         return (int)Math.Round(SellingCost * (1.5f + 0.3f * (upgradeLevel - 1)));
     }
 
