@@ -207,10 +207,13 @@ public class ConsumerFSM : MonoBehaviour
 
     private void Update()
     {
-        if (prevXPos > transform.position.x)
-            model.transform.localScale = new Vector3(1, 1, 1);
-        else
-            model.transform.localScale = new Vector3(-1, 1, 1);
+        if (model != null)
+        {
+            if (prevXPos > transform.position.x)
+                model.transform.localScale = new Vector3(1, 1, 1);
+            else
+                model.transform.localScale = new Vector3(-1, 1, 1);
+        }
         prevXPos = transform.position.x;
 
         switch (currentStatus)
@@ -252,10 +255,10 @@ public class ConsumerFSM : MonoBehaviour
         alreadyTip = false;
     }
 
-    public void SetModel()
+    public async UniTask SetModel()
     {
         var handle = Addressables.InstantiateAsync(consumerData.GuestPrefab, modelParent.transform);
-        handle.WaitForCompletion();
+        var go = await handle;
         Model = handle.Result.GetComponent<SPUM_Prefabs>();
         Model.OverrideControllerInit();
     }

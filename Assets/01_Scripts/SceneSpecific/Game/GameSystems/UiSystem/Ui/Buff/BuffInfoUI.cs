@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using System;
 using System.Collections;
@@ -20,11 +21,12 @@ public class BuffInfoUI : MonoBehaviour, IComparable<BuffInfoUI>
         return currentBuff.remainBuffTime > other.currentBuff.remainBuffTime ? 1 : -1;
     }
 
-    public void Init(Buff buff, BuffManager buffManager)
+    public async UniTask Init(Buff buff, BuffManager buffManager)
     {
         currentBuff = buff;
         this.buffManager = buffManager;
-        var sprite = Addressables.LoadAssetAsync<Sprite>(string.Format(BuffIconFormat, (int)buff.BuffType)).WaitForCompletion();
+        var handle = Addressables.LoadAssetAsync<Sprite>(string.Format(BuffIconFormat, (int)buff.BuffType));
+        var sprite = await handle;
         buffImage.sprite = sprite;
         buffRemainTimeText.text = $"{Mathf.CeilToInt(currentBuff.remainBuffTime)} 초";
         buffInfoText.text = currentBuff.buffDescription;

@@ -83,11 +83,11 @@ public class BuffManager : MonoBehaviour
         }
 
     }
-    public void BuffOverridePopup(Buff newBuff, Action limitCountAction, bool needAd = false)
+    public void BuffOverridePopup(Buff newBuff, Func<UniTask> limitCountAction, bool needAd = false)
     {
         var buffPopup = Instantiate(buffPopupPrefab, popupParent.transform, false);
         buffPopup.GetComponent<BuffOverrideAcceptPopup>().needAd = needAd;
-        buffPopup.GetComponent<BuffOverrideAcceptPopup>().Init(buffs[newBuff.BuffType], newBuff, () =>
+        buffPopup.GetComponent<BuffOverrideAcceptPopup>().Init(buffs[newBuff.BuffType], newBuff, async () =>
         {
             foreach (var buffUI in buffInfoUIList)
             {
@@ -101,30 +101,33 @@ public class BuffManager : MonoBehaviour
 
             buffs[newBuff.BuffType] = newBuff;
             var buffInfoUI = Instantiate(buffInfoPrefab, buffInfoPrefabParent.transform, false).GetComponent<BuffInfoUI>();
-            buffInfoUI.Init(newBuff, this);
+            await buffInfoUI.Init(newBuff, this);
             buffInfoUIList.Add(buffInfoUI);
             UpdateBuffInfoUIList();
-            limitCountAction?.Invoke();
+            if (limitCountAction != null)
+                await limitCountAction();
         });
     }
 
-    public void StartBuff(Buff newBuff, Action limitCountAction = null, bool needAd = false)
+    public async void StartBuff(Buff newBuff, Func<UniTask> limitCountAction = null, bool needAd = false)
     {
         if (ContainType(newBuff.BuffType))
         {
             if (ContainID(newBuff))
             {
-                ExtendBuffTimer(newBuff, () =>
+                ExtendBuffTimer(newBuff,async () =>
                 {
-                    limitCountAction?.Invoke();
-                    UserDataManager.Instance.OnUseBuff(newBuff);
+                    if (limitCountAction != null)
+                        await limitCountAction();
+                    UserDataManager.Instance.OnUseBuff(newBuff).Forget();
                 }, needAd);
             }
             else
             {
-                BuffOverridePopup(newBuff, () =>
+                BuffOverridePopup(newBuff,async () =>
                 {
-                    limitCountAction?.Invoke();
+                    if (limitCountAction != null)
+                        await limitCountAction();
                     UserDataManager.Instance.OnUseBuff(newBuff).Forget();
                 }, needAd);
             }
@@ -133,15 +136,16 @@ public class BuffManager : MonoBehaviour
         {
             if (needAd)
             {
-                AdvertisementManager.Instance.ShowRewardedAd(() =>
+                AdvertisementManager.Instance.ShowRewardedAd(async () =>
                 {
                     UserDataManager.Instance.OnUseBuff(newBuff).Forget();
                     buffs[newBuff.BuffType] = newBuff;
                     var buffInfoUI = Instantiate(buffInfoPrefab, buffInfoPrefabParent.transform, false).GetComponent<BuffInfoUI>();
-                    buffInfoUI.Init(newBuff, this);
+                    await buffInfoUI.Init(newBuff, this);
                     buffInfoUIList.Add(buffInfoUI);
                     UpdateBuffInfoUIList();
-                    limitCountAction?.Invoke();
+                    if (limitCountAction != null)
+                        await limitCountAction();
                 });
             }
             else
@@ -149,7 +153,7 @@ public class BuffManager : MonoBehaviour
                 UserDataManager.Instance.OnUseBuff(newBuff).Forget();
                 buffs[newBuff.BuffType] = newBuff;
                 var buffInfoUI = Instantiate(buffInfoPrefab, buffInfoPrefabParent.transform, false).GetComponent<BuffInfoUI>();
-                buffInfoUI.Init(newBuff, this);
+                await buffInfoUI.Init(newBuff, this);
                 buffInfoUIList.Add(buffInfoUI);
                 UpdateBuffInfoUIList();
                 limitCountAction?.Invoke();
@@ -158,7 +162,7 @@ public class BuffManager : MonoBehaviour
 
     }
 
-    public void StartBuff(Buff buff)
+    public async void StartBuff(Buff buff)
     {
         if (ContainType(buff.BuffType))
         {
@@ -180,12 +184,12 @@ public class BuffManager : MonoBehaviour
         }
 
         var buffInfoUI = Instantiate(buffInfoPrefab, buffInfoPrefabParent.transform, false).GetComponent<BuffInfoUI>();
-        buffInfoUI.Init(buff, this);
+        await buffInfoUI.Init(buff, this);
         buffInfoUIList.Add(buffInfoUI);
         UpdateBuffInfoUIList();
     }
 
-    public void StartBuff(Buff buff, float remainTime)
+    public async void StartBuff(Buff buff, float remainTime)
     {
         buff.Init();
         buffs[buff.BuffType] = buff;
@@ -194,7 +198,7 @@ public class BuffManager : MonoBehaviour
 
         buff.remainBuffTime = remainTime;
         var buffInfoUI = Instantiate(buffInfoPrefab, buffInfoPrefabParent.transform, false).GetComponent<BuffInfoUI>();
-        buffInfoUI.Init(buff, this);
+        await buffInfoUI.Init(buff, this);
         buffInfoUIList.Add(buffInfoUI);
         UpdateBuffInfoUIList();
     }
@@ -223,22 +227,23 @@ public class BuffManager : MonoBehaviour
     {
         return buffs[buff.BuffType].BuffID == buff.BuffID;
     }
-    public void ExtendBuffTimer(Buff buff, Action limitCountAction, bool needAd)
+    public void ExtendBuffTimer(Buff buff, Func<UniTask> limitCountAction, bool needAd)
     {
         if (needAd)
         {
-            AdvertisementManager.Instance.ShowRewardedAd(() =>
+            AdvertisementManager.Instance.ShowRewardedAd(async () =>
             {
                 buffs[buff.BuffType].remainBuffTime += buff.remainBuffTime;
                 UpdateBuffInfoUIList();
-                limitCountAction.Invoke();
+                if (limitCountAction != null)
+                    await limitCountAction();
             });
         }
         else
         {
             buffs[buff.BuffType].remainBuffTime += buff.remainBuffTime;
             UpdateBuffInfoUIList();
-            limitCountAction.Invoke();
+            limitCountAction?.Invoke();
         }
     }
 }

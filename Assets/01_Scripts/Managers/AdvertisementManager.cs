@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using GoogleMobileAds.Api;
 using System;
 using UnityEngine;
@@ -165,13 +166,16 @@ public class AdvertisementManager : Singleton<AdvertisementManager>
             });
     }
 
-    public void ShowRewardedAd(Action adCallBack)
+    public void ShowRewardedAd(Func<UniTask> adCallBack)
     {
         if (rewarded != null && rewarded.CanShowAd())
         {
             rewarded.Show((Reward reward) =>
             {
-                adCallBack?.Invoke();
+                UniTask.Void(async () =>
+                {
+                    await adCallBack();
+                });
                 LoadRewardedAd();
             });
         }

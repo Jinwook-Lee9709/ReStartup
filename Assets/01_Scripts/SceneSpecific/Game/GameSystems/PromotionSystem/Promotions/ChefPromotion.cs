@@ -20,17 +20,17 @@ public class ChefPromotion : PromotionBase
         doubleConsumerBuff.Init();
         if (consumerManager.CanSpawnConsumer())
         {
-            buffManager.StartBuff(doubleConsumerBuff, () =>
+            buffManager.StartBuff(doubleConsumerBuff, async () =>
             {
                 base.Excute(buffManager, consumerManager, needAd);
-                consumerManager.SpawnConsumer(chef);
+                await consumerManager.SpawnConsumer(chef);
                 LimitCounting(needAd);
                 OnPayment(needAd);
             }, needAd);
         }
         else
         {
-            buffManager.StartBuff(doubleConsumerBuff, () =>
+            buffManager.StartBuff(doubleConsumerBuff,async () =>
             {
                 base.Excute(buffManager, consumerManager, needAd);
                 consumerManager.AddPromotionConsumerWaitingLine(chef);

@@ -83,7 +83,7 @@ public class PromotionUI : MonoBehaviour
     public void UpdateUI()
     {
         payButton.interactable = true;
-        // adButton.interactable = true;
+         adButton.interactable = true;
         if (promotionData.currentLimitAD <= 0)
         {
             promotionData.currentLimitAD = 0;

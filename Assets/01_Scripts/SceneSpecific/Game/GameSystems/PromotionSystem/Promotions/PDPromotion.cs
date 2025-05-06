@@ -22,10 +22,10 @@ public class PDPromotion : PromotionBase
         staffMove.Init();
         if (consumerManager.CanSpawnConsumer())
         {
-            buffManager.StartBuff(staffWalk, () =>
+            buffManager.StartBuff(staffWalk,async () =>
             {
                 base.Excute(buffManager, consumerManager, needAd);
-                consumerManager.SpawnConsumer(pd);
+                await consumerManager.SpawnConsumer(pd);
                 buffManager.StartBuff(staffMove);
                 LimitCounting(needAd);
                 OnPayment(needAd);
@@ -33,7 +33,7 @@ public class PDPromotion : PromotionBase
         }
         else
         {
-            buffManager.StartBuff(staffWalk, () =>
+            buffManager.StartBuff(staffWalk,async () =>
             {
                 base.Excute(buffManager, consumerManager, needAd);
                 consumerManager.AddPromotionConsumerWaitingLine(pd);

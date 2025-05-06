@@ -20,17 +20,17 @@ public class ItuberPromotion : PromotionBase
         footTrafficBuff.Init();
         if (consumerManager.CanSpawnConsumer())
         {
-            buffManager.StartBuff(footTrafficBuff, () =>
+            buffManager.StartBuff(footTrafficBuff,async () =>
             {
                 base.Excute(buffManager, consumerManager, needAd);
-                consumerManager.SpawnConsumer(ituber);
+                await consumerManager.SpawnConsumer(ituber);
                 LimitCounting(needAd);
                 OnPayment(needAd);
             }, needAd);
         }
         else
         {
-            buffManager.StartBuff(footTrafficBuff, () =>
+            buffManager.StartBuff(footTrafficBuff,async () =>
             {
                 base.Excute(buffManager, consumerManager, needAd);
                 consumerManager.AddPromotionConsumerWaitingLine(ituber);

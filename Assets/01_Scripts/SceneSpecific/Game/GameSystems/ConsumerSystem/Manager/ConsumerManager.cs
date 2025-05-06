@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -62,35 +63,35 @@ public class ConsumerManager : MonoBehaviour
     }
 
     [ContextMenu("Consumer Spawn")]
-    public void SpawnConsumer()
+    public async UniTask SpawnConsumer()
     {
         var consumer = consumerPool.Get().GetComponent<Consumer>();
-        consumer.FSM.SetModel();
+        await consumer.FSM.SetModel();
         AfterSpawnInit(consumer);
     }
 
-    public void SpawnConsumer(ConsumerData consumerData)
+    public async UniTask SpawnConsumer(ConsumerData consumerData)
     {
         var spawnConsumer = consumerPool.Get().GetComponent<Consumer>();
         spawnConsumer.FSM.consumerData = consumerData;
         spawnConsumer.FSM.consumerData.Init();
-        spawnConsumer.FSM.SetModel();
+        await spawnConsumer.FSM.SetModel();
         AfterSpawnInit(spawnConsumer);
     }
 
     [ContextMenu("Pair Consumer Spawn")]
-    public void SpawnPairConsumer()
+    public async UniTask SpawnPairConsumer()
     {
         var consumer1 = consumerPool.Get().GetComponent<Consumer>();
         var consumer2 = consumerPool.Get().GetComponent<Consumer>();
         SetPairData(consumer1, consumer2);
-        consumer1.FSM.SetModel();
-        consumer2.FSM.SetModel();
+        await consumer1.FSM.SetModel();
+        await consumer2.FSM.SetModel();
         consumer2.FSM.CurrentStatus = ConsumerFSM.ConsumerState.None;
         AfterSpawnInit(consumer1);
     }
 
-    public void SpawnPairConsumer(ConsumerData owner, ConsumerData partner)
+    public async UniTask SpawnPairConsumer(ConsumerData owner, ConsumerData partner)
     {
         var consumer1 = consumerPool.Get().GetComponent<Consumer>();
         var consumer2 = consumerPool.Get().GetComponent<Consumer>();
@@ -99,8 +100,8 @@ public class ConsumerManager : MonoBehaviour
         consumer2.FSM.consumerData = partner;
         SetFood(ref consumer1);
         SetFood(ref consumer2);
-        consumer1.FSM.SetModel();
-        consumer2.FSM.SetModel();
+        await consumer1.FSM.SetModel();
+        await consumer2.FSM.SetModel();
         consumer2.FSM.CurrentStatus = ConsumerFSM.ConsumerState.None;
         AfterSpawnInit(consumer1);
     }

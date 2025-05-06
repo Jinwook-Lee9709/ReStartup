@@ -18,7 +18,7 @@ public class Review : MonoBehaviour
     [SerializeField] private TextMeshProUGUI rankPointText;
     [SerializeField] private TextMeshProUGUI reviewUserID;
  
-    public event Action OnRemoveAdEvent;
+    public event Func<UniTask> OnRemoveAdEvent;
 
     public void Init(ReviewData data)
     {
@@ -40,7 +40,7 @@ public class Review : MonoBehaviour
             removeButton.onClick.AddListener(() => reviewManager.OnRemoveButtonClick(this));
         }
 
-        OnRemoveAdEvent += () =>
+        OnRemoveAdEvent += async () =>
         {
             
             int count = 0;
@@ -48,7 +48,7 @@ public class Review : MonoBehaviour
             {
                 if (review == gameObject)
                 {
-                    ReviewSaveDataDAC.DeleteReviewData(count).Forget();
+                    await ReviewSaveDataDAC.DeleteReviewData(count);
                     break;
                 }
                 count++;

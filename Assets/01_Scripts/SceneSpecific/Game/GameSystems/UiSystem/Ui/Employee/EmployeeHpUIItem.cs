@@ -54,7 +54,7 @@ public class EmployeeHpUIItem : MonoBehaviour
         var userDataManager = UserDataManager.Instance;
         if(CostType.Free == type)
         {
-            AdvertisementManager.Instance.ShowRewardedAd(() =>
+            AdvertisementManager.Instance.ShowRewardedAd(async () =>
             {
                 if (employeeData.currentHealth == employeeData.Health)
                 {

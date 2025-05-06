@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
 using TMPro;
@@ -11,7 +12,7 @@ public class BuffOverrideAcceptPopup : PopUp
     [SerializeField] private TextMeshProUGUI currentBuffText, nextBuffText;
     [SerializeField] private GameObject adPanel;
     public bool needAd = false;
-    public void Init(Buff currentBuff, Buff nextBuff, Action callBack)
+    public void Init(Buff currentBuff, Buff nextBuff, Func<UniTask> callBack)
     {
         cancleButton.interactable = true;
         acceptButton.interactable = true;
@@ -23,9 +24,9 @@ public class BuffOverrideAcceptPopup : PopUp
         {
             acceptButton.onClick.AddListener(() =>
             {
-                AdvertisementManager.Instance.ShowRewardedAd(() =>
+                AdvertisementManager.Instance.ShowRewardedAd(async () =>
                 {
-                    callBack.Invoke();
+                    await callBack();
                     cancleButton.interactable = false;
                     acceptButton.interactable = false;
                     OnCancle();
@@ -34,9 +35,9 @@ public class BuffOverrideAcceptPopup : PopUp
         }
         else
         {
-            acceptButton.onClick.AddListener(() =>
+            acceptButton.onClick.AddListener(async () =>
             {
-                callBack.Invoke();
+                await callBack();
                 cancleButton.interactable = false;
                 acceptButton.interactable = false;
                 OnCancle();
