@@ -209,6 +209,8 @@ public static class Endpoints
     public static readonly string SaveRankPointUrl = BaseUrl + "/users/progress/saveRankpoint";
     public static readonly string GetCumulativeUrl = BaseUrl + "/users/progress/getCumulative";
     public static readonly string SaveCumulativeUrl = BaseUrl + "/users/progress/saveCumulative";
+    public static readonly string SaveIsClaimedUrl = BaseUrl + "/users/progress/saveIsClaimed";
+    
 
     public static readonly string GetPromotionsUrl = BaseUrl + "/users/getPromotions";
     public static readonly string SavePromotionsUrl = BaseUrl + "/users/savePromotions";
@@ -246,6 +248,8 @@ public static class Constants
     public static readonly int MAX_SUPERVISOR_COUNT = 3;
     public static readonly int SUPERVISOR_HIRE_REQUIREMENTS = 15;
     public static readonly int MAX_RANK = 15;
+
+    public static readonly int TRASH_CREATE_STACK = 1;
 }
 
 public enum RankRewardType
@@ -299,6 +303,7 @@ public enum InteriorCategory
     Interior,
     Cookware,
     Sink,
+    TrashCan,
     Wallpaper,
     Floor,
     Decor,
@@ -344,6 +349,8 @@ public static class Strings
     public static readonly string Tray = "Tray";
     public static readonly string TrayReturnCounter = "TrayReturnCounter";
     public static readonly string SinkingStation = "SinkingStation";
+    public static readonly string TrashCan = "TrashCan";
+    public static readonly string TrashIcon = "TrashIcon";
 
     public static readonly string Bubble = "Bubble";
     public static readonly string Clean = "Clean";

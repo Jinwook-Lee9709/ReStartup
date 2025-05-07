@@ -60,6 +60,13 @@ public class UserDataManager : Singleton<UserDataManager>
         OnRankChangedEvent?.Invoke(rank);
     }
 
+    public async UniTask SaveIsRankCompensationClaimed(bool isClaimed)
+    {
+        currentUserData.IsRankCompensationClaimed = isClaimed;
+        var currentTheme = ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme;
+        await ThemeRecordDAC.UpdateIsClaimed((int)currentTheme, isClaimed);
+    }
+
     public void AdjustMoney(int money)
     {
         CurrentUserData.Money += money;
@@ -101,8 +108,6 @@ public class UserDataManager : Singleton<UserDataManager>
         list.Add(data);
         await CurrencyDataDAC.UpdateCurrencyData(list);
     }
-
-
 
     public async UniTask UpgradeInterior(int interiorId)
     {

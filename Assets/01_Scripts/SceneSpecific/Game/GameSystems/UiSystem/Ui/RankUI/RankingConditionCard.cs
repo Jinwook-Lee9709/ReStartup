@@ -114,7 +114,8 @@ public class RankingConditionCard : MonoBehaviour
             button.interactable = currentRankPoint >= rankConditionData.GoalRanking;
         }
 
-        if (UserDataManager.Instance.CurrentUserData.CurrentRank > rankConditionData.Rank)
+        if (UserDataManager.Instance.CurrentUserData.CurrentRank > rankConditionData.Rank
+            || UserDataManager.Instance.CurrentUserData.IsRankCompensationClaimed)
         {
             button.interactable = false;
         }
@@ -145,7 +146,6 @@ public class RankingConditionCard : MonoBehaviour
         {
             UserDataManager.Instance.SetRankWithSave(rankConditionData.Rank + 1).Forget();
             
-            
             ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager
                 .OnEventInvoked(MissionMainCategory.GainRanking, 1);
             CheckComplete((int)UserDataManager.Instance.CurrentUserData.CurrentRankPoint);
@@ -153,6 +153,7 @@ public class RankingConditionCard : MonoBehaviour
         }
         else
         {
+            UserDataManager.Instance.SaveIsRankCompensationClaimed(true).Forget();
             button.interactable = false;
         }
         var data = table.Data.First(x => x.Value.Rank == rankConditionData.Rank);

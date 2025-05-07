@@ -13,6 +13,9 @@ public class PivotLocator : MonoBehaviour
     [SerializedDictionary] [SerializeField]
     private SerializedDictionary<int, Transform> interiorPivots;
 
+    [SerializedDictionary] [SerializeField]
+    private SerializedDictionary<ObjectArea, Transform> trashCanPivots;
+    
     [SerializeField] private List<Transform> tablePivots;
     [SerializeField] private List<Transform> pickupCounterPivots;
     [SerializeField] private List<Transform> watingLinePivots;
@@ -30,6 +33,7 @@ public class PivotLocator : MonoBehaviour
     public SerializedDictionary<WorkType, List<Transform>> IdleAreas => idleAreas;
     public SerializedDictionary<CookwareType, List<Transform>> CookWarePivots => cookWarePivots;
     public SerializedDictionary<int, Transform> InteriorPivots => interiorPivots;
+    public SerializedDictionary<ObjectArea, Transform> TrashCanPivots => trashCanPivots;
     public List<Transform> TablePivots => tablePivots;
     public List<Transform> PickupCounterPivots => pickupCounterPivots;
     public List<Transform> WatingLinePivots => watingLinePivots;

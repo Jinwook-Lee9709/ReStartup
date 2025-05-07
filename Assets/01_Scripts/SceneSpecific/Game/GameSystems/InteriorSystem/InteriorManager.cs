@@ -31,6 +31,7 @@ public class InteriorManager
         InitSinkingStation();
         InitCounter();
         InitInterior();
+        InitTrashCan();
         InitDecor();
     }
 
@@ -141,6 +142,21 @@ public class InteriorManager
         }
     }
 
+    private void InitTrashCan()
+    {
+        var interiorUpgradeDictionary = UserDataManager.Instance.CurrentUserData.InteriorSaveData;
+        var trashCanQuery = interiorTable.Where(x =>
+                x.RestaurantType == (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme)
+            .Where(x =>
+                x.Category == InteriorCategory.TrashCan);
+        foreach (var data in trashCanQuery)
+        {
+            if(interiorUpgradeDictionary[data.InteriorID]!= 1)
+                workStationManager.AddTrashCan(data);
+            UpgradeTrashCan(data, interiorUpgradeDictionary[data.InteriorID]);
+        }
+    }
+
     private void InitDecor()
     {
         var parent = gameManager.ObjectPivotManager.GetDecorPivot();
@@ -238,6 +254,9 @@ public class InteriorManager
             case InteriorCategory.Sink:
                 UpgradeSink(interiorData, level);
                 break;
+            case InteriorCategory.TrashCan:
+                UpgradeTrashCan(interiorData, level);
+                break;
             case InteriorCategory.Wallpaper:
                 break;
             case InteriorCategory.Floor:
@@ -301,5 +320,12 @@ public class InteriorManager
         if (level == 1)
             workStationManager.AddSinkingStation();
         workStationManager.UpgradeSinkingStation(interiorData, level);
+    }
+
+    private void UpgradeTrashCan(InteriorData interiorData, int level)
+    {
+        if (level == 1)
+            workStationManager.AddTrashCan(interiorData);
+        workStationManager.UpgradeTrashCan(interiorData, level);
     }
 }

@@ -13,6 +13,7 @@ public class WorkStationManager
     private CashierCounter counter;
     private NavMeshSurface surface2D;
     private List<Transform> tablePivots;
+    private Dictionary<ObjectArea, TrashCan> trashCans = new();
 
     private readonly Dictionary<int, Table> tables = new();
     private WorkFlowController workFlowController;
@@ -158,6 +159,24 @@ public class WorkStationManager
         var sprite = Addressables.LoadAssetAsync<Sprite>(data.IconID + level).WaitForCompletion();
         sinkingStation.ChangeSpirte(sprite);
         sinkingStation.ChangeCapacity(capacity);
+    }
+
+    public void AddTrashCan(InteriorData data)
+    {
+        var pivot = objectPivotManager.GetTrashCanPivot(data.CookwareType);
+        var handle = Addressables.InstantiateAsync(Strings.TrashCan);
+        handle.WaitForCompletion();
+        
+        var trashCan = handle.Result.GetComponent<TrashCan>();
+        trashCan.transform.SetParentAndInitialize(pivot);
+        workFlowController.RegisterTrashCan(data.CookwareType, trashCan);
+        trashCans.Add(data.CookwareType, trashCan);
+    }
+
+    public void UpgradeTrashCan(InteriorData data, int level)
+    {
+        var sprite = Addressables.LoadAssetAsync<Sprite>(data.IconID + level).WaitForCompletion();
+        trashCans[data.CookwareType].ChangeSpirte(sprite);
     }
 
 

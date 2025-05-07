@@ -76,6 +76,7 @@ public static class GameSceneLoader
                 UserDataManager.Instance.CurrentUserData.CurrentRank = themeRecordResponse.Data[0].ranking;
                 UserDataManager.Instance.CurrentUserData.CurrentRankPoint = themeRecordResponse.Data[0].rank_point;
                 UserDataManager.Instance.CurrentUserData.Cumulative = themeRecordResponse.Data[0].cumulative;
+                UserDataManager.Instance.CurrentUserData.IsRankCompensationClaimed = themeRecordResponse.Data[0].is_claimed;
             }
 
             if (promotionResponse.Data.Length == 0)

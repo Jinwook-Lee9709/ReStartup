@@ -138,8 +138,12 @@ public class SupervisorListPanel : MonoBehaviour
 
     private void OnDestroy()
     {
-        UserDataManager.Instance.ChangeMoneyAction -= OnMoneyChanged;
-        UserDataManager.Instance.OnRankChangedEvent -= OnRankChanged;
+        if (UserDataManager.Instance != null)
+        {
+            UserDataManager.Instance.ChangeMoneyAction -= OnMoneyChanged;
+            UserDataManager.Instance.OnRankChangedEvent -= OnRankChanged;
+        }
+
     }
 
     public void OnSupervisorHire()

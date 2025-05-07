@@ -46,4 +46,15 @@ public static class ThemeRecordDAC
         ApiResponse<ThemeRecordData> response = await RestApiService.PostAsyncWithToken<ThemeRecordData>(Endpoints.SaveRankingUrl, payload);
         return response != null && response.ResponseCode == ResponseType.Success;
     }
+
+    public static async UniTask<bool> UpdateIsClaimed(int themeId, bool isClaimed)
+    {
+        Dictionary<string, string> payload = new()
+        {
+            ["theme"] = themeId.ToString(),
+            ["is_claimed"] = isClaimed.ToString()
+        };
+        ApiResponse<ThemeRecordData> response = await RestApiService.PostAsyncWithToken<ThemeRecordData>(Endpoints.SaveIsClaimedUrl, payload);
+        return response != null && response.ResponseCode == ResponseType.Success;
+    }
 }

@@ -73,7 +73,8 @@ public class EmployeeUIItem : MonoBehaviour
 
     private void OnDestroy()
     {
-        UserDataManager.Instance.ChangeMoneyAction -= OnConditionChanged;
+        if(UserDataManager.Instance != null)
+            UserDataManager.Instance.ChangeMoneyAction -= OnConditionChanged;
     }
 
     public void Init(EmployeeTableGetData data, EmployeeUpgradePopup employeeUpgradePopup)

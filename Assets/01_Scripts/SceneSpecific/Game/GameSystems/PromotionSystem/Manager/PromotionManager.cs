@@ -87,6 +87,7 @@ public class PromotionManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        UserDataManager.Instance.ChangeMoneyAction -= ChangeGoods;
+        if( UserDataManager.Instance != null)
+            UserDataManager.Instance.ChangeMoneyAction -= ChangeGoods;
     }
 }
