@@ -8,14 +8,15 @@ using UnityEngine.UI;
 
 public class AdTicketPopup : PopUp
 {
-    private readonly string cntFormat = ": {0}";
+    private readonly string cntFormat = "남은 티켓 갯수 : {0}";
     [SerializeField] private TextMeshProUGUI adTicketCheckText, adTicketCnt;
     [SerializeField] private Button acceptButton, cancelButton;
 
     public void Init(Func<UniTask> adCallback, Func<UniTask> afterEvent = null)
     {
         adTicketCheckText.text = "테스트 티켓 사용 텍스트";
-        adTicketCnt.text = string.Format(cntFormat, UserDataManager.Instance.CurrentUserData.AdTicket);
+        var ticketCnt = UserDataManager.Instance.CurrentUserData.AdTicket;
+        adTicketCnt.text = string.Format(cntFormat, ticketCnt < 999 ? ticketCnt : "+999");
         acceptButton.onClick.AddListener(() =>
         {
             UniTask.Void(async () =>

@@ -46,7 +46,7 @@ public class BuffOverrideAcceptPopup : PopUp
     }
     private void Update()
     {
-        currentBuffText.text = $"{Mathf.Clamp(currentBuff.remainBuffTime, 0f,float.MaxValue)} / {currentBuff.buffName} / {currentBuff.buffDescription}";
+        currentBuffText.text = $"{Mathf.CeilToInt(Mathf.Clamp(currentBuff.remainBuffTime, 0f,float.MaxValue))} / {currentBuff.buffName} / {currentBuff.buffDescription}";
         nextBuffText.text = $"{nextBuff.remainBuffTime} / {nextBuff.buffName} / {nextBuff.buffDescription}";
     }
     private void OnEnable()
