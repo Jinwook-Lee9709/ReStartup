@@ -10,6 +10,8 @@ using UnityEngine.UI;
 
 public class InteriorUpgradePopup : MonoBehaviour
 {
+    private static readonly string UpgradeInfoFormat = "{0} -> {1}";
+    
     [SerializeField] private float backgroundOpacity = 0.8f;
     [SerializeField] private Button background;
     [SerializeField] private Button mainButton;
@@ -44,9 +46,15 @@ public class InteriorUpgradePopup : MonoBehaviour
     {
         IsPaid = false;
         currentCard = card;
-        priceText.text = card.Data.GetSellingCost().ToString();
         var data = currentCard.Data;
+        priceText.text = data.GetSellingCost().ToString();
         var currentInteriorLevel = UserDataManager.Instance.CurrentUserData.InteriorSaveData[data.InteriorID];
+
+        String beforeString = LZString.GetUIString(data.StringID + currentInteriorLevel);
+        String afterString = LZString.GetUIString($"{data.StringID}{currentInteriorLevel + 1}");
+        
+        infoText.text = string.Format(UpgradeInfoFormat, beforeString, afterString);
+        
         var beforeSprite = Addressables.LoadAssetAsync<Sprite>(data.IconID + currentInteriorLevel).WaitForCompletion();
         var afterSprite = Addressables.LoadAssetAsync<Sprite>($"{data.IconID}{currentInteriorLevel + 1}").WaitForCompletion();
         beforeIcon.sprite = beforeSprite;

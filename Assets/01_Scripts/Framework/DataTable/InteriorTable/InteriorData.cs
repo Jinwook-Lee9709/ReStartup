@@ -13,7 +13,7 @@ public class InteriorData
     public int Reward { get; set; }
     public InteriorEffectType EffectType { get; set; }
     public int EffectQuantity { get; set; }
-    public int StringID { get; set; }
+    public String StringID { get; set; }
     public string IconID { get; set; }
     public InteriorCategory Category { get; set; }
     public InteriorUICategory UICategory { get; set; }
