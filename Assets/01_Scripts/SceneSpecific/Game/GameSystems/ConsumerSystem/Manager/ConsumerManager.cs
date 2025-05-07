@@ -426,6 +426,7 @@ public class ConsumerManager : MonoBehaviour
 
     private void AfterSpawnInit(Consumer consumer)
     {
+        consumer.gameObject.SetActive(true);
         if (workFlowController.RegisterCustomer(consumer))
         {
             consumer.FSM.CurrentStatus = ConsumerFSM.ConsumerState.BeforeOrder;

@@ -144,6 +144,7 @@ public class ConsumerFSM : MonoBehaviour
 
                     targetPivot = consumer.currentTable.GetInteractablePoints(permission)[0].transform.position;
                     agent.SetDestination(targetPivot);
+
                     break;
                 case ConsumerState.AfterOrder:
                     consumerManager.OnChangeConsumerState(consumer, ConsumerState.AfterOrder);

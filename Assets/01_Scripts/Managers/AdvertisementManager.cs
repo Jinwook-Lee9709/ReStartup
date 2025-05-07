@@ -2,11 +2,13 @@ using Cysharp.Threading.Tasks;
 using GoogleMobileAds.Api;
 using System;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 public class AdvertisementManager : Singleton<AdvertisementManager>
 {
     public RewardedAd rewarded;
     public NativeOverlayAd nativeAd;
+    private GameObject ticketPopup;
     private bool isInitialized = false;
 
 #if UNITY_ANDROID
@@ -168,6 +170,12 @@ public class AdvertisementManager : Singleton<AdvertisementManager>
 
     public void ShowRewardedAd(Func<UniTask> adCallBack, Func<UniTask> afterEvent = null)
     {
+        if (CheckAdTicket())
+        {
+            ShowTicketPopup(adCallBack, afterEvent);
+            return;
+        }
+
         if (rewarded != null && rewarded.CanShowAd())
         {
             rewarded.Show((Reward reward) =>
@@ -185,6 +193,43 @@ public class AdvertisementManager : Singleton<AdvertisementManager>
         {
             Debug.LogWarning("광고가 준비되지 않음.");
         }
+    }
+
+    private void ShowTicketPopup(Func<UniTask> adCallBack, Func<UniTask> afterEvent = null)
+    {
+        if (ticketPopup == null)
+        {
+            var handle = Addressables.LoadAssetAsync<GameObject>(Strings.adTicketPopupId);
+            handle.WaitForCompletion();
+            ticketPopup = handle.Result;
+        }
+        var popup = Instantiate(ticketPopup).GetComponent<AdTicketPopup>();
+        popup.Init(adCallBack, afterEvent);
+    }
+
+    public void ShowRewardedAdDirect(Func<UniTask> adCallBack, Func<UniTask> afterEvent = null)
+    {
+        if (rewarded != null && rewarded.CanShowAd())
+        {
+            rewarded.Show((Reward reward) =>
+            {
+                UniTask.Void(async () =>
+                {
+                    await adCallBack();
+                });
+                LoadRewardedAd();
+            });
+            if (afterEvent != null)
+                afterEvent();
+        }
+        else
+        {
+            Debug.LogWarning("광고가 준비되지 않음.");
+        }
+    }
+    private bool CheckAdTicket()
+    {
+        return UserDataManager.Instance.CurrentUserData.AdTicket != 0;
     }
 
 

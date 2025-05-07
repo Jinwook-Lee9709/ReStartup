@@ -405,6 +405,8 @@ public static class Strings
     public static readonly string negativeReviewFileName = "NegativeReview";
 
     public static readonly string promotionIconFormat = "Promotion{0}";
+
+    public static readonly string adTicketPopupId = "AdTicketPopup";
 }
 
 public static class Colors
