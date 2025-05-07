@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Audio;
@@ -15,6 +16,7 @@ public class AudioManager : Singleton<AudioManager>
     private AudioMixer audioMixer;
     private AudioSource audioBGMSource, audioSFXSource;
     private AudioSO audioSO;
+    private Coroutine saveCoroutine;
     public void Init()
     {
         LoadAudioSO();
@@ -47,6 +49,21 @@ public class AudioManager : Singleton<AudioManager>
     public void SetVolume(AudioType audioType, float volume)
     {
         audioMixer.SetFloat(audioType.ToString(), volume);
+        switch (audioType)
+        {
+            case AudioType.Master:
+                break;
+            case AudioType.SFX:
+                LocalSaveLoadManager.Data.SFXVolume = volume;
+                break;
+            case AudioType.BGM:
+                LocalSaveLoadManager.Data.BackGroundVolume = volume;
+                break;
+        }
+        if (saveCoroutine == null)
+        {
+            saveCoroutine = StartCoroutine(LocalSave());
+        }
     }
 
     public void PlayBGM(string key)
@@ -59,5 +76,11 @@ public class AudioManager : Singleton<AudioManager>
     {
         audioSFXSource.clip = audioSO.AudioClips[key]; 
         audioSFXSource.Play();
+    }
+    private IEnumerator LocalSave()
+    {
+        yield return new WaitForSeconds(10f);
+        LocalSaveLoadManager.Save();
+        saveCoroutine = null;
     }
 }

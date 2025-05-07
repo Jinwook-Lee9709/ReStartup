@@ -75,8 +75,6 @@ public class SaveDataV1 : SaveData
     {
         Version = 1;
     }
-
-    public float MasterVolume { get; set; } = 1f;
     public float BackGroundVolume { get; set; } = 1f;
     public float SFXVolume { get; set; } = 1f;
     public string UserToken { get; set; }
