@@ -35,14 +35,16 @@ public class ConsumerFSM : MonoBehaviour
     public event Action<Consumer> OnSeatEvent;
     public ConsumerManager consumerManager;
     public BuffManager buffManager;
-    
-    [SerializeField] private List<float> satisfactionChangeLimit = new()
+
+    [SerializeField]
+    private List<float> satisfactionChangeLimit = new()
     {
         15f,
         0f
     };
 
-    [SerializeField] private List<float> satisfactionColorChangeFlagTimes = new()
+    [SerializeField]
+    private List<float> satisfactionColorChangeFlagTimes = new()
     {
         30f,
         25f,
@@ -186,8 +188,8 @@ public class ConsumerFSM : MonoBehaviour
                 case ConsumerState.TalkingAbout:
                     consumer.currentTable.HideIcon();
                     ConsumerScriptActive(
-                        string.Format(Strings.badTextFormat, UnityEngine.Random.Range(0, 2), consumerData.GuestId),
-                        () => { satisfactionIcon.SetIcon(currentSatisfaction); });
+                        string.Format(Strings.badTextFormat, UnityEngine.Random.Range(0, 2), consumerData.GuestId)
+                        , null, () => { satisfactionIcon.SetIcon(currentSatisfaction); });
                     break;
                 case ConsumerState.None:
                     model.PlayAnimation(PlayerState.MOVE, 0);

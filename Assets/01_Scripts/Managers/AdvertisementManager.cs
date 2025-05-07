@@ -166,7 +166,7 @@ public class AdvertisementManager : Singleton<AdvertisementManager>
             });
     }
 
-    public void ShowRewardedAd(Func<UniTask> adCallBack)
+    public void ShowRewardedAd(Func<UniTask> adCallBack, Func<UniTask> afterEvent = null)
     {
         if (rewarded != null && rewarded.CanShowAd())
         {
@@ -178,6 +178,8 @@ public class AdvertisementManager : Singleton<AdvertisementManager>
                 });
                 LoadRewardedAd();
             });
+            if (afterEvent != null)
+                afterEvent();
         }
         else
         {

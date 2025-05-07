@@ -19,7 +19,7 @@ public class Review : MonoBehaviour
     [SerializeField] private TextMeshProUGUI reviewUserID;
  
     public event Func<UniTask> OnRemoveAdEvent;
-
+    public event Func<UniTask> OnRemoveAdAfterEvent;
     public void Init(ReviewData data)
     {
         this.data = data;
@@ -54,16 +54,21 @@ public class Review : MonoBehaviour
                 count++;
             }
 
-            reviewManager.RemoveAt(gameObject);
             UserDataManager.Instance.AddRankPointWithSave(-data.addPoint).Forget();
             UserDataManager.Instance.OnNegativeReviewRemove();
             ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.BadReviewDelete, 1);
         };
+
+        OnRemoveAdAfterEvent += async () =>
+        {
+            reviewManager.RemoveAt(gameObject);
+        };
     }
+
 
     public void Remove()
     {
-        AdvertisementManager.Instance.ShowRewardedAd(OnRemoveAdEvent);
+        AdvertisementManager.Instance.ShowRewardedAd(OnRemoveAdEvent, OnRemoveAdAfterEvent);
     }
 
 }

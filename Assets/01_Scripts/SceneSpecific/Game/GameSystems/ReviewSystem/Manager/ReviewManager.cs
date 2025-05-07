@@ -58,14 +58,14 @@ public class ReviewManager : MonoBehaviour
     {
         StartCoroutine(AddReviewCoroutine(isBest));
     }
-    [ContextMenu("Add Best Review")]
-    public void TempFunc1()
+    [VInspector.Button]
+    public void AddPositiveReview()
     {
         StartCoroutine(AddReviewCoroutine(true));
     }
 
-    [ContextMenu("Add Worst Review")]
-    public void TempFunc2()
+    [VInspector.Button]
+    public void AddNegativeReview()
     {
         StartCoroutine(AddReviewCoroutine(false));
     }
