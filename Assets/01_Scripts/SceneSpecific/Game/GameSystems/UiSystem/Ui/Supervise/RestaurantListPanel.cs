@@ -44,6 +44,12 @@ public class RestaurantListPanel : MonoBehaviour
         SetButtonActive();
     }
 
+    private void OnDestroy()
+    {
+        UserDataManager.Instance.OnRankChangedEvent -= OnRankChanged;
+        UserDataManager.Instance.ChangeMoneyAction -= OnMoneyChanged;
+    }
+
     private void Start()
     {
         MovePanelToCenterTask().Forget();

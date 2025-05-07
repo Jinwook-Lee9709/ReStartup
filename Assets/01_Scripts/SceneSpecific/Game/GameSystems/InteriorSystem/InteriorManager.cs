@@ -34,6 +34,11 @@ public class InteriorManager
         InitDecor();
     }
 
+    private void OnDestroy()
+    {
+        UserDataManager.Instance.OnInteriorUpgradeEvent -= OnInteriorUpgrade;
+    }
+
     public void ReferenceDataTable()
     {
         interiorTable = DataTableManager.Get<InteriorDataTable>(DataTableIds.Interior.ToString());

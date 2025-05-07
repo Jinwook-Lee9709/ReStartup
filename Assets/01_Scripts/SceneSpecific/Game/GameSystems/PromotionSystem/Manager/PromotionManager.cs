@@ -1,3 +1,4 @@
+using System;
 using Excellcube.EasyTutorial.Utils;
 using System.Collections;
 using System.Collections.Generic;
@@ -82,5 +83,10 @@ public class PromotionManager : MonoBehaviour
     {
         haveMeney.text = a.ToString();
         haveGold.text = UserDataManager.Instance.CurrentUserData.Gold.ToString();
+    }
+
+    private void OnDestroy()
+    {
+        UserDataManager.Instance.ChangeMoneyAction -= ChangeGoods;
     }
 }

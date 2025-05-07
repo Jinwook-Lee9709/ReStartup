@@ -135,7 +135,13 @@ public class SupervisorListPanel : MonoBehaviour
         claimButton.onClick.RemoveAllListeners();
         claimButton.onClick.AddListener(OnClaim);
     }
-    
+
+    private void OnDestroy()
+    {
+        UserDataManager.Instance.ChangeMoneyAction -= OnMoneyChanged;
+        UserDataManager.Instance.OnRankChangedEvent -= OnRankChanged;
+    }
+
     public void OnSupervisorHire()
     {
         int currentManager = UserDataManager.Instance.CurrentUserData.ThemeStatus[(ThemeIds)cursorThemeID].managerCount;

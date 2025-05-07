@@ -71,6 +71,11 @@ public class EmployeeUIItem : MonoBehaviour
         GameObject.FindWithTag("UIManager").GetComponent<UiManager>().EmployeeHpRenewal(employeeData);
     }
 
+    private void OnDestroy()
+    {
+        UserDataManager.Instance.ChangeMoneyAction -= OnConditionChanged;
+    }
+
     public void Init(EmployeeTableGetData data, EmployeeUpgradePopup employeeUpgradePopup)
     {
         employeeData = data;
