@@ -6,7 +6,6 @@ public class TrayReturnCounter : MonoBehaviour, IInteractable
 {
     //References
     [SerializeField] private List<InteractPivot> interactablePoint;
-    
     public List<InteractPivot> InteractablePoints => interactablePoint;
     
     public InteractStatus InteractStatus { get; }
@@ -37,4 +36,5 @@ public class TrayReturnCounter : MonoBehaviour, IInteractable
     public void OnInteractCompleted()
     {
     }
+    
 }

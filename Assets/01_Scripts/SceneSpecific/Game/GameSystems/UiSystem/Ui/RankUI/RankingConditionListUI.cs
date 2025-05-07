@@ -23,13 +23,16 @@ public class RankingConditionListUI : MonoBehaviour
 
     private void OnDestroy()
     {
-        UserDataManager.Instance.ChangeRankPointAction -= RankPointCheck;
-        UserDataManager.Instance.OnRankChangedEvent -= RankCheck;
+        if (UserDataManager.Instance != null)
+        {
+            UserDataManager.Instance.ChangeRankPointAction -= RankPointCheck;
+            UserDataManager.Instance.OnRankChangedEvent -= RankCheck;
+        }
     }
 
     private void OnEnable()
     {
-        MovePanelToCenterTask(UserDataManager.Instance.CurrentUserData.CurrentRank-1).Forget();
+        MovePanelToCenterTask(UserDataManager.Instance.CurrentUserData.CurrentRank - 1).Forget();
     }
 
     private async UniTask MovePanelToCenterTask(int index)
@@ -37,13 +40,14 @@ public class RankingConditionListUI : MonoBehaviour
         await UniTask.Yield(PlayerLoopTiming.PostLateUpdate);
         MovePanelToCenter(index);
     }
+
     [VInspector.Button]
     private void MovePanelToCenter(int index)
     {
         var contentRect = contents.GetComponent<RectTransform>();
         Vector3 contentPosition = contentRect.anchoredPosition;
         Vector3 itemPosition = cards[index].transform.localPosition;
-        float contentWidth = contentRect.rect.size.x;           
+        float contentWidth = contentRect.rect.size.x;
         float viewportWidth = scrollRect.viewport.rect.size.x;
         float targetX = itemPosition.x - (viewportWidth / 2);
         float minX = 0;
@@ -52,7 +56,7 @@ public class RankingConditionListUI : MonoBehaviour
         Vector2 targetPosition = new Vector2(-targetX, contentPosition.y);
         scrollRect.velocity = Vector2.zero;
         DOTween.To(() => contentRect.anchoredPosition, x => contentRect.anchoredPosition = x, targetPosition, 0.5f)
-            .SetEase(Ease.OutCubic).onComplete += ()=>{ scrollRect.velocity = Vector2.zero; }; 
+            .SetEase(Ease.OutCubic).onComplete += () => { scrollRect.velocity = Vector2.zero; };
     }
 
     public void RankConditionCardAdd(RankConditionData data)
@@ -63,6 +67,7 @@ public class RankingConditionListUI : MonoBehaviour
         newrankingConditionCard.Init(data);
         cards.Add(newrankingConditionCard);
     }
+
     public void RankPointCheck(int val)
     {
         foreach (var card in cards)
@@ -79,14 +84,16 @@ public class RankingConditionListUI : MonoBehaviour
             card.CheckComplete(point);
         }
     }
+
     public void CheckUnlock(int index)
     {
         int nextindex = index + 1;
-        if(nextindex > cards.Count)
+        if (nextindex > cards.Count)
             return;
         var table = DataTableManager.Get<RankConditionDataTable>(DataTableIds.RankCondition.ToString());
-        var count = table.Count(x=>x.Type == (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme);
-        if(index != count)
+        var count = table.Count(x =>
+            x.Type == (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme);
+        if (index != count)
             cards[index + 1].Unlock();
     }
 }

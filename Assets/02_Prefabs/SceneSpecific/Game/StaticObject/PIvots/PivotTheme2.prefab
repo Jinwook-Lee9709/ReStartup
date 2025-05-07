@@ -307,6 +307,51 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectArea: 2
+--- !u!1 &1296472144275613312
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5969280599062384930}
+  - component: {fileID: 8739585790133145591}
+  m_Layer: 0
+  m_Name: HallTrashCan
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5969280599062384930
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1296472144275613312}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.56, y: 5.11, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8110644790593057518}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8739585790133145591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1296472144275613312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59591d1d351f54e438612eb1cf0c28b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectArea: 0
 --- !u!1 &1360882498111325487
 GameObject:
   m_ObjectHideFlags: 0
@@ -432,6 +477,51 @@ Transform:
   - {fileID: 2175780286620760105}
   m_Father: {fileID: 4201695680272108604}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2586311352161197735
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6930622721460646112}
+  - component: {fileID: 2913439912154736741}
+  m_Layer: 0
+  m_Name: KitchenTrashCan
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6930622721460646112
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2586311352161197735}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 9.32, y: -9, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8110644790593057518}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2913439912154736741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2586311352161197735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59591d1d351f54e438612eb1cf0c28b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectArea: 2
 --- !u!1 &2773798174273474803
 GameObject:
   m_ObjectHideFlags: 0
@@ -1110,7 +1200,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectArea: 2
---- !u!1 &8143729101277933306
+--- !u!1 &7876444387095580394
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1118,43 +1208,31 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5058416673637106514}
-  - component: {fileID: 436749782522539463}
+  - component: {fileID: 8110644790593057518}
   m_Layer: 0
-  m_Name: KitchenTrashCan
+  m_Name: TrashCanPivots
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5058416673637106514
+--- !u!4 &8110644790593057518
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8143729101277933306}
+  m_GameObject: {fileID: 7876444387095580394}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.56, y: 5.11, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3398919184077129041}
+  m_Children:
+  - {fileID: 5969280599062384930}
+  - {fileID: 6930622721460646112}
+  m_Father: {fileID: 4201695680272108604}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &436749782522539463
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8143729101277933306}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59591d1d351f54e438612eb1cf0c28b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objectArea: 0
 --- !u!1 &8336761233969093097
 GameObject:
   m_ObjectHideFlags: 0
@@ -1186,7 +1264,6 @@ Transform:
   m_Children:
   - {fileID: 1646408067755622381}
   - {fileID: 5371956803056914091}
-  - {fileID: 5058416673637106514}
   - {fileID: 7731250912129341967}
   - {fileID: 4789758967129058002}
   - {fileID: 295822123335497242}
@@ -1327,7 +1404,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 77560400059340633, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.852
+      value: -2.51
       objectReference: {fileID: 0}
     - target: {fileID: 284540709846461250, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1399,7 +1476,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1762278818728297429, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.259
+      value: -1.42
       objectReference: {fileID: 0}
     - target: {fileID: 1929706108576252397, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
       propertyPath: m_Name
@@ -1491,7 +1568,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2526442546026951410, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
       propertyPath: interiorPivots._serializedList.Array.size
-      value: 6
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2526442546026951410, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
+      propertyPath: trashCanPivots._serializedList.Array.size
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2526442546026951410, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
       propertyPath: cookWarePivots._serializedList.Array.data[0].Key
@@ -1527,19 +1608,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2526442546026951410, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
       propertyPath: interiorPivots._serializedList.Array.data[2].Key
-      value: 402114
-      objectReference: {fileID: 0}
-    - target: {fileID: 2526442546026951410, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
-      propertyPath: interiorPivots._serializedList.Array.data[3].Key
       value: 402207
       objectReference: {fileID: 0}
     - target: {fileID: 2526442546026951410, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
-      propertyPath: interiorPivots._serializedList.Array.data[4].Key
+      propertyPath: interiorPivots._serializedList.Array.data[3].Key
       value: 402205
+      objectReference: {fileID: 0}
+    - target: {fileID: 2526442546026951410, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
+      propertyPath: interiorPivots._serializedList.Array.data[4].Key
+      value: 402206
       objectReference: {fileID: 0}
     - target: {fileID: 2526442546026951410, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
       propertyPath: interiorPivots._serializedList.Array.data[5].Key
       value: 402206
+      objectReference: {fileID: 0}
+    - target: {fileID: 2526442546026951410, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
+      propertyPath: trashCanPivots._serializedList.Array.data[0].Key
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2526442546026951410, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
+      propertyPath: trashCanPivots._serializedList.Array.data[1].Key
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2526442546026951410, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
       propertyPath: interiorPivots._serializedList.Array.data[0].Value
@@ -1552,19 +1641,27 @@ PrefabInstance:
     - target: {fileID: 2526442546026951410, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
       propertyPath: interiorPivots._serializedList.Array.data[2].Value
       value: 
-      objectReference: {fileID: 5058416673637106514}
+      objectReference: {fileID: 7731250912129341967}
     - target: {fileID: 2526442546026951410, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
       propertyPath: interiorPivots._serializedList.Array.data[3].Value
       value: 
-      objectReference: {fileID: 7731250912129341967}
+      objectReference: {fileID: 4789758967129058002}
     - target: {fileID: 2526442546026951410, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
       propertyPath: interiorPivots._serializedList.Array.data[4].Value
       value: 
-      objectReference: {fileID: 4789758967129058002}
+      objectReference: {fileID: 295822123335497242}
     - target: {fileID: 2526442546026951410, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
       propertyPath: interiorPivots._serializedList.Array.data[5].Value
       value: 
       objectReference: {fileID: 295822123335497242}
+    - target: {fileID: 2526442546026951410, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
+      propertyPath: trashCanPivots._serializedList.Array.data[0].Value
+      value: 
+      objectReference: {fileID: 5969280599062384930}
+    - target: {fileID: 2526442546026951410, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
+      propertyPath: trashCanPivots._serializedList.Array.data[1].Value
+      value: 
+      objectReference: {fileID: 6930622721460646112}
     - target: {fileID: 2526442546026951410, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
       propertyPath: cookWarePivots._serializedList.Array.data[0].Value.Array.size
       value: 3
@@ -1679,7 +1776,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4323915517556854565, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.963
+      value: -5.89
       objectReference: {fileID: 0}
     - target: {fileID: 4612334777585234959, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1731,7 +1828,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5441947449882682432, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.29
+      value: -0.24
       objectReference: {fileID: 0}
     - target: {fileID: 6058560554347354722, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
       propertyPath: m_Name
@@ -1839,7 +1936,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7557272314804176699, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.37
+      value: -3.67
       objectReference: {fileID: 0}
     - target: {fileID: 7565824768491630781, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
       propertyPath: m_Name
@@ -1961,6 +2058,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2455591641632885001, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5135097032592097467}
+    - targetCorrespondingSourceObject: {fileID: 2455591641632885001, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8110644790593057518}
     - targetCorrespondingSourceObject: {fileID: 7219373829274758314, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 683609993816200778}

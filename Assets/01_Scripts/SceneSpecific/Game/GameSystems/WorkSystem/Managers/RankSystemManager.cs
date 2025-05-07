@@ -55,7 +55,8 @@ public class RankSystemManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        UserDataManager.Instance.ChangeRankPointAction -= rankingListUi.AddPlayerPoints;
+        if(UserDataManager.Instance != null)
+            UserDataManager.Instance.ChangeRankPointAction -= rankingListUi.AddPlayerPoints;
     }
     private bool CheckOverlap(RectTransform rect)
     {

@@ -10,5 +10,5 @@ public class ThemeRecordData
     public long cumulative;
     public int ranking;
     public int rank_point;
-
+    public bool is_claimed;
 }

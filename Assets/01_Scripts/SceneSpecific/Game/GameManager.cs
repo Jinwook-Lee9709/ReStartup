@@ -231,4 +231,12 @@ public class GameManager : MonoBehaviour
     
     #endregion
     
+    
+    //For Test
+    [VInspector.Button]
+    public void AddTrash(ObjectArea area)
+    {
+        WorkFlowController.CreateTrash(area);
+    }
+    //For Test
 }

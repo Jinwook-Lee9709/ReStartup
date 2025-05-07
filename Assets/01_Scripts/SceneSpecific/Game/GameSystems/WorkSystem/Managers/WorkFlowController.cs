@@ -3,20 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using Object = System.Object;
+using Random = UnityEngine.Random;
 
 public class WorkFlowController
 {
     private static readonly string FoodObjectName = "FoodObject";
-    private readonly LinkedList<Consumer> cashierQueue = new();
-    private readonly Dictionary<CookwareType, InteractableObjectManager<CookingStation>> cookingStationManagers = new();
-    private readonly InteractableObjectManager<FoodPickupCounter> foodPickupCounterManager = new();
-    private readonly LinkedList<(MainLoopWorkContext, CookingStation)> foodPickupCounterQueue = new();
-    private readonly Dictionary<CookwareType, LinkedList<MainLoopWorkContext>> orderQueue = new();
+    private LinkedList<Consumer> cashierQueue = new();
+    private Dictionary<CookwareType, InteractableObjectManager<CookingStation>> cookingStationManagers = new();
+    private InteractableObjectManager<FoodPickupCounter> foodPickupCounterManager = new();
+    private LinkedList<(MainLoopWorkContext, CookingStation)> foodPickupCounterQueue = new();
+    private Dictionary<CookwareType, LinkedList<MainLoopWorkContext>> orderQueue = new();
 
-    private readonly InteractableObjectManager<Table> tableManager = new();
+    private Dictionary<ObjectArea, TrashCan> trashCanDictionary = new();
+    private int isTrashExist = 0;
+
+    private InteractableObjectManager<Table> tableManager = new();
     private CashierCounter cashierCounter;
     private GameManager gameManager;
-    private readonly LinkedList<Consumer> waitingConsumerQueue = new();
+    private LinkedList<Consumer> waitingConsumerQueue = new();
     private WorkManager workManager;
 
     public TrayReturnCounter TrayReturnCounter { get; private set; }
@@ -25,6 +30,9 @@ public class WorkFlowController
 
     public event Action<CookwareType> OnCookingStationAdded;
 
+    private int foodSellStack = 0;
+    
+    
     public void Init(GameManager gameManager, WorkManager workManager)
     {
         this.gameManager = gameManager;
@@ -341,6 +349,7 @@ public class WorkFlowController
 
     public int OnCashierFinished()
     {
+        IncreaseSellStack();
         var firstConsumer = cashierQueue.First();
         cashierQueue.RemoveFirst();
         firstConsumer.FSM.OnEndPayment();
@@ -359,7 +368,7 @@ public class WorkFlowController
 
         return cashierQueue.Count;
     }
-
+    
     public void RegisterPayment()
     {
         var work = new WorkPayment(workManager, WorkType.Payment);
@@ -378,6 +387,91 @@ public class WorkFlowController
     public LinkedList<Consumer> GetCashierQueue()
     {
         return cashierQueue;
+    }
+
+    #endregion
+
+    #region TrashCanLogic
+    
+    private void IncreaseSellStack()
+    {
+        foodSellStack++;
+        if (foodSellStack >= Constants.TRASH_CREATE_STACK)
+        {
+            HandleTrashCreation();
+            foodSellStack = 0;
+        }
+    }
+
+    private void HandleTrashCreation()
+    {
+        switch (isTrashExist)
+        {
+            case 0b00:
+            {
+                if (Random.value < 0.5f)
+                    CreateTrash(ObjectArea.Hall);
+                else
+                    CreateTrash(ObjectArea.Kitchen);
+                UserDataManager.Instance.negativeReviewProbability = 0.65f;
+                break;
+            }
+            case 0b01:
+                CreateTrash(ObjectArea.Hall);
+                UserDataManager.Instance.negativeReviewProbability = 0.7f;
+                break;
+            case 0b10:
+                CreateTrash(ObjectArea.Kitchen);
+                UserDataManager.Instance.negativeReviewProbability = 0.7f;
+                break;
+            case 0b11:
+                break;
+        }
+    }
+
+    public void RegisterTrashCan(ObjectArea area, TrashCan trashCan)
+    {
+        trashCanDictionary.TryAdd(area, trashCan);
+    }
+    
+    public void CreateTrash(ObjectArea area)
+    {
+        if (area == ObjectArea.Hall)
+        {
+            isTrashExist |= 0b10;
+        }
+        else
+        {
+            isTrashExist |= 0b01;
+        }
+        var work = new WorkCleanTrashCan(workManager, area == ObjectArea.Hall ? WorkType.Hall : WorkType.Kitchen, 0);
+        work.SetContext(this, area);
+        work.SetInteractable(trashCanDictionary[area]);
+        work.OnWorkRegistered();
+        trashCanDictionary[area].SetWork(work);
+    }
+
+    public void OnCleanTrash(ObjectArea area)
+    {
+        if (area == ObjectArea.Hall)
+        {
+            isTrashExist &= 0b01;
+        }
+        else
+        {
+            isTrashExist &= 0b10;
+        }
+
+        if (isTrashExist == 0)
+        {
+            UserDataManager.Instance.negativeReviewProbability = 0.6f;
+        }
+        else
+        {
+            UserDataManager.Instance.negativeReviewProbability = 0.65f;
+        }
+
+        UserDataManager.Instance.AddRankPointWithSave(Constants.TRASH_CLEAN_BONUS);
     }
 
     #endregion

@@ -105,6 +105,11 @@ public class ObjectPivotManager
     {
         return mapPivotLocator.decor;
     }
+
+    public Transform GetTrashCanPivot(ObjectArea area)
+    {
+        return pivotLocator.TrashCanPivots[area];
+    }
     
     
        private void AdjustPivots()
@@ -139,6 +144,15 @@ public class ObjectPivotManager
         }
 
         foreach (var pair in pivotLocator.InteriorPivots)
+        {
+            var info = pair.Value.GetComponent<PivotInfo>();
+            if (info is not null)
+            {
+                AdjustObject(pair.Value, info, defaultInterval, adjustMagnification);
+            }
+        }
+
+        foreach (var pair in pivotLocator.TrashCanPivots)
         {
             var info = pair.Value.GetComponent<PivotInfo>();
             if (info is not null)

@@ -33,6 +33,8 @@ public class UserDataManager : Singleton<UserDataManager>
     public event Action<bool> OnReviewCntFullEvent;
     public event Action<int> OnRankChangedEvent;
 
+    public float negativeReviewProbability = 0.6f;
+
     public void OnRankPointUp(int getRankPoint)
     {
         currentUserData.CurrentRankPoint += getRankPoint;
@@ -58,6 +60,13 @@ public class UserDataManager : Singleton<UserDataManager>
         CurrentUserData.CurrentRank = rank;
         await ThemeRecordDAC.UpdateThemeRank((int)currentTheme, rank);
         OnRankChangedEvent?.Invoke(rank);
+    }
+
+    public async UniTask SaveIsRankCompensationClaimed(bool isClaimed)
+    {
+        currentUserData.IsRankCompensationClaimed = isClaimed;
+        var currentTheme = ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme;
+        await ThemeRecordDAC.UpdateIsClaimed((int)currentTheme, isClaimed);
     }
 
     public void AdjustMoney(int money)
@@ -101,8 +110,6 @@ public class UserDataManager : Singleton<UserDataManager>
         list.Add(data);
         await CurrencyDataDAC.UpdateCurrencyData(list);
     }
-
-
 
     public async UniTask UpgradeInterior(int interiorId)
     {
@@ -207,7 +214,7 @@ public class UserDataManager : Singleton<UserDataManager>
             currentUserData.NegativeCnt++;
             if (currentUserData.NegativeCnt >= 4)
             {
-                if (Random.Range(0f, 1f) < 0.6f) OnReviewCntFullEvent?.Invoke(isPositive);
+                if (Random.Range(0f, 1f) < negativeReviewProbability) OnReviewCntFullEvent?.Invoke(isPositive);
                 ReviewCountUp(isPositive);
                 currentUserData.NegativeCnt = 0;
             }
