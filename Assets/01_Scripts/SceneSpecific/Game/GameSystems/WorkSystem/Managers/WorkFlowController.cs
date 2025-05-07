@@ -349,6 +349,7 @@ public class WorkFlowController
 
     public int OnCashierFinished()
     {
+        IncreaseSellStack();
         var firstConsumer = cashierQueue.First();
         cashierQueue.RemoveFirst();
         firstConsumer.FSM.OnEndPayment();
@@ -398,6 +399,7 @@ public class WorkFlowController
         if (foodSellStack >= Constants.TRASH_CREATE_STACK)
         {
             HandleTrashCreation();
+            foodSellStack = 0;
         }
     }
 
@@ -411,13 +413,16 @@ public class WorkFlowController
                     CreateTrash(ObjectArea.Hall);
                 else
                     CreateTrash(ObjectArea.Kitchen);
+                UserDataManager.Instance.negativeReviewProbability = 0.65f;
                 break;
             }
             case 0b01:
                 CreateTrash(ObjectArea.Hall);
+                UserDataManager.Instance.negativeReviewProbability = 0.7f;
                 break;
             case 0b10:
                 CreateTrash(ObjectArea.Kitchen);
+                UserDataManager.Instance.negativeReviewProbability = 0.7f;
                 break;
             case 0b11:
                 break;
@@ -452,6 +457,21 @@ public class WorkFlowController
         {
             isTrashExist &= 0b01;
         }
+        else
+        {
+            isTrashExist &= 0b10;
+        }
+
+        if (isTrashExist == 0)
+        {
+            UserDataManager.Instance.negativeReviewProbability = 0.6f;
+        }
+        else
+        {
+            UserDataManager.Instance.negativeReviewProbability = 0.65f;
+        }
+
+        UserDataManager.Instance.AddRankPointWithSave(Constants.TRASH_CLEAN_BONUS);
     }
 
     #endregion

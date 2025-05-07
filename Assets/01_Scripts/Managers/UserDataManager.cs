@@ -33,6 +33,8 @@ public class UserDataManager : Singleton<UserDataManager>
     public event Action<bool> OnReviewCntFullEvent;
     public event Action<int> OnRankChangedEvent;
 
+    public float negativeReviewProbability = 0.6f;
+
     public void OnRankPointUp(int getRankPoint)
     {
         currentUserData.CurrentRankPoint += getRankPoint;
@@ -212,7 +214,7 @@ public class UserDataManager : Singleton<UserDataManager>
             currentUserData.NegativeCnt++;
             if (currentUserData.NegativeCnt >= 4)
             {
-                if (Random.Range(0f, 1f) < 0.6f) OnReviewCntFullEvent?.Invoke(isPositive);
+                if (Random.Range(0f, 1f) < negativeReviewProbability) OnReviewCntFullEvent?.Invoke(isPositive);
                 ReviewCountUp(isPositive);
                 currentUserData.NegativeCnt = 0;
             }

@@ -249,7 +249,8 @@ public static class Constants
     public static readonly int SUPERVISOR_HIRE_REQUIREMENTS = 15;
     public static readonly int MAX_RANK = 15;
 
-    public static readonly int TRASH_CREATE_STACK = 1;
+    public static readonly int TRASH_CREATE_STACK = 20;
+    public static readonly int TRASH_CLEAN_BONUS = 1;
 }
 
 public enum RankRewardType
