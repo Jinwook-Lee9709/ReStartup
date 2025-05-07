@@ -7,6 +7,9 @@ using UnityEngine.UI;
 
 public class EmployeeUpgradeListUi : MonoBehaviour
 {
+    private readonly string hallStaff = "HallStaff";
+    private readonly string kitchenStaff = "KitchenStaff";
+    private readonly string cashier = "Cashier";
     public GameObject upgradeItemObject;
     private EmployeeTableGetData employeeData;
     public Transform contents;
@@ -35,13 +38,13 @@ public class EmployeeUpgradeListUi : MonoBehaviour
             case WorkType.All:
                 break;
             case WorkType.Payment:
-                GetComponentInChildren<TextMeshProUGUI>().text = "계산원";
+                GetComponentInChildren<TextMeshProUGUI>().text = LZString.GetUIString(hallStaff);
                 break;
             case WorkType.Hall:
-                GetComponentInChildren<TextMeshProUGUI>().text = "홀직원";
+                GetComponentInChildren<TextMeshProUGUI>().text = LZString.GetUIString(kitchenStaff);
                 break;
             case WorkType.Kitchen:
-                GetComponentInChildren<TextMeshProUGUI>().text = "주방직원";
+                GetComponentInChildren<TextMeshProUGUI>().text = LZString.GetUIString(cashier);
                 break;
         }
     }

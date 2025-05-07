@@ -11,6 +11,9 @@ public class QuestCard : MonoBehaviour
     //[SerializeField] private GameObject CompleteImage;
     private readonly string categoryFormat = "MainCategory{0}";
     private readonly string missionName = "MissionName{0}";
+    private readonly string completeGetReward = "CompleteGetReward";
+    private readonly string nonComplete = "NonComplete";
+    private readonly string rewardReceipt = "RewardReceipt";
     [SerializeField] private TextMeshProUGUI rewardValue, conditionText, currentProgress, buttonText;
     [SerializeField] private Slider progressSlider;
     [SerializeField] private Image rewardImage, completeImage;
@@ -34,7 +37,7 @@ public class QuestCard : MonoBehaviour
         progressSlider.value = (float)mission.Count / missionData.CompleteTimes;
         conditionText.text = string.Format(LZString.GetUIString(string.Format(missionName, missionData.MissionId)), missionData.CompleteTimes);
         currentProgress.text = $"{Math.Clamp(mission.Count, 0, missionData.CompleteTimes)} / {missionData.CompleteTimes}";
-        button.GetComponentInChildren<TextMeshProUGUI>().text = mission.Count < missionData.CompleteTimes ? "미완료" : "완료\n보상 받기";
+        button.GetComponentInChildren<TextMeshProUGUI>().text = mission.Count < missionData.CompleteTimes ? LZString.GetUIString(nonComplete) : LZString.GetUIString(completeGetReward);
         clear = mission.Count >= missionData.CompleteTimes;
         rewardClaimed = false;
         if (saveClear && missionData.MissionType != MissionType.Achievements)
@@ -57,7 +60,7 @@ public class QuestCard : MonoBehaviour
         progressSlider.value = (float)mission.Count / missionData.CompleteTimes;
         conditionText.text = string.Format(LZString.GetUIString(string.Format(missionName, missionData.MissionId)), missionData.CompleteTimes);
         currentProgress.text = $"{Math.Clamp(mission.Count, 0, missionData.CompleteTimes)} / {missionData.CompleteTimes}";
-        button.GetComponentInChildren<TextMeshProUGUI>().text = mission.Count < missionData.CompleteTimes ? "미완료" : "완료\n보상 받기";
+        button.GetComponentInChildren<TextMeshProUGUI>().text = mission.Count < missionData.CompleteTimes ? LZString.GetUIString(nonComplete) : LZString.GetUIString(completeGetReward);
         clear = mission.Count >= missionData.CompleteTimes;
         rewardClaimed = false;
         missionManager.ReorderMissionCard(missionData.MissionId);
@@ -97,7 +100,7 @@ public class QuestCard : MonoBehaviour
         rewardClaimed = true;
         completeImage.gameObject.SetActive(true);
         missionManager.ReorderMissionCard(missionData.MissionId);
-        button.GetComponentInChildren<TextMeshProUGUI>().text = "수령 완료";
+        button.GetComponentInChildren<TextMeshProUGUI>().text = LZString.GetUIString(rewardReceipt);
     }
     public void UpdateMissionUICard(int count)
     {
@@ -106,7 +109,7 @@ public class QuestCard : MonoBehaviour
         clear = count >= missionData.CompleteTimes;
         if (clear)
         {
-            button.GetComponentInChildren<TextMeshProUGUI>().text = "완료 \n 보상 받기";
+            button.GetComponentInChildren<TextMeshProUGUI>().text = LZString.GetUIString(completeGetReward);
             button.interactable = true;
             missionManager.ReorderMissionCard(missionData.MissionId);
         }
