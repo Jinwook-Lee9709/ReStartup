@@ -21,6 +21,17 @@ public class PreferencesUI : MonoBehaviour
         changeLangaugeButton.onClick.AddListener(ChangeLanguageButtonClick);
         contactUsButton.onClick.AddListener(OpenGmailApp);
     }
+
+    private void Update()
+    {
+        if(Application.platform == RuntimePlatform.Android)
+        {
+            if(Input.GetKey(KeyCode.Escape))
+            {
+                ServiceLocator.Instance.GetSceneService<GameManager>().uiManager.OnClickButtonExitPreferencesUI();
+            }
+        }
+    }
     public void ChangeLanguageButtonClick()
     {
         var sceneManager = ServiceLocator.Instance.GetGlobalService<SceneController>();

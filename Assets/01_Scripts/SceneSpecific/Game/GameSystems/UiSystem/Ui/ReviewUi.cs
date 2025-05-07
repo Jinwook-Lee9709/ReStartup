@@ -7,6 +7,16 @@ public class ReviewUi : MonoBehaviour
     public GameObject rankUpScrollView;
     public GameObject informationScrollView;
 
+    private void Update()
+    {
+        if(Application.platform == RuntimePlatform.Android)
+        {
+            if(Input.GetKey(KeyCode.Escape))
+            {
+                ServiceLocator.Instance.GetSceneService<GameManager>().uiManager.OnClickButtonExitReviewUi();
+            }
+        }
+    }
 
     public void OnClickReviewButton()
     {

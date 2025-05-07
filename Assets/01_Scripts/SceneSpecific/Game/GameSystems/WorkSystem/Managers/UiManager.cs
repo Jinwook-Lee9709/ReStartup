@@ -16,6 +16,18 @@ public class UiManager : MonoBehaviour
     {
         EmployeeReewalAll();
     }
+
+    private void Update()
+    {
+        if(Application.platform == RuntimePlatform.Android)
+        {
+            if(Input.GetKey(KeyCode.Escape))
+            {
+                OnClickButtonExitUiApps();
+            }
+        }
+    }
+    
     public void OnClickButtonSetAppsUi()
     {
         var uiSetChack = uiHUD.gameObject.GetComponent<HeadsUpDisplayUi>().includedUiSet;
@@ -27,14 +39,14 @@ public class UiManager : MonoBehaviour
         }
     }
 
-    public void OnCilckButtonOepnUiReview()
+    public void OnCilckButtonOpenUiReview()
     {
         uiUpgrade.SetActive(false);
         uiPromotion.SetActive(false);
         uiReview.SetActive(true);
     }
 
-    public void OnClickButtonOepnUiUpgrade()
+    public void OnClickButtonOpenUiUpgrade()
     {
         uiUpgrade.SetActive(true);
     }

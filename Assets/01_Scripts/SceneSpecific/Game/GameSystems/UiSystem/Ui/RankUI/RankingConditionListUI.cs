@@ -83,6 +83,7 @@ public class RankingConditionListUI : MonoBehaviour
         {
             card.CheckComplete(point);
         }
+        MovePanelToCenterTask(UserDataManager.Instance.CurrentUserData.CurrentRank - 1).Forget();
     }
 
     public void CheckUnlock(int index)

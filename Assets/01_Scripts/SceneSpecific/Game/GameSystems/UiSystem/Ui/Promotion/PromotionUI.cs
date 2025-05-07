@@ -21,6 +21,17 @@ public class PromotionUI : MonoBehaviour
         payButton.onClick.AddListener(OnPayButtonClick);
         adButton.onClick.AddListener(OnAdButtonClick);
     }
+
+    private void Update()
+    {
+        if(Application.platform == RuntimePlatform.Android)
+        {
+            if(Input.GetKey(KeyCode.Escape))
+            {
+                ServiceLocator.Instance.GetSceneService<GameManager>().uiManager.OnClickButtonExitPromotionUI();
+            }
+        }
+    }
     public void Init(PromotionBase promotion)
     {
         promotionData = promotion;

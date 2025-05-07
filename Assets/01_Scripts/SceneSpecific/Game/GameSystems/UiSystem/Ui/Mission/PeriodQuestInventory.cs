@@ -21,6 +21,18 @@ public class PeriodQuestInventory : MonoBehaviour
 
     [SerializeField] public GameObject dailyQuestScrollview, weeklyQuestScrollview, mainQuestScrollview, AchievementScrollview;
 
+    private void Update()
+    {
+        if(Application.platform == RuntimePlatform.Android)
+        {
+            if(Input.GetKey(KeyCode.Escape))
+            {
+                ServiceLocator.Instance.GetSceneService<GameManager>().uiManager.OnClickButtonExitQuestUI();
+            }
+        }
+    }
+    
+    
     public void AddPeriodQuest(MissionData data, Mission mission, bool saveClear)
     {
         if (missionManager == null)

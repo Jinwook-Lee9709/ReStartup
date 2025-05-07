@@ -8,6 +8,16 @@ public class UpgradeUi : MonoBehaviour
     public GameObject foodScrollView;
     public GameObject RestaurantSupervisePanel;
 
+    private void Update()
+    {
+        if(Application.platform == RuntimePlatform.Android)
+        {
+            if(Input.GetKey(KeyCode.Escape))
+            {
+                ServiceLocator.Instance.GetSceneService<GameManager>().uiManager.OnClickButtonExitUiUpgrade();
+            }
+        }
+    }
     public void EmployeeScrollViewOpenButton()
     {
         employeeScrollView.SetActive(true);
