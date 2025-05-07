@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     public ConsumerManager consumerManager;
     public FoodManager foodManager;
     public BuffManager buffManager;
+    public UiManager uiManager;
     
     #region InitializeClasses
     private void Awake()

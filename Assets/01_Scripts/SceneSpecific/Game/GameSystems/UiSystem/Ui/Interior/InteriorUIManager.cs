@@ -51,6 +51,19 @@ public class InteriorUIManager : MonoBehaviour
         UpdateCards();
     }
 
+    private void Update()
+    {
+        if(Application.platform == RuntimePlatform.Android)
+        {
+            if(Input.GetKey(KeyCode.Escape))
+            {
+                ServiceLocator.Instance.GetSceneService<GameManager>().uiManager.OnClickButtonExitInteriorUI();
+            }
+        }
+    }
+    
+    
+
     private void InitCardGroups(List<InteriorData> dataList, ObjectArea area)
     {
         var targetList = area == ObjectArea.Hall ? hallCardGroups : kitchenCardGroups;
