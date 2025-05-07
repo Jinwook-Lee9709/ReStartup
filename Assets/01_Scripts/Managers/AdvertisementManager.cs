@@ -203,7 +203,7 @@ public class AdvertisementManager : Singleton<AdvertisementManager>
             handle.WaitForCompletion();
             ticketPopup = handle.Result;
         }
-        var popup = Instantiate(ticketPopup).GetComponent<AdTicketPopup>();
+        var popup = Instantiate(ticketPopup, ServiceLocator.Instance.GetSceneService<GameManager>().uiManager.canvas.transform).GetComponent<AdTicketPopup>();
         popup.Init(adCallBack, afterEvent);
     }
 

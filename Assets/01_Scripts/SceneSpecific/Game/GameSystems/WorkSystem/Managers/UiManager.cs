@@ -1,6 +1,7 @@
 using UnityEngine;
 public class UiManager : MonoBehaviour
 {
+    public GameObject canvas;
     public GameObject uiHUD;
     public GameObject uiApps;
     public GameObject uiReview;

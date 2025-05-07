@@ -27,7 +27,11 @@ public class AdTicketPopup : PopUp
                 afterEvent();
 
             UserDataManager.Instance.CurrentUserData.AdTicket--;
+            OnCancle();
         });
-        cancelButton.onClick.AddListener(() => AdvertisementManager.Instance.ShowRewardedAdDirect(adCallback, afterEvent));
+        cancelButton.onClick.AddListener(() => {
+            AdvertisementManager.Instance.ShowRewardedAdDirect(adCallback, afterEvent);
+            OnCancle();
+            });
     }
 }
