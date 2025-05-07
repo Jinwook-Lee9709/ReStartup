@@ -4,6 +4,7 @@ using UnityEngine;
 public class FoodPickupCounter : InteractableObjectBase
 {
     [SerializeField] private Transform foodPlacePivot;
+    [SerializeField] private IconBubble iconBubble;
 
     public Transform FoodPlacePivot => foodPlacePivot;
 
@@ -14,10 +15,12 @@ public class FoodPickupCounter : InteractableObjectBase
 
     public override bool ShowIcon(IconPivots pivot, Sprite icon, Sprite background = null, bool flipBackground = false )
     {
-        return false;
+        iconBubble.ShowIcon(icon, iconBubble.transform.position, flipBackground);
+        return true;
     }
 
     public override void HideIcon()
     {
+        iconBubble.HideIcon();
     }
 }

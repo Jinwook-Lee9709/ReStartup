@@ -13,7 +13,8 @@ public enum DebugFlags
 public enum CurrencyType
 {
     Money,
-    Gold
+    Gold,
+    AdTicket
 }
 
 public enum ResponseType

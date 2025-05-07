@@ -37,6 +37,7 @@ public class CurrencyTypeConverter : JsonConverter<CurrencyType>
         {
             "money" => CurrencyType.Money,
             "gold" => CurrencyType.Gold,
+            "adticket" => CurrencyType.AdTicket,
             _ => throw new JsonSerializationException($"Unexpected currency_type value: {value}")
         };
     }
