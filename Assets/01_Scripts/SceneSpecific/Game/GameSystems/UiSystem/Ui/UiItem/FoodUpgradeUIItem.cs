@@ -101,7 +101,6 @@ public class FoodUpgradeUIItem : MonoBehaviour
     {
         var handle = Addressables.LoadAssetAsync<Sprite>(iconAddress);
         yield return handle;
-
         if (handle.Status == AsyncOperationStatus.Succeeded)
             image.sprite = handle.Result;
         else

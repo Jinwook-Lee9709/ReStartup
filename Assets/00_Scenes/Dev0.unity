@@ -20144,7 +20144,6 @@ MonoBehaviour:
   contactUsButton: {fileID: 1292535848}
   backgroundSound: {fileID: 1061350683}
   effectSound: {fileID: 1178170156}
-  audioSource: {fileID: 0}
   updatePopup: {fileID: 1180738922}
 --- !u!1 &774402585
 GameObject:
@@ -43124,14 +43123,14 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 1634035046}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 344316609}
         m_TargetAssemblyTypeName: UiManager, Assembly-CSharp
-        m_MethodName: OnClickButtonOpenPromotionUI
+        m_MethodName: OnClickButtonOpenPreferencesUI
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
