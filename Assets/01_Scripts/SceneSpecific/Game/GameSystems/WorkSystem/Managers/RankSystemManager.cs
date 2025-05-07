@@ -52,6 +52,11 @@ public class RankSystemManager : MonoBehaviour
 
         playerClone.GetComponent<PlayerClone>().playerData = playerData;
     }
+
+    private void OnDestroy()
+    {
+        UserDataManager.Instance.ChangeRankPointAction -= rankingListUi.AddPlayerPoints;
+    }
     private bool CheckOverlap(RectTransform rect)
     {
         Vector3[] corners = new Vector3[4];

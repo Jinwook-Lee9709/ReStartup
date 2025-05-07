@@ -21,6 +21,12 @@ public class RankingConditionListUI : MonoBehaviour
         UserDataManager.Instance.OnRankChangedEvent += RankCheck;
     }
 
+    private void OnDestroy()
+    {
+        UserDataManager.Instance.ChangeRankPointAction -= RankPointCheck;
+        UserDataManager.Instance.OnRankChangedEvent -= RankCheck;
+    }
+
     private void OnEnable()
     {
         MovePanelToCenterTask(UserDataManager.Instance.CurrentUserData.CurrentRank-1).Forget();

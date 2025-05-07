@@ -25,6 +25,12 @@ public class FoodResearchListUI : MonoBehaviour
         gameObject.GetComponent<GridLayoutGroup>().cellSize = new Vector2(newWidth, newHeight);
         UnlockCheakAll();
     }
+
+    private void OnDestroy()
+    {
+        var userDataManager = UserDataManager.Instance;
+        userDataManager.ChangeRankPointAction -= Unlock;
+    }
     private void UnlockCheakAll()
     {
         foreach (var ui in foodResearchItems)

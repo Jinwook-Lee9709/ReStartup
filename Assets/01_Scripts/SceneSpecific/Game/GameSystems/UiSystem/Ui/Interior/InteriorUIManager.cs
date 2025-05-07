@@ -44,6 +44,7 @@ public class InteriorUIManager : MonoBehaviour
         UserDataManager.Instance.ChangeRankPointAction -= OnRankpointChanged;
         UserDataManager.Instance.ChangeRankPointAction += OnRankpointChanged;
     }
+    
 
     private void OnEnable()
     {
@@ -129,6 +130,7 @@ public class InteriorUIManager : MonoBehaviour
         if (UserDataManager.Instance != null)
         {
             UserDataManager.Instance.ChangeMoneyAction -= OnMoneyChanged;
+            UserDataManager.Instance.ChangeRankPointAction -= OnRankpointChanged;
         }
     }
 }
