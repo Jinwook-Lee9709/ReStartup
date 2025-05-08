@@ -9,19 +9,14 @@ public class EmployeeUpgradeListUi : MonoBehaviour
 {
     private readonly string hallStaff = "HallStaff";
     private readonly string kitchenStaff = "KitchenStaff";
-    private readonly string cashier = "Cashier";
+    private readonly string cashier = "CashierStaff";
     public GameObject upgradeItemObject;
     private EmployeeTableGetData employeeData;
     public Transform contents;
     private WorkType workType;
-
-    void Start()
-    {
-
-    }
+    
     public void AddEmployeeUpgradeItem(EmployeeTableGetData data, EmployeeUpgradePopup employeeUpgradePopup)
     {
-       
         employeeData = data;
         var ui = Instantiate(upgradeItemObject, contents).GetComponent<EmployeeUIItem>();
         ui.Init(data, employeeUpgradePopup);
@@ -38,13 +33,13 @@ public class EmployeeUpgradeListUi : MonoBehaviour
             case WorkType.All:
                 break;
             case WorkType.Payment:
-                GetComponentInChildren<TextMeshProUGUI>().text = LZString.GetUIString(hallStaff);
+                GetComponentInChildren<TextMeshProUGUI>().text = LZString.GetUIString(cashier);
                 break;
             case WorkType.Hall:
-                GetComponentInChildren<TextMeshProUGUI>().text = LZString.GetUIString(kitchenStaff);
+                GetComponentInChildren<TextMeshProUGUI>().text = LZString.GetUIString(hallStaff);
                 break;
             case WorkType.Kitchen:
-                GetComponentInChildren<TextMeshProUGUI>().text = LZString.GetUIString(cashier);
+                GetComponentInChildren<TextMeshProUGUI>().text = LZString.GetUIString(kitchenStaff);
                 break;
         }
     }

@@ -89,13 +89,13 @@ public class EmployeeUIItem : MonoBehaviour
             case WorkType.All:
                 break;
             case WorkType.Payment:
-                uiNameText.text = $"{LZString.GetUIString(cashierStaff)} :\n{LZString.GetUIString(string.Format(Strings.employeeNameKeyFormat, employeeData.StaffID))}";
+                uiNameText.text = $"{LZString.GetUIString(cashierStaff)}{employeeData.StaffID % 10}";
                 break;
             case WorkType.Hall:
-                uiNameText.text = $"{LZString.GetUIString(hallStaff)} :\n{LZString.GetUIString(string.Format(Strings.employeeNameKeyFormat, employeeData.StaffID))}";
+                uiNameText.text = $"{LZString.GetUIString(hallStaff)}{employeeData.StaffID % 10}";
                 break;
             case WorkType.Kitchen:
-                uiNameText.text = $"{LZString.GetUIString(kitchenStaff)} :\n{LZString.GetUIString(string.Format(Strings.employeeNameKeyFormat, employeeData.StaffID))}";
+                uiNameText.text = $"{LZString.GetUIString(kitchenStaff)}{employeeData.StaffID % 10}";
                 break;
         }
         button = GetComponentInChildren<Button>();
@@ -179,13 +179,13 @@ public class EmployeeUIItem : MonoBehaviour
             case WorkType.All:
                 break;
             case WorkType.Payment:
-                uiNameText.text = $"{LZString.GetUIString(cashierStaff)}:\n{LZString.GetUIString(string.Format(Strings.employeeNameKeyFormat, employeeData.StaffID))}:{employeeSaveData[employeeId].level}";
+                uiNameText.text = uiNameText.text = $"{LZString.GetUIString(cashierStaff)}{employeeData.StaffID % 10}";
                 break;
             case WorkType.Hall:
-                uiNameText.text = $"{LZString.GetUIString(hallStaff)}:\n{LZString.GetUIString(string.Format(Strings.employeeNameKeyFormat, employeeData.StaffID))}:{employeeSaveData[employeeId].level}";
+                uiNameText.text = $"{LZString.GetUIString(hallStaff)}{employeeData.StaffID % 10}";
                 break;
             case WorkType.Kitchen:
-                uiNameText.text = $"{LZString.GetUIString(kitchenStaff)}:\n{LZString.GetUIString(string.Format(Strings.employeeNameKeyFormat, employeeData.StaffID))}:{employeeSaveData[employeeId].level}";
+                uiNameText.text = $"{LZString.GetUIString(kitchenStaff)}{employeeData.StaffID % 10}";
                 break;
         }
         workSpeedValue.text = employeeData.WorkSpeed.ToString();

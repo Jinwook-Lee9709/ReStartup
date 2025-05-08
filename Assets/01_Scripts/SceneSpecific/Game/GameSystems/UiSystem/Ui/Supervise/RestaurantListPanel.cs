@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using AYellowpaper.SerializedCollections;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
@@ -21,6 +22,8 @@ public class RestaurantListPanel : MonoBehaviour
     [SerializeField] private RectTransform content;
     [SerializeField] private float animationDuration = 0.3f;
 
+    [SerializeField] private List<Image> dots;
+    
     private List<Image> indicators;
     
     private RestaurantSuperviseUIManager uiManager;
@@ -41,6 +44,7 @@ public class RestaurantListPanel : MonoBehaviour
         UserDataManager.Instance.ChangeMoneyAction += OnMoneyChanged;
         lButton.onClick.AddListener(() => OnButtonClick(false));
         rButton.onClick.AddListener(() => OnButtonClick(true));
+        FillDots();
         SetButtonActive();
     }
 
@@ -89,9 +93,25 @@ public class RestaurantListPanel : MonoBehaviour
     private void OnButtonClick(bool isRight)
     {
         currentTheme += isRight ? 1 : -1;
+        FillDots();
         uiManager.ChangeSupervisorList(currentTheme);
         MovePanelToCenter(currentTheme);
         SetButtonActive();
+    }
+
+    private void FillDots()
+    {
+        for(int i = 0; i < dots.Count; i++)
+        {
+            if (i == currentTheme - 1)
+            {
+                dots[i].color = Color.white;
+            }
+            else
+            {
+                dots[i].color = Color.gray;
+            }
+        }
     }
 
 
