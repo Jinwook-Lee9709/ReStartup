@@ -33,6 +33,10 @@ public class AudioManager : Singleton<AudioManager>
             }
         }
         audioMixer = audioBGMSource.outputAudioMixerGroup.audioMixer;
+        var bgmVol = Mathf.Lerp(-80f, 0f, LocalSaveLoadManager.Data.BackGroundVolume);
+        var sfxVol = Mathf.Lerp(-80f, 0f, LocalSaveLoadManager.Data.SFXVolume);
+        SetVolume(AudioType.BGM, bgmVol);
+        SetVolume(AudioType.BGM, sfxVol);
         PlayBGM("Theme1BGM");
     }
 
@@ -49,17 +53,6 @@ public class AudioManager : Singleton<AudioManager>
     public void SetVolume(AudioType audioType, float volume)
     {
         audioMixer.SetFloat(audioType.ToString(), volume);
-        switch (audioType)
-        {
-            case AudioType.Master:
-                break;
-            case AudioType.SFX:
-                LocalSaveLoadManager.Data.SFXVolume = volume;
-                break;
-            case AudioType.BGM:
-                LocalSaveLoadManager.Data.BackGroundVolume = volume;
-                break;
-        }
         if (saveCoroutine == null)
         {
             saveCoroutine = StartCoroutine(LocalSave());
@@ -74,7 +67,7 @@ public class AudioManager : Singleton<AudioManager>
 
     public void PlaySFX(string key)
     {
-        audioSFXSource.clip = audioSO.AudioClips[key]; 
+        audioSFXSource.clip = audioSO.AudioClips[key];
         audioSFXSource.Play();
     }
     private IEnumerator LocalSave()

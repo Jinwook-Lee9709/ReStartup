@@ -9,11 +9,6 @@ public class GameInitializer : MonoBehaviour
     private void Awake()
     {
         LocalSaveLoadManager.GameSettingInit();
-        Application.targetFrameRate = 120;
-        QualitySettings.vSyncCount = 0;
-    }
-    private void Start()
-    {
         switch (LocalSaveLoadManager.Data.LanguageType)
         {
             case LanguageType.Korean:
@@ -23,6 +18,12 @@ public class GameInitializer : MonoBehaviour
                 titleSceneManager.SwitchToEnglish();
                 break;
         }
+        Application.targetFrameRate = 120;
+        QualitySettings.vSyncCount = 0;
+    }
+    private void Start()
+    {
+
 
     }
 }
