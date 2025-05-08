@@ -12,7 +12,8 @@ using UnityEngine.UI;
 public class InteriorUpgradePopup : MonoBehaviour
 {
     private static readonly string UpgradeInfoFormat = "{0} -> {1}";
-    
+    private static readonly string UpgradeEffectWithPercentFormat = "{0}% -> {1}%";
+
     [SerializeField] private float backgroundOpacity = 0.8f;
     [SerializeField] private Button background;
     [SerializeField] private Button mainButton;
@@ -21,9 +22,11 @@ public class InteriorUpgradePopup : MonoBehaviour
     [SerializeField] private Image afterIcon;
     [SerializeField] private TextMeshProUGUI infoText;
     [SerializeField] private TextMeshProUGUI priceText;
+    [SerializeField] private TextMeshProUGUI effectNameText;
+    [SerializeField] private TextMeshProUGUI effectAmountText;
 
     private InteriorCard currentCard;
-    
+
     public void Start()
     {
         background.onClick.RemoveAllListeners();
@@ -41,14 +44,22 @@ public class InteriorUpgradePopup : MonoBehaviour
 
         String beforeString = LZString.GetUIString(data.StringID + currentInteriorLevel);
         String afterString = LZString.GetUIString($"{data.StringID}{currentInteriorLevel + 1}");
+        String effectString = LZString.GetUIString(data.EffectType.ToString());
+        String effectAmountString = string.Format(UpgradeInfoFormat, data.EffectQuantity * currentInteriorLevel,
+            data.EffectQuantity * (currentInteriorLevel + 1));
         
+        effectNameText.text = effectString;
+        if(data.EffectType == InteriorEffectType.RankPoints)
+        effectAmountText.text = effectAmountString;
         infoText.text = string.Format(UpgradeInfoFormat, beforeString, afterString);
-        
+
         var beforeSprite = Addressables.LoadAssetAsync<Sprite>(data.IconID + currentInteriorLevel).WaitForCompletion();
-        var afterSprite = Addressables.LoadAssetAsync<Sprite>($"{data.IconID}{currentInteriorLevel + 1}").WaitForCompletion();
+        var afterSprite = Addressables.LoadAssetAsync<Sprite>($"{data.IconID}{currentInteriorLevel + 1}")
+            .WaitForCompletion();
         beforeIcon.sprite = beforeSprite;
         afterIcon.sprite = afterSprite;
     }
+
     private void OnEnable()
     {
         background.interactable = false;
@@ -60,7 +71,7 @@ public class InteriorUpgradePopup : MonoBehaviour
 
         if (panel != null)
         {
-            panel.transform.PopupAnimation(onComplete:()=> background.interactable = true);
+            panel.transform.PopupAnimation(onComplete: () => background.interactable = true);
         }
     }
 
