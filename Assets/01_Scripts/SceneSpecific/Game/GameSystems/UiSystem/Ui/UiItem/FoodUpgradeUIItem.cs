@@ -9,12 +9,13 @@ using UnityEngine.UI;
 
 public class FoodUpgradeUIItem : MonoBehaviour
 {
-
-    [SerializeField] private GameObject levelUpImage;
     public Image image;
     [SerializeField] private GameObject lockImage;
+    [SerializeField] private GameObject newImage;
+    [SerializeField] private GameObject payableArrowImage;
     [SerializeField] private TextMeshProUGUI levelText;
-
+    
+    
     //Fortest
     public EmployeeTableGetData employeeData;
 
@@ -48,13 +49,19 @@ public class FoodUpgradeUIItem : MonoBehaviour
     {
         foodData = data;
         foodUpgradePopup = popup;
-        levelUpImage.SetActive(false);
         button = GetComponentInChildren<Button>();
 
-        if (UserDataManager.Instance.CurrentUserData.FoodSaveData[foodData.FoodID].level != 0)
+        foodData.upgradeCount = UserDataManager.Instance.CurrentUserData.FoodSaveData[foodData.FoodID].level;
+        
+        if (foodData.upgradeCount != 0)
         {
+            newImage.SetActive(true);
             lockImage.SetActive(false);
-            foodData.upgradeCount = 1;
+        }
+
+        if (foodData.upgradeCount >= 5)
+        {
+            OnFoodLevelMax();
         }
         levelText.text = foodData.upgradeCount.ToString();
         button.onClick.AddListener(OnButtonClick);
@@ -88,12 +95,19 @@ public class FoodUpgradeUIItem : MonoBehaviour
 
         if (foodData.upgradeCount >= 5)
         {
-            button.interactable = false;
+            OnFoodLevelMax();
         }
+    }
+
+    private void OnFoodLevelMax()
+    {
+        button.interactable = false;
+        newImage.SetActive(false);
     }
     public void UnlockFoodUpgrade()
     {
         lockImage.SetActive(false);
+        newImage.SetActive(true);
         foodData.upgradeCount = 1;
         levelText.text = foodData.upgradeCount.ToString();
     }
@@ -105,6 +119,13 @@ public class FoodUpgradeUIItem : MonoBehaviour
             image.sprite = handle.Result;
         else
             Debug.LogError($"Failed to load sprite: {iconAddress}");
+    }
+
+    public void UpdatePayableArrow(int currentMoney)
+    {
+        if (foodData.upgradeCount >= 5)
+            return;
+        payableArrowImage.SetActive(currentMoney > foodData.BasicCost * foodData.upgradeCount);
     }
     
     private async UniTask HandleUpgradeFood()

@@ -43,9 +43,9 @@ public class FoodResearchUIItem : MonoBehaviour
                 Debug.LogError($"{gameObject.name}의 부모 중 foodUpgradeListUi를 찾을 수 없습니다.");
                 return;
             }
-            var newWidth = foodUpgradeListUi.gameObject.GetComponent<RectTransform>().rect.width * imageSizeFilter;
-            image.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, newWidth);
-            image.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, newWidth);
+            // var newWidth = foodUpgradeListUi.gameObject.GetComponent<RectTransform>().rect.width * imageSizeFilter;
+            // image.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, newWidth);
+            // image.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, newWidth);
         }
     }
 
@@ -66,11 +66,13 @@ public class FoodResearchUIItem : MonoBehaviour
         {
             lockImage.SetActive(false);
             button.interactable = false;
+            newImage.SetActive(false);
             consumerManager.foodIds.Add(foodData.FoodID);
             button.GetComponentInChildren<TextMeshProUGUI>().text = LZString.GetUIString(Strings.complete);
         }
         if (foodData.Requirements < userData.CurrentRankPoint && chackCookWareUnlock)
         {
+            newImage.SetActive(true);
             lockImage.SetActive(false);
         }
         UnlockCookwareAmount();
@@ -82,7 +84,11 @@ public class FoodResearchUIItem : MonoBehaviour
     public void UnlockFood()
     {
         if (chackCookWareUnlock && userData.CurrentRankPoint >= foodData.Requirements)
+        {
             lockImage.SetActive(false);
+            newImage.SetActive(UserDataManager.Instance.CurrentUserData.FoodSaveData[foodData.FoodID].level == 0);
+        }
+
     }
     public void UnlockCookwareAmount()
     {
@@ -102,9 +108,10 @@ public class FoodResearchUIItem : MonoBehaviour
     {
         if (!chackCookWareUnlock)
             return;
-        if (userData.Money > foodData.BasicCost)
+        if (userData.Money >= foodData.BasicCost)
         {
             Unlock().Forget();
+            newImage.SetActive(false);
         }
         else
         {
@@ -118,6 +125,7 @@ public class FoodResearchUIItem : MonoBehaviour
         {
             return;
         }
+        
         lockImage.SetActive(false);
         consumerManager.foodIds.Add(foodData.FoodID);
         float targetTime = Time.time + Constants.POP_UP_DURATION;
