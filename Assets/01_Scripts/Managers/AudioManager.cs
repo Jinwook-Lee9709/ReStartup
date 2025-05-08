@@ -16,7 +16,6 @@ public class AudioManager : Singleton<AudioManager>
     private AudioMixer audioMixer;
     private AudioSource audioBGMSource, audioSFXSource;
     private AudioSO audioSO;
-    private Coroutine saveCoroutine;
     public void Init()
     {
         LoadAudioSO();
@@ -53,10 +52,6 @@ public class AudioManager : Singleton<AudioManager>
     public void SetVolume(AudioType audioType, float volume)
     {
         audioMixer.SetFloat(audioType.ToString(), volume);
-        if (saveCoroutine == null)
-        {
-            saveCoroutine = StartCoroutine(LocalSave());
-        }
     }
 
     public void PlayBGM(string key)
@@ -69,11 +64,5 @@ public class AudioManager : Singleton<AudioManager>
     {
         audioSFXSource.clip = audioSO.AudioClips[key];
         audioSFXSource.Play();
-    }
-    private IEnumerator LocalSave()
-    {
-        yield return new WaitForSeconds(10f);
-        LocalSaveLoadManager.Save();
-        saveCoroutine = null;
     }
 }

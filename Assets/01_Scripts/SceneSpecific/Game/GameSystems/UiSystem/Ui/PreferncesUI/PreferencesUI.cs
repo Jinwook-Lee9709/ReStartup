@@ -13,7 +13,7 @@ public class PreferencesUI : MonoBehaviour
     [SerializeField] private Slider backgroundSound;
     [SerializeField] private Slider effectSound;
     [SerializeField] private PreferencesUpdatePopup updatePopup;
-    private Coroutine saveCoroutine;
+    [SerializeField] private ChangeLanguagePopup changeLanguagePopup;
     void Start()
     {
         backgroundSound.onValueChanged.AddListener(BGMVolumSet);
@@ -35,7 +35,12 @@ public class PreferencesUI : MonoBehaviour
             }
         }
     }
-    public void ChangeLanguageButtonClick()
+    private void ChangeLanguageButtonClick()
+    {
+        changeLanguagePopup.gameObject.SetActive(true);
+        changeLanguagePopup.Init(this);
+    }
+    public void GoToTitle()
     {
         var sceneManager = ServiceLocator.Instance.GetGlobalService<SceneController>();
         sceneManager.LoadSceneWithLoading(SceneIds.Title);

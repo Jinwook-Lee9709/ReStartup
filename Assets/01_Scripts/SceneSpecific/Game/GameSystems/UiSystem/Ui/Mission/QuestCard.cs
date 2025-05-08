@@ -42,6 +42,7 @@ public class QuestCard : MonoBehaviour
         rewardClaimed = false;
         if (saveClear && missionData.MissionType != MissionType.Achievements)
         {
+            button.GetComponentInChildren<TextMeshProUGUI>().text = LZString.GetUIString(rewardReceipt);
             rewardClaimed = true;
             completeImage.gameObject.SetActive(true);
         }
@@ -67,6 +68,10 @@ public class QuestCard : MonoBehaviour
     }
     public void OnButtonClick()
     {
+        if(!clear)
+        {
+            return;
+        }
         button.interactable = false;
         //CompleteImage.SetActive(true);
 
@@ -109,11 +114,14 @@ public class QuestCard : MonoBehaviour
         clear = count >= missionData.CompleteTimes;
         if (clear)
         {
+            ServiceLocator.Instance.GetSceneService<GameManager>().uiManager.OnMissionClear();
+            missionManager.OnQuestClear(missionData.MissionType);
             button.GetComponentInChildren<TextMeshProUGUI>().text = LZString.GetUIString(completeGetReward);
             button.interactable = true;
             missionManager.ReorderMissionCard(missionData.MissionId);
         }
     }
+
     public void ResetQuest()
     {
         //퀘스트 초기화 해주기
