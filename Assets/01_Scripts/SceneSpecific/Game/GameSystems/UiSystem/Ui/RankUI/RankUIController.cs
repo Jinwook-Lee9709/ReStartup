@@ -18,18 +18,23 @@ public class RankUIController : MonoBehaviour
         globalRankingButton.onClick.RemoveListener(OnLocalRankingButtonTouched);
         localRankingButton.onClick.AddListener(OnLocalRankingButtonTouched);
         globalRankingButton.onClick.AddListener(OnGlobalRankingButtonTouched);
+        OnLocalRankingButtonTouched();
     }
     
     private void OnLocalRankingButtonTouched()
     {
         localRankingPanel.SetActive(true);
         globalRankingPanel.SetActive(false);
+        localRankingButton.interactable = false;
+        globalRankingButton.interactable = true;
     }
     
     private void OnGlobalRankingButtonTouched()
     {
         localRankingPanel.SetActive(false);
         globalRankingPanel.SetActive(true);
+        localRankingButton.interactable = true;
+        globalRankingButton.interactable = false;
         localPlayerClone.OnUnActive();
     }
     
