@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -53,66 +54,33 @@ public class PreferencesUI : MonoBehaviour
     }
     public void OpenGmailApp()
     {
-        //#if UNITY_ANDROID && !UNITY_EDITOR
-        if (IsGmailInstalled())
+#if UNITY_ANDROID && !UNITY_EDITOR
+        try
         {
-            try
+            using (AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
             {
-                using (AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+                AndroidJavaObject currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+
+                using (AndroidJavaObject intent = new AndroidJavaObject("android.content.Intent"))
                 {
-                    AndroidJavaObject currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+                    intent.Call<AndroidJavaObject>("setAction", "android.intent.action.SEND");
+                    intent.Call<AndroidJavaObject>("setType", "message/rfc822");
 
-                    using (AndroidJavaObject intent = new AndroidJavaObject("android.content.Intent", "android.intent.action.SEND"))
-                    {
-                        intent.Call<AndroidJavaObject>("setType", "message/rfc822");
-                        string[] recipients = new string[] { "psmin5812@email.com" };
-                        intent.Call<AndroidJavaObject>("putExtra", "android.intent.extra.EMAIL", recipients);
-                        intent.Call<AndroidJavaObject>("putExtra", "android.intent.extra.SUBJECT", "문의드립니다");
-                        intent.Call<AndroidJavaObject>("putExtra", "android.intent.extra.TEXT", "안녕하세요.");
-                        intent.Call<AndroidJavaObject>("setType", "message/rfc822");
+                    string[] recipients = new string[] { "target@email.com" };
+                    intent.Call<AndroidJavaObject>("putExtra", "android.intent.extra.EMAIL", recipients);
+                    intent.Call<AndroidJavaObject>("putExtra", "android.intent.extra.SUBJECT", "문의드립니다");
+                    intent.Call<AndroidJavaObject>("putExtra", "android.intent.extra.TEXT", "안녕하세요.");
 
-                        // 올바른 chooser 생성
-                        using (AndroidJavaClass intentClass = new AndroidJavaClass("android.content.Intent"))
-                        {
-                            AndroidJavaObject chooser = intentClass.CallStatic<AndroidJavaObject>(
-                                "createChooser", intent, "Gmail로 보내기");
-                            currentActivity.Call("startActivity", chooser);
-                        }
-                    }
+                    // ❌ chooser 없이 바로 실행
+                    currentActivity.Call("startActivity", intent);
                 }
             }
-            catch (System.Exception e)
-            {
-                Debug.Log("Gmail 열기 실패: " + e.Message);
-            }
-            //#endif
         }
-        else
+        catch (System.Exception e)
         {
-
+            Debug.Log("메일 앱 열기 실패: " + e.Message);
         }
+#endif
     }
-    bool IsGmailInstalled()
-    {
-        #if UNITY_ANDROID && !UNITY_EDITOR
-        using (AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
-        {
-            AndroidJavaObject currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
-            AndroidJavaObject packageManager = currentActivity.Call<AndroidJavaObject>("getPackageManager");
 
-            try
-            {
-                AndroidJavaObject packageInfo = packageManager.Call<AndroidJavaObject>(
-                    "getPackageInfo", "com.google.android.gm", 0);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-        #else
-        return false;
-        #endif
-    }
 }

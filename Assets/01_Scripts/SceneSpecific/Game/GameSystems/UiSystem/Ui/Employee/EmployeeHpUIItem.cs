@@ -30,7 +30,6 @@ public class EmployeeHpUIItem : MonoBehaviour
         {
             StartCoroutine(LoadSpriteCoroutine(employeeData.Icon));
             buyCostText.text = $"{buyCost}";
-            recoveryValueText.text = $"{recoveryValue}회복";
             var button = GetComponentInChildren<Button>();
             button.onClick.AddListener(() =>
             {
