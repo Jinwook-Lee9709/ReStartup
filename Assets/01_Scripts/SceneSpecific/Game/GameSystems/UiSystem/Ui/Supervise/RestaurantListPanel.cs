@@ -46,8 +46,11 @@ public class RestaurantListPanel : MonoBehaviour
 
     private void OnDestroy()
     {
-        UserDataManager.Instance.OnRankChangedEvent -= OnRankChanged;
-        UserDataManager.Instance.ChangeMoneyAction -= OnMoneyChanged;
+        if (UserDataManager.Instance != null)
+        {
+            UserDataManager.Instance.OnRankChangedEvent -= OnRankChanged;
+            UserDataManager.Instance.ChangeMoneyAction -= OnMoneyChanged;
+        }
     }
 
     private void Start()

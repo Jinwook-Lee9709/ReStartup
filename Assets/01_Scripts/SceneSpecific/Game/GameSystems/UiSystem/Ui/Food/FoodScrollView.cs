@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class FoodScrollView : MonoBehaviour
 {
@@ -8,16 +10,27 @@ public class FoodScrollView : MonoBehaviour
     [SerializeField] private FoodResearchListUI foodResearchListUI;
     [SerializeField] private FoodResearchNotifyPopup authorityNotifyPopup;
     [SerializeField] private FoodUpgradePopup popup;
+    [SerializeField] private Button upgradeButton;
+    [SerializeField] private Button researchButton;
 
+    private void Start()
+    {
+        SetUpgradeViews();
+    }
+    
     public void SetUpgradeViews()
     {
         upgradeViews.SetActive(true);
+        upgradeButton.interactable = false;
         ResearchViews.SetActive(false);
+        researchButton.interactable = true;
     }
     public void SetResearchViews()
     {
         upgradeViews.SetActive(false);
+        upgradeButton.interactable = true;
         ResearchViews.SetActive(true); 
+        researchButton.interactable = false;
     }
 
     public void AddFoodUISet(FoodData data)
