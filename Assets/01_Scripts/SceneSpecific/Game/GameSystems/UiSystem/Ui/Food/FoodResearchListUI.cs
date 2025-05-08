@@ -28,8 +28,11 @@ public class FoodResearchListUI : MonoBehaviour
 
     private void OnDestroy()
     {
-        var userDataManager = UserDataManager.Instance;
-        userDataManager.ChangeRankPointAction -= Unlock;
+        if (UserDataManager.Instance != null)
+        {
+            var userDataManager = UserDataManager.Instance;
+            userDataManager.ChangeRankPointAction -= Unlock;
+        }
     }
     private void UnlockCheakAll()
     {
