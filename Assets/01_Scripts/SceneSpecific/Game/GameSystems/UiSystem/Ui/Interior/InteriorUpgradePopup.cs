@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using TMPro;
 using Unity.VisualScripting;
@@ -19,21 +20,10 @@ public class InteriorUpgradePopup : MonoBehaviour
     [SerializeField] private Image beforeIcon;
     [SerializeField] private Image afterIcon;
     [SerializeField] private TextMeshProUGUI infoText;
-    [SerializeField] private TextMeshProUGUI mainButtonText;
     [SerializeField] private TextMeshProUGUI priceText;
 
     private InteriorCard currentCard;
-    private bool isPaid;
-
-    private bool IsPaid
-    {
-        get => isPaid;
-        set
-        {
-            isPaid = value;
-            mainButtonText.text = value ? "확인" : "업그레이드";
-        }
-    }
+    
     public void Start()
     {
         background.onClick.RemoveAllListeners();
@@ -44,7 +34,6 @@ public class InteriorUpgradePopup : MonoBehaviour
 
     public void SetInfo(InteriorCard card)
     {
-        IsPaid = false;
         currentCard = card;
         var data = currentCard.Data;
         priceText.text = data.GetSellingCost().ToString();
@@ -78,15 +67,13 @@ public class InteriorUpgradePopup : MonoBehaviour
 
     private void OnMainButtonTouched()
     {
-        if (!IsPaid)
-        {
-            IsPaid = true;
-            currentCard.OnBuy();
-        }
-        else
-        {
-            OnClose();
-        }
+        MainButtonInputHandleTask().Forget();
+    }
+
+    private async UniTask MainButtonInputHandleTask()
+    {
+        OnClose();
+        await currentCard.OnBuy();
     }
 
     private void OnClose()
