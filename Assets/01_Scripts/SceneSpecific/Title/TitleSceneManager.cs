@@ -197,6 +197,9 @@ public class TitleSceneManager : MonoBehaviour
     {
         if(SetLocale("ko"))
         {
+            LocalSaveLoadManager.Data.LanguageType = LanguageType.Korean;
+            LocalSaveLoadManager.Save();
+
             koreanCheck.gameObject.SetActive(true);
             englishCheck.gameObject.SetActive(false);
         }
@@ -206,6 +209,9 @@ public class TitleSceneManager : MonoBehaviour
     {
         if(SetLocale("en"))
         {
+            LocalSaveLoadManager.Data.LanguageType = LanguageType.English;
+            LocalSaveLoadManager.Save();
+
             koreanCheck.gameObject.SetActive(false);
             englishCheck.gameObject.SetActive(true);
         }

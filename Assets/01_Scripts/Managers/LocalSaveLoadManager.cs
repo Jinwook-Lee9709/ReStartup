@@ -22,12 +22,10 @@ public static class LocalSaveLoadManager
     {
         if (!Load())
             Data = new SaveDataVC();
-        //TODO : �ΰ��� ���� (����, ��� ��) ����
     }
 
     public static void UpdateSaveData()
     {
-        //TODO : �ΰ��� ���� (����, ��� ��) �ΰ��� ���� ���� �����ͼ� Data ����
     }
 
     public static bool Save()
