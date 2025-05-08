@@ -15,7 +15,7 @@ public class FoodScrollView : MonoBehaviour
 
     private void Start()
     {
-        SetUpgradeViews();
+        SetResearchViews();
     }
     
     public void SetUpgradeViews()

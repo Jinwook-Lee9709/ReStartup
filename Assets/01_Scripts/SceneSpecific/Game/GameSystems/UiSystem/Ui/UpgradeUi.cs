@@ -43,7 +43,7 @@ public class UpgradeUi : MonoBehaviour
 
     private void Start()
     {
-        CurrentFocus = FocusingArea.Employee;
+        CurrentFocus = FocusingArea.Food;
     }
 
     private void Update()
