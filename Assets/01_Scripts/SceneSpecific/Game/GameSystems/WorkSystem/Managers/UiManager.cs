@@ -29,6 +29,10 @@ public class UiManager : MonoBehaviour
         }
     }
     
+    public void OnMissionClear()
+    {
+        uiApps.GetComponent<AppsUi>().MissionNewImageON();
+    }
     public void OnClickButtonSetAppsUi()
     {
         var uiSetChack = uiHUD.gameObject.GetComponent<HeadsUpDisplayUi>().includedUiSet;
@@ -110,6 +114,7 @@ public class UiManager : MonoBehaviour
     }
     public void OnClickButtonOpenQuestUI()
     {
+        uiApps.GetComponent<AppsUi>().MissionNewImageOFF();
         uiQuest.SetActive(true);
     }  
     public void OnClickButtonExitQuestUI()
@@ -122,6 +127,7 @@ public class UiManager : MonoBehaviour
     }
     public void OnClickButtonExitPreferencesUI()
     {
-        uiPreferences.SetActive(false); 
+        uiPreferences.SetActive(false);
+        LocalSaveLoadManager.Save();
     }
 }

@@ -13,7 +13,7 @@ public class PreferencesUI : MonoBehaviour
     [SerializeField] private Slider backgroundSound;
     [SerializeField] private Slider effectSound;
     [SerializeField] private PreferencesUpdatePopup updatePopup;
-    private Coroutine saveCoroutine;
+    [SerializeField] private ChangeLanguagePopup changeLanguagePopup;
     void Start()
     {
         backgroundSound.onValueChanged.AddListener(BGMVolumSet);
@@ -21,6 +21,8 @@ public class PreferencesUI : MonoBehaviour
         updateButton.onClick.AddListener(UpdatePopupSet);
         changeLangaugeButton.onClick.AddListener(ChangeLanguageButtonClick);
         contactUsButton.onClick.AddListener(OpenGmailApp);
+        backgroundSound.value = LocalSaveLoadManager.Data.BackGroundVolume;
+        effectSound.value = LocalSaveLoadManager.Data.SFXVolume;
     }
 
     private void Update()
@@ -33,7 +35,12 @@ public class PreferencesUI : MonoBehaviour
             }
         }
     }
-    public void ChangeLanguageButtonClick()
+    private void ChangeLanguageButtonClick()
+    {
+        changeLanguagePopup.gameObject.SetActive(true);
+        changeLanguagePopup.Init(this);
+    }
+    public void GoToTitle()
     {
         var sceneManager = ServiceLocator.Instance.GetGlobalService<SceneController>();
         sceneManager.LoadSceneWithLoading(SceneIds.Title);
@@ -45,11 +52,13 @@ public class PreferencesUI : MonoBehaviour
     public void BGMVolumSet(float vol)
     {
         float volumeDB = Mathf.Lerp(-80f, 0f, vol);
+        LocalSaveLoadManager.Data.SFXVolume = vol;
         AudioManager.Instance.SetVolume(AudioManager.AudioType.BGM, volumeDB);
     }
     public void SFXVolumSet(float vol)
     {
         float volumeDB = Mathf.Lerp(-80f, 0f, vol);
+        LocalSaveLoadManager.Data.BackGroundVolume = vol;
         AudioManager.Instance.SetVolume(AudioManager.AudioType.SFX, volumeDB);
     }
     public void OpenGmailApp()

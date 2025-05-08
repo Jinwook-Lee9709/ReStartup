@@ -5,10 +5,25 @@ using UnityEngine;
 /// </summary>
 public class GameInitializer : MonoBehaviour
 {
+    [SerializeField] TitleSceneManager titleSceneManager;
     private void Awake()
     {
         LocalSaveLoadManager.GameSettingInit();
+        switch (LocalSaveLoadManager.Data.LanguageType)
+        {
+            case LanguageType.Korean:
+                titleSceneManager.SwitchToKorean();
+                break;
+            case LanguageType.English:
+                titleSceneManager.SwitchToEnglish();
+                break;
+        }
         Application.targetFrameRate = 120;
         QualitySettings.vSyncCount = 0;
+    }
+    private void Start()
+    {
+
+
     }
 }

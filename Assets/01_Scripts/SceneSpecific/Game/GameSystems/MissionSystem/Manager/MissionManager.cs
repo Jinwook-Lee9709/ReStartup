@@ -148,8 +148,10 @@ public class MissionManager
             }
         }
     }
-
-
+    public void OnQuestClear(MissionType type)
+    {
+        questInventory.newMissionClear(type);
+    }
     private void UpdateMissionUICard(int args, Mission mission)
     {
         if (missionCards.TryGetValue(mission.ID, out var card))

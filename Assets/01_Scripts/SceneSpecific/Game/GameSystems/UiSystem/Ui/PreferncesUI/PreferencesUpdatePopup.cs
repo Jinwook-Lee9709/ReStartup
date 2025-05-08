@@ -10,7 +10,6 @@ public class PreferencesUpdatePopup : MonoBehaviour
     [SerializeField] private Button background;
     [SerializeField] private Image panel;
 
-    private FoodUpgradeUIItem currentCard;
     private bool isPaid;
 
     private bool IsPaid

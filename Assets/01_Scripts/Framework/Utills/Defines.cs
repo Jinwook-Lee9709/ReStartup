@@ -91,7 +91,8 @@ public enum InteractPermission
 
 public enum LanguageType
 {
-    Korean
+    Korean,
+    English,
 }
 
 public enum SceneIds
