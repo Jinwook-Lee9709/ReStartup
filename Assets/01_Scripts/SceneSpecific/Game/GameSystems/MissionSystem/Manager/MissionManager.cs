@@ -78,6 +78,7 @@ public class MissionManager
         }
         AllReorderMissionCard();
     }
+
     public void OnEventInvoked(MissionMainCategory category, int args, int id = 0)
     {
         foreach (var mission in missions[category])
