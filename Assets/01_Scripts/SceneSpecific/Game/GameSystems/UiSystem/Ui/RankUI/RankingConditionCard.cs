@@ -17,6 +17,7 @@ public class RankingConditionCard : MonoBehaviour
     private Button button;
     private Slider slider;
     public GameObject lockImage;
+    public GameObject clearImage;
     public TextMeshProUGUI prevConditionText;
     public TextMeshProUGUI conditionText;
     public TextMeshProUGUI currentRankPointText;
@@ -83,6 +84,7 @@ public class RankingConditionCard : MonoBehaviour
                 prevConditionText.text = prevRankData.Value.GoalRanking.ToString();
             }
             conditionText.text = rankConditionData.GoalRanking.ToString();
+            clearImage.SetActive(true);
         }
         else
         {

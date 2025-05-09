@@ -102,7 +102,6 @@ public class EmployeeManager
         GameObject prefab = handle.WaitForCompletion();
         var newEmployee = Object.Instantiate(prefab).GetComponent<EmployeeFSM>();
         newEmployee.EmployeeData = employeeData;
-        newEmployee.GetComponentInChildren<TextMeshPro>().text = $"{((WorkType)employeeData.StaffType).ToString()}직원";
         AddEmployee(employeeData.StaffID, newEmployee);
 
         LoadEmployeeSaveData(employeeData, newEmployee);

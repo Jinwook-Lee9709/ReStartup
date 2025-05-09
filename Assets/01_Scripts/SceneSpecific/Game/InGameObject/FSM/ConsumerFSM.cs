@@ -604,7 +604,14 @@ public class ConsumerFSM : MonoBehaviour
     {
         //��� �� �����ϴ� ����.
         //���� ������ƮǮ�� ��ȯ��.
-        if (agent.IsArrive(consumerManager.spawnPoint)) consumerManager.consumerPool.Release(gameObject);
+        if (agent.IsArrive(consumerManager.spawnPoint))
+        {
+            consumerManager.consumerPool.Release(gameObject);
+            foreach (Transform child in modelParent.transform)
+            {
+                Destroy(child.gameObject); // Transform의 GameObject 제거
+            }
+        }
     }
 
     private void UpdateWaitingPayLine()

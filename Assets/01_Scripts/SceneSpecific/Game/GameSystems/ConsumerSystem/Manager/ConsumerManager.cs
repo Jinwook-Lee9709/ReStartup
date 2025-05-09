@@ -143,9 +143,7 @@ public class ConsumerManager : MonoBehaviour
     {
         return currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count < 3;
     }
-
-
-
+    
     private void SetPairData(Consumer owner, Consumer partner)
     {
         owner.pairData = new ConsumerPairData();
@@ -251,7 +249,9 @@ public class ConsumerManager : MonoBehaviour
             , OnTakeConsumer
             , OnReturnConsumer
             , OnDestroyConsumer
-            , false);
+            , false,
+            maxConsumerCnt);
+        
         foreach (ConsumerFSM.ConsumerState consumerState in Enum.GetValues(typeof(ConsumerFSM.ConsumerState)))
             currentSpawnedConsumerDictionary[consumerState] = new List<Consumer>();
 
@@ -260,7 +260,6 @@ public class ConsumerManager : MonoBehaviour
 
         UpdateWaitingText();
     }
-
     public void OnChangeConsumerState(Consumer consumer, ConsumerFSM.ConsumerState state)
     {
         var prevState = consumer.FSM.CurrentStatus;
