@@ -13498,19 +13498,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 459951195}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 344316609}
-        m_TargetAssemblyTypeName: UiManager, Assembly-CSharp
-        m_MethodName: OnClickButtonExitUiUpgrade
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &459951195
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20968,6 +20956,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: eee9eeef4b6b080408897cd0876c779c, type: 3}
+    - target: {fileID: 7566400864368396671, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -45867,8 +45859,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
-    m_Right: 0
+    m_Left: 10
+    m_Right: 10
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 1
@@ -62632,7 +62624,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4203867026886714670, guid: 5b3a7d5238f234533bacfe317b388f1a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4203867026886714670, guid: 5b3a7d5238f234533bacfe317b388f1a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
@@ -62781,18 +62773,18 @@ PrefabInstance:
     - target: {fileID: 5209902387460465478, guid: 5b3a7d5238f234533bacfe317b388f1a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 69788557}
+      objectReference: {fileID: 8435039698925482516}
     - target: {fileID: 5209902387460465478, guid: 5b3a7d5238f234533bacfe317b388f1a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5209902387460465478, guid: 5b3a7d5238f234533bacfe317b388f1a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: FoodScrollViewOpenButton
+      value: OnTutorialTriggerButtonTouch
       objectReference: {fileID: 0}
     - target: {fileID: 5209902387460465478, guid: 5b3a7d5238f234533bacfe317b388f1a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: UpgradeUi, Assembly-CSharp
+      value: TutorialTriggerButton, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5209902387460465478, guid: 5b3a7d5238f234533bacfe317b388f1a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -89,24 +90,26 @@ public class InteriorUIManager : MonoBehaviour
         hallButton.onClick.RemoveAllListeners();
         kitchenButton.onClick.RemoveAllListeners();
         closeButton.onClick.RemoveAllListeners();
-        hallButton.onClick.AddListener(() =>
-            {
-                ToggleCardGroups(hallCardGroups, kitchenCardGroups);
-                kitchenButton.gameObject.SetActive(true);
-                hallButton.gameObject.SetActive(false);
-                closeButton.transform.SetSiblingIndex(0);
-            }
-        );
-        kitchenButton.onClick.AddListener(() =>
-            {
-                ToggleCardGroups(kitchenCardGroups, hallCardGroups);
-                kitchenButton.gameObject.SetActive(false);
-                hallButton.gameObject.SetActive(true);
-                closeButton.transform.SetSiblingIndex(1);
-            }
-        );
+        hallButton.onClick.AddListener(OnHallButtonClicked);
+        kitchenButton.onClick.AddListener(OnKitchenButtonClicked);
         closeButton.onClick.AddListener(OnClose);
         ToggleCardGroups(hallCardGroups, kitchenCardGroups);
+    }
+
+    private void OnHallButtonClicked()
+    {
+        ToggleCardGroups(hallCardGroups, kitchenCardGroups);
+        kitchenButton.gameObject.SetActive(true);
+        hallButton.gameObject.SetActive(false);
+        closeButton.transform.SetSiblingIndex(0);
+    }
+    
+    private void OnKitchenButtonClicked()
+    {
+        ToggleCardGroups(kitchenCardGroups, hallCardGroups);
+        kitchenButton.gameObject.SetActive(false);
+        hallButton.gameObject.SetActive(true);
+        closeButton.transform.SetSiblingIndex(1);
     }
 
     private void OnMoneyChanged(int? gold)
