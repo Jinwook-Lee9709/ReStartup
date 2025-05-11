@@ -148,7 +148,7 @@ public class TitleSceneManager : MonoBehaviour
         }
         PlayerPrefs.SetInt("Theme", (int)currentTheme);
         var sceneManager = ServiceLocator.Instance.GetGlobalService<SceneController>();
-        sceneManager.LoadSceneWithLoading(SceneIds.Dev1, GameSceneLoader.BeforeGameSceneLoad);
+        sceneManager.LoadSceneWithLoading(SceneIds.Dev0, GameSceneLoader.BeforeGameSceneLoad);
         startButton.interactable = true;
 
     }
