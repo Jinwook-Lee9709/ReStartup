@@ -158,6 +158,7 @@ public static class RestApiService
             }
             catch (Exception e)
             {
+                Debug.LogError(e);
                 if (request.responseCode == 401)
                 {
                     bool refreshResult = await UserAuthController.RefreshToken();
@@ -227,7 +228,6 @@ public static class RestApiService
                         try
                         {
                             var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
-                            Debug.Log(request.downloadHandler.text);
                             var data = JsonConvert.DeserializeObject<ApiResponse<T>>(request.downloadHandler.text,
                                 settings);
                             return data;

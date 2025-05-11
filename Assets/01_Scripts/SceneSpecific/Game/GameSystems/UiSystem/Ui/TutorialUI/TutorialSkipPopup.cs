@@ -20,6 +20,6 @@ public class TutorialSkipPopup : PopUp
             OnCancle();
         });
 
-        tutorialSkipText.text = "튜토리얼 스킵 임시 텍스트";
+        tutorialSkipText.text = "사장님 스킵하시면\r\n식당 운영에 대한\r\n설명을 못 듣습니다.\r\n정말 스킵하시겠어요?\r\n";
     }
 }

@@ -64,6 +64,8 @@ public class TutorialManager : MonoBehaviour
         {
             action?.Invoke();
             consumerManager.StartSpawnRoutine();
+            PlayerPrefs.SetInt("ECET_CLEAR_ALL", 1);
+            Destroy(gameObject);
         });
     }
 
