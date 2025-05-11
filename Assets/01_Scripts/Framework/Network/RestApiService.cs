@@ -244,10 +244,18 @@ public static class RestApiService
         // Clone body (if present in the original POST/PUT request)
         if (originalRequest.uploadHandler != null)
         {
-            newRequest.uploadHandler = new UploadHandlerRaw(originalRequest.uploadHandler.data)
+            // 명시적으로 byte 배열을 복사하여 Payload를 복원
+            var originalData = originalRequest.uploadHandler.data;
+            if (originalData != null)
             {
-                contentType = originalRequest.uploadHandler.contentType
-            };
+                var copiedData = new byte[originalData.Length];
+                Buffer.BlockCopy(originalData, 0, copiedData, 0, originalData.Length);
+
+                newRequest.uploadHandler = new UploadHandlerRaw(copiedData)
+                {
+                    contentType = originalRequest.uploadHandler.contentType
+                };
+            }
         }
         newRequest.certificateHandler = new BypassCertificateHandler();
 

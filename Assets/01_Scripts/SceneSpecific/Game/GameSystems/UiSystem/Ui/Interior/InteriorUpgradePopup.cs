@@ -20,7 +20,8 @@ public class InteriorUpgradePopup : MonoBehaviour
     [SerializeField] private Image panel;
     [SerializeField] private Image beforeIcon;
     [SerializeField] private Image afterIcon;
-    [SerializeField] private TextMeshProUGUI infoText;
+    [SerializeField] private TextMeshProUGUI prevProductName;
+    [SerializeField] private TextMeshProUGUI nextProductName;
     [SerializeField] private TextMeshProUGUI priceText;
     [SerializeField] private TextMeshProUGUI effectNameText;
     [SerializeField] private TextMeshProUGUI effectAmountText;
@@ -51,7 +52,8 @@ public class InteriorUpgradePopup : MonoBehaviour
         effectNameText.text = effectString;
         if(data.EffectType == InteriorEffectType.RankPoints)
         effectAmountText.text = effectAmountString;
-        infoText.text = string.Format(UpgradeInfoFormat, beforeString, afterString);
+        prevProductName.text = beforeString;
+        nextProductName.text = afterString;
 
         var beforeSprite = Addressables.LoadAssetAsync<Sprite>(data.IconID + currentInteriorLevel).WaitForCompletion();
         var afterSprite = Addressables.LoadAssetAsync<Sprite>($"{data.IconID}{currentInteriorLevel + 1}")
