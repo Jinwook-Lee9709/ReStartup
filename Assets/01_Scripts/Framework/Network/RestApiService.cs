@@ -12,8 +12,8 @@ public static class RestApiService
 {
     private static readonly int DefaultTimeout = 3;
     private static readonly int RetryCount = 5;
-    
-    
+
+
     public static UnityWebRequest CreateGetRequest(string url, Dictionary<string, string> data = null)
     {
         url += "?" + GetQueryString(data);
@@ -28,7 +28,8 @@ public static class RestApiService
     {
         if (data == null || data.Count == 0)
             return string.Empty;
-        return string.Join("&", data.Select(kvp => $"{Uri.EscapeDataString(kvp.Key)}={Uri.EscapeDataString(kvp.Value.ToString())}"));
+        return string.Join("&",
+            data.Select(kvp => $"{Uri.EscapeDataString(kvp.Key)}={Uri.EscapeDataString(kvp.Value.ToString())}"));
     }
 
     public static UnityWebRequest CreatePostRequest(string url, Dictionary<string, string> data = null)
@@ -58,7 +59,7 @@ public static class RestApiService
         return request;
     }
 
-    public static async UniTask<ApiResponse<T>> GetAsync<T>(string url,  Dictionary<string, string> data = null)
+    public static async UniTask<ApiResponse<T>> GetAsync<T>(string url, Dictionary<string, string> data = null)
     {
         using (var request = CreateGetRequest(url, data))
         {
@@ -74,13 +75,15 @@ public static class RestApiService
             {
                 request.SetRequestHeader("Authorization", $"Bearer {TokenManager.LoginToken}");
                 return await SendRequestAsync<T>(request);
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 Debug.Log(e);
                 throw e;
             }
         }
     }
+
     public static async UniTask<ApiResponse<T>> PostAsync<T>(string url, Dictionary<string, string> data = null)
     {
         using (var request = CreatePostRequest(url, data))
@@ -104,8 +107,9 @@ public static class RestApiService
             }
         }
     }
-    
-    public static async UniTask<ApiResponse<T>> PostAsyncWithToken<T>(string url, Dictionary<string, string> data = null)
+
+    public static async UniTask<ApiResponse<T>> PostAsyncWithToken<T>(string url,
+        Dictionary<string, string> data = null)
     {
         using (var request = CreatePostRequest(url, data))
         {
@@ -113,16 +117,18 @@ public static class RestApiService
             return await SendRequestAsync<T>(request);
         }
     }
-    
+
     public static async UniTask<ApiResponse<T>> SendRequestAsync<T>(UnityWebRequest request)
     {
         request.timeout = DefaultTimeout;
-        
+
+        var payloadClone = ClonePayload(request);
+
         if (!CheckInternetConnection<T>())
         {
             return new ApiResponse<T>(ResponseType.InternetDisconnected, default);
         }
-            
+
         using (request)
         {
             try
@@ -134,7 +140,8 @@ public static class RestApiService
                     try
                     {
                         var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
-                        var data = JsonConvert.DeserializeObject<ApiResponse<T>>(request.downloadHandler.text, settings);
+                        var data = JsonConvert.DeserializeObject<ApiResponse<T>>(request.downloadHandler.text,
+                            settings);
                         return data;
                     }
                     catch (JsonException ex)
@@ -143,7 +150,9 @@ public static class RestApiService
                         throw new Exception($"JSON Deserialization Error: {ex.Message}");
                     }
                 }
-                throw new Exception($"Request failed with error: {request.error}, ResponseCode: {request.responseCode}");
+
+                throw new Exception(
+                    $"Request failed with error: {request.error}, ResponseCode: {request.responseCode}");
             }
             catch (Exception e)
             {
@@ -155,6 +164,7 @@ public static class RestApiService
                         var newRequest = CloneRequest(request);
                         return await SendRequestAsync<T>(newRequest);
                     }
+
                     var title = LZString.GetUIString("TokenExpiredAlertTitle");
                     var message = LZString.GetUIString("TokenExpiredAlertDescription");
                     ServiceLocator.Instance.GetGlobalService<AlertPopup>().PopUp(title, message, isError: true);
@@ -162,12 +172,12 @@ public static class RestApiService
                 }
                 else
                 {
-                    var retryResult = await RetryRequest<T>(request);
+                    var retryResult = await RetryRequest<T>(request, payloadClone);
                     if (retryResult.ResponseCode == ResponseType.Success)
                     {
                         return retryResult;
                     }
-                    
+
                     var title = LZString.GetUIString("ServerConnectionFailureAlertTitle");
                     var message = LZString.GetUIString("ServerConnectionFailureAlertDescription");
                     ServiceLocator.Instance.GetGlobalService<AlertPopup>().PopUp(title, message, isError: true);
@@ -193,14 +203,15 @@ public static class RestApiService
             ServiceLocator.Instance.GetGlobalService<AlertPopup>().PopUp(title, message, isError: true);
             return false;
         }
+
         return true;
     }
 
-    private static async UniTask<ApiResponse<T>> RetryRequest<T>(UnityWebRequest request)
+    private static async UniTask<ApiResponse<T>> RetryRequest<T>(UnityWebRequest request, byte[] payloadClone)
     {
         for (int i = 0; i < RetryCount; i++)
         {
-            var requestClone = CloneRequest(request);
+            var requestClone = CloneRequest(request, payloadClone);
             using (requestClone)
             {
                 try
@@ -212,7 +223,8 @@ public static class RestApiService
                         {
                             var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
                             Debug.Log(request.downloadHandler.text);
-                            var data = JsonConvert.DeserializeObject<ApiResponse<T>>(request.downloadHandler.text, settings);
+                            var data = JsonConvert.DeserializeObject<ApiResponse<T>>(request.downloadHandler.text,
+                                settings);
                             return data;
                         }
                         catch (JsonException ex)
@@ -220,18 +232,21 @@ public static class RestApiService
                             return new ApiResponse<T>(ResponseType.JsonParseError, default);
                         }
                     }
-                    throw new Exception($"Request failed with error: {request.error}, ResponseCode: {request.responseCode}");
+
+                    throw new Exception(
+                        $"Request failed with error: {request.error}, ResponseCode: {request.responseCode}");
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Debug.Log(e);
                 }
             }
         }
+
         return new ApiResponse<T>(ResponseType.Timeout, default);
     }
 
-    private static UnityWebRequest CloneRequest(UnityWebRequest originalRequest)
+    private static UnityWebRequest CloneRequest(UnityWebRequest originalRequest, byte[] payloadClone = null)
     {
         var newRequest = new UnityWebRequest(originalRequest.url, originalRequest.method)
         {
@@ -242,24 +257,34 @@ public static class RestApiService
 
 
         // Clone body (if present in the original POST/PUT request)
-        if (originalRequest.uploadHandler != null)
+        if (payloadClone != null)
+        {
+            newRequest.uploadHandler = new UploadHandlerRaw(payloadClone)
+            {
+                contentType = originalRequest.uploadHandler.contentType
+            };
+        }
+
+        newRequest.certificateHandler = new BypassCertificateHandler();
+
+        return newRequest;
+    }
+
+    private static byte[] ClonePayload(UnityWebRequest request)
+    {
+        if (request.uploadHandler != null)
         {
             // 명시적으로 byte 배열을 복사하여 Payload를 복원
-            var originalData = originalRequest.uploadHandler.data;
+            var originalData = request.uploadHandler.data;
             if (originalData != null)
             {
                 var copiedData = new byte[originalData.Length];
                 Buffer.BlockCopy(originalData, 0, copiedData, 0, originalData.Length);
-
-                newRequest.uploadHandler = new UploadHandlerRaw(copiedData)
-                {
-                    contentType = originalRequest.uploadHandler.contentType
-                };
+                return copiedData;
             }
         }
-        newRequest.certificateHandler = new BypassCertificateHandler();
 
-        return newRequest;
+        return null;
     }
 
     private class BypassCertificateHandler : CertificateHandler
