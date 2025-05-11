@@ -46,11 +46,11 @@ public class InteriorUpgradePopup : MonoBehaviour
         String beforeString = LZString.GetUIString(data.StringID + currentInteriorLevel);
         String afterString = LZString.GetUIString($"{data.StringID}{currentInteriorLevel + 1}");
         String effectString = LZString.GetUIString(data.EffectType.ToString());
-        String effectAmountString = string.Format(UpgradeInfoFormat, data.EffectQuantity * currentInteriorLevel,
+        String effectAmountString = string.Empty;
+        bool isRank = data.EffectType == InteriorEffectType.RankPoints; 
+            effectAmountString = string.Format(isRank? UpgradeInfoFormat : UpgradeEffectWithPercentFormat, data.EffectQuantity * currentInteriorLevel,
             data.EffectQuantity * (currentInteriorLevel + 1));
-        
         effectNameText.text = effectString;
-        if(data.EffectType == InteriorEffectType.RankPoints)
         effectAmountText.text = effectAmountString;
         prevProductName.text = beforeString;
         nextProductName.text = afterString;
