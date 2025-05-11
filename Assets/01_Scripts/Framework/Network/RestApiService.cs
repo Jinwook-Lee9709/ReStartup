@@ -285,12 +285,10 @@ public static class RestApiService
 
 
         // Clone body (if present in the original POST/PUT request)
-        if (payloadClone != null)
+        if (payloadClone != null && originalRequest.method != UnityWebRequest.kHttpVerbGET)
         {
-            newRequest.uploadHandler = new UploadHandlerRaw(payloadClone)
-            {
-                contentType = originalRequest.uploadHandler.contentType
-            };
+            newRequest.uploadHandler = new UploadHandlerRaw(payloadClone);
+            newRequest.SetRequestHeader("Content-Type", "application/json");
         }
 
         newRequest.certificateHandler = new BypassCertificateHandler();
