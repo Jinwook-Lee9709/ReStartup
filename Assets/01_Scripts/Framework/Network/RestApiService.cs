@@ -61,20 +61,22 @@ public static class RestApiService
 
     public static async UniTask<ApiResponse<T>> GetAsync<T>(string url, Dictionary<string, string> data = null)
     {
+        var payload = CreatePayload(data);
         using (var request = CreateGetRequest(url, data))
         {
-            return await SendRequestAsync<T>(request);
+            return await SendRequestAsync<T>(request, payload);
         }
     }
 
     public static async UniTask<ApiResponse<T>> GetAsyncWithToken<T>(string url, Dictionary<string, string> data = null)
     {
+        var payload = CreatePayload(data);
         using (var request = CreateGetRequest(url, data))
         {
             try
             {
                 request.SetRequestHeader("Authorization", $"Bearer {TokenManager.LoginToken}");
-                return await SendRequestAsync<T>(request);
+                return await SendRequestAsync<T>(request, payload);
             }
             catch (Exception e)
             {
@@ -86,19 +88,21 @@ public static class RestApiService
 
     public static async UniTask<ApiResponse<T>> PostAsync<T>(string url, Dictionary<string, string> data = null)
     {
+        var payload = CreatePayload(data);
         using (var request = CreatePostRequest(url, data))
         {
-            return await SendRequestAsync<T>(request);
+            return await SendRequestAsync<T>(request, payload);
         }
     }
 
     public static async UniTask<ApiResponse<T>> PostAsync<T>(string url, string jsonPayLoad)
     {
+        var payload = CreatePayload(jsonPayLoad);
         using (var request = CreatePostRequest(url, jsonPayLoad))
         {
             try
             {
-                return await SendRequestAsync<T>(request);
+                return await SendRequestAsync<T>(request, payload);
             }
             catch (Exception e)
             {
@@ -111,19 +115,17 @@ public static class RestApiService
     public static async UniTask<ApiResponse<T>> PostAsyncWithToken<T>(string url,
         Dictionary<string, string> data = null)
     {
+        var payload = CreatePayload(data);
         using (var request = CreatePostRequest(url, data))
         {
             request.SetRequestHeader("Authorization", $"Bearer {TokenManager.LoginToken}");
-            return await SendRequestAsync<T>(request);
+            return await SendRequestAsync<T>(request, payload);
         }
     }
 
-    public static async UniTask<ApiResponse<T>> SendRequestAsync<T>(UnityWebRequest request)
+    public static async UniTask<ApiResponse<T>> SendRequestAsync<T>(UnityWebRequest request, byte[] payload)
     {
         request.timeout = DefaultTimeout;
-
-        var payloadClone = ClonePayload(request);
-
         if (!CheckInternetConnection<T>())
         {
             return new ApiResponse<T>(ResponseType.InternetDisconnected, default);
@@ -162,7 +164,7 @@ public static class RestApiService
                     if (refreshResult)
                     {
                         var newRequest = CloneRequest(request);
-                        return await SendRequestAsync<T>(newRequest);
+                        return await SendRequestAsync<T>(newRequest, payload);
                     }
 
                     var title = LZString.GetUIString("TokenExpiredAlertTitle");
@@ -172,11 +174,9 @@ public static class RestApiService
                 }
                 else
                 {
-                    var retryResult = await RetryRequest<T>(request, payloadClone);
-                    Debug.Log($"RetrySend : {payloadClone}");
+                    var retryResult = await RetryRequest<T>(request, payload);
                     if (retryResult.ResponseCode == ResponseType.Success)
                     {
-                        Debug.Log("RetrySend Success");
                         return retryResult;
                     }
 
@@ -248,6 +248,29 @@ public static class RestApiService
         return new ApiResponse<T>(ResponseType.Timeout, default);
     }
 
+    private static byte[] CreatePayload(Dictionary<string, string> data)
+    {
+        if (data != null)
+        {
+            var jsonPayLoad = JsonConvert.SerializeObject(data);
+            var bodyRaw = Encoding.UTF8.GetBytes(jsonPayLoad);
+            return bodyRaw;
+        }
+
+        return null;
+    }
+
+    private static byte[] CreatePayload(string jsonPayLoad)
+    {
+        if (jsonPayLoad != null)
+        {
+            var bodyRaw = Encoding.UTF8.GetBytes(jsonPayLoad);
+            return bodyRaw;
+        }
+
+        return null;
+    }
+
     private static UnityWebRequest CloneRequest(UnityWebRequest originalRequest, byte[] payloadClone = null)
     {
         var newRequest = new UnityWebRequest(originalRequest.url, originalRequest.method)
@@ -271,23 +294,7 @@ public static class RestApiService
 
         return newRequest;
     }
-
-    private static byte[] ClonePayload(UnityWebRequest request)
-    {
-        if (request.uploadHandler != null)
-        {
-            // 명시적으로 byte 배열을 복사하여 Payload를 복원
-            var originalData = request.uploadHandler.data;
-            if (originalData != null)
-            {
-                var copiedData = new byte[originalData.Length];
-                Buffer.BlockCopy(originalData, 0, copiedData, 0, originalData.Length);
-                return copiedData;
-            }
-        }
-
-        return null;
-    }
+    
 
     private class BypassCertificateHandler : CertificateHandler
     {
