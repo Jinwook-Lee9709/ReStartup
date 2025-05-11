@@ -173,8 +173,10 @@ public static class RestApiService
                 else
                 {
                     var retryResult = await RetryRequest<T>(request, payloadClone);
+                    Debug.Log($"RetrySend : {payloadClone}");
                     if (retryResult.ResponseCode == ResponseType.Success)
                     {
+                        Debug.Log("RetrySend Success");
                         return retryResult;
                     }
 

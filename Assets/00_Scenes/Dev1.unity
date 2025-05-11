@@ -20359,7 +20359,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[2].m_DialogPageData.m_Dialog
-      value: "\uD64D\uBCF4\uAC00 \uC798 \uB410\uC73C\uB824\uB098?  "
+      value: "\uD64D\uBCF4\uAC00 \uC798 \uB410\uB294\uC9C0 \uD655\uC778 \uD574 \uBCFC\uAE4C?"
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[3].m_DialogPageData.m_Dialog
@@ -21911,6 +21911,7 @@ GameObject:
   - component: {fileID: 732084434}
   - component: {fileID: 732084433}
   - component: {fileID: 732084436}
+  - component: {fileID: 732084437}
   m_Layer: 5
   m_Name: Staff HP
   m_TagString: Untagged
@@ -21993,6 +21994,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 732084437}
+        m_TargetAssemblyTypeName: TutorialTriggerButton, Assembly-CSharp
+        m_MethodName: OnTutorialTriggerButtonTouch
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &732084434
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22046,6 +22059,18 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.23529412}
   m_EffectDistance: {x: 6, y: -6}
   m_UseGraphicAlpha: 1
+--- !u!114 &732084437
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 732084431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 334886fe7623e104a9aef0253d0cf717, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &733838940
 GameObject:
   m_ObjectHideFlags: 0
@@ -26579,19 +26604,39 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.size
-      value: 10
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[1].m_PageType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[2].m_PageType
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[3].m_PageType
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[4].m_PageType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[5].m_PageType
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[6].m_PageType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[7].m_PageType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[8].m_PageType
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[9].m_PageType
@@ -26603,45 +26648,48 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[0].m_DialogPageData.m_Dialog
-      value: "\uD63C\uC790\uC11C \uC77C \uD560 \uC218\uB294 \uC5C6\uC9C0. \uC9C1\uC6D0\uC744
-        \uACE0\uC6A9\uD574\uC57C\uACA0\uC5B4."
+      value: "\uC190\uB2D8\uB4E4\uC774 \uBAB0\uB824\uC624\uC2DC\uAE30 \uC804\uC5D0
+        \uC9C1\uC6D0\uC744 \uACE0\uC6A9\uD574\uC57C\uACA0\uC5B4."
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[1].m_DialogPageData.m_Dialog
+      value: "\uADF8\uB7EC\uBA74 \uC774\uC81C \uC9C1\uC6D0\uC744 \uACE0\uC6A9\uD574\uC57C\uACA0\uB2E4.
+        \uD640\uC774 \uBC14\uBE60\uC9C8 \uC608\uC815\uC774\uB2C8\uAE4C \uD640 \uC9C1\uC6D0\uBD80\uD130\u2026"
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[2].m_DialogPageData.m_Dialog
       value: "\uC774 \uC571\uC5D0\uC11C \uC9C1\uC6D0\uB4E4\uC744 \uACE0\uC6A9\uD560
         \uC218 \uC788\uAD6C\uB098. \uB2E4\uC591\uD55C \uC9C1\uC6D0\uB4E4\uC774 \uC815\uB9D0
         \uB9CE\uB124!"
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
-      propertyPath: m_TutorialPageMakers.Array.data[2].m_DialogPageData.m_Dialog
-      value: "\uADF8\uB7EC\uBA74 \uC774\uC81C \uC9C1\uC6D0\uC744 \uACE0\uC6A9\uD574\uC57C\uACA0\uB2E4.
-        \uD640\uC774 \uBC14\uBE60\uC9C8 \uC608\uC815\uC774\uB2C8\uAE4C \uD640 \uC9C1\uC6D0\uBD80\uD130\u2026"
-      objectReference: {fileID: 0}
-    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[3].m_DialogPageData.m_Dialog
-      value: "\uADF8\uB7EC\uBA74 \uC774\uC81C \uC9C1\uC6D0\uC744 \uACE0\uC6A9\uD574\uC57C\uACA0\uB2E4.
-        \uD640\uC774 \uBC14\uBE60\uC9C8 \uC608\uC815\uC774\uB2C8\uAE4C \uD640 \uC9C1\uC6D0\uBD80\uD130\u2026"
+      value: "\uC9C1\uC6D0\uC774 \uC654\uC73C\uB2C8 \uC774\uC81C \uC880 \uB35C \uBC14\uC058\uACA0\uC9C0?
+        \uC9C1\uC6D0\uC774 \uC9C0\uCCD0\uBCF4\uC774\uBA74 \uBCF5\uC9C0\uB85C \uCEE4\uD53C\uB3C4
+        \uC880 \uC0AC\uC918\uC57C\uACA0\uB2E4! "
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[4].m_DialogPageData.m_Dialog
-      value: "\uACE0\uC6A9\uB3C4 \uC644\uB8CC \uD588\uC73C\uB2C8 \uC2DD\uB2F9\uC5D0
-        \uAC00\uC11C \uD640 \uC9C1\uC6D0\uC774 \uC798 \uC624\uC168\uB294\uC9C0 \uBCFC\uAE4C? "
+      value: "\uC787\uD2B8\uB80C\uB4DC\uC5D0\uC11C \uC54C\uB824\uC900 \uB0B4\uC6A9\uC740
+        \uB2E4 \uD30C\uC545\uD55C \uAC83 \uAC19\uC544 \uD63C\uC790\uC11C \uC2DD\uB2F9
+        \uC6B4\uC601\uC744 \uC2DC\uC791\uD574\uBCF4\uC790"
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[5].m_DialogPageData.m_Dialog
-      value: "\uD640 \uC9C1\uC6D0 \uBD84\uC774 \uC815\uC0C1\uC801\uC73C\uB85C \uACE0\uC6A9\uB410\uAD70!
-        \uC55E\uC73C\uB85C \uD640 \uCABD\uC740 \uC2E0\uACBD\uC4F0\uC9C0 \uC54A\uC544\uB3C4
-        \uB420\uC9C0\uB3C4?"
+      value: "\uB098\uC911\uC5D0 \uC9C1\uC6D0\uC744 \uC5EC\uB7EC\uBA85 \uB458 \uC815\uB3C4\uB85C
+        \uC2DD\uB2F9\uC774 \uC798\uB418\uBA74 \uBCF4\uB108\uC2A4\uB85C \uAE08\uC735\uCE58\uB8CC\uB3C4
+        \uD574\uC904 \uC218 \uC788\uC73C\uB824\uB098~"
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[6].m_DialogPageData.m_Dialog
-      value: "\uC544! \uC9C1\uC6D0\uB4E4\uC758 \uBCF5\uC9C0\uB97C \uC704\uD574 \uC787\uD2B8\uB80C\uB4DC
-        \uC571\uC744 \uD655\uC778\uD574\uC57C\uACA0\uB2E4!"
+      value: "\uC2DC\uC791\uC774 \uC88B\uC740 \uAC78? \uC5F4\uC2EC\uD788 \uD574\uC11C
+        \uB7AD\uD0B9 1\uC704\uAE4C\uC9C0 \uD574\uBCF4\uC790! "
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[7].m_DialogPageData.m_Dialog
-      value: "\uC774\uAC78\uB85C \uC9C1\uC6D0\uB4E4\uC758 \uBCF5\uC9C0\uB97C \uCC59\uACA8
-        \uC904 \uC218 \uC788\uACA0\uB124 \uC55E\uC73C\uB85C \uACC4\uC18D \uC774\uC6A9\uD574\uC57C\uACA0\uB2E4! "
+      value: "\uC787\uD2B8\uB80C\uB4DC\uC5D0\uC11C \uC54C\uB824\uC900 \uB0B4\uC6A9\uC740
+        \uB2E4 \uD30C\uC545\uD55C \uAC83 \uAC19\uC544 \uD63C\uC790\uC11C \uC2DD\uB2F9
+        \uC6B4\uC601\uC744 \uC2DC\uC791\uD574\uBCF4\uC790"
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[8].m_DialogPageData.m_Dialog
@@ -26661,7 +26709,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[1].m_ActionPageData.m_CompleteKey
-      value: 
+      value: TUTORIAL_ORDER_COMPLETE
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[2].m_ActionPageData.m_CompleteKey
+      value: TUTORIAL_ORDER_COMPLETE
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[3].m_ActionPageData.m_CompleteKey
@@ -26744,12 +26796,28 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[4].m_ActionPageData.m_HighlightTarget
+      value: 
+      objectReference: {fileID: 732084432}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[5].m_ActionPageData.m_HighlightTarget
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[1].m_ActionPageData.m_DynamicTargetKey
+      value: EmployeeTutorial
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[2].m_ActionPageData.m_DynamicTargetKey
+      value: EmployeeTutorial
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[3].m_ActionPageData.m_DynamicTargetKey
       value: EmployeeTutorial
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[4].m_ActionPageData.m_DynamicTargetKey
-      value: EmployeeTutorial
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[5].m_ActionPageData.m_DynamicTargetKey
@@ -26761,20 +26829,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[7].m_ActionPageData.m_DynamicTargetKey
-      value: EmployeeTutorial
+      value: TutorialComplete
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[8].m_ActionPageData.m_DynamicTargetKey
-      value: EmployeeTutorial
+      value: TutorialComplete
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[9].m_ActionPageData.m_DynamicTargetKey
       value: TutorialComplete
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
-      propertyPath: m_TutorialPageMakers.Array.data[3].m_ActionPageData.m_DynamicTargetRoot
+      propertyPath: m_TutorialPageMakers.Array.data[1].m_ActionPageData.m_DynamicTargetRoot
       value: 
       objectReference: {fileID: 344316610}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[2].m_ActionPageData.m_DynamicTargetRoot
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[3].m_ActionPageData.m_DynamicTargetRoot
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[4].m_ActionPageData.m_DynamicTargetRoot
       value: 
@@ -26790,11 +26866,11 @@ PrefabInstance:
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[7].m_ActionPageData.m_DynamicTargetRoot
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1784124636}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[8].m_ActionPageData.m_DynamicTargetRoot
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1784124636}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[9].m_ActionPageData.m_DynamicTargetRoot
       value: 
@@ -26829,6 +26905,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[2].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[3].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.size
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
@@ -26836,11 +26916,31 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[5].m_ActionPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[5].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[6].m_ActionPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[6].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.size
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[7].m_ActionPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[7].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[8].m_ActionPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.size
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
@@ -26884,7 +26984,23 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[3].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[4].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[5].m_ActionPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[5].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[6].m_ActionPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
@@ -26892,7 +27008,15 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[7].m_ActionPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[7].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[8].m_ActionPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
@@ -26934,23 +27058,47 @@ PrefabInstance:
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[2].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 344316609}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[2].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
-      propertyPath: m_TutorialPageMakers.Array.data[4].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      propertyPath: m_TutorialPageMakers.Array.data[3].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 344316609}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[4].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1784124632}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[5].m_ActionPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1784124632}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[5].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 344316609}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[6].m_ActionPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1784124632}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[6].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 344316609}
+      objectReference: {fileID: 1784124632}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[7].m_ActionPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1784124632}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[7].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 344316609}
+      objectReference: {fileID: 1784124632}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[8].m_ActionPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1784124632}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[8].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -26996,7 +27144,23 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[3].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[4].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[5].m_ActionPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[5].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[6].m_ActionPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
@@ -27004,7 +27168,15 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[7].m_ActionPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[7].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[8].m_ActionPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
@@ -27045,23 +27217,47 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[2].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: EmployeeScrollViewOpenButton
+      value: OnClickButtonExitUiUpgrade
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[2].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
       value: EmployeeScrollViewOpenButton
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
-      propertyPath: m_TutorialPageMakers.Array.data[4].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      propertyPath: m_TutorialPageMakers.Array.data[3].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: OnClickButtonExitUiUpgrade
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[4].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: TutorialCompletePopup
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[5].m_ActionPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: TutorialPhaseDone
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[5].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnClickButtonExitEmployeeHpUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[6].m_ActionPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: TutorialPhaseDone
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[6].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnClickButtonOpenEmployeeHpUI
+      value: TutorialCompletePopup
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[7].m_ActionPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: TutorialPhaseDone
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[7].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnClickButtonExitEmployeeHpUI
+      value: TutorialCompletePopup
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[8].m_ActionPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: TutorialPhaseDone
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[8].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
@@ -27097,23 +27293,47 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[2].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: UpgradeUi, Assembly-CSharp
+      value: UiManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[2].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
       value: UpgradeUi, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
-      propertyPath: m_TutorialPageMakers.Array.data[4].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      propertyPath: m_TutorialPageMakers.Array.data[3].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: UiManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[4].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: TutorialManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[5].m_ActionPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: TutorialManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[5].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UiManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[6].m_ActionPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: TutorialManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[6].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: UiManager, Assembly-CSharp
+      value: TutorialManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[7].m_ActionPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: TutorialManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[7].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: UiManager, Assembly-CSharp
+      value: TutorialManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[8].m_ActionPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: TutorialManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[8].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
@@ -27156,7 +27376,23 @@ PrefabInstance:
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[3].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[4].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[5].m_ActionPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[5].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[6].m_ActionPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
@@ -27164,7 +27400,15 @@ PrefabInstance:
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[7].m_ActionPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[7].m_DialogPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[8].m_ActionPageData.m_OnTutorialEnded.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
