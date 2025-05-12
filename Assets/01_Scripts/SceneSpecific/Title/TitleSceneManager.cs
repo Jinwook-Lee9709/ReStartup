@@ -128,6 +128,7 @@ public class TitleSceneManager : MonoBehaviour
         var response = await CurrencyDataDAC.GetCurrencyData();
         UserDataManager.Instance.CurrentUserData.Gold = response.Data.First(x => x.currencyType == CurrencyType.Gold).amount;
         UserDataManager.Instance.CurrentUserData.Money = response.Data.First(x => x.currencyType == CurrencyType.Money).amount;
+        UserDataManager.Instance.CurrentUserData.AdTicket = response.Data.First(x => x.currencyType == CurrencyType.AdTicket).amount;
         UserDataManager.Instance.CurrentUserData.Name = nameResponse.Data;
 
         var stageStatus = await StageStatusDataDAC.GetStageStatusData();

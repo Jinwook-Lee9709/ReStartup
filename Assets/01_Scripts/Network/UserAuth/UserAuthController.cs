@@ -78,9 +78,9 @@ public static class UserAuthController
     private static List<CurrencyData> CreateInitialCurrencyData()
     {
         CurrencyData gold = new CurrencyData(CurrencyType.Gold, 0);
-        //CurrencyData money = new CurrencyData(CurrencyType.Money, 0);
         CurrencyData money = new CurrencyData(CurrencyType.Money, 0);
-        List<CurrencyData> currencyDataList = new List<CurrencyData>() { gold, money };
+        CurrencyData adTicket = new CurrencyData(CurrencyType.AdTicket, 0);
+        List<CurrencyData> currencyDataList = new List<CurrencyData>() { gold, money, adTicket };
         return currencyDataList;
     }
 }

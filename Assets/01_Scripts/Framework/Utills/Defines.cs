@@ -42,6 +42,8 @@ public enum DataTableIds
     RankCondition,
     Mission,
     ThemeCondition,
+    GuideCategory,
+    GuideElement,
 }
 
 public enum IconPivots
