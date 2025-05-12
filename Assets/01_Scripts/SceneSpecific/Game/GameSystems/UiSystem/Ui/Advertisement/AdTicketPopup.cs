@@ -26,7 +26,7 @@ public class AdTicketPopup : PopUp
             if (afterEvent != null)
                 afterEvent();
 
-            UserDataManager.Instance.CurrentUserData.AdTicket--;
+            UserDataManager.Instance.AdjustAdTicketWithSave(-1).Forget();
             OnCancle();
         });
         cancelButton.onClick.AddListener(() => {
