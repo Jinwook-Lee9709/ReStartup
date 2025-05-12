@@ -6,8 +6,10 @@ using UnityEngine.Events;
 
 public class GuideUI : MonoBehaviour
 {
-    private readonly string guideCategoryButtonName = "GuideCategory";
+    private readonly string guideCategoryController = "GuideCategory";
+    
     [SerializeField] private Transform content;
+    
     
     private Dictionary<int, GuideCategoryController> categoryControllers = new();
 
@@ -21,7 +23,7 @@ public class GuideUI : MonoBehaviour
         var guideCategoryDataTable = DataTableManager.Get<GuideCategoryDataTable>(DataTableIds.GuideCategory.ToString());
         foreach (var data in guideCategoryDataTable)
         {
-            var obj = Addressables.InstantiateAsync(guideCategoryButtonName, content).WaitForCompletion();
+            var obj = Addressables.InstantiateAsync(guideCategoryController, content).WaitForCompletion();
             var categoryButton = obj.GetComponent<GuideCategoryController>();
             categoryButton.Init(data, OnClickCategoryButton, OnClickElementButton);
             categoryControllers.Add(data.CategoryID, categoryButton);
@@ -35,7 +37,15 @@ public class GuideUI : MonoBehaviour
             categoryControllers[categoryID].CloseElementPanel();
             return;
         }
-       
+
+        foreach (var categoryController in categoryControllers.Values)
+        {
+            if (categoryController.IsOpen)
+            {
+                categoryController.CloseElementPanel();
+            }
+        }
+        categoryControllers[categoryID].OpenElementPanel();
     }
 
     private void OnClickElementButton(int elementID)
