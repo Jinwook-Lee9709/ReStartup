@@ -22,5 +22,9 @@ namespace Excellcube.EasyTutorial.Page
         [SerializeField]
         private Unmask m_UnmaskPanel;
         public  Unmask UnmaskPanel => m_UnmaskPanel;
+
+        [SerializeField]
+        private GameObject m_ActionLogBackGround;
+        public GameObject ActionLogBackGround => m_ActionLogBackGround;
     }
 }

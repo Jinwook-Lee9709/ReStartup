@@ -108,13 +108,13 @@ public class QuestCard : MonoBehaviour
         switch (missionData.RewardType)
         {
             case RewardType.Money:
-                UserDataManager.Instance.AdjustMoney(missionData.RewardAmount);
+                UserDataManager.Instance.AdjustMoneyWithSave(missionData.RewardAmount).Forget();
                 break;
             case RewardType.Gold:
-                UserDataManager.Instance.AdjustGold(missionData.RewardAmount);
+                UserDataManager.Instance.AdjustGoldWithSave(missionData.RewardAmount).Forget();
                 break;
             case RewardType.AdBlockTicket:
-                UserDataManager.Instance.AdjustGold(missionData.RewardAmount);
+                UserDataManager.Instance.AdjustAdTicketWithSave(missionData.RewardAmount).Forget();
                 break;
             case RewardType.MissionPoint:
                 UserDataManager.Instance.AdjustGold(missionData.RewardAmount);
