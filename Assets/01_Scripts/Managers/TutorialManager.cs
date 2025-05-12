@@ -141,7 +141,7 @@ public class TutorialManager : MonoBehaviour
     public void OnTouchPhonePhase1()
     {
         var popup = Instantiate(eatrandAlarmPopupPrefab, transform);
-        popup.Init("앱 추천 알림!\n식당 사장님들은 주목! \n식당 운영이 막막하신가요?\n맛집 정보와 솔직한 리뷰가 가득한 맛집 앱!\nEATrend에 가입해보세요!");
+        popup.Init("식당 사장님들은 주목! \n식당 운영이 막막하신가요?\n맛집 정보와 솔직한 리뷰가 가득한 맛집 앱!\nEATrend에 가입해보세요!");
         popup.transform.SetSiblingIndex(0);
     }
 
