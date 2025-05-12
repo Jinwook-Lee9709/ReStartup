@@ -17,15 +17,15 @@ public class GuideCategoryButton : MonoBehaviour
 
     public void Init(GuideCategoryData data, UnityAction<int> onClick)
     {
-        var titleStringKey = String.Format(titleStringFormat, data.CategoryID);
+        var titleStringKey = String.Format(titleStringFormat, data.CategoryId);
         var titleString = LZString.GetUIString(titleStringKey);
 
-        var iconSprite = Addressables.LoadAssetAsync<Sprite>(data.IconID).WaitForCompletion();
+        var iconSprite = Addressables.LoadAssetAsync<Sprite>(data.CategoryIcon).WaitForCompletion();
         
         title.text = titleString;
         icon.sprite = iconSprite;
         
         button.onClick.RemoveAllListeners();
-        button.onClick.AddListener(() => onClick(data.CategoryID));
+        button.onClick.AddListener(() => onClick(data.CategoryId));
     }
 }

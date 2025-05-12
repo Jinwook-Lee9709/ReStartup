@@ -26,7 +26,7 @@ public class GuideUI : MonoBehaviour
             var obj = Addressables.InstantiateAsync(guideCategoryController, content).WaitForCompletion();
             var categoryButton = obj.GetComponent<GuideCategoryController>();
             categoryButton.Init(data, OnClickCategoryButton, OnClickElementButton);
-            categoryControllers.Add(data.CategoryID, categoryButton);
+            categoryControllers.Add(data.CategoryId, categoryButton);
         }
     }
 

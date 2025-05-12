@@ -13,10 +13,10 @@ public class GuideCategoryDataTable : DataTable, IEnumerable<GuideCategoryData>
     
     public override void Load()
     {
-        var result = LoadCsv<GuideCategoryData>("guideCategory");
+        var result = LoadCsv<GuideCategoryData>("guidecategorytable");
         foreach (var row in result)
         {
-            Data.TryAdd(row.CategoryID, row);
+            Data.TryAdd(row.CategoryId, row);
         }
     }
 

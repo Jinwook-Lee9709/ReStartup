@@ -17,8 +17,8 @@ public class GuidePopup : MonoBehaviour
     
     public void SetInfo(GuideElementData data)
     {
-        var sprite = Addressables.LoadAssetAsync<Sprite>(data.ImageIcon).WaitForCompletion();
-        string descriptionStringKey = String.Format(titleStringFormat, data.EntryID);
+        var sprite = Addressables.LoadAssetAsync<Sprite>(data.Resource).WaitForCompletion();
+        string descriptionStringKey = String.Format(titleStringFormat, data.EntryId);
         var description = LZString.GetUIString(descriptionStringKey);
         image.sprite = sprite;
         descriptionText.text = description;

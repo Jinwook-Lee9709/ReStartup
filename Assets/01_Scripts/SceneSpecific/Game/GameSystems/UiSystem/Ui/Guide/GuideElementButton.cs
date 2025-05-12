@@ -15,12 +15,12 @@ public class GuideElementButton : MonoBehaviour
 
     public void Init(GuideElementData data, UnityAction<int> onClick)
     {
-        var titleStringKey = String.Format(titleStringFormat, data.EntryID);
+        var titleStringKey = String.Format(titleStringFormat, data.EntryId);
         var titleString = LZString.GetUIString(titleStringKey);
         
         title.text = titleString;
         
         button.onClick.RemoveAllListeners();
-        button.onClick.AddListener(() => onClick(data.EntryID));
+        button.onClick.AddListener(() => onClick(data.EntryId));
     }
 }

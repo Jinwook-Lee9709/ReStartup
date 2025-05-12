@@ -5,7 +5,7 @@ using UnityEngine;
 public class GuideElementData
 {
     public int Index { get; set; }
-    public int EntryID { get; set; }
-    public int CategoryID { get; set; }
-    public string ImageIcon { get; set; }
+    public int EntryId { get; set; }
+    public int CategoryId { get; set; }
+    public string Resource { get; set; }
 }

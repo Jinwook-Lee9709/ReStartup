@@ -20,7 +20,7 @@ public class GuideCategoryController : MonoBehaviour
         categoryButton.Init(data, onCategoryButtonClicked);
 
         var guideElementTable = DataTableManager.Get<GuideElementDataTable>(DataTableIds.GuideElement.ToString());
-        var query = guideElementTable.Where(x => x.CategoryID == data.CategoryID);
+        var query = guideElementTable.Where(x => x.CategoryId == data.CategoryId);
 
         foreach (var elementData in query)
         {

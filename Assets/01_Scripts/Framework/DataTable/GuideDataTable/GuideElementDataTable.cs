@@ -14,10 +14,10 @@ public class GuideElementDataTable : DataTable, IEnumerable<GuideElementData>
     
     public override void Load()
     {
-        var result = LoadCsv<GuideElementData>("guideCategory");
+        var result = LoadCsv<GuideElementData>("guideentrytable");
         foreach (var row in result)
         {
-            Data.TryAdd(row.EntryID, row);
+            Data.TryAdd(row.EntryId, row);
         }
     }
 
