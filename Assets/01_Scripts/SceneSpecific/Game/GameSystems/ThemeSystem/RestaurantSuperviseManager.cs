@@ -47,7 +47,7 @@ public class RestaurantSuperviseManager : MonoBehaviour
         popup.ClosePopup();
         
         PlayerPrefs.SetInt("Theme", (int)currentTheme + 1);
-        ServiceLocator.Instance.GetGlobalService<SceneController>().LoadSceneWithLoading(SceneIds.Dev0, GameSceneLoader.BeforeGameSceneLoad);
+        ServiceLocator.Instance.GetGlobalService<SceneController>().LoadSceneWithLoading(SceneIds.Dev3, GameSceneLoader.BeforeGameSceneLoad);
 
     }
 

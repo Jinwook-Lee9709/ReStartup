@@ -11,6 +11,7 @@ public class UiManager : MonoBehaviour
     public GameObject uiPromotion;
     public GameObject uiQuest;
     public GameObject uiPreferences;
+    public GameObject uiBusinessModel;
     public IngameGoodsUi inGameUi;
 
     public void Start()
@@ -129,5 +130,13 @@ public class UiManager : MonoBehaviour
     {
         uiPreferences.SetActive(false);
         LocalSaveLoadManager.Save();
+    }
+    public void OnClickButtonOpenBusinessModeUI()
+    {
+        uiBusinessModel.SetActive(true);
+    }
+    public void OnClickButtonExitBusinessModelUI()
+    {
+        uiBusinessModel.SetActive(false);
     }
 }

@@ -7,6 +7,7 @@ public enum CostType
     Free,
     Money,
     Gold,
+    Cash,
 }
 public interface IPromotion
 {
