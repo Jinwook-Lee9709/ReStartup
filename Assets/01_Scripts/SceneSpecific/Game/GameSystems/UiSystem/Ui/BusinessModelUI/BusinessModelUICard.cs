@@ -11,10 +11,10 @@ public class BusinessModelUICard : MonoBehaviour
     [SerializeField] TextMeshProUGUI costText;
     [SerializeField] Image image;
     [SerializeField] int ea;
-    [SerializeField] int cost;
     [SerializeField] CostType costType;
     [SerializeField] Button mainButton;
     [SerializeField] RewardType rewardType;
+    public int cost;
 
     private void Start()
     {
@@ -32,7 +32,7 @@ public class BusinessModelUICard : MonoBehaviour
                 break;
         }
     }
-    private async void GoldBuy()
+    public async void GoldBuy()
     {
         //팝업켜기 킨후 아래행동
         var userDataManager = UserDataManager.Instance;
@@ -53,7 +53,7 @@ public class BusinessModelUICard : MonoBehaviour
                 break;
         }
     }
-    private async void CashBuy()
+    public async void CashBuy()
     {
         switch (rewardType)
         {
