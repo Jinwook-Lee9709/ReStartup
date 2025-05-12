@@ -40,7 +40,6 @@ public static class RegexFilter
             {
                 var currentStr = string.Format(badWordFilterFormat, strings[j]);
                 adjustPattern = string.Concat(adjustPattern, currentStr);
-                //adjustPattern.Concat(currentStr);
             }
             adjustRegexBadWords.Add(adjustPattern);
         }

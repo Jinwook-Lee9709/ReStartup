@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using Excellcube.EasyTutorial;
 using Excellcube.EasyTutorial.Utils;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -113,7 +114,7 @@ public class TutorialManager : MonoBehaviour
     #region Phase1
     [VInspector.Foldout("Phase1")]
     [SerializeField][Range(0f, 3f)] private float shakeDuration;
-    [SerializeField][Range(0f, 3f)] private float shakeAmount;
+    [SerializeField][Range(0f, 10f)] private float shakeAmount;
     [SerializeField] private CreateNamePopup createNamePopupPrefab;
     [SerializeField] private TutorialPhase1RewardPopup tutorialPhase1RewardPopupPrefab;
     [VInspector.EndFoldout]
@@ -130,7 +131,7 @@ public class TutorialManager : MonoBehaviour
         var prevPos = phone.transform.position;
         while (timer < shakeDuration)
         {
-            phone.transform.position = prevPos + Random.insideUnitSphere * shakeAmount;
+            phone.transform.position = prevPos +UnityEngine.Random.insideUnitSphere * shakeAmount;
             timer += Time.deltaTime;
             yield return null;
         }

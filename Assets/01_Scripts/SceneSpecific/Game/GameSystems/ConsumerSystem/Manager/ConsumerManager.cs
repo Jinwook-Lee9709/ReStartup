@@ -108,6 +108,7 @@ public class ConsumerManager : MonoBehaviour
 
     public void StartSpawnRoutine()
     {
+        StopAllCoroutines();
         StartCoroutine(SpawnCoroutine());
     }
 

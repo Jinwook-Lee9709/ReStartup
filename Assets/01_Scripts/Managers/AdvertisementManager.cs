@@ -176,23 +176,7 @@ public class AdvertisementManager : Singleton<AdvertisementManager>
             return;
         }
 
-        if (rewarded != null && rewarded.CanShowAd())
-        {
-            rewarded.Show((Reward reward) =>
-            {
-                UniTask.Void(async () =>
-                {
-                    await adCallBack();
-                });
-                LoadRewardedAd();
-            });
-            if (afterEvent != null)
-                afterEvent();
-        }
-        else
-        {
-            Debug.LogWarning("광고가 준비되지 않음.");
-        }
+        ShowRewardedAdDirect(adCallBack, afterEvent);
     }
 
     private void ShowTicketPopup(Func<UniTask> adCallBack, Func<UniTask> afterEvent = null)
@@ -229,7 +213,7 @@ public class AdvertisementManager : Singleton<AdvertisementManager>
     }
     private bool CheckAdTicket()
     {
-        return UserDataManager.Instance.CurrentUserData.AdTicket != 0;
+        return UserDataManager.Instance.CurrentUserData.AdTicket > 0;
     }
 
 
