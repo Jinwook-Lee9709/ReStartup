@@ -55,7 +55,7 @@ public class InteriorCard : MonoBehaviour
         this.Data = data;
         upgradePopup = popup;
         upgradeAuthorityNotifyPopup = authorityNotifyPopup;
-        nameText.text = data.Name;
+        nameText.text = LZString.GetUIString(data.Name);
 
         buyButton.onClick.RemoveAllListeners();
         buyButton.onClick.AddListener(OnButtonClick);

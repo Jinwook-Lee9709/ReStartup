@@ -50,7 +50,7 @@ public class InteriorUpgradeAuthorityNotifyPopup : MonoBehaviour
             var table =DataTableManager.Get<InteriorDataTable>(DataTableIds.Interior.ToString());
             var interiorData = table.GetData(data.Requirements2);
             
-            secondRequirementValueText.text = interiorData.Name;
+            secondRequirementValueText.text = LZString.GetUIString(interiorData.Name);
             
             var secondTextColor = data.CheckSecondRequirement() ? satisfiedColor : unsatisfiedColor;
             secondRequirementNameText.color = secondTextColor;

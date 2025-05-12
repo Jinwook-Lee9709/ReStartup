@@ -9,10 +9,10 @@ public class GuideUI : MonoBehaviour
     private readonly string guideCategoryController = "GuideCategory";
     
     [SerializeField] private Transform content;
-    
+    [SerializeField] private GuidePopup popup;
     
     private Dictionary<int, GuideCategoryController> categoryControllers = new();
-
+  
     public void Start()
     {
         Init();
@@ -50,6 +50,9 @@ public class GuideUI : MonoBehaviour
 
     private void OnClickElementButton(int elementID)
     {
-        
+        var guideElementDataTable = DataTableManager.Get<GuideElementDataTable>(DataTableIds.GuideElement.ToString());
+
+        popup.SetInfo(guideElementDataTable.GetData(elementID));
+        popup.Open();
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Events;
@@ -28,6 +29,8 @@ public class GuideCategoryController : MonoBehaviour
                 .GetComponent<GuideElementButton>();
             button.Init(elementData, onElementButtonClicked);
         }
+        
+        elementParent.gameObject.SetActive(false);
     }
 
     public void OpenElementPanel()
