@@ -60,6 +60,7 @@ public class IngameGoodsUi : MonoBehaviour
     {
         MoneyUiValueSet(userDataManager.CurrentUserData.Money);
         GoldUiValueSet(userDataManager.CurrentUserData.Gold);
+        AddTicketSet(userDataManager.CurrentUserData.AdTicket);
     }
 
     public void RankPointUiValueSet(int rankPoint)
