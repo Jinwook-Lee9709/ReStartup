@@ -55,6 +55,7 @@ public class BusinessModelUICard : MonoBehaviour
                 await userDataManager.AdjustGoldWithSave(ea);
                 break;
             case RewardType.AdBlockTicket:
+                await userDataManager.AdjustAdTicketWithSave(ea);
                 break;
         }
     }
@@ -69,6 +70,7 @@ public class BusinessModelUICard : MonoBehaviour
                 await UserDataManager.Instance.AdjustGoldWithSave(ea);
                 break;
             case RewardType.AdBlockTicket:
+                await UserDataManager.Instance.AdjustAdTicketWithSave(ea);
                 break;
         }
     }

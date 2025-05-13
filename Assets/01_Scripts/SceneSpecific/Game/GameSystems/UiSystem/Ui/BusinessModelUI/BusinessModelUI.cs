@@ -9,6 +9,7 @@ public class BusinessModelUI : MonoBehaviour
     [SerializeField] List<RectTransform> packageCards = new();
     [SerializeField] List<ContentSizeFitter> contentSizeFitters = new();
     public GameObject busunessModelUIBuyPopup;
+    public GameObject busunessModelUIPackagePopup;
     private float foldWidth = 900f;
     public GameObject notEnoughCostPopup;
     private Transform uicanvers;
