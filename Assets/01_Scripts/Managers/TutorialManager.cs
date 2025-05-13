@@ -67,7 +67,14 @@ public class TutorialManager : MonoBehaviour
             consumerManager.StartSpawnRoutine();
             PlayerPrefs.SetInt("ECET_CLEAR_ALL", 1);
             Destroy(gameObject);
+            TutorialEndTask().Forget();
         });
+    }
+
+    public async UniTask TutorialEndTask()
+    {
+        await UniTask.NextFrame();
+        ServiceLocator.Instance.GetSceneService<GameManager>().uiManager.BroadcastMessage("ScrollRectLock");
     }
 
     public void TutorialOrderComplete()
