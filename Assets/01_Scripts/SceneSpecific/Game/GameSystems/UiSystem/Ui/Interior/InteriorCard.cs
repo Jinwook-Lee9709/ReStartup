@@ -101,7 +101,10 @@ public class InteriorCard : MonoBehaviour
     {
         float targetTime = Time.time + Constants.POP_UP_DURATION;
         var alertPopup = ServiceLocator.Instance.GetGlobalService<AlertPopup>();
-        alertPopup.PopUp("인테리어 구매중!", "영차 영차!", SpumCharacter.Construct, false);
+        var title = LZString.GetUIString("BuyInterior");
+        var message = LZString.GetUIString("HeaveHo");
+        
+        alertPopup.PopUp(title, message, SpumCharacter.Construct, false);
         await UserDataManager.Instance.AdjustMoneyWithSave(-Data.GetSellingCost());
         await UserDataManager.Instance.UpgradeInterior(Data.InteriorID);
         if (Time.time < targetTime)
@@ -114,7 +117,9 @@ public class InteriorCard : MonoBehaviour
         else
             ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.UpgradeInterior, 1, (int)Data.InteriorID);
         alertPopup.ChangeCharacter(SpumCharacter.ConstructComplete);
-        alertPopup.ChangeText("구매 완료!", "만세!");
+        var buyTitle = LZString.GetUIString("BuyComplete");
+        var hurrayMessage = LZString.GetUIString("Hurray");
+        alertPopup.ChangeText(buyTitle, hurrayMessage);
         alertPopup.EnableTouch();
     }
 

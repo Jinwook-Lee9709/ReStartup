@@ -30,7 +30,10 @@ public class RestaurantSuperviseManager : MonoBehaviour
         var conditionData= DataTableManager.Get<ThemeConditionDataTable>(DataTableIds.ThemeCondition.ToString()).GetConditionData((int)currentTheme + 1);
         
         var popup = ServiceLocator.Instance.GetGlobalService<AlertPopup>();
-        popup.PopUp("서버와 통신중", "다음 식당으로 이동!", SpumCharacter.HireEmployee, false);
+
+        var title = LZString.GetUIString("ConnectToServer");
+        var message = LZString.GetUIString("MoveToNextTheme");
+        popup.PopUp(title, message, SpumCharacter.HireEmployee, false);
 
         await UserDataManager.Instance.AdjustMoneyWithSave(-conditionData.Requirements1);
 

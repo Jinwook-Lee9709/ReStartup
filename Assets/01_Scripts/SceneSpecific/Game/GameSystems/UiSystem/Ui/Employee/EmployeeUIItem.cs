@@ -217,11 +217,20 @@ public class EmployeeUIItem : MonoBehaviour
         
         float targetTime = Time.time + Constants.POP_UP_DURATION;
         var alertPopup = ServiceLocator.Instance.GetGlobalService<AlertPopup>();
-        
-        if(employeeSaveData[employeeId].level == 0)
-            alertPopup.PopUp("직원 고용중" ,"고용 고용!", SpumCharacter.HireEmployee, false);
+
+        if (employeeSaveData[employeeId].level == 0)
+        {
+            var title = LZString.GetUIString("HireEmployee");
+            var message = LZString.GetUIString("HireEmployeeMessage");
+            alertPopup.PopUp(title ,message, SpumCharacter.HireEmployee, false);
+        }
         else
-            alertPopup.PopUp("직원 교육중" ,"교육 교육!", SpumCharacter.HireEmployee, false);
+        {
+            var title = LZString.GetUIString("EducateEmployee");
+            var message = LZString.GetUIString("EducateEmployeeMessage");
+            alertPopup.PopUp(title ,message, SpumCharacter.HireEmployee, false);
+        }
+            
         
         await UserDataManager.Instance.AdjustMoneyWithSave(-employeeData.Cost);
         await UserDataManager.Instance.UpgradeEmployee(employeeId);
@@ -235,10 +244,18 @@ public class EmployeeUIItem : MonoBehaviour
 
 
         alertPopup.ChangeCharacter(SpumCharacter.HireEmployeeComplete);
-        if(employeeSaveData[employeeId].level == 1)
-            alertPopup.ChangeText("고용 완료!","만세!");
+        if (employeeSaveData[employeeId].level == 1)
+        {
+            var title = LZString.GetUIString("HiringComplete");
+            var message = LZString.GetUIString("Hurray");
+            alertPopup.ChangeText(title,message);
+        }
         else
-            alertPopup.ChangeText("교육 완료!","만세!");
+        {
+            var title = LZString.GetUIString("EducationComplete");
+            var message = LZString.GetUIString("Hurray");
+            alertPopup.ChangeText(title,message);
+        }
         alertPopup.EnableTouch();
 
     }

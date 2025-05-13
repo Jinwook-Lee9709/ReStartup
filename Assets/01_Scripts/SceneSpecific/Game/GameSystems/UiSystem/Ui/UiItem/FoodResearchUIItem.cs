@@ -130,7 +130,11 @@ public class FoodResearchUIItem : MonoBehaviour
         consumerManager.foodIds.Add(foodData.FoodID);
         float targetTime = Time.time + Constants.POP_UP_DURATION;
         var alertPopup = ServiceLocator.Instance.GetGlobalService<AlertPopup>();
-        alertPopup.PopUp("음식 연구중!", "어떤 음식이 나오려나?", SpumCharacter.FoodResearch, false);
+
+        var title = LZString.GetUIString("ResearchingFood");
+        var text = LZString.GetUIString("ResearchingFoodMessage");
+        
+        alertPopup.PopUp(title, text, SpumCharacter.FoodResearch, false);
         bool isComplete = await UserDataManager.Instance.AddRankPointWithSave(foodData.GetRankPoints);
         if (!isComplete)
         {
@@ -150,7 +154,11 @@ public class FoodResearchUIItem : MonoBehaviour
         HandleUpgradeFood().Forget();
         
         alertPopup.ChangeCharacter(SpumCharacter.FoodResearchComplete);
-        alertPopup.ChangeText("연구 완료!","만세!");
+        
+        var completeTitle = LZString.GetUIString("ResearchComplete");
+        var completeMessage = LZString.GetUIString("Hurray");
+        
+        alertPopup.ChangeText(completeTitle,completeMessage);
         alertPopup.EnableTouch();
         
         

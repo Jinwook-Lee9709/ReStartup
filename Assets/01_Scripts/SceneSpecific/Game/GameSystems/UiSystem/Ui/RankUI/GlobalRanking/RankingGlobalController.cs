@@ -124,7 +124,11 @@ public class RankingGlobalController : MonoBehaviour
     private void ShowLoadingPopup()
     {
         var alert = ServiceLocator.Instance.GetGlobalService<AlertPopup>();
-        alert?.PopUp("랭킹 로딩중..", "우리 가게는 몇등일까?", SpumCharacter.HireEmployee, false);
+        
+        var title = LZString.GetUIString("LoadingRanking");
+        var message = LZString.GetUIString("LoadingRankingMessage");
+        
+        alert?.PopUp(title, message, SpumCharacter.HireEmployee, false);
     }
 
     // 팝업 닫기
