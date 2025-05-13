@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
 
-public class BusinessModelUIButPopup : MonoBehaviour
+public class BusinessModelUIBuyPopup : MonoBehaviour
 {
     [SerializeField] private float backgroundOpacity = 0.8f;
     [SerializeField] private Button background;
@@ -40,6 +40,8 @@ public class BusinessModelUIButPopup : MonoBehaviour
     public void SetInfo(BusinessModelUICard card, Sprite image)
     {
         currentCard = card;
+        costText.text = currentCard.cost.ToString("N0");
+        Icon.sprite = image;
     }
     private void OnEnable()
     {

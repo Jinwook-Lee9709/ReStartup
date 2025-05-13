@@ -14,23 +14,21 @@ public class BusinessModelUICard : MonoBehaviour
     [SerializeField] CostType costType;
     [SerializeField] Button mainButton;
     [SerializeField] RewardType rewardType;
+    private BusinessModelUIBuyPopup popup;
     public int cost;
 
     private void Start()
     {
+        popup = ServiceLocator.Instance.GetSceneService<GameManager>().uiManager.uiBusinessModel.GetComponent<BusinessModelUI>().busunessModelUIBuyPopup.GetComponent<BusinessModelUIBuyPopup>();
         eaText.text = $"X {ea}";
         costText.text = cost.ToString("N0");
-        switch (costType)
-        {
-            case CostType.Gold:
-                mainButton.onClick.RemoveAllListeners();
-                mainButton.onClick.AddListener(GoldBuy);
-                break;
-            case CostType.Cash:
-                mainButton.onClick.RemoveAllListeners();
-                mainButton.onClick.AddListener(CashBuy);
-                break;
-        }
+        mainButton.onClick.RemoveAllListeners();
+        mainButton.onClick.AddListener(OnPopup);
+    }
+    private void OnPopup()
+    {
+        popup.gameObject.SetActive(true);
+        popup.SetInfo(this,image.sprite);
     }
     public async void GoldBuy()
     {

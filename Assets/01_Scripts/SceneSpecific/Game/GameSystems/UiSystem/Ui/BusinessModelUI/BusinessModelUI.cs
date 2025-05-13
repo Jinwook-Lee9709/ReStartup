@@ -8,6 +8,7 @@ public class BusinessModelUI : MonoBehaviour
     public GameObject packageContent;
     [SerializeField] List<RectTransform> packageCards = new();
     [SerializeField] List<ContentSizeFitter> contentSizeFitters = new();
+    public GameObject busunessModelUIBuyPopup;
     private float foldWidth = 900f;
     // Start is called before the first frame update
     void Start()

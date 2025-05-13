@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class BusinessModelUIPackageCard : MonoBehaviour
 {
-    private readonly string numberOfTimes = "NumberOfTimes";
+    private readonly string numberOfTimes = "WeeklyNumberOfTimes {0}/3";
     private int times = 3;
     public int cost;
     [SerializeField] private Button mainButton;
