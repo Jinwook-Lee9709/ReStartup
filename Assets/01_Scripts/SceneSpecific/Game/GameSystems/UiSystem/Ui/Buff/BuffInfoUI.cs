@@ -49,10 +49,8 @@ public class BuffInfoUI : MonoBehaviour, IComparable<BuffInfoUI>
     {
         GetComponent<RectTransform>().DOMoveX(-GetComponent<RectTransform>().sizeDelta.x, 1.5f).OnComplete(() =>
         {
-            transform.DOKill();
-            buffManager.buffInfoUIList.Remove(this);
-            buffManager.UpdateBuffCntUI();
             Destroy(gameObject);
+            transform.DOKill();
         });
     }
 }
