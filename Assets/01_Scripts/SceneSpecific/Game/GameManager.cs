@@ -5,6 +5,7 @@ using NavMeshPlus.Components;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.Serialization;
 
 [Serializable]
 public class GameManager : MonoBehaviour
@@ -13,7 +14,7 @@ public class GameManager : MonoBehaviour
     
     [SerializeField] private Transform poolParent;
     [SerializeField] private NavMeshSurface surface2D;
-    [SerializeField] private MapPivotLocator mapPivotLocator;
+    [FormerlySerializedAs("mapSpriteLocator")] [FormerlySerializedAs("mapPivotLocator")] [SerializeField] private MapRendererLocator mapRendererLocator;
 
     private ThemeIds currentTheme;
     public ThemeIds CurrentTheme => currentTheme;
@@ -75,7 +76,7 @@ public class GameManager : MonoBehaviour
         WorkFlowController = new WorkFlowController();
         WorkStationManager = new WorkStationManager();
         
-        ObjectPivotManager.Init(this, currentTheme, mapPivotLocator);
+        ObjectPivotManager.Init(this, currentTheme, mapRendererLocator);
         WorkManager.Init(WorkerManager, alarm);
         WorkerManager.Init(WorkManager);
         WorkFlowController.Init(this, WorkManager);

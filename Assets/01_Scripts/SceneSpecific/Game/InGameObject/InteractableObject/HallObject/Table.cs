@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -11,10 +12,12 @@ public class Table : InteractableObjectBase, IInterior
 {
     [SerializeField] private Transform foodPlacePivot;
     [SerializeField] private SpriteRenderer objectRenderer;
+    [SerializeField] private List<SpriteRenderer> chairs;
     [SerializeField] private Transform defaultIconTransform;
     [SerializeField] private Transform consumerIconTransform;
     [SerializeField] private IconBubble iconBubble;
     [SerializeField] private Table pairTable;
+
 
     [SerializeField] private TableType tableType;
     private float eattingSpeed = 1f;
@@ -22,9 +25,14 @@ public class Table : InteractableObjectBase, IInterior
     public TableType TableType => tableType;
     public Table PairTable => pairTable;
     public IconBubble IconBubble => iconBubble;
+
     public void ChangeSpirte(params Sprite[] sprite)
     {
         objectRenderer.sprite = sprite[0];
+        foreach (var chair in chairs)
+        {
+            chair.sprite = sprite[1];
+        }
     }
 
     public GameObject GetFood()
@@ -61,6 +69,7 @@ public class Table : InteractableObjectBase, IInterior
         iconBubble.ShowIcon(icon, targetRendererTransform.position, flipBackground);
         return true;
     }
+
     public void ShowIcon()
     {
         iconBubble.ShowIcon();
