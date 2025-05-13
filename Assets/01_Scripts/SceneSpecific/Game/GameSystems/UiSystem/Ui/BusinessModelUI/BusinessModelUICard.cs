@@ -11,15 +11,17 @@ public class BusinessModelUICard : MonoBehaviour
     [SerializeField] TextMeshProUGUI costText;
     [SerializeField] Image image;
     [SerializeField] int ea;
-    [SerializeField] CostType costType;
+    public CostType costType;
     [SerializeField] Button mainButton;
     [SerializeField] RewardType rewardType;
     private BusinessModelUIBuyPopup popup;
+    public BusinessModelUI businessModelUI;
     public int cost;
 
     private void Start()
     {
-        popup = ServiceLocator.Instance.GetSceneService<GameManager>().uiManager.uiBusinessModel.GetComponent<BusinessModelUI>().busunessModelUIBuyPopup.GetComponent<BusinessModelUIBuyPopup>();
+        businessModelUI = ServiceLocator.Instance.GetSceneService<GameManager>().uiManager.uiBusinessModel.GetComponent<BusinessModelUI>();
+        popup = businessModelUI.busunessModelUIBuyPopup.GetComponent<BusinessModelUIBuyPopup>();
         eaText.text = $"X {ea}";
         costText.text = cost.ToString("N0");
         mainButton.onClick.RemoveAllListeners();
@@ -30,12 +32,17 @@ public class BusinessModelUICard : MonoBehaviour
         popup.gameObject.SetActive(true);
         popup.SetInfo(this,image.sprite);
     }
+    private void OnNotEnoughCostPopup()
+    {
+        businessModelUI.OnNotEnoughCostPopup();
+    }
     public async void GoldBuy()
     {
         //팝업켜기 킨후 아래행동
         var userDataManager = UserDataManager.Instance;
         if(userDataManager.CurrentUserData.Gold < cost)
         {
+            OnNotEnoughCostPopup();
             return;
         }
         userDataManager.AdjustGold(-cost);

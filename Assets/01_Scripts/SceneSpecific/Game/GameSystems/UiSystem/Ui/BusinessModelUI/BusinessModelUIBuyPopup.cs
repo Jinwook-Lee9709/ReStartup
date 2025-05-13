@@ -16,7 +16,6 @@ public class BusinessModelUIBuyPopup : MonoBehaviour
     [SerializeField] private Image Icon;
     [SerializeField] private TextMeshProUGUI infoText;
     [SerializeField] private TextMeshProUGUI costText;
-    private CostType costType;
     private BusinessModelUICard currentCard;
 
     private bool isPaid;
@@ -39,6 +38,7 @@ public class BusinessModelUIBuyPopup : MonoBehaviour
 
     public void SetInfo(BusinessModelUICard card, Sprite image)
     {
+        mainButton.interactable = true;
         currentCard = card;
         costText.text = currentCard.cost.ToString("N0");
         Icon.sprite = image;
@@ -61,18 +61,18 @@ public class BusinessModelUIBuyPopup : MonoBehaviour
 
     private void OnMainButtonTouched()
     {
-
-        switch (costType)
+        switch (currentCard.costType)
         {
             case CostType.Free:
                 break;
             case CostType.Money:
                 break;
             case CostType.Gold:
-                if (currentCard.cost < UserDataManager.Instance.CurrentUserData.Gold)
-                    currentCard.GoldBuy();
+                mainButton.interactable = false;
+                currentCard.GoldBuy();
                 break;
             case CostType.Cash:
+                mainButton.interactable = false;
                 currentCard.CashBuy();
                 break;
         }

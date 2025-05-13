@@ -10,11 +10,14 @@ public class BusinessModelUI : MonoBehaviour
     [SerializeField] List<ContentSizeFitter> contentSizeFitters = new();
     public GameObject busunessModelUIBuyPopup;
     private float foldWidth = 900f;
+    public GameObject notEnoughCostPopup;
+    private Transform uicanvers;
     // Start is called before the first frame update
     void Start()
     {
         var uiManager = ServiceLocator.Instance.GetSceneService<GameManager>().uiManager;
         var cenversWidth = uiManager.canvas.GetComponent<RectTransform>().rect.width;
+        uicanvers = uiManager.canvas.transform;
         var contentPadding = packageContent.GetComponent<HorizontalLayoutGroup>().padding;
         var newWidth = cenversWidth - (contentPadding.left + contentPadding.right);
         foreach( var card in packageCards )
@@ -30,7 +33,10 @@ public class BusinessModelUI : MonoBehaviour
             }
         }
     }
-
+    public void OnNotEnoughCostPopup()
+    {
+        Instantiate(notEnoughCostPopup, uicanvers);
+    }
     // Update is called once per frame
     void Update()
     {
