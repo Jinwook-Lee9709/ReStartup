@@ -32,6 +32,7 @@ public class UserDataManager : Singleton<UserDataManager>
     public event Action<int, int> OnInteriorUpgradeEvent;
     public event Action<bool> OnReviewCntFullEvent;
     public event Action<int> OnRankChangedEvent;
+    public event Action<int> ChangeAdTicketAction;
 
     public float negativeReviewProbability = 0.6f;
 
@@ -113,6 +114,7 @@ public class UserDataManager : Singleton<UserDataManager>
     public void AdjustAdTicket(int ticket)
     {
         CurrentUserData.AdTicket += ticket;
+        ChangeAdTicketAction.Invoke(currentUserData.AdTicket);
     }
 
     public async UniTask AdjustAdTicketWithSave(int ticket)
