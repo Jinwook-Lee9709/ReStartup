@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AYellowpaper.SerializedCollections;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.AI;
@@ -66,9 +67,15 @@ public class WorkerManager
     {
         int pivotIndex = id % 10 - 1;
         worker.Init(this, idleArea[workType][pivotIndex], workType, id);
-        worker.GetComponent<NavMeshAgent>().Warp(idleArea[workType][pivotIndex].position);
+        WarpWorker(worker.GetComponent<NavMeshAgent>(),idleArea[workType][pivotIndex].position).Forget();
         workers[workType].Add(worker);
         OnWorkerFree?.Invoke(workType);
+    }
+
+    private async UniTask WarpWorker(NavMeshAgent agent, Vector3 position)
+    {
+        await UniTask.Yield(PlayerLoopTiming.LastPostLateUpdate);
+        agent.Warp(position);
     }
 
     public bool AssignWork(WorkBase work)

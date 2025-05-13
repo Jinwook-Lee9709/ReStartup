@@ -191,7 +191,7 @@ public class InteriorManager
     {
         Transform pivot;
         String assetId;
-        pivot = gameManager.ObjectPivotManager.GetWallPivot(data.CookwareType);
+        var renderers = gameManager.ObjectPivotManager.GetWallRenderer(data.CookwareType);
         if (data.CookwareType == ObjectArea.Hall)
         {
             assetId = String.Format(Strings.HallWallTileIdFormat, data.RestaurantType, 1);
@@ -201,20 +201,17 @@ public class InteriorManager
             assetId = String.Format(Strings.KitchenWallTileIdFormat, data.RestaurantType, 1);
         }
 
-        foreach (Transform child in pivot.transform)
+        var sprite = Addressables.LoadAssetAsync<Sprite>(assetId).WaitForCompletion();
+        foreach (var renderer in renderers)
         {
-            GameObject.Destroy(child.gameObject);
+            renderer.sprite = sprite;    
         }
-
-        var objHandle = Addressables.InstantiateAsync(assetId, pivot);
-        objHandle.WaitForCompletion();
     }
 
     private void AddFloor(InteriorData data)
     {
-        Transform pivot;
         String assetId;
-        pivot = gameManager.ObjectPivotManager.GetFloorPivot(data.CookwareType);
+        var renderers = gameManager.ObjectPivotManager.GetFloorRenderer(data.CookwareType);
         if (data.CookwareType == ObjectArea.Hall)
         {
             assetId = String.Format(Strings.HallFloorTileIdFormat, data.RestaurantType, 1);
@@ -223,14 +220,12 @@ public class InteriorManager
         {
             assetId = String.Format(Strings.KitchenFloorTileIdFormat, data.RestaurantType, 1);
         }
-
-        foreach (Transform child in pivot.transform)
+        
+        var sprite = Addressables.LoadAssetAsync<Sprite>(assetId).WaitForCompletion();
+        foreach (var renderer in renderers)
         {
-            GameObject.Destroy(child.gameObject);
+            renderer.sprite = sprite;    
         }
-
-        var objHandle = Addressables.InstantiateAsync(assetId, pivot);
-        objHandle.WaitForCompletion();
     }
 
     private void OnInteriorUpgrade(int interiorId, int level)

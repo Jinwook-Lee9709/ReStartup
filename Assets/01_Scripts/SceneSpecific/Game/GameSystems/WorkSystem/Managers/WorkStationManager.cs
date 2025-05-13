@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NavMeshPlus.Components;
@@ -7,6 +8,8 @@ using UnityEngine.AddressableAssets;
 
 public class WorkStationManager
 {
+    private static readonly string ChairIconID = "HallChair{0}";
+    
     private readonly Dictionary<CookwareType, Dictionary<int, CookingStation>> cookingStations = new();
     private ObjectPivotManager objectPivotManager;
     private SinkingStation sinkingStation;
@@ -106,11 +109,12 @@ public class WorkStationManager
     {
         var interactionSpeed = 1 - data.EffectQuantity * (level - 1) / 100f;
         var sprite = Addressables.LoadAssetAsync<Sprite>(data.IconID + level).WaitForCompletion();
+        var chairSprite = Addressables.LoadAssetAsync<Sprite>(String.Format(ChairIconID, level)).WaitForCompletion();
 
         var table = tables[data.InteriorID % 10 - 1];
         table.SetInteractionSpeed(interactionSpeed);
         table.SetEattingSpeed(interactionSpeed);
-        table.ChangeSpirte(sprite);
+        table.ChangeSpirte(sprite, chairSprite);
     }
 
     private void OnTableInstantiated(GameObject obj, int num)

@@ -6,11 +6,11 @@ public class ObjectPivotManager
 {
     public static readonly string PivotFormat = "Pivot{0}";
     private PivotLocator pivotLocator;
-    private MapPivotLocator mapPivotLocator;
+    private MapRendererLocator mapRendererLocator;
     public GameManager gameManager;
-    public void Init(GameManager gameManager, ThemeIds themeId, MapPivotLocator mapPivotLocator)
+    public void Init(GameManager gameManager, ThemeIds themeId, MapRendererLocator mapRendererLocator)
     {
-        this.mapPivotLocator = mapPivotLocator;
+        this.mapRendererLocator = mapRendererLocator;
         this.gameManager = gameManager;
         LoadAndInstantiatePivots(themeId);
         AdjustPivots();
@@ -84,26 +84,26 @@ public class ObjectPivotManager
         return pivotLocator.PayWaitingPivots;
     }
 
-    public Transform GetWallPivot(ObjectArea area)
+    public List<SpriteRenderer> GetWallRenderer(ObjectArea area)
     {
         if (area == ObjectArea.Hall)
-            return mapPivotLocator.hallWall;
+            return mapRendererLocator.hallWall;
         else
-            return mapPivotLocator.kitchenWall;
+            return mapRendererLocator.kitchenWall;
     }
 
-    public Transform GetFloorPivot(ObjectArea area)
+    public List<SpriteRenderer> GetFloorRenderer(ObjectArea area)
     {
         if (area == ObjectArea.Hall)
-            return mapPivotLocator.hallFloor;
+            return mapRendererLocator.hallFloor;
         else
-            return mapPivotLocator.kitchenFloor;
+            return mapRendererLocator.kitchenFloor;
     }
     
 
     public Transform GetDecorPivot()
     {
-        return mapPivotLocator.decor;
+        return mapRendererLocator.decor;
     }
 
     public Transform GetTrashCanPivot(ObjectArea area)
