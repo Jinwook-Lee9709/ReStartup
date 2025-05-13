@@ -26,7 +26,6 @@ public class GameManager : MonoBehaviour
     public WorkStationManager WorkStationManager { get; private set; }
     public ObjectPivotManager ObjectPivotManager { get; private set; }
     public InteriorManager InteriorManager { get; private set; }
-    public AudioManager AudioManager { get; private set; }
     public EmployeeManager EmployeeManager { get; private set; }
     public MissionManager MissionManager { get; private set; }
     public RankSystemManager rankSystemManager;

@@ -52,7 +52,7 @@ public class UserDataManager : Singleton<UserDataManager>
 
     public void GetTotalRankPoint()
     {
-        
+
     }
 
     public async UniTask SetRankWithSave(int rank)
@@ -94,6 +94,10 @@ public class UserDataManager : Singleton<UserDataManager>
 
     public void AdjustGold(int gold)
     {
+        if (gold > 0)
+        {
+            AudioManager.Instance.PlaySFX("GetMoney");
+        }
         CurrentUserData.Gold += gold;
         ChangeGoldAction?.Invoke(CurrentUserData.Gold);
     }
