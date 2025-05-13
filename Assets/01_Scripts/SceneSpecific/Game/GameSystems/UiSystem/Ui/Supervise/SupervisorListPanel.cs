@@ -10,6 +10,7 @@ using VInspector;
 public class SupervisorListPanel : MonoBehaviour
 {
     private static readonly string ManagerStringKey = "ManagerFormat";
+    private static readonly string SupervisorIconStringFormat = "ManagerIcon{0}";
     [SerializeField] private AssetReference supervisorInfoPanel;
     [SerializeField] private Transform supervisorInfoParent;
     [SerializeField] private SerializedDictionary<int, int> costMultiplier = new() { { 1, 1 }, { 2, 3 }, { 3, 4 } };
@@ -125,6 +126,7 @@ public class SupervisorListPanel : MonoBehaviour
             info.isHireable = i == themeStatus.managerCount + 1 &&
                               UserDataManager.Instance.CurrentUserData.CurrentRank >=
                               Constants.SUPERVISOR_HIRE_REQUIREMENTS;
+            info.icon = Addressables.LoadAssetAsync<Sprite>(String.Format(SupervisorIconStringFormat, i)).WaitForCompletion();
             card.Init(info, (number) => { action(cursorThemeID, number); });
             cards.Add(card);
         }
@@ -183,6 +185,7 @@ public class SupervisorListPanel : MonoBehaviour
             var info = CreateDefaultInfo(themeID, i);
             info.isHired = i <= themeStatus.managerCount;
             info.isHireable = i == themeStatus.managerCount + 1;
+            info.icon = Addressables.LoadAssetAsync<Sprite>(String.Format(SupervisorIconStringFormat, i)).WaitForCompletion();
             cards[i-1].ChangeInfo(info);
         }
     }
@@ -197,6 +200,7 @@ public class SupervisorListPanel : MonoBehaviour
             info.isHireable = i == themeStatus.managerCount + 1 &&
                               UserDataManager.Instance.CurrentUserData.CurrentRank >=
                               Constants.SUPERVISOR_HIRE_REQUIREMENTS;
+            info.icon = Addressables.LoadAssetAsync<Sprite>(String.Format(SupervisorIconStringFormat, i)).WaitForCompletion();
             cards[i-1].ChangeInfo(info);
         }
     }
@@ -209,6 +213,7 @@ public class SupervisorListPanel : MonoBehaviour
             var info = CreateDefaultInfo(themeID, i);
             info.isHired = false;
             info.isHireable = false;
+            info.icon = Addressables.LoadAssetAsync<Sprite>(String.Format(SupervisorIconStringFormat, i)).WaitForCompletion();
             cards[i-1].ChangeInfo(info);
         }
     }

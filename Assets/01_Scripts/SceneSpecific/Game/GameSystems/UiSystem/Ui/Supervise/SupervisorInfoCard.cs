@@ -13,6 +13,7 @@ public class SupervisorInfoCard : MonoBehaviour
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI costText;
     [SerializeField] private Image moneyImage;
+    [SerializeField] private Image supervisorImage;
     [SerializeField] private Button buyButton;
     private SupervisorInfo supervisorInfo;
 
@@ -26,6 +27,7 @@ public class SupervisorInfoCard : MonoBehaviour
     private void UpdateDisplay()
     {
         nameText.text = supervisorInfo.name;
+        supervisorImage.sprite = supervisorInfo.icon;
         SetCostText(supervisorInfo.isHired);
     }
 

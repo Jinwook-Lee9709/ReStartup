@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using Excellcube.EasyTutorial;
 using Excellcube.EasyTutorial.Utils;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -64,6 +65,8 @@ public class TutorialManager : MonoBehaviour
         {
             action?.Invoke();
             consumerManager.StartSpawnRoutine();
+            PlayerPrefs.SetInt("ECET_CLEAR_ALL", 1);
+            Destroy(gameObject);
         });
     }
 
@@ -111,7 +114,7 @@ public class TutorialManager : MonoBehaviour
     #region Phase1
     [VInspector.Foldout("Phase1")]
     [SerializeField][Range(0f, 3f)] private float shakeDuration;
-    [SerializeField][Range(0f, 3f)] private float shakeAmount;
+    [SerializeField][Range(0f, 10f)] private float shakeAmount;
     [SerializeField] private CreateNamePopup createNamePopupPrefab;
     [SerializeField] private TutorialPhase1RewardPopup tutorialPhase1RewardPopupPrefab;
     [VInspector.EndFoldout]
@@ -128,7 +131,7 @@ public class TutorialManager : MonoBehaviour
         var prevPos = phone.transform.position;
         while (timer < shakeDuration)
         {
-            phone.transform.position = prevPos + Random.insideUnitSphere * shakeAmount;
+            phone.transform.position = prevPos +UnityEngine.Random.insideUnitSphere * shakeAmount;
             timer += Time.deltaTime;
             yield return null;
         }
@@ -138,7 +141,7 @@ public class TutorialManager : MonoBehaviour
     public void OnTouchPhonePhase1()
     {
         var popup = Instantiate(eatrandAlarmPopupPrefab, transform);
-        popup.Init("식당 사장님들은 주목!\r\n식당 운영이 막막한가요?\r\n잇트랜드 맛집 랭킹에 가입해보세요!");
+        popup.Init("식당 사장님들은 주목! \n식당 운영이 막막하신가요?\n맛집 정보와 솔직한 리뷰가 가득한 맛집 앱!\nEATrend에 가입해보세요!");
         popup.transform.SetSiblingIndex(0);
     }
 
@@ -157,7 +160,7 @@ public class TutorialManager : MonoBehaviour
     public void OnTouchPhonePhase2()
     {
         var popup = Instantiate(eatrandAlarmPopupPrefab, transform);
-        popup.Init("손님을 많이 끌어들이는 법!\r\n맛집 랭킹을 올리는 방법은\r\n이 가이드에서 확인하실 수 있습니다!");
+        popup.Init("손님을 많이 끌어들이는 법!\n맛집 랭킹을 올리는 방법은\n이 가이드에서 확인하실 수 있습니다!");
         popup.transform.SetSiblingIndex(0);
     }
 

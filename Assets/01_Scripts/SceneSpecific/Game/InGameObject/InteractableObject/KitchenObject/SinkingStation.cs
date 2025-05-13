@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SinkingStation : InteractableObjectBase, IInterior
 {
-    private static readonly string CountFomrat = "{0} / {1}";
+    private static readonly string CountFomrat = "{0}/{1}";
     [SerializeField] private int trayCapacity = 5;
     [SerializeField] private TextMeshPro countText;
 

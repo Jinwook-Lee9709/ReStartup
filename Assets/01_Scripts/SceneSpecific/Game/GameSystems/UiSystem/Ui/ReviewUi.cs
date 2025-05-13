@@ -49,11 +49,6 @@ public class ReviewUi : MonoBehaviour
             
         }
     }
-
-    private void Start()
-    {
-        CurrentState = ReviewUiState.Rank;
-    }
     
     private void Update()
     {

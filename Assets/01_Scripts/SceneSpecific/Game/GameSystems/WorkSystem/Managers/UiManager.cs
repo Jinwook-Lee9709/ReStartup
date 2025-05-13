@@ -11,7 +11,7 @@ public class UiManager : MonoBehaviour
     public GameObject uiPromotion;
     public GameObject uiQuest;
     public GameObject uiPreferences;
-    public GameObject uiBusinessModel;
+    public GameObject uiGuide;
     public IngameGoodsUi inGameUi;
 
     public void Start()
@@ -131,12 +131,14 @@ public class UiManager : MonoBehaviour
         uiPreferences.SetActive(false);
         LocalSaveLoadManager.Save();
     }
-    public void OnClickButtonOpenBusinessModeUI()
+
+    public void OnClickButtonOpenGuideUI()
     {
-        uiBusinessModel.SetActive(true);
+        uiGuide.SetActive(true);
     }
-    public void OnClickButtonExitBusinessModelUI()
+    
+    public void OnClickButtonExitGuideUI()
     {
-        uiBusinessModel.SetActive(false);
+        uiGuide.SetActive(false);
     }
 }

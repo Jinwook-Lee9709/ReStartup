@@ -50,6 +50,15 @@ public static class DataTableManager
         var themeConditionDataTable = new ThemeConditionDataTable();
         themeConditionDataTable.Load();
         tables.Add(DataTableIds.ThemeCondition.ToString(), themeConditionDataTable);
+        
+        var guideCategoryDataTable = new GuideCategoryDataTable();
+        guideCategoryDataTable.Load();
+        tables.Add(DataTableIds.GuideCategory.ToString(), guideCategoryDataTable);
+        
+        var guideElementDataTable = new GuideElementDataTable();
+        guideElementDataTable.Load();
+        tables.Add(DataTableIds.GuideElement.ToString(), guideElementDataTable);
+        
     }
 
     public static T Get<T>(string id) where T : DataTable

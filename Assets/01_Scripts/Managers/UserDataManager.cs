@@ -110,7 +110,24 @@ public class UserDataManager : Singleton<UserDataManager>
         list.Add(data);
         await CurrencyDataDAC.UpdateCurrencyData(list);
     }
+    public void AdjustAdTicket(int ticket)
+    {
+        CurrentUserData.AdTicket += ticket;
+    }
 
+    public async UniTask AdjustAdTicketWithSave(int ticket)
+    {
+        AdjustAdTicket(ticket);
+        await SaveAdTicketData();
+    }
+
+    public async UniTask SaveAdTicketData()
+    {
+        List<CurrencyData> list = new();
+        CurrencyData data = new CurrencyData(CurrencyType.AdTicket, CurrentUserData.AdTicket);
+        list.Add(data);
+        await CurrencyDataDAC.UpdateCurrencyData(list);
+    }
     public async UniTask UpgradeInterior(int interiorId)
     {
         CurrentUserData.InteriorSaveData[interiorId]++;

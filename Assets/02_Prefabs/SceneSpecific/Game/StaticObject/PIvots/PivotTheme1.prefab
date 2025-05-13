@@ -488,7 +488,7 @@ GameObject:
   - component: {fileID: 7067733014499862969}
   - component: {fileID: 5521307522550564392}
   m_Layer: 0
-  m_Name: HallDeco
+  m_Name: SalesStand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -828,6 +828,51 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectArea: 1
+--- !u!1 &6435887968463550670
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 58087301146695484}
+  - component: {fileID: 7615638825455654489}
+  m_Layer: 0
+  m_Name: WallDecor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &58087301146695484
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6435887968463550670}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.03, y: 8.24, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3398919184077129041}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7615638825455654489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6435887968463550670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59591d1d351f54e438612eb1cf0c28b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectArea: 0
 --- !u!1 &6702434175715348718
 GameObject:
   m_ObjectHideFlags: 0
@@ -996,6 +1041,7 @@ Transform:
   - {fileID: 5371956803056914091}
   - {fileID: 7067733014499862969}
   - {fileID: 7731250912129341967}
+  - {fileID: 58087301146695484}
   - {fileID: 7438936594569544794}
   - {fileID: 2415637429066939318}
   m_Father: {fileID: 4201695680272108604}
@@ -1295,7 +1341,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2526442546026951410, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
       propertyPath: interiorPivots._serializedList.Array.size
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 2526442546026951410, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
       propertyPath: trashCanPivots._serializedList.Array.size
@@ -1347,7 +1393,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2526442546026951410, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
       propertyPath: interiorPivots._serializedList.Array.data[6].Key
-      value: 401207
+      value: 401219
       objectReference: {fileID: 0}
     - target: {fileID: 2526442546026951410, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
       propertyPath: trashCanPivots._serializedList.Array.data[0].Key
@@ -1384,7 +1430,7 @@ PrefabInstance:
     - target: {fileID: 2526442546026951410, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
       propertyPath: interiorPivots._serializedList.Array.data[6].Value
       value: 
-      objectReference: {fileID: 2415637429066939318}
+      objectReference: {fileID: 58087301146695484}
     - target: {fileID: 2526442546026951410, guid: ed363fbe361c44012a8f7b3c16a70c7b, type: 3}
       propertyPath: trashCanPivots._serializedList.Array.data[0].Value
       value: 

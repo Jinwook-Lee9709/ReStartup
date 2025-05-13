@@ -14,8 +14,8 @@ public class FoodUpgradeUIItem : MonoBehaviour
     [SerializeField] private GameObject newImage;
     [SerializeField] private GameObject payableArrowImage;
     [SerializeField] private TextMeshProUGUI levelText;
-    
-    
+
+
     //Fortest
     public EmployeeTableGetData employeeData;
 
@@ -29,7 +29,8 @@ public class FoodUpgradeUIItem : MonoBehaviour
     private FoodUpgradePopup foodUpgradePopup;
 
     private IngameGoodsUi ingameGoodsUi;
-    [SerializeField]private GameObject notEnoughCostPopUp;
+    [SerializeField] private GameObject notEnoughCostPopUp;
+
     private void Start()
     {
         ingameGoodsUi = GameObject.FindWithTag("UIManager").GetComponent<UiManager>().inGameUi;
@@ -45,6 +46,7 @@ public class FoodUpgradeUIItem : MonoBehaviour
             }
         }
     }
+
     public void Init(FoodData data, FoodUpgradePopup popup)
     {
         foodData = data;
@@ -52,7 +54,7 @@ public class FoodUpgradeUIItem : MonoBehaviour
         button = GetComponentInChildren<Button>();
 
         foodData.upgradeCount = UserDataManager.Instance.CurrentUserData.FoodSaveData[foodData.FoodID].level;
-        
+
         if (foodData.upgradeCount != 0)
         {
             newImage.SetActive(true);
@@ -63,24 +65,29 @@ public class FoodUpgradeUIItem : MonoBehaviour
         {
             OnFoodLevelMax();
         }
+
         levelText.text = foodData.upgradeCount.ToString();
         button.onClick.AddListener(OnButtonClick);
     }
+
     private void OnButtonClick()
     {
         foodUpgradePopup.gameObject.SetActive(true);
         foodUpgradePopup.SetInfo(this);
     }
+
     public void OnBuy()
     {
         if (foodData.upgradeCount >= 5)
         {
             return;
         }
+
         var userData = UserDataManager.Instance.CurrentUserData;
         if (userData.Money > foodData.BasicCost * foodData.upgradeCount)
         {
-            ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.UpgradeFood, 1, (int)foodData.FoodID);
+            ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager
+                .OnEventInvoked(MissionMainCategory.UpgradeFood, 1, (int)foodData.FoodID);
             foodData.upgradeCount++;
             foodUpgradePopup.SetInfo(this);
             levelText.text = foodData.upgradeCount.ToString();
@@ -90,7 +97,8 @@ public class FoodUpgradeUIItem : MonoBehaviour
         }
         else
         {
-            Instantiate(notEnoughCostPopUp, GameObject.FindWithTag("UIManager").GetComponentInChildren<Canvas>().transform);
+            Instantiate(notEnoughCostPopUp,
+                GameObject.FindWithTag("UIManager").GetComponentInChildren<Canvas>().transform);
         }
 
         if (foodData.upgradeCount >= 5)
@@ -103,7 +111,9 @@ public class FoodUpgradeUIItem : MonoBehaviour
     {
         button.interactable = false;
         newImage.SetActive(false);
+        payableArrowImage.SetActive(false);
     }
+
     public void UnlockFoodUpgrade()
     {
         lockImage.SetActive(false);
@@ -111,6 +121,7 @@ public class FoodUpgradeUIItem : MonoBehaviour
         foodData.upgradeCount = 1;
         levelText.text = foodData.upgradeCount.ToString();
     }
+
     private IEnumerator LoadSpriteCoroutine(string iconAddress)
     {
         var handle = Addressables.LoadAssetAsync<Sprite>(iconAddress);
@@ -124,10 +135,15 @@ public class FoodUpgradeUIItem : MonoBehaviour
     public void UpdatePayableArrow(int currentMoney)
     {
         if (foodData.upgradeCount >= 5)
-            return;
-        payableArrowImage.SetActive(currentMoney > foodData.BasicCost * foodData.upgradeCount);
+        {
+            payableArrowImage.SetActive(false);
+        }
+        else
+        {
+            payableArrowImage.SetActive(currentMoney > foodData.BasicCost * foodData.upgradeCount);
+        }
     }
-    
+
     private async UniTask HandleUpgradeFood()
     {
         await UserDataManager.Instance.UpgradeFood(foodData.FoodID);
