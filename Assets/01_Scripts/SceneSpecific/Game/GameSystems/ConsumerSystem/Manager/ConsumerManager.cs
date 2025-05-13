@@ -13,6 +13,7 @@ public class ConsumerManager : MonoBehaviour
 {
     private readonly string consumerDataTableFileName = "guesttable";
     private readonly string consumerSpawnPercentCsvFileName = "guestspawnratetable";
+    private readonly string waitingTextStringID = "WaitingNumber";
     [SerializeField] private BuffManager buffManager;
     [SerializeField] private int maxConsumerCnt;
     [SerializeField] private int maxWaitingSeatCnt;
@@ -29,6 +30,7 @@ public class ConsumerManager : MonoBehaviour
 
     private readonly Dictionary<ConsumerFSM.ConsumerState, List<Consumer>> currentSpawnedConsumerDictionary = new();
     private int waitOutsideConsumerCnt = 0;
+    private string waitingNumberText = "대기 인원";
 
     public List<int> foodIds;
     public Queue<ConsumerData> promotionWatings = new();
@@ -53,12 +55,13 @@ public class ConsumerManager : MonoBehaviour
         spawnPoint = pivotManager.GetConsumerSpawnPoint();
         waitingConsumerSeats = pivotManager.GetWatingLines();
         payWaitingPivots = pivotManager.GetPayWaitingPivots();
+        waitingNumberText = LZString.GetUIString(waitingTextStringID);
     }
 
     private void UpdateWaitingText()
     {
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine($"대기 인원 : {waitOutsideConsumerCnt + currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count}");
+        sb.AppendLine($"{waitingNumberText} : {waitOutsideConsumerCnt + currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count}");
         waitingText.text = sb.ToString();
     }
 

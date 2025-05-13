@@ -27,17 +27,7 @@ public class EmployeeUpgradePopup : MonoBehaviour
     [SerializeField] private TextMeshProUGUI nextLevelText;
 
     private EmployeeUIItem currentCard;
-    private bool isPaid;
 
-    private bool IsPaid
-    {
-        get => isPaid;
-        set
-        {
-            isPaid = value;
-            mainButtonText.text = value ? "확인" : "업그레이드";
-        }
-    }
     public void Start()
     {
         background.onClick.RemoveAllListeners();
@@ -48,7 +38,6 @@ public class EmployeeUpgradePopup : MonoBehaviour
 
     public void SetInfo(EmployeeUIItem card , Sprite image)
     {
-        IsPaid = false;
         currentCard = card;
         var data = card.employeeData;
         int upgradeCount = UserDataManager.Instance.CurrentUserData.EmployeeSaveData[data.StaffID].level;
@@ -82,15 +71,8 @@ public class EmployeeUpgradePopup : MonoBehaviour
 
     private void OnMainButtonTouched()
     {
-        if (!IsPaid)
-        {
-            IsPaid = true;
-            currentCard.OnBuy();
-        }
-        else
-        {
-            OnClose();
-        }
+        currentCard.OnBuy();
+        OnClose();
     }
 
     private void OnClose()
