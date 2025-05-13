@@ -7,14 +7,10 @@ public class TutorialScrollRectController : MonoBehaviour
 {
     private void OnEnable()
     {
+        ScrollRectLock();
+    }
+    public void ScrollRectLock()
+    {
         GetComponent<ScrollRect>().enabled = ServiceLocator.Instance.GetSceneService<GameManager>().tutorialManager == null;
-    }
-    public void OnTutorialStart()
-    {
-        GetComponent<ScrollRect>().enabled = false;
-    }
-    public void OnTutorialEnd()
-    {
-        GetComponent<ScrollRect>().enabled = true;
     }
 }
