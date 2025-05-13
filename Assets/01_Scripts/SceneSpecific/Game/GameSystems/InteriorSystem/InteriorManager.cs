@@ -91,7 +91,7 @@ public class InteriorManager
         {
             var data = interiorTable.First(x =>
                 x.RestaurantType == (int)gameManager.CurrentTheme && x.Category == InteriorCategory.Sink);
-            if( interiorUpgradeDictionary[interiorQuery.InteriorID]!= 1)
+            if (interiorUpgradeDictionary[interiorQuery.InteriorID] != 1)
                 workStationManager.AddSinkingStation();
             UpgradeSink(data, interiorUpgradeDictionary[interiorQuery.InteriorID]);
         }
@@ -108,7 +108,7 @@ public class InteriorManager
         {
             var data = interiorTable.First(x =>
                 x.RestaurantType == (int)gameManager.CurrentTheme && x.Category == InteriorCategory.Counter);
-            if( interiorUpgradeDictionary[interiorQuery.InteriorID]!= 1)
+            if (interiorUpgradeDictionary[interiorQuery.InteriorID] != 1)
                 workStationManager.AddCounter();
             UpgradeCounter(data, interiorUpgradeDictionary[interiorQuery.InteriorID]);
         }
@@ -130,10 +130,12 @@ public class InteriorManager
             if (data.Category == InteriorCategory.Wallpaper)
             {
                 AddWallpaper(data);
+                UpgradeWallpaper(data, interiorUpgradeDictionary[data.InteriorID]);
             }
             else if (data.Category == InteriorCategory.Floor)
             {
                 AddFloor(data);
+                UpgradeFloor(data, interiorUpgradeDictionary[data.InteriorID]);
             }
             else
             {
@@ -151,7 +153,7 @@ public class InteriorManager
                 x.Category == InteriorCategory.TrashCan);
         foreach (var data in trashCanQuery)
         {
-            if(interiorUpgradeDictionary[data.InteriorID]!= 1)
+            if (interiorUpgradeDictionary[data.InteriorID] != 1)
                 workStationManager.AddTrashCan(data);
             UpgradeTrashCan(data, interiorUpgradeDictionary[data.InteriorID]);
         }
@@ -189,7 +191,6 @@ public class InteriorManager
 
     private void AddWallpaper(InteriorData data)
     {
-        Transform pivot;
         String assetId;
         var renderers = gameManager.ObjectPivotManager.GetWallRenderer(data.CookwareType);
         if (data.CookwareType == ObjectArea.Hall)
@@ -204,7 +205,7 @@ public class InteriorManager
         var sprite = Addressables.LoadAssetAsync<Sprite>(assetId).WaitForCompletion();
         foreach (var renderer in renderers)
         {
-            renderer.sprite = sprite;    
+            renderer.sprite = sprite;
         }
     }
 
@@ -220,11 +221,11 @@ public class InteriorManager
         {
             assetId = String.Format(Strings.KitchenFloorTileIdFormat, data.RestaurantType, 1);
         }
-        
+
         var sprite = Addressables.LoadAssetAsync<Sprite>(assetId).WaitForCompletion();
         foreach (var renderer in renderers)
         {
-            renderer.sprite = sprite;    
+            renderer.sprite = sprite;
         }
     }
 
@@ -253,8 +254,10 @@ public class InteriorManager
                 UpgradeTrashCan(interiorData, level);
                 break;
             case InteriorCategory.Wallpaper:
+                UpgradeWallpaper(interiorData, level);
                 break;
             case InteriorCategory.Floor:
+                UpgradeFloor(interiorData, level);
                 break;
         }
     }
@@ -286,7 +289,7 @@ public class InteriorManager
 
     private void UpgradeCounter(InteriorData interiorData, int level)
     {
-        if(level == 1)
+        if (level == 1)
             workStationManager.AddCounter();
         workStationManager.UpgradeCounter(interiorData, level);
     }
@@ -322,5 +325,45 @@ public class InteriorManager
         if (level == 1)
             workStationManager.AddTrashCan(interiorData);
         workStationManager.UpgradeTrashCan(interiorData, level);
+    }
+
+    private void UpgradeWallpaper(InteriorData data, int level)
+    {
+        String assetId;
+        var renderers = gameManager.ObjectPivotManager.GetWallRenderer(data.CookwareType);
+        if (data.CookwareType == ObjectArea.Hall)
+        {
+            assetId = String.Format(Strings.HallWallTileIdFormat, data.RestaurantType, level);
+        }
+        else
+        {
+            assetId = String.Format(Strings.KitchenWallTileIdFormat, data.RestaurantType, level);
+        }
+
+        var sprite = Addressables.LoadAssetAsync<Sprite>(assetId).WaitForCompletion();
+        foreach (var renderer in renderers)
+        {
+            renderer.sprite = sprite;
+        }
+    }
+
+    private void UpgradeFloor(InteriorData data, int level)
+    {
+        String assetId;
+        var renderers = gameManager.ObjectPivotManager.GetFloorRenderer(data.CookwareType);
+        if (data.CookwareType == ObjectArea.Hall)
+        {
+            assetId = String.Format(Strings.HallFloorTileIdFormat, data.RestaurantType, level);
+        }
+        else
+        {
+            assetId = String.Format(Strings.KitchenFloorTileIdFormat, data.RestaurantType, level);
+        }
+
+        var sprite = Addressables.LoadAssetAsync<Sprite>(assetId).WaitForCompletion();
+        foreach (var renderer in renderers)
+        {
+            renderer.sprite = sprite;
+        }
     }
 }

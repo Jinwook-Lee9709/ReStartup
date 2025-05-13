@@ -10,6 +10,7 @@ public class ConsumerFSM : MonoBehaviour
 {
     public enum ConsumerState
     {
+        Debug,
         None,
         Waiting,
         BeforeOrder,

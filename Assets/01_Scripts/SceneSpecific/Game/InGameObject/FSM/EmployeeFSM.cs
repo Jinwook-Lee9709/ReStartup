@@ -6,6 +6,7 @@ using UnityEngine;
 public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
 {
     [SerializeField] private Transform handPivot;
+    [SerializeField] private GameObject exhaustedBubble;
     private readonly float upgradeWorkSpeedValue = 0.02f;
 
     private WorkerState currentStatus;
@@ -169,6 +170,7 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
         if (IsExhausted)
         {
             IsExhausted = false;
+            exhaustedBubble.SetActive(false);
             workerManager.ReturnRecoveredWorker(this);
         }
     }
@@ -180,7 +182,14 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
         if (EmployeeData.currentHealth == 0)
         {
             OnWorkerExhausted();
+            exhaustedBubble.transform.PopdownAnimation();
         }
+    }
+
+    public override void OnWorkerExhausted()
+    {
+        base.OnWorkerExhausted();
+        exhaustedBubble.transform.PopupAnimation(0.39f);
     }
 
     private void UpdateIdle()

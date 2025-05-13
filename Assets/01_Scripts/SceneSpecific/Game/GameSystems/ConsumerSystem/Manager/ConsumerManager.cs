@@ -388,6 +388,7 @@ public class ConsumerManager : MonoBehaviour
         consumer.FSM.consumerData = data;
         consumer.FSM.consumerData.Init();
         consumer.FSM.satisfactionIcon.gameObject.SetActive(false);
+        consumer.FSM.CurrentStatus = ConsumerFSM.ConsumerState.Debug;
         consumer.FSM.CurrentSatisfaction = ConsumerFSM.Satisfaction.None;
         SetFood(ref consumer);
         consumer.isEndMeal = false;
