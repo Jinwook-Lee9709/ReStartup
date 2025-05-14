@@ -38,6 +38,7 @@ public class TitleSceneManager : MonoBehaviour
         koreanChangeButton.onClick.AddListener(SwitchToKorean);
         englishChangeButton.onClick.AddListener(SwitchToEnglish);
         languageSettingButton.onClick.AddListener(OpenOrExitSetting);
+        AudioManager.Instance.PlayBGM("TitleBGM");
     }
 
 

@@ -23,6 +23,10 @@ public class InputManager : MonoBehaviour
 
     private InputAction slowTouchAction;
 
+    private bool soundOn = false;
+    private float currentTime = 0f;
+    private float swipeTime = 2f;
+
     private bool slowTouchDetected;
     private bool isSwipe;
     private Vector2 startPos;
@@ -52,14 +56,24 @@ public class InputManager : MonoBehaviour
         touchAction = InputSystem.actions.FindAction("TouchAction");
 
         touchAction.canceled += OnTouchActionCanceled;
-        
+
         player.UpdateIdleArea(hollCamera.activeSelf);
     }
-
+    private void Update()
+    {
+        if (currentTime >= swipeTime)
+        {
+            soundOn = true;
+        }
+        else
+        {
+            currentTime += Time.deltaTime;
+        }
+    }
     private void OnSlowTouchStarted(InputAction.CallbackContext callbackContext)
     {
         AudioManager.Instance.PlaySFX("Touch");
-        if (IsPointerOverUI()) 
+        if (IsPointerOverUI())
             return;
 
         isPressed = true;
@@ -77,13 +91,16 @@ public class InputManager : MonoBehaviour
             return;
         }
         bool isCameraOnHall = distance > 0;
-        if (isCameraOnHall)
+        if (soundOn)
         {
-            AudioManager.Instance.PlaySFX("ChangeHall");
-        }
-        else
-        {
-            AudioManager.Instance.PlaySFX("ChangeKitchen");
+            if (isCameraOnHall)
+            {
+                AudioManager.Instance.PlaySFX("ChangeHall");
+            }
+            else
+            {
+                AudioManager.Instance.PlaySFX("ChangeKitchen");
+            }
         }
         hollCamera.SetActive(isCameraOnHall);
         player.UpdateIdleArea(isCameraOnHall);
@@ -124,7 +141,6 @@ public class InputManager : MonoBehaviour
 
         return results.Count > 0; // UI 요소를 감지했으면 true 반환
     }
-
     private void OnDestroy()
     {
         slowTouchAction.started -= OnSlowTouchStarted;
