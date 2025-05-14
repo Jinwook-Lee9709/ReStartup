@@ -1189,7 +1189,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -554.92896, y: 0}
+  m_SizeDelta: {x: -555.162, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &44645922
 MonoBehaviour:
@@ -4698,6 +4698,18 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TextLocalizer
+      value: 
+      objectReference: {fileID: 2120620073}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_UseLocalization
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_LocalizationTable
+      value: UIString
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.size
       value: 10
       objectReference: {fileID: 0}
@@ -4794,12 +4806,20 @@ PrefabInstance:
         \uD558\uB294\uAC8C \uC88B\uACA0\uC5B4."
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[0].m_DialogPageData.m_DialogKey
+      value: TutorialScript3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[1].m_ActionPageData.m_ActionLog
       value: "\uD654\uBA74\uC744 \uD130\uCE58!"
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[2].m_ActionPageData.m_ActionLog
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[2].m_DialogPageData.m_DialogKey
+      value: TutorialScript4
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[3].m_ActionPageData.m_ActionLog
@@ -4810,8 +4830,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[4].m_DialogPageData.m_DialogKey
+      value: TutorialScript5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[5].m_ActionPageData.m_ActionLog
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[5].m_DialogPageData.m_DialogKey
+      value: TutorialScript6
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[6].m_ActionPageData.m_ActionLog
@@ -4820,6 +4848,10 @@ PrefabInstance:
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[7].m_ActionPageData.m_ActionLog
       value: "\uD654\uBA74\uC744 \uD130\uCE58!"
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[9].m_DialogPageData.m_DialogKey
+      value: TutorialScript7
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[1].m_ActionPageData.m_StartDelay
@@ -4916,6 +4948,26 @@ PrefabInstance:
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[9].m_ActionPageData.m_CompleteKey
       value: TUTORIAL_ORDER_COMPLETE
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[1].m_ActionPageData.m_ActionLogKey
+      value: TutorialActionLog1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[3].m_ActionPageData.m_ActionLogKey
+      value: TutorialActionLog1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[6].m_ActionPageData.m_ActionLogKey
+      value: TutorialActionLog3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[7].m_ActionPageData.m_ActionLogKey
+      value: TutorialActionLog1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[8].m_ActionPageData.m_ActionLogKey
+      value: TutorialActionLog1
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[0].m_DialogPageData.m_CharacterName
@@ -5046,12 +5098,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1680991211}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[0].m_DialogPageData.m_CharacterNameKey
+      value: Me
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[1].m_ActionPageData.m_DynamicTargetKey
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[2].m_ActionPageData.m_DynamicTargetKey
       value: EatrandAlarmPopup
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[2].m_DialogPageData.m_CharacterNameKey
+      value: Me
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[3].m_ActionPageData.m_DynamicTargetKey
@@ -5062,8 +5122,16 @@ PrefabInstance:
       value: EatrandAlarmPopup
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[4].m_DialogPageData.m_CharacterNameKey
+      value: Me
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[5].m_ActionPageData.m_DynamicTargetKey
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[5].m_DialogPageData.m_CharacterNameKey
+      value: Me
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[6].m_ActionPageData.m_DynamicTargetKey
@@ -5080,6 +5148,10 @@ PrefabInstance:
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[9].m_ActionPageData.m_DynamicTargetKey
       value: EatrandAlarmPopup
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[9].m_DialogPageData.m_CharacterNameKey
+      value: Me
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[1].m_ActionPageData.m_DynamicTargetRoot
@@ -7051,8 +7123,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 457.46448, y: -957.2727}
-  m_SizeDelta: {x: 914.92896, y: 1576.3636}
+  m_AnchoredPosition: {x: 457.581, y: -957.2727}
+  m_SizeDelta: {x: 915.162, y: 1576.3636}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &179119078
 MonoBehaviour:
@@ -9030,6 +9102,18 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TextLocalizer
+      value: 
+      objectReference: {fileID: 2120620073}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_UseLocalization
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_LocalizationTable
+      value: UIString
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.size
       value: 3
       objectReference: {fileID: 0}
@@ -9063,8 +9147,16 @@ PrefabInstance:
         \uC880 \uD574\uBCFC\uAE4C?"
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[0].m_DialogPageData.m_DialogKey
+      value: TutorialScript11
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[1].m_ActionPageData.m_ActionLog
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[2].m_DialogPageData.m_DialogKey
+      value: TutorialScript12
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[1].m_ActionPageData.m_CompleteKey
@@ -9073,6 +9165,10 @@ PrefabInstance:
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[2].m_ActionPageData.m_CompleteKey
       value: TUTORIAL_ORDER_COMPLETE
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[1].m_ActionPageData.m_ActionLogKey
+      value: TutorialActionLog2
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[0].m_DialogPageData.m_CharacterName
@@ -9111,12 +9207,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[0].m_DialogPageData.m_CharacterNameKey
+      value: Me
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[1].m_ActionPageData.m_DynamicTargetKey
       value: FoodUnLockTutorial
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[2].m_ActionPageData.m_DynamicTargetKey
       value: FoodUnLockTutorial
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[2].m_DialogPageData.m_CharacterNameKey
+      value: Me
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[1].m_ActionPageData.m_DynamicTargetRoot
@@ -13375,6 +13479,18 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TextLocalizer
+      value: 
+      objectReference: {fileID: 2120620073}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_UseLocalization
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_LocalizationTable
+      value: UIString
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.size
       value: 6
       objectReference: {fileID: 0}
@@ -13446,8 +13562,24 @@ PrefabInstance:
         \uC624\uACA0\uC9C0? "
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[0].m_DialogPageData.m_DialogKey
+      value: TutorialScript13
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[1].m_ActionPageData.m_ActionLog
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[2].m_DialogPageData.m_DialogKey
+      value: TutorialScript14
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[4].m_DialogPageData.m_DialogKey
+      value: TutorialScript15
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[5].m_DialogPageData.m_DialogKey
+      value: TutorialScript16
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[1].m_ActionPageData.m_CompleteKey
@@ -13476,6 +13608,14 @@ PrefabInstance:
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[7].m_ActionPageData.m_CompleteKey
       value: TUTORIAL_ORDER_COMPLETE
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[1].m_ActionPageData.m_ActionLogKey
+      value: TutorialActionLog2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[3].m_ActionPageData.m_ActionLogKey
+      value: TutorialActionLog1
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[0].m_DialogPageData.m_CharacterName
@@ -13542,12 +13682,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[0].m_DialogPageData.m_CharacterNameKey
+      value: Me
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[1].m_ActionPageData.m_DynamicTargetKey
       value: PromoitonTutorial
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[2].m_ActionPageData.m_DynamicTargetKey
       value: PromoitonTutorial
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[2].m_DialogPageData.m_CharacterNameKey
+      value: Me
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[3].m_ActionPageData.m_DynamicTargetKey
@@ -13558,8 +13706,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[4].m_DialogPageData.m_CharacterNameKey
+      value: Me
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[5].m_ActionPageData.m_DynamicTargetKey
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[5].m_DialogPageData.m_CharacterNameKey
+      value: Me
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[1].m_ActionPageData.m_DynamicTargetRoot
@@ -24572,8 +24728,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 457.46448, y: -10}
-  m_SizeDelta: {x: 284.97632, y: 150}
+  m_AnchoredPosition: {x: 457.58102, y: -10}
+  m_SizeDelta: {x: 285.05402, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &618564818
 MonoBehaviour:
@@ -25643,8 +25799,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 457.46448, y: -208.35637}
-  m_SizeDelta: {x: 914.92896, y: 416.71274}
+  m_AnchoredPosition: {x: 457.581, y: -208.35637}
+  m_SizeDelta: {x: 915.162, y: 416.71274}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &645359353
 MonoBehaviour:
@@ -29341,8 +29497,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 683.6967, y: -104.178185}
-  m_SizeDelta: {x: 402.46448, y: 148.35637}
+  m_AnchoredPosition: {x: 683.87146, y: -104.178185}
+  m_SizeDelta: {x: 402.581, y: 148.35637}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &733838942
 MonoBehaviour:
@@ -41114,8 +41270,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 457.46448, y: -84.545456}
-  m_SizeDelta: {x: 914.92896, y: 169.09091}
+  m_AnchoredPosition: {x: 457.581, y: -84.545456}
+  m_SizeDelta: {x: 915.162, y: 169.09091}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1056040478
 MonoBehaviour:
@@ -43617,8 +43773,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 752.4408, y: -10}
-  m_SizeDelta: {x: 284.97632, y: 150}
+  m_AnchoredPosition: {x: 752.635, y: -10}
+  m_SizeDelta: {x: 285.05402, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1097427429
 MonoBehaviour:
@@ -44316,8 +44472,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 457.46448, y: -459.4737}
-  m_SizeDelta: {x: 914.92896, y: 912.6316}
+  m_AnchoredPosition: {x: 457.581, y: -957.2727}
+  m_SizeDelta: {x: 915.162, y: 1576.3636}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1119086322
 MonoBehaviour:
@@ -48946,8 +49102,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 457.46448, y: -517.2909}
-  m_SizeDelta: {x: 914.92896, y: 208.35637}
+  m_AnchoredPosition: {x: 457.581, y: -517.2909}
+  m_SizeDelta: {x: 915.162, y: 208.35637}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1250136727
 MonoBehaviour:
@@ -49104,8 +49260,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TextLocalizer
+      value: 
+      objectReference: {fileID: 2120620073}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_UseLocalization
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_LocalizationTable
+      value: UIString
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.size
@@ -49164,6 +49328,10 @@ PrefabInstance:
         \uB3C4\uC6C0\uC774 \uB418\uACA0\uB294\uB370?"
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[0].m_DialogPageData.m_DialogKey
+      value: TutorialScript1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[1].m_ActionPageData.m_ActionLog
       value: "\uC2A4\uB9C8\uD2B8\uD3F0\uC744 \uD130\uCE58!"
       objectReference: {fileID: 0}
@@ -49174,6 +49342,10 @@ PrefabInstance:
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[3].m_ActionPageData.m_ActionLog
       value: "\uD654\uBA74\uC744 \uD130\uCE58!"
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[3].m_DialogPageData.m_DialogKey
+      value: TutorialScript2
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[4].m_ActionPageData.m_ActionLog
@@ -49202,6 +49374,22 @@ PrefabInstance:
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[5].m_ActionPageData.m_CompleteKey
       value: TUTORIAL_ORDER_COMPLETE
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[1].m_ActionPageData.m_ActionLogKey
+      value: TutorialActionLog3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[2].m_ActionPageData.m_ActionLogKey
+      value: TutorialActionLog1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[4].m_ActionPageData.m_ActionLogKey
+      value: NamePlaceholder
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[5].m_ActionPageData.m_ActionLogKey
+      value: TutorialActionLog2
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[0].m_DialogPageData.m_CharacterName
@@ -49284,12 +49472,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[0].m_DialogPageData.m_CharacterNameKey
+      value: Me
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[2].m_ActionPageData.m_DynamicTargetKey
       value: EatrandAlarmPopup
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[3].m_ActionPageData.m_DynamicTargetKey
       value: EatrandSignInPopup
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[3].m_DialogPageData.m_CharacterNameKey
+      value: Me
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[4].m_ActionPageData.m_DynamicTargetKey
@@ -52821,8 +53017,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 457.46448, y: -1979.9999}
-  m_SizeDelta: {x: 914.92896, y: 150}
+  m_AnchoredPosition: {x: 457.581, y: -1979.9999}
+  m_SizeDelta: {x: 915.162, y: 150}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1327478407
 MonoBehaviour:
@@ -55601,8 +55797,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 162.48816, y: -10}
-  m_SizeDelta: {x: 284.97632, y: 150}
+  m_AnchoredPosition: {x: 162.52701, y: -10}
+  m_SizeDelta: {x: 285.05402, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1409333000
 MonoBehaviour:
@@ -60485,6 +60681,18 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TextLocalizer
+      value: 
+      objectReference: {fileID: 2120620073}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_UseLocalization
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_LocalizationTable
+      value: UIString
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.size
       value: 8
       objectReference: {fileID: 0}
@@ -60572,6 +60780,10 @@ PrefabInstance:
         \uC74C\uB8CC\uB97C \uD574\uAE08\uD558\uB7EC \uAC00\uBCFC\uAE4C?"
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[0].m_DialogPageData.m_DialogKey
+      value: TutorialScript8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[1].m_ActionPageData.m_ActionLog
       value: "\uAD6C\uB9E4 \uBC84\uD2BC\uC744 \uD074\uB9AD!"
       objectReference: {fileID: 0}
@@ -60588,6 +60800,10 @@ PrefabInstance:
       value: "\uBC84\uD2BC\uC744 \uD074\uB9AD!"
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[4].m_DialogPageData.m_DialogKey
+      value: TutorialScript9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[5].m_ActionPageData.m_ActionLog
       value: "\uBC84\uD2BC\uC744 \uD074\uB9AD!"
       objectReference: {fileID: 0}
@@ -60598,6 +60814,10 @@ PrefabInstance:
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[7].m_ActionPageData.m_ActionLog
       value: "\uBC84\uD2BC\uC744 \uD074\uB9AD!"
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[7].m_DialogPageData.m_DialogKey
+      value: TutorialScript10
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[8].m_ActionPageData.m_ActionLog
@@ -60634,6 +60854,26 @@ PrefabInstance:
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[8].m_ActionPageData.m_CompleteKey
       value: TUTORIAL_ORDER_COMPLETE
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[1].m_ActionPageData.m_ActionLogKey
+      value: TutorialActionLog2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[2].m_ActionPageData.m_ActionLogKey
+      value: TutorialActionLog2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[3].m_ActionPageData.m_ActionLogKey
+      value: TutorialActionLog2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[5].m_ActionPageData.m_ActionLogKey
+      value: TutorialActionLog2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[6].m_ActionPageData.m_ActionLogKey
+      value: TutorialActionLog2
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[0].m_DialogPageData.m_CharacterName
@@ -60752,6 +60992,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[0].m_DialogPageData.m_CharacterNameKey
+      value: Me
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[1].m_ActionPageData.m_DynamicTargetKey
       value: TableTutorial
       objectReference: {fileID: 0}
@@ -60768,6 +61012,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[4].m_DialogPageData.m_CharacterNameKey
+      value: Me
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[5].m_ActionPageData.m_DynamicTargetKey
       value: KitchenSinkTutorial
       objectReference: {fileID: 0}
@@ -60778,6 +61026,10 @@ PrefabInstance:
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[7].m_ActionPageData.m_DynamicTargetKey
       value: CoffeeMachineTutorial
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[7].m_DialogPageData.m_CharacterNameKey
+      value: Me
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[8].m_ActionPageData.m_DynamicTargetKey
@@ -64034,6 +64286,18 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TextLocalizer
+      value: 
+      objectReference: {fileID: 2120620073}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_UseLocalization
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_LocalizationTable
+      value: UIString
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.size
       value: 8
       objectReference: {fileID: 0}
@@ -64135,8 +64399,28 @@ PrefabInstance:
         \uC6B4\uC601\uC744 \uC2DC\uC791\uD574\uBCF4\uC790"
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[0].m_DialogPageData.m_DialogKey
+      value: TutorialScript17
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[1].m_ActionPageData.m_ActionLog
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[2].m_DialogPageData.m_DialogKey
+      value: TutorialScript18
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[3].m_DialogPageData.m_DialogKey
+      value: TutorialScript19
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[5].m_DialogPageData.m_DialogKey
+      value: TutorialScript20
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[6].m_DialogPageData.m_DialogKey
+      value: TutorialScript21
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[1].m_ActionPageData.m_CompleteKey
@@ -64173,6 +64457,18 @@ PrefabInstance:
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[9].m_ActionPageData.m_CompleteKey
       value: TUTORIAL_ORDER_COMPLETE
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[1].m_ActionPageData.m_ActionLogKey
+      value: TutorialActionLog2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[4].m_ActionPageData.m_ActionLogKey
+      value: TutorialActionLog2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[7].m_ActionPageData.m_ActionLogKey
+      value: TutorialActionLog1
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[0].m_DialogPageData.m_CharacterName
@@ -64235,6 +64531,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[0].m_DialogPageData.m_CharacterNameKey
+      value: Me
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[1].m_ActionPageData.m_DynamicTargetKey
       value: EmployeeTutorial
       objectReference: {fileID: 0}
@@ -64243,8 +64543,16 @@ PrefabInstance:
       value: EmployeeTutorial
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[2].m_DialogPageData.m_CharacterNameKey
+      value: Me
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[3].m_ActionPageData.m_DynamicTargetKey
       value: EmployeeTutorial
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[3].m_DialogPageData.m_CharacterNameKey
+      value: Me
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[4].m_ActionPageData.m_DynamicTargetKey
@@ -64255,8 +64563,16 @@ PrefabInstance:
       value: EmployeeTutorial
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[5].m_DialogPageData.m_CharacterNameKey
+      value: Me
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[6].m_ActionPageData.m_DynamicTargetKey
       value: EmployeeTutorial
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
+      propertyPath: m_TutorialPageMakers.Array.data[6].m_DialogPageData.m_CharacterNameKey
+      value: Me
       objectReference: {fileID: 0}
     - target: {fileID: 5810936324179562974, guid: 99c3b1870a46a47b3a5ff63016ad4e1c, type: 3}
       propertyPath: m_TutorialPageMakers.Array.data[7].m_ActionPageData.m_DynamicTargetKey
@@ -66685,7 +67001,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 220}
-  m_Pivot: {x: 0, y: 1}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1689721739
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68544,8 +68860,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 231.23224, y: -104.178185}
-  m_SizeDelta: {x: 402.46448, y: 148.35637}
+  m_AnchoredPosition: {x: 231.2905, y: -104.178185}
+  m_SizeDelta: {x: 402.581, y: 148.35637}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1746416541
 MonoBehaviour:
@@ -79071,8 +79387,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 457.46448, y: -1097.1163}
-  m_SizeDelta: {x: 914.92896, y: 958.49457}
+  m_AnchoredPosition: {x: 457.581, y: -1097.1163}
+  m_SizeDelta: {x: 915.162, y: 958.49457}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2094198828
 MonoBehaviour:
@@ -79556,6 +79872,7 @@ GameObject:
   - component: {fileID: 2120620070}
   - component: {fileID: 2120620069}
   - component: {fileID: 2120620068}
+  - component: {fileID: 2120620073}
   m_Layer: 5
   m_Name: TutorialCanvas
   m_TagString: Untagged
@@ -79682,6 +79999,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &2120620073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2120620067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4aaad5bc01931b44bae55746de50e0fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2123076708
 GameObject:
   m_ObjectHideFlags: 0
