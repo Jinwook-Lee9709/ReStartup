@@ -20,10 +20,12 @@ public class GameInitializer : MonoBehaviour
         }
         Application.targetFrameRate = 120;
         QualitySettings.vSyncCount = 0;
+        
+        AudioManager.Instance.Init();
     }
     private void Start()
     {
-
+        
 
     }
 }

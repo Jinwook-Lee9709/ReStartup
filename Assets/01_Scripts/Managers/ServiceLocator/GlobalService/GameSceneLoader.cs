@@ -7,13 +7,13 @@ using UnityEngine;
 
 public static class GameSceneLoader
 {
+    private static readonly string themeBGM = "Theme{0}BGM";
     public static async UniTask BeforeGameSceneLoad()
     {
+        int theme = PlayerPrefs.GetInt("Theme", 1);
         try
         {
             UserDataManager.Instance.ResetThemeSave();
-
-            int theme = PlayerPrefs.GetInt("Theme", 1);
             var interiorQueryTask = InteriorSaveDataDAC.GetInteriorData(theme);
             var foodQueryTask = FoodSaveDataDAC.GetFoodData(theme);
             var employeeQueryTask = EmployeeSaveDataDAC.GetEmployeeData(theme);

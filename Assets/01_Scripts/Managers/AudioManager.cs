@@ -13,6 +13,7 @@ public class AudioManager : Singleton<AudioManager>
         BGM,
     }
     private readonly string audioSOAssetName = "AudioSO";
+    private static readonly string themeBGM = "Theme{0}BGM";
     private AudioMixer audioMixer;
     private AudioSource audioBGMSource, audioSFXSource;
     private AudioSO audioSO;
@@ -36,7 +37,9 @@ public class AudioManager : Singleton<AudioManager>
         var sfxVol = Mathf.Lerp(-80f, 0f, LocalSaveLoadManager.Data.SFXVolume);
         SetVolume(AudioType.BGM, bgmVol);
         SetVolume(AudioType.BGM, sfxVol);
-        PlayBGM("Theme1BGM");
+        int theme = PlayerPrefs.GetInt("Theme", 0);
+        if(theme > 0)
+            Instance.PlayBGM(string.Format(themeBGM, theme));
     }
 
     private void LoadAudioSO()
