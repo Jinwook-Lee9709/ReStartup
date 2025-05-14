@@ -52,7 +52,7 @@ public class BuffManager : MonoBehaviour
     }
     public void UpdateBuffCntUI()
     {
-        buffCountText.text = string.Format(Strings.buffCountFormat, buffInfoUIList.Count);
+        buffCountText.text = $"+{buffInfoUIList.Count}";
     }
     private void Update()
     {

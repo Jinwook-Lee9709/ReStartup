@@ -55,14 +55,11 @@ public class ConsumerManager : MonoBehaviour
         spawnPoint = pivotManager.GetConsumerSpawnPoint();
         waitingConsumerSeats = pivotManager.GetWatingLines();
         payWaitingPivots = pivotManager.GetPayWaitingPivots();
-        waitingNumberText = LZString.GetUIString(waitingTextStringID);
     }
 
     private void UpdateWaitingText()
     {
-        StringBuilder sb = new StringBuilder();
-        sb.AppendLine($"{waitingNumberText} : {waitOutsideConsumerCnt + currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count}");
-        waitingText.text = sb.ToString();
+        waitingText.text = (waitOutsideConsumerCnt + currentSpawnedConsumerDictionary[ConsumerFSM.ConsumerState.Waiting].Count).ToString();
     }
 
     [ContextMenu("Consumer Spawn")]
