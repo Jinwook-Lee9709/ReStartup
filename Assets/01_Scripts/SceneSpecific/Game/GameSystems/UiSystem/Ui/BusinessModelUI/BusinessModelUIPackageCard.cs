@@ -7,17 +7,19 @@ using UnityEngine.UI;
 
 public class BusinessModelUIPackageCard : MonoBehaviour
 {
-    private readonly string numberOfTimes = "WeeklyNumberOfTimes {0}/3";
-    private int times = 3;
+    private readonly string numberOfTimes = "WeeklyLimitation{0}";
+    public int times = 3;
     public int cost;
     public int adTicketValue, moneyValue, goldValue;
     [SerializeField] private Button mainButton;
     [SerializeField] private TextMeshProUGUI costText;
     [SerializeField] private TextMeshProUGUI numberOfTimesText;
     private BusinessModelUIPackagePopup popup;
+    private BusinessModelUI businessModelUI;
     void Start()
     {
-        popup = ServiceLocator.Instance.GetSceneService<GameManager>().uiManager.uiBusinessModel.GetComponent<BusinessModelUI>().busunessModelUIPackagePopup.GetComponent<BusinessModelUIPackagePopup>();
+        businessModelUI = ServiceLocator.Instance.GetSceneService<GameManager>().uiManager.uiBusinessModel.GetComponent<BusinessModelUI>();
+        popup = businessModelUI.busunessModelUIPackagePopup.GetComponent<BusinessModelUIPackagePopup>();
         costText.text = cost.ToString("N0");
         SetNumberOfTimesText();
         mainButton.onClick.RemoveAllListeners();
@@ -25,11 +27,17 @@ public class BusinessModelUIPackageCard : MonoBehaviour
     }
     private void OnPopup()
     {
+        if (times <= 0)
+        {
+            businessModelUI.OnLimitationPackagePopup();
+            return;
+        }
         popup.gameObject.SetActive(true);
         popup.SetInfo(this);
     }
     public void Buy()
     {
+        --times;
         SetNumberOfTimesText();
     }
     private void SetNumberOfTimesText()

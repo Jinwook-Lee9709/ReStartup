@@ -7,6 +7,7 @@ using UnityEngine.AddressableAssets;
 
 public class RestaurantSuperviseManager : MonoBehaviour
 {
+    private readonly string themeBGM = "Theme{0}BGM";
     [SerializeField] RestaurantSuperviseUIManager restaurantSuperviseUIManager;
     private SupervisorCompensationSO compensation;
     private void Start()
@@ -50,7 +51,8 @@ public class RestaurantSuperviseManager : MonoBehaviour
         popup.ClosePopup();
         
         PlayerPrefs.SetInt("Theme", (int)currentTheme + 1);
-        ServiceLocator.Instance.GetGlobalService<SceneController>().LoadSceneWithLoading(SceneIds.Dev0, GameSceneLoader.BeforeGameSceneLoad);
+        AudioManager.Instance.PlayBGM(string.Format(themeBGM, currentTheme));
+        ServiceLocator.Instance.GetGlobalService<SceneController>().LoadSceneWithLoading(SceneIds.Dev3, GameSceneLoader.BeforeGameSceneLoad);
 
     }
 

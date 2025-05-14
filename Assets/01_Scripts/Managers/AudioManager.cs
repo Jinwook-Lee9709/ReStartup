@@ -56,6 +56,7 @@ public class AudioManager : Singleton<AudioManager>
 
     public void PlayBGM(string key)
     {
+        audioBGMSource.Stop();
         audioBGMSource.clip = audioSO.AudioClips[key];
         audioBGMSource.Play();
     }

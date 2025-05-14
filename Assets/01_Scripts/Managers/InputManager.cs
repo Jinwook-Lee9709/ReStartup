@@ -77,6 +77,14 @@ public class InputManager : MonoBehaviour
             return;
         }
         bool isCameraOnHall = distance > 0;
+        if (isCameraOnHall)
+        {
+            AudioManager.Instance.PlaySFX("ChangeHall");
+        }
+        else
+        {
+            AudioManager.Instance.PlaySFX("ChangeKitchen");
+        }
         hollCamera.SetActive(isCameraOnHall);
         player.UpdateIdleArea(isCameraOnHall);
     }

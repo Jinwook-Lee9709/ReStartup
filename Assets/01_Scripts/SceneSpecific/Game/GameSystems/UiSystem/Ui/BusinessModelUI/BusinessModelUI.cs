@@ -12,6 +12,7 @@ public class BusinessModelUI : MonoBehaviour
     public GameObject busunessModelUIPackagePopup;
     private float foldWidth = 900f;
     public GameObject notEnoughCostPopup;
+    public GameObject limitationPackagePopup;
     private Transform uicanvers;
     // Start is called before the first frame update
     void Start()
@@ -37,6 +38,10 @@ public class BusinessModelUI : MonoBehaviour
     public void OnNotEnoughCostPopup()
     {
         Instantiate(notEnoughCostPopup, uicanvers);
+    }
+    public void OnLimitationPackagePopup()
+    {
+        Instantiate(limitationPackagePopup, uicanvers);
     }
     // Update is called once per frame
     void Update()
