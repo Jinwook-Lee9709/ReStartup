@@ -46,11 +46,12 @@ public class LoadingSceneManager : MonoBehaviour
             {
                 while (!sceneHandle.IsDone)
                 {
-                    progressBar.value = sceneHandle.PercentComplete;
+                    progressBar.value = sceneHandle.PercentComplete * 100;
+                    Debug.Log(progressBar.value);
                     await UniTask.Yield();
                 }
 
-                await UniTask.Delay(TimeSpan.FromSeconds(1));
+                await UniTask.Delay(TimeSpan.FromSeconds(2));
             }
             catch (Exception e)
             {
