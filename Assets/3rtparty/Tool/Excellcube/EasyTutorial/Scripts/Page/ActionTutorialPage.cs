@@ -34,7 +34,7 @@ namespace Excellcube.EasyTutorial.Page
 
             // Highlight target 탐색.
             SearchDynamicHighlightTarget(ref data);
-            m_View.ActionLogBackGround.SetActive(data.ActionLog != "");
+            m_View.ActionLogBackGround.SetActive(data.ActionLog != ".");
             m_View.ActionLogText.text = data.ActionLog;
             if(data.HighlightTarget != null)
             {
