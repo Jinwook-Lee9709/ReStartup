@@ -8,10 +8,13 @@ using UnityEngine.UI;
 public class UserReset : MonoBehaviour
 {
     [SerializeField] private Button button;
+    [SerializeField] private Button startButton;
+    [SerializeField] private Button loginButton;
 
     private void Start()
     {
         button.onClick.AddListener(OnDeleteButtonTouched);
+        button.interactable = GuestLoginManager.ReadUUID();
     }
     
     public void OnDeleteButtonTouched()
@@ -21,6 +24,7 @@ public class UserReset : MonoBehaviour
 
     private async UniTask DeleteUserTask()
     {
+        button.interactable = false;
         PlayerPrefs.SetInt("ECET_CLEAR_ALL", 0);
         TokenManager.ReadToken();
         bool isUUIDExist = GuestLoginManager.ReadUUID();
@@ -29,10 +33,14 @@ public class UserReset : MonoBehaviour
             return;
         button.interactable = false;
         var response = await RestApiService.PostAsyncWithToken<bool>(Endpoints.DeleteUserUrl);
+        if (response.ResponseCode != ResponseType.Success)
+            return;
         TokenManager.DeleteToken();
         GuestLoginManager.DeleteUUID();
         
-        button.interactable = true;
+        startButton.gameObject.SetActive(false);
+        loginButton.gameObject.SetActive(true);
+        
     }
 
     private static async Task<bool> LoginAsGuest()

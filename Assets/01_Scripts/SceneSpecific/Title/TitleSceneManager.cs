@@ -14,22 +14,26 @@ using UnityEngine.UI;
 
 public class TitleSceneManager : MonoBehaviour
 {
-
-
-    [FormerlySerializedAs("button")]
-    [SerializeField]
-    private Button startButton;
-
+    [SerializeField] private Button startButton;
     [SerializeField] private Button guestLoginButton;
+    [SerializeField] private Button resetUserButton;
+
+    [SerializeField] private Button closeButton;
     [SerializeField] private Button testButton;
     [SerializeField] private TextMeshProUGUI alarmText;
     [SerializeField] private Button koreanChangeButton;
     [SerializeField] private Button englishChangeButton;
     [SerializeField] private Button languageSettingButton;
+    [SerializeField] private GameObject settingPanel;
     [SerializeField] private GameObject koreanCheck;
     [SerializeField] private GameObject englishCheck;
     [SerializeField] private GameObject languageSettingInObject;
-
+    
+    
+    private void Awake()
+    {
+        SetInitialStatus();
+    }
 
     private void Start()
     {
@@ -38,7 +42,29 @@ public class TitleSceneManager : MonoBehaviour
         koreanChangeButton.onClick.AddListener(SwitchToKorean);
         englishChangeButton.onClick.AddListener(SwitchToEnglish);
         languageSettingButton.onClick.AddListener(OpenOrExitSetting);
+        closeButton.onClick.AddListener(OpenOrExitSetting);
         BgmPlayTask().Forget();
+    }
+    
+    private async void SetInitialStatus()
+    {
+        if (!GuestLoginManager.ReadUUID())
+        {
+            startButton.gameObject.SetActive(false);
+            guestLoginButton.gameObject.SetActive(true);
+            return;
+        }
+        await LoginAsGuest();
+        
+        if (!TokenManager.ReadToken())
+        {
+            startButton.gameObject.SetActive(false);
+            guestLoginButton.gameObject.SetActive(true);
+            return;
+        }
+        
+        startButton.gameObject.SetActive(true);
+        guestLoginButton.gameObject.SetActive(false);
     }
 
     private async UniTask BgmPlayTask()
@@ -56,19 +82,14 @@ public class TitleSceneManager : MonoBehaviour
     private async UniTask GameStartTask()
     {
         startButton.interactable = false;
-        if (!GuestLoginManager.ReadUUID())
+        await LoginAsGuest();
+        if (!TokenManager.ReadToken())
         {
-            alarmText.text = "Need To Register Fisrt";
+            //팝업 필요
             startButton.interactable = true;
             return;
         }
 
-        if (!TokenManager.ReadToken())
-        {
-            alarmText.text = "Need To Login Fisrt";
-            startButton.interactable = true;
-            return;
-        }
         bool isLoginSucceed = await UserAuthController.VerifyToken();
         alarmText.text = "Login Succeed";
         if (!isLoginSucceed)
@@ -109,6 +130,11 @@ public class TitleSceneManager : MonoBehaviour
     private async UniTask RegisterAsGuest()
     {
         var isSucceed = await UserAuthController.RegisterAsGuestTask();
+        if (isSucceed)
+            resetUserButton.interactable = true;
+        
+        startButton.gameObject.SetActive(true);
+        guestLoginButton.gameObject.SetActive(false);
     }
 
     private async UniTask LoginAsGuest()
@@ -123,8 +149,10 @@ public class TitleSceneManager : MonoBehaviour
     {
         var nameResponse = await UserDataDAC.GetUserName();
         var response = await CurrencyDataDAC.GetCurrencyData();
-        UserDataManager.Instance.CurrentUserData.Gold = response.Data.First(x => x.currencyType == CurrencyType.Gold).amount;
-        UserDataManager.Instance.CurrentUserData.Money = response.Data.First(x => x.currencyType == CurrencyType.Money).amount;
+        UserDataManager.Instance.CurrentUserData.Gold =
+            response.Data.First(x => x.currencyType == CurrencyType.Gold).amount;
+        UserDataManager.Instance.CurrentUserData.Money =
+            response.Data.First(x => x.currencyType == CurrencyType.Money).amount;
         UserDataManager.Instance.CurrentUserData.Name = nameResponse.Data;
         await InitializeStageStatus();
     }
@@ -133,9 +161,12 @@ public class TitleSceneManager : MonoBehaviour
     {
         var nameResponse = await UserDataDAC.GetUserName();
         var response = await CurrencyDataDAC.GetCurrencyData();
-        UserDataManager.Instance.CurrentUserData.Gold = response.Data.First(x => x.currencyType == CurrencyType.Gold).amount;
-        UserDataManager.Instance.CurrentUserData.Money = response.Data.First(x => x.currencyType == CurrencyType.Money).amount;
-        UserDataManager.Instance.CurrentUserData.AdTicket = response.Data.First(x => x.currencyType == CurrencyType.AdTicket).amount;
+        UserDataManager.Instance.CurrentUserData.Gold =
+            response.Data.First(x => x.currencyType == CurrencyType.Gold).amount;
+        UserDataManager.Instance.CurrentUserData.Money =
+            response.Data.First(x => x.currencyType == CurrencyType.Money).amount;
+        UserDataManager.Instance.CurrentUserData.AdTicket =
+            response.Data.First(x => x.currencyType == CurrencyType.AdTicket).amount;
         UserDataManager.Instance.CurrentUserData.Name = nameResponse.Data;
 
         var stageStatus = await StageStatusDataDAC.GetStageStatusData();
@@ -151,14 +182,15 @@ public class TitleSceneManager : MonoBehaviour
             {
                 UserDataManager.Instance.CurrentUserData.ThemeStatus[data.theme] = data;
             }
+
             currentTheme = stageStatus.Data.Max(x => x.theme);
             PlayerPrefs.SetInt("Theme", (int)currentTheme);
         }
+
         PlayerPrefs.SetInt("Theme", (int)currentTheme);
         var sceneManager = ServiceLocator.Instance.GetGlobalService<SceneController>();
         sceneManager.LoadSceneWithLoading(SceneIds.Dev0, GameSceneLoader.BeforeGameSceneLoad);
         startButton.interactable = true;
-
     }
 
     private async UniTask InitializeStageStatus()
@@ -169,6 +201,7 @@ public class TitleSceneManager : MonoBehaviour
             await SaveInitialStatusData();
             return;
         }
+
         if (stageStatus.ResponseCode != ResponseType.Success)
         {
             alarmText.text = "Stage Status Data Load Failed";
@@ -188,6 +221,7 @@ public class TitleSceneManager : MonoBehaviour
         {
             //TODO: ReturnToTitleScene
         }
+
         UserDataManager.Instance.CurrentUserData.ThemeStatus.Add(data.theme, data);
     }
 
@@ -202,9 +236,10 @@ public class TitleSceneManager : MonoBehaviour
         };
         return data;
     }
+
     public void SwitchToKorean()
     {
-        if(SetLocale("ko"))
+        if (SetLocale("ko"))
         {
             LocalSaveLoadManager.Data.LanguageType = LanguageType.Korean;
             LocalSaveLoadManager.Save();
@@ -216,7 +251,7 @@ public class TitleSceneManager : MonoBehaviour
 
     public void SwitchToEnglish()
     {
-        if(SetLocale("en"))
+        if (SetLocale("en"))
         {
             LocalSaveLoadManager.Data.LanguageType = LanguageType.English;
             LocalSaveLoadManager.Save();
@@ -251,15 +286,33 @@ public class TitleSceneManager : MonoBehaviour
             return false;
         }
     }
+
     private void OpenOrExitSetting()
     {
         if (languageSettingInObject.activeSelf)
         {
-            languageSettingInObject.SetActive(false);
+            closeButton.interactable = false;
+            var image = closeButton.GetComponent<Image>();
+            settingPanel.transform.PopdownAnimation();
+            image.FadeOutAnimation(
+                onComplete: () =>
+                {
+                    closeButton.interactable = true;
+                    languageSettingInObject.SetActive(false);
+                }
+            );
         }
         else
         {
             languageSettingInObject.SetActive(true);
+            closeButton.interactable = false;
+            var image = closeButton.GetComponent<Image>();
+            settingPanel.transform.PopupAnimation(
+                onComplete: () =>
+                {
+                    closeButton.interactable = true;
+                });
+            image.FadeInAnimation();
         }
     }
 }
