@@ -28,6 +28,8 @@ public class WorkGotoFoodPickupCounter : InteractWorkBase
 
         var transporter = worker as ITransportable;
         var package = counter.LiftFood();
+        var food = package.GetComponent<FoodObject>();
+        food.HideEffect();
         transporter.LiftPackage(package);
 
         nextWork = work;
