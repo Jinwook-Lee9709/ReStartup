@@ -63,6 +63,7 @@ public class InputManager : MonoBehaviour
     {
         if (currentTime >= swipeTime)
         {
+            currentTime = 0;
             soundOn = true;
         }
         else
@@ -93,6 +94,7 @@ public class InputManager : MonoBehaviour
         bool isCameraOnHall = distance > 0;
         if (soundOn)
         {
+            soundOn = false;
             if (isCameraOnHall)
             {
                 AudioManager.Instance.PlaySFX("ChangeHall");
