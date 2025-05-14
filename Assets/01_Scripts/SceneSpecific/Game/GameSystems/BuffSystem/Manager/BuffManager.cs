@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -77,6 +78,8 @@ public class BuffManager : MonoBehaviour
                 OnBuffExpired?.Invoke(buff);
                 buff.isOnBuff = false;
                 buffs.Remove(buff.BuffType);
+                var removedBuffInfo = buffInfoUIList.Where((x) => x.currentBuff == buff).FirstOrDefault();
+                buffInfoUIList.Remove(removedBuffInfo);
                 Debug.Log("Buff Off");
                 return;
             }
