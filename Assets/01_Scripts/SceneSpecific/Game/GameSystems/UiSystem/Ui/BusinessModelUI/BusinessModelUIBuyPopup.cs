@@ -9,12 +9,16 @@ using UnityEngine.UI;
 
 public class BusinessModelUIBuyPopup : MonoBehaviour
 {
+    private readonly string goldExplanation = "GoldExplanationBusinessPopup{0}";
+    private readonly string moneyExplanation = "MoneyExplanationBusinessPopup{0}";
+    private readonly string adTicketExplanation = "AdTicketExplanationBusinessPopup{0}";
     [SerializeField] private float backgroundOpacity = 0.8f;
     [SerializeField] private Button background;
     [SerializeField] private Button mainButton;
     [SerializeField] private Image panel;
     [SerializeField] private Image Icon;
-    [SerializeField] private TextMeshProUGUI infoText;
+    [SerializeField] private Image costImage;
+    [SerializeField] private TextMeshProUGUI explanationText;
     [SerializeField] private TextMeshProUGUI costText;
     private BusinessModelUICard currentCard;
 
@@ -36,12 +40,25 @@ public class BusinessModelUIBuyPopup : MonoBehaviour
         mainButton.onClick.AddListener(OnMainButtonTouched);
     }
 
-    public void SetInfo(BusinessModelUICard card, Sprite image)
+    public void SetInfo(BusinessModelUICard card, Sprite image, Sprite costimage)
     {
         mainButton.interactable = true;
         currentCard = card;
         costText.text = currentCard.cost.ToString("N0");
         Icon.sprite = image;
+        costImage.sprite = costimage;
+        switch (currentCard.rewardType)
+        {
+            case RewardType.Money:
+                explanationText.text = LZString.GetUIString(string.Format(moneyExplanation, currentCard.ea));
+                break;
+            case RewardType.Gold:
+                explanationText.text = LZString.GetUIString(string.Format(goldExplanation, currentCard.ea));
+                break;
+            case RewardType.AdBlockTicket:
+                explanationText.text = LZString.GetUIString(string.Format(adTicketExplanation, currentCard.ea));
+                break;
+        }
     }
     private void OnEnable()
     {
