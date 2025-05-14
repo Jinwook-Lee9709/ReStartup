@@ -43,8 +43,8 @@ public class QuestCard : MonoBehaviour
                 break;
             case RewardType.AdBlockTicket:
                 StartCoroutine(LoadSpriteCoroutine(adBlockTicket));
-                var newRectTransform = new Vector2(rewardImage.GetComponent<RectTransform>().rect.size.x, adTicketRectY);
-                rewardImage.GetComponent<RectTransform>().sizeDelta = newRectTransform;
+                //var newRectTransform = new Vector2(rewardImage.GetComponent<RectTransform>().rect.size.x, adTicketRectY);
+                //rewardImage.GetComponent<RectTransform>().sizeDelta = newRectTransform;
                 break;
             case RewardType.MissionPoint:
                 StartCoroutine(LoadSpriteCoroutine(gold));

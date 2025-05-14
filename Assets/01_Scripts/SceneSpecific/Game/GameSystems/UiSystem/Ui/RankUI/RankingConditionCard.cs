@@ -7,11 +7,16 @@ using TMPro;
 using TMPro.Examples;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class RankingConditionCard : MonoBehaviour
 {
+    private readonly string goldIconSprite = "Gold";
+    private readonly string inflowrateIconSprite = "BuffIcon0";
+    private readonly string moneyIconSprite = "Cash";
+    private readonly string adTicketIconSprite = "AdBlockTicket";
     public RankConditionData rankConditionData;
 
     private Button button;
@@ -22,6 +27,10 @@ public class RankingConditionCard : MonoBehaviour
     public TextMeshProUGUI conditionText;
     public TextMeshProUGUI currentRankPointText;
     public TextMeshProUGUI explanationText;
+    public TextMeshProUGUI reward1ValueText;
+    public TextMeshProUGUI reward2ValueText;
+    public Image reward1Image;
+    public Image reward2Image;
     public RectTransform sliderGauge;
     public Image emblemImage;
     public HatListController hatController;
@@ -33,6 +42,48 @@ public class RankingConditionCard : MonoBehaviour
     private void Start()
     {
         rankConditionListUI = gameObject.GetComponentInParent<RankingConditionListUI>();
+        switch (rankConditionData.RewardType1)
+        {
+            case RankRewardType.None:
+                reward1Image.gameObject.SetActive(false);
+                reward1ValueText.gameObject.SetActive(false);
+                break;
+            case RankRewardType.Money:
+                StartCoroutine(LoadSpriteCoroutine(moneyIconSprite, reward1Image));
+                break;
+            case RankRewardType.Gold:
+                StartCoroutine(LoadSpriteCoroutine(goldIconSprite, reward1Image));
+                break;
+            case RankRewardType.InflowRate:
+                StartCoroutine(LoadSpriteCoroutine(inflowrateIconSprite, reward1Image));
+                reward1Image.color = Color.blue;
+                break;
+            case RankRewardType.AdDelete:
+                StartCoroutine(LoadSpriteCoroutine(adTicketIconSprite, reward1Image));
+                break;
+        }
+        reward1ValueText.text = rankConditionData.RewardAmount1.ToString();
+        switch (rankConditionData.RewardType2)
+        {
+            case RankRewardType.None:
+                reward2Image.gameObject.SetActive(false);
+                reward2ValueText.gameObject.SetActive(false);
+                break;
+            case RankRewardType.Money:
+                StartCoroutine(LoadSpriteCoroutine(moneyIconSprite, reward2Image));
+                break;
+            case RankRewardType.Gold:
+                StartCoroutine(LoadSpriteCoroutine(goldIconSprite, reward2Image));
+                break;
+            case RankRewardType.InflowRate:
+                StartCoroutine(LoadSpriteCoroutine(inflowrateIconSprite, reward2Image)); 
+                reward2Image.color = Color.blue;
+                break;
+            case RankRewardType.AdDelete:
+                StartCoroutine(LoadSpriteCoroutine(adTicketIconSprite, reward2Image));
+                break;
+        }
+        reward2ValueText.text = rankConditionData.RewardAmount2.ToString();
     }
 
     private void OnEnable()
@@ -62,8 +113,8 @@ public class RankingConditionCard : MonoBehaviour
         {
             Unlock();
         }
-
         CheckComplete((int)currentUserRankPoint);
+        
     }
 
     public void CheckComplete(int currentRankPoint)
@@ -179,11 +230,21 @@ public class RankingConditionCard : MonoBehaviour
                 UserDataManager.Instance.CurrentUserData.InflowRate += amount;
                 break;
             case RankRewardType.AdDelete:
+                UserDataManager.Instance.AdjustAdTicketWithSave(amount).Forget();
                 break;
         }
         
     }
-    
+    private IEnumerator LoadSpriteCoroutine(string iconAddress, Image image)
+    {
+        var handle = Addressables.LoadAssetAsync<Sprite>(iconAddress);
+        yield return handle;
+
+        if (handle.Status == AsyncOperationStatus.Succeeded)
+            image.sprite = handle.Result;
+        else
+            Debug.LogError($"Failed to load sprite: {iconAddress}");
+    }
 
     public void Unlock()
     {
