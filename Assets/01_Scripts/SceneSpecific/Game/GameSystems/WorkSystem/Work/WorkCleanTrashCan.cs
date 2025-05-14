@@ -36,7 +36,7 @@ public class WorkCleanTrashCan : InteractWorkBase
     protected override void HandlePostInteraction()
     {
         var trashCan = target as TrashCan;
-        AudioManager.Instance.PlaySFX("GetMoney");
+        AudioManager.Instance.PlaySFX("CleanRubbish");
         trashCan?.HideIcon();
         controller.OnCleanTrash(area);
         worker.ClearWork();
