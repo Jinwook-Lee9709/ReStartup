@@ -14,9 +14,7 @@ using static SoonsoonData;
 public class EmployeeUIItem : MonoBehaviour
 {
     static readonly string employeeUpgradeFix = "EmployeeUpgradeComplete";
-    static readonly string hallStaff = "HallStaff";
-    static readonly string kitchenStaff = "KitchenStaff";
-    static readonly string cashierStaff = "CashierStaff";
+    static readonly string employeeName = "EmployeeName{0}";
     static readonly string employment = "Employment";
     static readonly string education = "Education";
 
@@ -84,20 +82,8 @@ public class EmployeeUIItem : MonoBehaviour
         employeeId = employeeData.StaffID;
 
         this.employeeUpgradePopup = employeeUpgradePopup;
-        switch ((WorkType)employeeData.StaffType)
-        {
-            case WorkType.All:
-                break;
-            case WorkType.Payment:
-                uiNameText.text = $"{LZString.GetUIString(cashierStaff)}{employeeData.StaffID % 10}";
-                break;
-            case WorkType.Hall:
-                uiNameText.text = $"{LZString.GetUIString(hallStaff)}{employeeData.StaffID % 10}";
-                break;
-            case WorkType.Kitchen:
-                uiNameText.text = $"{LZString.GetUIString(kitchenStaff)}{employeeData.StaffID % 10}";
-                break;
-        }
+        uiNameText.text = LZString.GetUIString(string.Format(employeeName, employeeData.StaffID));
+
         button = GetComponentInChildren<Button>();
         employeeData.UpdateUpgradeStats(employeeSaveData[employeeId].level);
         SetButtonInteractable();
@@ -174,20 +160,8 @@ public class EmployeeUIItem : MonoBehaviour
         {
             uiUpgradeCostText.text = $"{employeeData.Cost}";
         }
-        switch ((WorkType)employeeData.StaffType)
-        {
-            case WorkType.All:
-                break;
-            case WorkType.Payment:
-                uiNameText.text = uiNameText.text = $"{LZString.GetUIString(cashierStaff)}{employeeData.StaffID % 10}";
-                break;
-            case WorkType.Hall:
-                uiNameText.text = $"{LZString.GetUIString(hallStaff)}{employeeData.StaffID % 10}";
-                break;
-            case WorkType.Kitchen:
-                uiNameText.text = $"{LZString.GetUIString(kitchenStaff)}{employeeData.StaffID % 10}";
-                break;
-        }
+        uiNameText.text = LZString.GetUIString(string.Format(employeeName, employeeData.StaffID));
+
         workSpeedValue.text = employeeData.WorkSpeed.ToString();
         moveSpeedValue.text = employeeData.MoveSpeed.ToString();
         HealthValue.text = employeeData.Health.ToString();
