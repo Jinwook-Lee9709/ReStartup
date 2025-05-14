@@ -15,6 +15,7 @@ public class BusinessModelUIPackagePopup : MonoBehaviour
     [SerializeField] private Button mainButton;
     [SerializeField] private Image panel;
     [SerializeField] private TextMeshProUGUI costText;
+    [SerializeField] private TextMeshProUGUI infoText;
     [SerializeField] private TextMeshProUGUI moneyValue, goldValue, adTicketValue;
     private BusinessModelUIPackageCard currentCard;
 
@@ -40,6 +41,7 @@ public class BusinessModelUIPackagePopup : MonoBehaviour
     {
         mainButton.interactable = true;
         currentCard = card;
+        infoText.text = card.nameText.text;
         moneyValue.text = currentCard.moneyValue.ToString("N0");
         goldValue.text = currentCard.goldValue.ToString("N0");
         adTicketValue.text = currentCard.adTicketValue.ToString("N0");

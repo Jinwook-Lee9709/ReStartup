@@ -10,10 +10,11 @@ public class BusinessModelUICard : MonoBehaviour
     [SerializeField] TextMeshProUGUI eaText;
     [SerializeField] TextMeshProUGUI costText;
     [SerializeField] Image image;
-    [SerializeField] int ea;
+    [SerializeField] Image costImage;
+    public int ea;
     public CostType costType;
     [SerializeField] Button mainButton;
-    [SerializeField] RewardType rewardType;
+    public RewardType rewardType;
     private BusinessModelUIBuyPopup popup;
     public BusinessModelUI businessModelUI;
     public int cost;
@@ -30,7 +31,7 @@ public class BusinessModelUICard : MonoBehaviour
     private void OnPopup()
     {
         popup.gameObject.SetActive(true);
-        popup.SetInfo(this,image.sprite);
+        popup.SetInfo(this,image.sprite, costImage.sprite);
     }
     private void OnNotEnoughCostPopup()
     {

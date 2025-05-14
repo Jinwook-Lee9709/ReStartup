@@ -13,6 +13,7 @@ public class BusinessModelUIPackageCard : MonoBehaviour
     public int adTicketValue, moneyValue, goldValue;
     [SerializeField] private Button mainButton;
     [SerializeField] private TextMeshProUGUI costText;
+    public TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI numberOfTimesText;
     private BusinessModelUIPackagePopup popup;
     private BusinessModelUI businessModelUI;
