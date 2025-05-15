@@ -11,6 +11,7 @@ public class TrashCan : InteractableObjectBase, IInterior
     
     public void ChangeSpirte(params Sprite[] sprite)
     {
+        objectRenderer = GetComponent<SpriteRenderer>();
         objectRenderer.sprite = sprite[0];
     }
     

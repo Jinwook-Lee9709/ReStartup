@@ -59,16 +59,15 @@ public class BusinessModelUIPackagePopup : MonoBehaviour
 
     private async void OnMainButtonTouched()
     {
-        if (currentCard.times <= 0)
-        {
-            OnClose();
-            return;
-        }
+        //if (currentCard.times <= 0)
+        //{
+        //    OnClose();
+        //    return;
+        //}
         var userDataManager = UserDataManager.Instance;
         await userDataManager.AdjustMoneyWithSave(currentCard.moneyValue);
         await userDataManager.AdjustGoldWithSave(currentCard.goldValue);
         await userDataManager.AdjustAdTicketWithSave(currentCard.adTicketValue);
-        currentCard.Buy();
         OnClose();
     }
 

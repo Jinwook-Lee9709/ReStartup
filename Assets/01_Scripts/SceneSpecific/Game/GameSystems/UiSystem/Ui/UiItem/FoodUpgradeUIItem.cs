@@ -54,7 +54,7 @@ public class FoodUpgradeUIItem : MonoBehaviour
         button = GetComponentInChildren<Button>();
 
         foodData.upgradeCount = UserDataManager.Instance.CurrentUserData.FoodSaveData[foodData.FoodID].level;
-
+        foodData.BasicSellingCostSet();
         if (foodData.upgradeCount != 0)
         {
             newImage.SetActive(true);
@@ -65,7 +65,7 @@ public class FoodUpgradeUIItem : MonoBehaviour
         {
             OnFoodLevelMax();
         }
-
+        
         levelText.text = foodData.upgradeCount.ToString();
         button.onClick.AddListener(OnButtonClick);
     }
@@ -89,7 +89,9 @@ public class FoodUpgradeUIItem : MonoBehaviour
             ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager
                 .OnEventInvoked(MissionMainCategory.UpgradeFood, 1, (int)foodData.FoodID);
             foodData.upgradeCount++;
+            foodData.SetSellingCost();
             foodUpgradePopup.SetInfo(this);
+            Debug.Log(foodData.SellingCost.ToString());
             levelText.text = foodData.upgradeCount.ToString();
             userData.Money -= foodData.BasicCost * foodData.upgradeCount;
             ingameGoodsUi.SetCostUi();
@@ -119,6 +121,7 @@ public class FoodUpgradeUIItem : MonoBehaviour
         lockImage.SetActive(false);
         newImage.SetActive(true);
         foodData.upgradeCount = 1;
+        foodData.SetSellingCost();
         levelText.text = foodData.upgradeCount.ToString();
     }
 

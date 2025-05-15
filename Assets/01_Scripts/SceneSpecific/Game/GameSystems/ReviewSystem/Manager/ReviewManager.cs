@@ -104,7 +104,7 @@ public class ReviewManager : MonoBehaviour
             reviewObj.reviewManager = this;
 
             ReviewSaveDataDAC.InsertReviewData(isBest, tempData.stringID, timeStamp).Forget();
-            UserDataManager.Instance.AddRankPointWithSave(reviewObj.data.addPoint);
+            UserDataManager.Instance.AddRankPointWithSave(reviewObj.data.addPoint).Forget();
 
             reviews.AddFirst(reviewObj.gameObject);
 

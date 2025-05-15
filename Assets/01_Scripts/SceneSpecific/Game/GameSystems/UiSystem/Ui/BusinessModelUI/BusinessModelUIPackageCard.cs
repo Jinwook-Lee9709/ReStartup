@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class BusinessModelUIPackageCard : MonoBehaviour
 {
-    public int times = 3;
     public int cost;
     public int adTicketValue, moneyValue, goldValue;
     [SerializeField] private Button mainButton;
@@ -25,16 +24,10 @@ public class BusinessModelUIPackageCard : MonoBehaviour
     }
     private void OnPopup()
     {
-        if (times <= 0)
-        {
-            businessModelUI.OnLimitationPackagePopup();
-            return;
-        }
+        //businessModelUI.OnLimitationPackagePopup();
+        //return;
+
         popup.gameObject.SetActive(true);
         popup.SetInfo(this);
-    }
-    public void Buy()
-    {
-        --times;
     }
 }

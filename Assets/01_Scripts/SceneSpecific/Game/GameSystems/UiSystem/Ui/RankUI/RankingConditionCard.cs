@@ -17,6 +17,7 @@ public class RankingConditionCard : MonoBehaviour
     private readonly string inflowrateIconSprite = "BuffIcon0";
     private readonly string moneyIconSprite = "Cash";
     private readonly string adTicketIconSprite = "AdBlockTicket";
+    private readonly string rankSt = "RankSt{0}";
     public RankConditionData rankConditionData;
 
     private Button button;
@@ -84,6 +85,7 @@ public class RankingConditionCard : MonoBehaviour
                 break;
         }
         reward2ValueText.text = rankConditionData.RewardAmount2.ToString();
+        explanationText.text = LZString.GetUIString(string.Format(rankSt, rankConditionData.Rank));
     }
 
     private void OnEnable()

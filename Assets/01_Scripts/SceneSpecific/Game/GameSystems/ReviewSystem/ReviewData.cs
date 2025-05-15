@@ -16,7 +16,7 @@ public class ReviewData
         stars = isBest ? 5 : 1;
         reviewMessage = LZString.GetUIString(stringID.ToString());
         date = dateTime.ToString("yyyy:MM:dd HH:mm");
-        addPoint = isBest ? 10 : -10;
+        addPoint = isBest ? 500 : -500;
         iconID = UnityEngine.Random.Range(1, 16).ToString("D3");
         userID = CreateRandomID();
     }
@@ -39,7 +39,7 @@ public class ReviewData
         stars = isBest ? 5 : 1;
         reviewMessage = LZString.GetUIString(this.stringID.ToString());
         date = dateTime.ToString("yyyy:MM:dd HH:mm");
-        addPoint = isBest ? 10 : -10;
+        addPoint = isBest ? 500 : -500;
         iconID = UnityEngine.Random.Range(1, 16).ToString("D3");
         userID = CreateRandomID();
     }

@@ -59,7 +59,7 @@ public class PromotionBase : IPromotion
 
     public virtual void Excute(BuffManager buffManager, bool needAd)
     {
-        UserDataManager.Instance.AddRankPointWithSave(10).Forget();
+        UserDataManager.Instance.AddRankPointWithSave(200).Forget();
         ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.Promotion, 1, PromotionID);
         ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.Promotion, 1);
     }
@@ -88,7 +88,7 @@ public class PromotionBase : IPromotion
 
     public virtual void Excute(BuffManager buffManager, ConsumerManager consumerManager, bool needAd)
     {
-        UserDataManager.Instance.AddRankPointWithSave(10).Forget();
+        UserDataManager.Instance.AddRankPointWithSave(200).Forget();
     }
 
     public void OnPayment(bool needAd)
