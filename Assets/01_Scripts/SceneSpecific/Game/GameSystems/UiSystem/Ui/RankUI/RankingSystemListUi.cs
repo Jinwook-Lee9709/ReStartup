@@ -11,7 +11,10 @@ public class RankingSystemListUi : MonoBehaviour
     public PlayerClone playerClone;
     public List<RankingSystemUiItem> items = new();
     private List<int> hatContisions = new();
-
+    private void Start()
+    {
+        AddPlayerPoints((int)UserDataManager.Instance.CurrentUserData.CurrentRankPoint);
+    }
     public void AddRankingSystemItem(RankingData data, List<int> hatContisions)
     {
         this.hatContisions = hatContisions;

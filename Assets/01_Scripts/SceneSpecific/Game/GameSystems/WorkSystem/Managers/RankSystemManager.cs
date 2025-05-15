@@ -51,6 +51,7 @@ public class RankSystemManager : MonoBehaviour
         //RankCoinditionCardAdd
 
         playerClone.GetComponent<PlayerClone>().playerData = playerData;
+        playerClone.GetComponent<PlayerClone>().OnActive(playerUiItem.rankingData);
     }
 
     private void OnDestroy()
