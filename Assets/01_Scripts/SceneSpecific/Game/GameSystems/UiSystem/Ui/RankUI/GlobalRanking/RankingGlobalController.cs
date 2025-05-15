@@ -21,6 +21,8 @@ public class RankingGlobalController : MonoBehaviour
 
     private int userRank = int.MaxValue;
     
+    public List<RankingGlobalUiItem> Items => rankingGlobalUiItems;
+    
     public void Awake()
     {
         List<AsyncOperationHandle<GameObject>> handleList = new();

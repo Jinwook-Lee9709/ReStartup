@@ -15,7 +15,9 @@ public class PlayerClone : MonoBehaviour
     [SerializeField] private TextMeshProUGUI playerRank;
     [SerializeField] private TextMeshProUGUI playerRankPoint;
     [SerializeField] private HatListController hats;
-
+    [SerializeField] private RankingSystemListUi listManager;
+    [SerializeField] private RectTransform contentRect;
+    
     private bool isActive = true;
 
     private void Start()
@@ -61,6 +63,26 @@ public class PlayerClone : MonoBehaviour
 
     public void OnClickClone()
     {
-        rect.DOVerticalNormalizedPos(Mathf.InverseLerp(50, 0, playerData.rank),1f);
+        MovePanelToCenter(playerData.rank);
     }
+    
+    
+    [VInspector.Button]
+    private void MovePanelToCenter(int index)
+    {
+        Vector3 contentPosition = contentRect.anchoredPosition;
+        Vector3 itemPosition = listManager.Items[index].transform.localPosition;
+        float contentHeight = contentRect.rect.size.y;
+        float viewportHeight = rect.viewport.rect.size.y;
+        float targetY = itemPosition.y + (viewportHeight / 2);
+        float maxY = 0;
+        float minY = -(contentHeight - viewportHeight);
+        targetY = Mathf.Clamp(targetY, minY, maxY);
+
+        Vector2 targetPosition = new Vector2(contentPosition.x, -targetY);
+        rect.velocity = Vector2.zero;
+        DOTween.To(() => contentRect.anchoredPosition, x => contentRect.anchoredPosition = x, targetPosition, 0.5f)
+            .SetEase(Ease.OutCubic).onComplete += () => { rect.velocity = Vector2.zero; };
+    }
+
 }

@@ -13,8 +13,8 @@ public class GlobalPlayerClone : MonoBehaviour
     [SerializeField] private TextMeshProUGUI playerRank;
     [SerializeField] private TextMeshProUGUI playerRankPoint;
     private int rankerCount = 0;
-    
-    
+    [SerializeField] private RectTransform contentRect;
+    [SerializeField] private RankingGlobalController listManager;
     private bool isActive = true;
 
     private void Start()
@@ -60,8 +60,24 @@ public class GlobalPlayerClone : MonoBehaviour
     {
         if (playerData.rank > 50)
             return;
-        var target = Math.Clamp(playerData.rank + 3, 0, rankerCount);
-        rect.DOVerticalNormalizedPos(Mathf.InverseLerp(rankerCount, 0, target),1f);
+        MovePanelToCenter(playerData.rank);
+    }
+    
+    private void MovePanelToCenter(int index)
+    {
+        Vector3 contentPosition = contentRect.anchoredPosition;
+        Vector3 itemPosition = listManager.Items[index].transform.localPosition;
+        float contentHeight = contentRect.rect.size.y;
+        float viewportHeight = rect.viewport.rect.size.y;
+        float targetY = itemPosition.y + (viewportHeight / 2);
+        float maxY = 0;
+        float minY = -(contentHeight - viewportHeight);
+        targetY = Mathf.Clamp(targetY, minY, maxY);
+
+        Vector2 targetPosition = new Vector2(contentPosition.x, -targetY);
+        rect.velocity = Vector2.zero;
+        DOTween.To(() => contentRect.anchoredPosition, x => contentRect.anchoredPosition = x, targetPosition, 0.5f)
+            .SetEase(Ease.OutCubic).onComplete += () => { rect.velocity = Vector2.zero; };
     }
 
 

@@ -6,7 +6,7 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.UI;
 
-public class RankingSystemUiItem : MonoBehaviour
+public class  RankingSystemUiItem : MonoBehaviour
 {
     public Image image;
     public TextMeshProUGUI nameText;
