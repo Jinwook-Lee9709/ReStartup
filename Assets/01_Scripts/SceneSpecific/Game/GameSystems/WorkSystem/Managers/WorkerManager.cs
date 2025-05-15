@@ -8,7 +8,7 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.AI;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-public class WorkerManager
+public class WorkerManager : IDisposable
 {
     //References
     private Dictionary<WorkType, List<Transform>> idleArea = new();
@@ -137,6 +137,10 @@ public class WorkerManager
         exhaustedWorkers.Remove(worker);
         workers[worker.WorkType].Add(worker);
         OnWorkerFree?.Invoke(worker.WorkType);
+    }
+    public void Dispose()
+    {
+        OnWorkerFree = null;
     }
 
     public bool IsWorkerAvailable(WorkType workType)

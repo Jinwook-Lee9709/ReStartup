@@ -239,5 +239,13 @@ public class GameManager : MonoBehaviour
     {
         WorkFlowController.CreateTrash(area);
     }
+
+    public void OnDestroy()
+    {
+        InteriorManager.Dispose();
+        WorkerManager.Dispose();
+        WorkManager.Dispose();
+        EmployeeManager.Dispose();
+    }
     //For Test
 }

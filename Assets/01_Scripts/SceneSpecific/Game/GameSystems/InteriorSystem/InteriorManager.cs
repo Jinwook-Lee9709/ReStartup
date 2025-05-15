@@ -5,7 +5,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-public class InteriorManager
+public class InteriorManager : IDisposable
 {
     private static readonly string FurnitureStringID = "FurnitureBase";
 
@@ -35,9 +35,10 @@ public class InteriorManager
         InitDecor();
     }
 
-    private void OnDestroy()
+    public void Dispose()
     {
-        UserDataManager.Instance.OnInteriorUpgradeEvent -= OnInteriorUpgrade;
+        if(UserDataManager.Instance != null)
+            UserDataManager.Instance.OnInteriorUpgradeEvent -= OnInteriorUpgrade;
     }
 
     public void ReferenceDataTable()

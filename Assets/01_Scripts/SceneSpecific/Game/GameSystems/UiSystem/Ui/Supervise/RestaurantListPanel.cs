@@ -5,6 +5,7 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 
@@ -33,6 +34,8 @@ public class RestaurantListPanel : MonoBehaviour
     
     public void Init(Action action, RestaurantSuperviseUIManager manager)
     {
+        SceneManager.sceneUnloaded -= OnSceneUnloaded;
+        SceneManager.sceneUnloaded += OnSceneUnloaded;
         uiManager = manager;
         currentTheme = (int)ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme;
         foreach (var id in Enum.GetValues(typeof(ThemeIds)))
@@ -48,6 +51,11 @@ public class RestaurantListPanel : MonoBehaviour
         SetButtonActive();
     }
 
+    private void OnSceneUnloaded(Scene scene)
+    {
+        OnDestroy();
+    }
+
     private void OnDestroy()
     {
         if (UserDataManager.Instance != null)
@@ -55,6 +63,7 @@ public class RestaurantListPanel : MonoBehaviour
             UserDataManager.Instance.OnRankChangedEvent -= OnRankChanged;
             UserDataManager.Instance.ChangeMoneyAction -= OnMoneyChanged;
         }
+        SceneManager.sceneUnloaded -= OnSceneUnloaded;
     }
 
     private void Start()

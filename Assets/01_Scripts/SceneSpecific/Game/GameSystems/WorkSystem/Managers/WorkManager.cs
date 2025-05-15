@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-public class WorkManager
+public class WorkManager : IDisposable
 {
     public WorkDurationRatioSO workDurationRatio;
     private WorkerManager workerManager;
@@ -206,4 +206,10 @@ public class WorkManager
 
 
     #endregion
+
+    public void Dispose()
+    {
+        if(workerManager != null)
+            workerManager.OnWorkerFree -= OnWorkerReturned;
+    }
 }

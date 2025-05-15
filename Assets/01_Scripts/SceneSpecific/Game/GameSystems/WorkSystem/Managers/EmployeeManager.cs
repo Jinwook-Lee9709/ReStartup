@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using Object = UnityEngine.Object;
 
-public class EmployeeManager
+public class EmployeeManager : IDisposable
 {
     private readonly string employeePrefab = "Employee{0}";
     
@@ -120,5 +120,12 @@ public class EmployeeManager
             newEmployee.EmployeeData.currentHealth = employeeData.Health;
         }
         newEmployee.AdjustTimer(save.remainHpDecreaseTime);
+    }
+
+
+    public void Dispose()
+    {
+        buffManager.OnBuffUsed -= OnBuffUsed;
+        buffManager.OnBuffExpired -= OnBuffExpired;
     }
 }

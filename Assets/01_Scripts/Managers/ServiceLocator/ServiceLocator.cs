@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using VInspector;
 
 public class ServiceLocator : Singleton<ServiceLocator>
 {
-    private readonly Dictionary<Type, object> globalServices = new();
+    private readonly SerializedDictionary<Type, object> globalServices = new();
     private readonly Dictionary<Type, object> sceneServices = new();
 
     public void Awake()

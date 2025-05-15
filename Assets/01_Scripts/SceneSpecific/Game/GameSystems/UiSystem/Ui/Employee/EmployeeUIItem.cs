@@ -120,13 +120,13 @@ public class EmployeeUIItem : MonoBehaviour
         }
 
         button.interactable = false;
-        if (employeeSaveData[employeeId].level < 1 && userData.Money > employeeData.Cost)
+        if (employeeSaveData[employeeId].level < 1 && userData.Money >= employeeData.Cost)
         {
             ServiceLocator.Instance.GetSceneService<GameManager>().EmployeeManager.InstantiateAndRegisterWorker(employeeData);
             ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.HireStaff, 1, (int)employeeData.StaffID);
             OnUpgradeEmployee();
         }
-        else if (userData.Money > employeeData.Cost * employeeSaveData[employeeId].level)
+        else if (userData.Money >= employeeData.Cost * employeeSaveData[employeeId].level)
         {
             ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.UpgradeStaff, 1, (int)employeeData.StaffID);
             OnUpgradeEmployee();

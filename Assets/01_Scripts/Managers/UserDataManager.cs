@@ -1,14 +1,27 @@
 using System;
-
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 public class UserDataManager : Singleton<UserDataManager>
 {
     private UserData currentUserData = new();
+
     private UserDataManager()
     {
+        SceneManager.sceneUnloaded += OnSceneUnloaded;
+    }
+
+    private void OnSceneUnloaded(Scene scene)
+    {
+        ChangeMoneyAction = null;
+        ChangeGoldAction = null;
+        ChangeRankPointAction = null;
+        OnInteriorUpgradeEvent = null;
+        OnReviewCntFullEvent = null;
+        OnRankChangedEvent = null;
+        ChangeAdTicketAction = null;
     }
 
     public UserData CurrentUserData
@@ -46,13 +59,13 @@ public class UserDataManager : Singleton<UserDataManager>
     {
         var currentTheme = ServiceLocator.Instance.GetSceneService<GameManager>().CurrentTheme;
         OnRankPointUp(rankPoint);
-        var response = await ThemeRecordDAC.UpdateThemeRankpoint((int)currentTheme, (int)currentUserData.CurrentRankPoint);
+        var response =
+            await ThemeRecordDAC.UpdateThemeRankpoint((int)currentTheme, (int)currentUserData.CurrentRankPoint);
         return response;
     }
 
     public void GetTotalRankPoint()
     {
-
     }
 
     public async UniTask SetRankWithSave(int rank)
@@ -98,6 +111,7 @@ public class UserDataManager : Singleton<UserDataManager>
         {
             AudioManager.Instance.PlaySFX("GetMoney");
         }
+
         CurrentUserData.Gold += gold;
         ChangeGoldAction?.Invoke(CurrentUserData.Gold);
     }
@@ -115,6 +129,7 @@ public class UserDataManager : Singleton<UserDataManager>
         list.Add(data);
         await CurrencyDataDAC.UpdateCurrencyData(list);
     }
+
     public void AdjustAdTicket(int ticket)
     {
         CurrentUserData.AdTicket += ticket;
@@ -134,6 +149,7 @@ public class UserDataManager : Singleton<UserDataManager>
         list.Add(data);
         await CurrencyDataDAC.UpdateCurrencyData(list);
     }
+
     public async UniTask UpgradeInterior(int interiorId)
     {
         CurrentUserData.InteriorSaveData[interiorId]++;
@@ -228,7 +244,8 @@ public class UserDataManager : Singleton<UserDataManager>
             {
                 OnReviewCntFullEvent?.Invoke(isPositive);
                 currentUserData.PositiveCnt = 0;
-                ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager.OnEventInvoked(MissionMainCategory.GoodReview, 1);
+                ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager
+                    .OnEventInvoked(MissionMainCategory.GoodReview, 1);
                 ReviewCountUp(isPositive);
             }
         }
