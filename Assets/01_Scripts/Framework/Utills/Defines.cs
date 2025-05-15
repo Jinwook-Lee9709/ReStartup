@@ -430,7 +430,7 @@ public static class Colors
         new Color(Mathf.InverseLerp(0, 255, 255), Mathf.InverseLerp(0, 255, 249), Mathf.InverseLerp(0, 255, 159)),
         new Color(Mathf.InverseLerp(0, 255, 255), Mathf.InverseLerp(0, 255, 128), Mathf.InverseLerp(0, 255, 125))
     };
-
+    public static Color rankPanelPlayerColor = new(1, 0.9855481f, 0.6462264f);
     public static Color invisibleBlack = new Color(0, 0, 0, 0);
     public static Color invisibleWhite = new Color(1, 1, 1, 0);
 

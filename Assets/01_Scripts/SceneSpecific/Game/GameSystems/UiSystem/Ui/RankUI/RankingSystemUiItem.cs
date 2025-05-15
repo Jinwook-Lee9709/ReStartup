@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public class RankingSystemUiItem : MonoBehaviour
 {
     public Image image;
+    [SerializeField] Image frame;
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI rankingText;
     public TextMeshProUGUI rankingPointText;
@@ -27,6 +28,7 @@ public class RankingSystemUiItem : MonoBehaviour
     {
         if (rankingData.RestaurantName == UserDataManager.Instance.CurrentUserData.Name)
         {
+            frame.color = Colors.rankPanelPlayerColor;
             rankingData.rankingPoint = (int)UserDataManager.Instance.CurrentUserData.CurrentRankPoint;
             nameText.text = UserDataManager.Instance.CurrentUserData.Name;
         }

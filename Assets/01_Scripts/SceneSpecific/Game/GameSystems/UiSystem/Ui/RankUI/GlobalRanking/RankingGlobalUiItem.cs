@@ -2,13 +2,14 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RankingGlobalUiItem : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI rankText;
     [SerializeField] private TextMeshProUGUI userNameText;
     [SerializeField] private TextMeshProUGUI rankPointText;
-
+    [SerializeField] private Image background;
     private string uuid;
     private int rankPoint;
     
@@ -25,6 +26,10 @@ public class RankingGlobalUiItem : MonoBehaviour
         if(this.uuid == uuid && rankPoint == this.rankPoint)
         {
             return;
+        }
+        if(userName == UserDataManager.Instance.CurrentUserData.Name)
+        {
+            background.color = Colors.rankPanelPlayerColor;
         }
         this.rankPoint = rankPoint;
         this.uuid = uuid;
