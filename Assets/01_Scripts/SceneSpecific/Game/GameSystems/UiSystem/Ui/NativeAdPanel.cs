@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -17,10 +18,16 @@ public class NativeAdPanel : MonoBehaviour
             parentCanvas = GetComponentInParent<Canvas>();
         }
 
-
         var adSize = new Vector2(Screen.width, GetUIHeightInScreenPixels());
         var adPos = Utills.GetLogicalViewPort(GetAdjustPixelPosition());
+        NativeAdRender(adSize, adPos).Forget();
+    }
 
+    private async UniTask NativeAdRender(Vector2 adSize, Vector2 adPos)
+    {
+        await UniTask.Yield(PlayerLoopTiming.PostLateUpdate);
+
+        Debug.Log($"ScreenHeight : {Screen.height}, AdPos : {adPos}");
         AdvertisementManager.Instance.RenderNativeAd(adSize, adPos);
         AdvertisementManager.Instance.ShowNativeAd();
     }

@@ -91,7 +91,6 @@ public class AdvertisementManager : Singleton<AdvertisementManager>
 
     public void RenderNativeAd(Vector2 adSize, Vector2 adPosition)
     {
-        Debug.Log($"ScreenSize : {adSize}\nScreenPos : {adPosition}");
         if (nativeAd == null)
             LoadNativeAd();
         if (nativeAd != null)
@@ -109,7 +108,6 @@ public class AdvertisementManager : Singleton<AdvertisementManager>
                 }
             };
             AdSize currentAdSize = new((int)adSize.x, (int)adSize.y);
-            Debug.Log($"ScreenSize : {adSize}\nScreenPosY : {adPosition.y}");
             nativeAd.RenderTemplate(style, currentAdSize, 0, (int)adPosition.y);
         }
     }

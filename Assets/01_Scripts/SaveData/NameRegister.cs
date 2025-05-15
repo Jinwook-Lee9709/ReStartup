@@ -24,25 +24,29 @@ public class NameRegister : MonoBehaviour
 
     private void OnRegistButtonTouch()
     {
+        int idx = 1;
         if(nameInput.text.Length >= nameLengthLimit)
         {
-            WarningMessageActive("글자 수가 초과되었습니다.");
+            WarningMessageActive(LZString.GetUIString(string.Format(Strings.nameWarningFormat,idx.ToString())));
             return;
         }
+        idx++;
         if(nameInput.text == "")
         {
-            WarningMessageActive("이름을 입력해주세요.");
+            WarningMessageActive(LZString.GetUIString(string.Format(Strings.nameWarningFormat, idx.ToString())));
             return;
         }
+        idx++;
         var check = nameInput.text;
         if (!RegexFilter.SpecialStringFilter(check))
         {
-            WarningMessageActive("특수문자가 존재합니다.");
+            WarningMessageActive(LZString.GetUIString(string.Format(Strings.nameWarningFormat, idx.ToString())));
             return;
         }
+        idx++;
         if (!RegexFilter.BadWordFilter(check))
         {
-            WarningMessageActive("비속어가 포함 되어 있습니다.");
+            WarningMessageActive(LZString.GetUIString(string.Format(Strings.nameWarningFormat, idx.ToString())));
             return;
         }
         SaveName(check).Forget();
