@@ -9519,6 +9519,7 @@ MonoBehaviour:
   uiQuest: {fileID: 1382448446}
   uiPreferences: {fileID: 1839357297}
   uiGuide: {fileID: 2002219942}
+  uiBusinessModel: {fileID: 0}
   inGameUi: {fileID: 415523618}
 --- !u!4 &344316610
 Transform:
@@ -11077,6 +11078,9 @@ MonoBehaviour:
   upgradeUIMoney: {fileID: 1745166654}
   upgradeUIGold: {fileID: 656120520}
   rankPointText: {fileID: 1694296490}
+  businessModelUIMoney: {fileID: 0}
+  businessModelUIGold: {fileID: 0}
+  businessModelUIAdTicket: {fileID: 0}
 --- !u!224 &415523619
 RectTransform:
   m_ObjectHideFlags: 0
@@ -48898,6 +48902,7 @@ MonoBehaviour:
   descriptionText: {fileID: 1247932801}
   background: {fileID: 1632633595}
   panel: {fileID: 1632633594}
+  canvas: {fileID: 0}
 --- !u!1 &1632958462
 GameObject:
   m_ObjectHideFlags: 0
@@ -52164,7 +52169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poolParent: {fileID: 1397034241}
   surface2D: {fileID: 1528191182}
-  mapPivotLocator: {fileID: 38593594}
+  mapRendererLocator: {fileID: 38593594}
   rankSystemManager: {fileID: 1932019520}
   alarm: {fileID: 152859533}
   consumerManager: {fileID: 1941923294}
@@ -58132,6 +58137,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   content: {fileID: 981780515}
+  popup: {fileID: 0}
 --- !u!1 &2012627589
 GameObject:
   m_ObjectHideFlags: 0
@@ -62916,11 +62922,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 611946141896760541, guid: cf2313901cc2f423fa400fcefb90c32c, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 874.92896
+      value: 897.8948
       objectReference: {fileID: 0}
     - target: {fileID: 611946141896760541, guid: cf2313901cc2f423fa400fcefb90c32c, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 437.46448
+      value: 448.9474
       objectReference: {fileID: 0}
     - target: {fileID: 611946141896760541, guid: cf2313901cc2f423fa400fcefb90c32c, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -62976,7 +62982,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7991556672581869495, guid: cf2313901cc2f423fa400fcefb90c32c, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 874.92896
+      value: 897.8948
       objectReference: {fileID: 0}
     - target: {fileID: 7991556672581869495, guid: cf2313901cc2f423fa400fcefb90c32c, type: 3}
       propertyPath: m_SizeDelta.y
@@ -63012,7 +63018,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7991556672581869495, guid: cf2313901cc2f423fa400fcefb90c32c, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 457.46448
+      value: 468.9474
       objectReference: {fileID: 0}
     - target: {fileID: 7991556672581869495, guid: cf2313901cc2f423fa400fcefb90c32c, type: 3}
       propertyPath: m_AnchoredPosition.y

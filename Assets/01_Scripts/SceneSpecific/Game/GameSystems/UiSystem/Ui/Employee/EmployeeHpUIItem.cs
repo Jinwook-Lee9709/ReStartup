@@ -9,6 +9,7 @@ using UnityEngine.UI;
 
 public class EmployeeHpUIItem : MonoBehaviour
 {
+    static readonly string employeeName = "EmployeeName{0}";
     public Image image;
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI hpText;
@@ -125,7 +126,7 @@ public class EmployeeHpUIItem : MonoBehaviour
     {
         this.employee = employee;
         employeeData = employee.EmployeeData;
-        nameText.text = employeeData.StaffID.ToString();
+        nameText.text = LZString.GetUIString(string.Format(employeeName, employeeData.StaffID));
         HpSet();
     }
     public void EmployeeHpSet()
