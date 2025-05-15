@@ -16,6 +16,10 @@ public class RankingGlobalUiItem : MonoBehaviour
     
     public void SetInfo(int rank, string userName,int rankPoint, string uuid)
     {
+        if(userName == UserDataManager.Instance.CurrentUserData.Name)
+        {
+            background.color = Colors.rankPanelPlayerColor;
+        }
         if (string.IsNullOrEmpty(this.uuid))
         {
             this.uuid = uuid;
@@ -26,10 +30,6 @@ public class RankingGlobalUiItem : MonoBehaviour
         if(this.uuid == uuid && rankPoint == this.rankPoint)
         {
             return;
-        }
-        if(userName == UserDataManager.Instance.CurrentUserData.Name)
-        {
-            background.color = Colors.rankPanelPlayerColor;
         }
         this.rankPoint = rankPoint;
         this.uuid = uuid;

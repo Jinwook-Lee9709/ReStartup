@@ -45,7 +45,7 @@ public class EmployeeTableGetData
     {
         WorkSpeed = defaultWorkSpeed - (upgradeCount * upgradeWorkSpeed);
         MoveSpeed = defaultMoveSpeed + (upgradeCount * upgradeMoveSpeed);
-        Health = defaultHealth + (upgradeCount * upgradeHealth);
+        Health = defaultHealth + ((upgradeCount - 1) * upgradeHealth);
         float upgradeSquareValue = upgradeCostValue;
         for (int i = 1; i < upgradeCount; i++)
         {
