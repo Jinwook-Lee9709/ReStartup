@@ -57,6 +57,10 @@ public class MissionManager
                             continue;
                         }
                     }
+                    if (isNextExist)
+                    {
+                        continue;
+                    }
                 }
             }
             if (item.Theme != (int)gameManager.CurrentTheme && item.Theme != 0)

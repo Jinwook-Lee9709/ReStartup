@@ -76,7 +76,7 @@ public class QuestCard : MonoBehaviour
             rewardClaimed = true;
             completeImage.gameObject.SetActive(true);
         }
-
+        UpdateMissionUICard(mission.Count);
         missionManager.ReorderMissionCard(missionData.MissionId);
     }
     public void Init(MissionData data, Mission mis)
