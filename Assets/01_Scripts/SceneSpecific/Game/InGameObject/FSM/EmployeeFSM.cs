@@ -6,6 +6,8 @@ using UnityEngine;
 public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
 {
     [SerializeField] private Transform handPivot;
+    [SerializeField] private Transform originHandPivot;
+    [SerializeField] private Transform serveHandPivot;
     [SerializeField] private GameObject exhaustedBubble;
     private readonly float upgradeWorkSpeedValue = 0.02f;
 
@@ -22,7 +24,7 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     public int CurrentLevel => UserDataManager.Instance.CurrentUserData.EmployeeSaveData[EmployeeData.StaffID].level;
 
     public UiManager uiManager;
-    
+
     private SPUM_Prefabs model;
     public SPUM_Prefabs Model => model;
 
@@ -53,11 +55,9 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
             }
         }
     }
-    
     private void Start()
     {
         OnUpgrade();
-        
         model = GetComponentInChildren<SPUM_Prefabs>();
         model.OverrideControllerInit();
         uiManager = GameObject.FindWithTag("UIManager").GetComponent<UiManager>();
@@ -74,10 +74,16 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
 
     private void Update()
     {
-        if(prevXPos > transform.position.x)
+        if (prevXPos > transform.position.x)
+        {
             model.transform.localScale = new Vector3(1, 1, 1);
+            HandPivot.position = originHandPivot.position;
+        }
         else
+        {
             model.transform.localScale = new Vector3(-1, 1, 1);
+            HandPivot.position = serveHandPivot.position;
+        }
         prevXPos = transform.position.x;
         switch (currentStatus)
         {
@@ -98,20 +104,20 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
         currentTimer += Time.deltaTime;
         int currentInterval = (int)(currentTimer / Constants.BUFF_SAVE_INTERVAL);
         int previousInterval = (int)(prev / Constants.BUFF_SAVE_INTERVAL);
-    
+
         if (currentInterval != previousInterval)
         {
             var saveData = UserDataManager.Instance.CurrentUserData.EmployeeSaveData[EmployeeData.StaffID];
             saveData.remainHp = EmployeeData.currentHealth;
             saveData.remainHpDecreaseTime = currentTimer;
-            
+
             EmployeeSaveDataDAC.UpdateEmployeeData(saveData).Forget();
         }
-        
+
         if (healthDecreaseTimer < currentTimer)
         {
             currentTimer = 0;
-            if (EmployeeData.currentHealth == 0) 
+            if (EmployeeData.currentHealth == 0)
                 return;
             DecreaseHp(Constants.HEALTH_DECREASE_AMOUNT_ONTIMEFINISHED);
             uiManager.EmployeeHpSet(this);
@@ -122,16 +128,16 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     {
         currentTimer = timer;
     }
-    
+
     public void PlayWorkAnimation()
     {
-        if(model!= null)
+        if (model!= null)
             Model.PlayAnimation(PlayerState.IDLE, 1);
     }
 
     public void PlayWalkAnimation()
     {
-        if(model!= null)
+        if (model!= null)
             model.PlayAnimation(PlayerState.MOVE, 0);
     }
 
@@ -164,9 +170,9 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
         EmployeeData.currentHealth = Mathf.Clamp(EmployeeData.currentHealth, 0, EmployeeData.Health);
         UserDataManager.Instance.CurrentUserData.EmployeeSaveData[EmployeeData.StaffID].remainHp = EmployeeData.currentHealth;
         UserDataManager.Instance.CurrentUserData.EmployeeSaveData[EmployeeData.StaffID].remainHpDecreaseTime = currentTimer;
-        
+
         EmployeeSaveDataDAC.UpdateEmployeeData(UserDataManager.Instance.CurrentUserData.EmployeeSaveData[EmployeeData.StaffID]).Forget();
-        
+
         if (IsExhausted)
         {
             IsExhausted = false;
@@ -198,7 +204,7 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
 
     private void UpdateReturnidleArea()
     {
-        if (agent.IsArrive(idleArea)) 
+        if (agent.IsArrive(idleArea))
             CurrentStatus = WorkerState.Idle;
     }
 
@@ -228,7 +234,7 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     {
         agent.speed = defaultMoveSpeed;
     }
-    
+
     public void RemoveWorkSpeedBuff()
     {
         interactionSpeed = defaultWorkSpeed;
@@ -243,5 +249,5 @@ public class EmployeeFSM : WorkerBase, IInteractor, ITransportable
     {
         return interactionSpeed;
     }
-    
+
 }
