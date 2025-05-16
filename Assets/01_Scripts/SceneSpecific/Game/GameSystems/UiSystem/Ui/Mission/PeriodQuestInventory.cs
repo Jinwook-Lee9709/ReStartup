@@ -170,7 +170,7 @@ public class PeriodQuestInventory : MonoBehaviour
     {
         foreach (var item in rastorantQuestList)
         {
-            if (!item.rewardClaimed && item.clear)
+            if (item.clear)
             {
                 item.OnButtonClick();
             }
