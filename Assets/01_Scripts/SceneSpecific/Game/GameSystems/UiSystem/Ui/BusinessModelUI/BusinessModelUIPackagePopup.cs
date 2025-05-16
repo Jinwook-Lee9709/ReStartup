@@ -44,6 +44,7 @@ public class BusinessModelUIPackagePopup : MonoBehaviour
     private void OnEnable()
     {
         background.interactable = false;
+        mainButton.interactable = true;
         if (background != null)
         {
             var backgroundImage = background.GetComponent<Image>();
@@ -64,6 +65,7 @@ public class BusinessModelUIPackagePopup : MonoBehaviour
         //    OnClose();
         //    return;
         //}
+        mainButton.interactable = false;
         var userDataManager = UserDataManager.Instance;
         await userDataManager.AdjustMoneyWithSave(currentCard.moneyValue);
         await userDataManager.AdjustGoldWithSave(currentCard.goldValue);

@@ -63,6 +63,7 @@ public class BusinessModelUIBuyPopup : MonoBehaviour
     private void OnEnable()
     {
         background.interactable = false;
+        mainButton.interactable = true;
         if (background != null)
         {
             var backgroundImage = background.GetComponent<Image>();
@@ -78,6 +79,7 @@ public class BusinessModelUIBuyPopup : MonoBehaviour
 
     private void OnMainButtonTouched()
     {
+        mainButton.interactable = false;
         switch (currentCard.costType)
         {
             case CostType.Free:
