@@ -231,9 +231,6 @@ public class ConsumerFSM : MonoBehaviour
             case ConsumerState.AfterOrder:
                 UpdateAfterOrder();
                 break;
-            case ConsumerState.Eatting:
-                UpdateEatting();
-                break;
             case ConsumerState.WaitForPay:
                 UpdateWaitForPay();
                 break;
@@ -256,7 +253,6 @@ public class ConsumerFSM : MonoBehaviour
         isPaying = false;
         isOnSeat = false;
         isTip = false;
-        alreadyTip = false;
     }
 
     public async UniTask SetModel()
@@ -281,7 +277,6 @@ public class ConsumerFSM : MonoBehaviour
 
     public bool IsTip()
     {
-        alreadyTip = true;
         if (consumerData.GuestType != GuestType.BadGuest)
         {
             if (consumer.needFood.FoodID == consumerData.LoveFoodId)
@@ -316,7 +311,6 @@ public class ConsumerFSM : MonoBehaviour
             Cost += Mathf.CeilToInt(consumer.needFood.SellingCost * (consumerData.SellTipPercent / 100f));
             ServiceLocator.Instance.GetSceneService<GameManager>().MissionManager
                 .OnEventInvoked(MissionMainCategory.GetTip, 1);
-            //TODO : Get Tip
         }
 
         UserDataManager.Instance.AdjustMoneyWithSave(Cost).Forget();
@@ -570,16 +564,6 @@ public class ConsumerFSM : MonoBehaviour
                 iconBubble.SetColorSatisfaction(Colors.satisfactionColors[1], Colors.satisfactionColors[2], middleLerp);
                 break;
         }
-    }
-
-    private void UpdateEatting()
-    {
-        //�Ļ����� ����.
-    }
-
-
-    private void UpdateBeforePay()
-    {
     }
 
     private void UpdateWaitForPay()

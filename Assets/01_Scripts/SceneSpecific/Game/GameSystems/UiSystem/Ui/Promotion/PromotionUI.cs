@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,9 +25,9 @@ public class PromotionUI : MonoBehaviour
 
     private void Update()
     {
-        if(Application.platform == RuntimePlatform.Android)
+        if (Application.platform == RuntimePlatform.Android)
         {
-            if(Input.GetKey(KeyCode.Escape))
+            if (Input.GetKey(KeyCode.Escape))
             {
                 ServiceLocator.Instance.GetSceneService<GameManager>().uiManager.OnClickButtonExitPromotionUI();
             }
@@ -37,10 +38,10 @@ public class PromotionUI : MonoBehaviour
         promotionData = promotion;
         promotionNameText.text = $"{promotionData.promotionName}";
         promotionEffectText.text = $"{promotionData.promotionDescription}";
-        
-        var sprite = Addressables.LoadAssetAsync<Sprite>(String.Format(Strings.promotionIconFormat,promotionData.PromotionType)).WaitForCompletion();
+
+        var sprite = Addressables.LoadAssetAsync<Sprite>(String.Format(Strings.promotionIconFormat, promotionData.PromotionType)).WaitForCompletion();
         promotionImage.sprite = sprite;
-        
+
         switch (promotionData.CostType)
         {
             case CostType.Free:
@@ -56,8 +57,8 @@ public class PromotionUI : MonoBehaviour
                 costText.text = promotionData.CostQty.ToString(Strings.costFormat);
                 break;
         }
-        
-        
+
+
         UpdateUI();
     }
 
@@ -68,8 +69,16 @@ public class PromotionUI : MonoBehaviour
         return handle.Result;
     }
 
+    private async UniTask ButtonClose(Button button)
+    {
+        button.interactable = false;
+        await UniTask.WaitForSeconds(0.5f);
+        button.interactable = true;
+    }
+
     public void OnPayButtonClick()
     {
+        ButtonClose(payButton).Forget();
         if (promotionData.PromotionType == PromotionType.SNS)
         {
             promotionData.Excute(buffManager, false);
@@ -81,6 +90,7 @@ public class PromotionUI : MonoBehaviour
     }
     public void OnAdButtonClick()
     {
+        ButtonClose(adButton).Forget();
         if (promotionData.PromotionType == PromotionType.SNS)
         {
             promotionData.Excute(buffManager, true);
@@ -94,7 +104,7 @@ public class PromotionUI : MonoBehaviour
     public void UpdateUI()
     {
         payButton.interactable = true;
-         adButton.interactable = true;
+        adButton.interactable = true;
         if (promotionData.currentLimitAD <= 0)
         {
             promotionData.currentLimitAD = 0;

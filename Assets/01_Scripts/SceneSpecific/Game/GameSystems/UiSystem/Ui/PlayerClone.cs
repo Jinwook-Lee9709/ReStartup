@@ -63,7 +63,7 @@ public class PlayerClone : MonoBehaviour
 
     public void OnClickClone()
     {
-        MovePanelToCenter(playerData.rank);
+        MovePanelToCenter(playerData.rank - 1);
     }
     
     
