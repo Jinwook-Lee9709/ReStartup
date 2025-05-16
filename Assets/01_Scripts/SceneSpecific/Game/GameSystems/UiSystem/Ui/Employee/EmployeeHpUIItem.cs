@@ -51,8 +51,7 @@ public class EmployeeHpUIItem : MonoBehaviour
     }
     public void EmployeeAllRecovery(int val, CostType type)
     {
-        var userDataManager = UserDataManager.Instance;
-        if(CostType.Free == type)
+        if (CostType.Free == type)
         {
             AdvertisementManager.Instance.ShowRewardedAd(async () =>
             {
@@ -102,14 +101,11 @@ public class EmployeeHpUIItem : MonoBehaviour
         if (buyCost > (int)UserDataManager.Instance.CurrentUserData.Money)
         {
             OnNotEnoughCostPopUp();
-            Debug.Log("돈모자람");
             return false;
         }
         if (employeeData.currentHealth >= employeeData.Health)
         {
             OnEmployeeHpFullPopUp();
-            Debug.Log("체력꽉참");
-
             return false;
         }
         return true;
