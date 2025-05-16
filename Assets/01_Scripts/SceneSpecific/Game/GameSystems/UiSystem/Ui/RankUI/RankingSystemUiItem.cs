@@ -8,7 +8,6 @@ using UnityEngine.UI;
 
 public class  RankingSystemUiItem : MonoBehaviour
 {
-    public Image image;
     [SerializeField] Image frame;
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI rankingText;

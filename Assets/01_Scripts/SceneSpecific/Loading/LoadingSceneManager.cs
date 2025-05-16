@@ -1,14 +1,17 @@
 using System;
 using Cysharp.Threading.Tasks;
+using TMPro;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
+using UnityEngine.AddressableAssets;
 using Slider = UnityEngine.UI.Slider;
 
 public class LoadingSceneManager : MonoBehaviour
 {
     private static readonly string titleSceneId = "TitleScene";
+    private static readonly string loadingStringFormat = "LOADING...{0}%";
     [SerializeField] private Slider progressBar;
+    [SerializeField] private TextMeshProUGUI progressText;
     
     private void Awake()
     {
@@ -47,6 +50,7 @@ public class LoadingSceneManager : MonoBehaviour
                 while (!sceneHandle.IsDone)
                 {
                     progressBar.value = sceneHandle.PercentComplete * 100;
+                    progressText.text = String.Format(loadingStringFormat, Math.Truncate(progressBar.value));
                     Debug.Log(progressBar.value);
                     await UniTask.Yield();
                 }

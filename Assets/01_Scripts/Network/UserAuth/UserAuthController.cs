@@ -49,7 +49,7 @@ public static class UserAuthController
     {
         Dictionary<string, string> payload = new Dictionary<string, string>();
         payload.Add("uuid", GuestLoginManager.UUID);
-        var response =  await RestApiService.GetAsync<TokenData>(Endpoints.GuestLoginUrl, payload);
+        var response = await RestApiService.GetAsync<TokenData>(Endpoints.GuestLoginUrl, payload);
         if(response.ResponseCode != ResponseType.Success) return null;
         return response.Data;
     }

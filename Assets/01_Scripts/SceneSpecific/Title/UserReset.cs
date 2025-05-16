@@ -10,11 +10,18 @@ public class UserReset : MonoBehaviour
     [SerializeField] private Button button;
     [SerializeField] private Button startButton;
     [SerializeField] private Button loginButton;
+    [SerializeField] private Button retryButton;
 
     private void Start()
     {
         button.onClick.AddListener(OnDeleteButtonTouched);
         button.interactable = GuestLoginManager.ReadUUID();
+
+        if (PlayerPrefs.GetInt("ECET_CLEAR_ALL") != 1 && button.interactable)
+        {
+            DeleteUserTask().Forget();
+        }
+        
     }
     
     public void OnDeleteButtonTouched()
@@ -39,7 +46,9 @@ public class UserReset : MonoBehaviour
         GuestLoginManager.DeleteUUID();
         
         startButton.gameObject.SetActive(false);
+        startButton.interactable = true;
         loginButton.gameObject.SetActive(true);
+        retryButton.gameObject.SetActive(false);
         
     }
 

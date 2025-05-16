@@ -17,6 +17,7 @@ public class TitleSceneManager : MonoBehaviour
     [SerializeField] private Button startButton;
     [SerializeField] private Button guestLoginButton;
     [SerializeField] private Button resetUserButton;
+    [SerializeField] private Button loginButton;
 
     [SerializeField] private Button closeButton;
     [SerializeField] private Button testButton;
@@ -39,6 +40,7 @@ public class TitleSceneManager : MonoBehaviour
     {
         startButton.onClick.AddListener(OnStartButtonClick);
         guestLoginButton.onClick.AddListener(OnGuestLoginButtonClick);
+        loginButton.onClick.AddListener(RetryLogin);
         koreanChangeButton.onClick.AddListener(SwitchToKorean);
         englishChangeButton.onClick.AddListener(SwitchToEnglish);
         languageSettingButton.onClick.AddListener(OpenOrExitSetting);
@@ -54,17 +56,40 @@ public class TitleSceneManager : MonoBehaviour
             guestLoginButton.gameObject.SetActive(true);
             return;
         }
-        await LoginAsGuest();
+
+        var isSucceed = await LoginAsGuest();
+        if (!isSucceed)
+        {
+            PopupLoginFailAlert().Forget();
+            startButton.gameObject.SetActive(true);
+            startButton.interactable = false;
+            guestLoginButton.gameObject.SetActive(false);
+            loginButton.gameObject.SetActive(true);
+            return;
+        }
         
         if (!TokenManager.ReadToken())
         {
             startButton.gameObject.SetActive(false);
             guestLoginButton.gameObject.SetActive(true);
+            guestLoginButton.interactable = true;
             return;
         }
-        
+
         startButton.gameObject.SetActive(true);
+        startButton.interactable = true;
         guestLoginButton.gameObject.SetActive(false);
+        loginButton.gameObject.SetActive(false);
+    }
+
+    private async UniTask PopupLoginFailAlert()
+    {
+        await UniTask.Yield();
+        var title = LZString.GetUIString("LoginFailTitle");
+        var message = LZString.GetUIString("LoginFailDescription");
+        var popup = ServiceLocator.Instance.GetGlobalService<AlertPopup>();
+        Debug.Log(popup==null);
+        popup?.PopUp(title, message, isError: true);
     }
 
     private async UniTask BgmPlayTask()
@@ -77,6 +102,11 @@ public class TitleSceneManager : MonoBehaviour
     private void OnStartButtonClick()
     {
         GameStartTask().Forget();
+    }
+
+    private void RetryLogin()
+    {
+        SetInitialStatus();
     }
 
     private async UniTask GameStartTask()
@@ -137,12 +167,13 @@ public class TitleSceneManager : MonoBehaviour
         guestLoginButton.gameObject.SetActive(false);
     }
 
-    private async UniTask LoginAsGuest()
+    private async UniTask<bool> LoginAsGuest()
     {
         var token = await UserAuthController.LoginAsGuestTask();
         if (token == null)
-            return;
+            return false;
         TokenManager.SaveToken(token.token, token.refreshToken);
+        return true;
     }
 
     private async UniTask BeforeLobbySceneLoad()

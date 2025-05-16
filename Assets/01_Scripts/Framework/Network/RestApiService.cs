@@ -206,7 +206,8 @@ public static class RestApiService
         {
             var title = LZString.GetUIString("NetworkFailureAlertTitle");
             var message = LZString.GetUIString("NetworkFailureAlertDescription");
-            ServiceLocator.Instance.GetGlobalService<AlertPopup>().PopUp(title, message, isError: true);
+            var popup = ServiceLocator.Instance.GetGlobalService<AlertPopup>();
+            popup?.PopUp(title, message, isError: true);
             return false;
         }
 
