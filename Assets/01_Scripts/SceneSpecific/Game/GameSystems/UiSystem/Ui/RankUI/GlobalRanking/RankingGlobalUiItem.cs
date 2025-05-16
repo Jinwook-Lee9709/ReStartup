@@ -20,6 +20,10 @@ public class RankingGlobalUiItem : MonoBehaviour
         {
             background.color = Colors.rankPanelPlayerColor;
         }
+        else
+        {
+            background.color = Color.white;
+        }
         if (string.IsNullOrEmpty(this.uuid))
         {
             this.uuid = uuid;

@@ -33,6 +33,7 @@ public class  RankingSystemUiItem : MonoBehaviour
         }
         else
         {
+            frame.color = Color.white;
             rankingData.rankingPoint = Random.Range(rankingData.RankingPointminimum, rankingData.RankingPointmaximum);
             nameText.text = LZString.GetUIString(rankingData.RestaurantName);
         }
