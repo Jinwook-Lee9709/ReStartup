@@ -78,6 +78,7 @@ public class PromotionUI : MonoBehaviour
         {
             promotionData.Excute(buffManager, consumerManager, false);
         }
+        UpdateUI();
     }
     public void OnAdButtonClick()
     {
@@ -89,6 +90,7 @@ public class PromotionUI : MonoBehaviour
         {
             promotionData.Excute(buffManager, consumerManager, true);
         }
+        UpdateUI();
     }
 
     public void UpdateUI()
