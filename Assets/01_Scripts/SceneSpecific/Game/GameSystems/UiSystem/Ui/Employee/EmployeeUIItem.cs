@@ -44,7 +44,7 @@ public class EmployeeUIItem : MonoBehaviour
 
     private Dictionary<int, EmployeeSaveData> employeeSaveData;
     private int employeeId;
-
+    [SerializeField] private GameObject notEnoughCostPopUp;
 
     private void Awake()
     {
@@ -71,7 +71,7 @@ public class EmployeeUIItem : MonoBehaviour
 
     private void OnDestroy()
     {
-        if(UserDataManager.Instance != null)
+        if (UserDataManager.Instance != null)
             UserDataManager.Instance.ChangeMoneyAction -= OnConditionChanged;
     }
 
@@ -113,9 +113,13 @@ public class EmployeeUIItem : MonoBehaviour
     public void OnBuy()
     {
         var userData = UserDataManager.Instance.CurrentUserData;
-        if (employeeSaveData[employeeId].level >= 5 || userData.Money < employeeData.Cost ||
-            userData.Money < employeeData.Cost * employeeSaveData[employeeId].level)
+        if (employeeSaveData[employeeId].level >= 5)
         {
+            return;
+        }
+        if (userData.Money < employeeData.Cost)
+        {
+            Instantiate(notEnoughCostPopUp, ServiceLocator.Instance.GetSceneService<GameManager>().uiManager.canvas.transform);
             return;
         }
 
@@ -188,7 +192,7 @@ public class EmployeeUIItem : MonoBehaviour
     {
         if (!IsPayable(employeeData))
             return;
-        
+
         float targetTime = Time.time + Constants.POP_UP_DURATION;
         var alertPopup = ServiceLocator.Instance.GetGlobalService<AlertPopup>();
 
@@ -196,16 +200,16 @@ public class EmployeeUIItem : MonoBehaviour
         {
             var title = LZString.GetUIString("HireEmployee");
             var message = LZString.GetUIString("HireEmployeeMessage");
-            alertPopup.PopUp(title ,message, SpumCharacter.HireEmployee, false);
+            alertPopup.PopUp(title, message, SpumCharacter.HireEmployee, false);
         }
         else
         {
             var title = LZString.GetUIString("EducateEmployee");
             var message = LZString.GetUIString("EducateEmployeeMessage");
-            alertPopup.PopUp(title ,message, SpumCharacter.HireEmployee, false);
+            alertPopup.PopUp(title, message, SpumCharacter.HireEmployee, false);
         }
-            
-        
+
+
         await UserDataManager.Instance.AdjustMoneyWithSave(-employeeData.Cost);
         await UserDataManager.Instance.UpgradeEmployee(employeeId);
         employeeData.UpdateUpgradeStats(employeeSaveData[employeeId].level);
@@ -222,13 +226,13 @@ public class EmployeeUIItem : MonoBehaviour
         {
             var title = LZString.GetUIString("HiringComplete");
             var message = LZString.GetUIString("Hurray");
-            alertPopup.ChangeText(title,message);
+            alertPopup.ChangeText(title, message);
         }
         else
         {
             var title = LZString.GetUIString("EducationComplete");
             var message = LZString.GetUIString("Hurray");
-            alertPopup.ChangeText(title,message);
+            alertPopup.ChangeText(title, message);
         }
         alertPopup.EnableTouch();
 
