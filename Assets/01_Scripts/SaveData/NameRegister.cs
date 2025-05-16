@@ -52,6 +52,7 @@ public class NameRegister : MonoBehaviour
         SaveName(check).Forget();
         TutorialEvent.Instance.Broadcast(Strings.tutorialCompeleteKey);
         parent.OnCancleAction?.Invoke();
+        registButton.onClick.RemoveAllListeners();
         return;
     }
 

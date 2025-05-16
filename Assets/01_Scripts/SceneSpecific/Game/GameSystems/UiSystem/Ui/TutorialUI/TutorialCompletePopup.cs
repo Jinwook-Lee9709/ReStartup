@@ -9,8 +9,12 @@ public class TutorialCompletePopup : PopUp
 
     public void Init()
     {
-        acceptButton.onClick.AddListener(OnCancle);
-
+        acceptButton.onClick.AddListener(()=>
+        {
+            acceptButton.onClick.RemoveAllListeners();
+            OnCancle();
+        });
+        backGround.onClick.RemoveAllListeners();
     }
 
 }

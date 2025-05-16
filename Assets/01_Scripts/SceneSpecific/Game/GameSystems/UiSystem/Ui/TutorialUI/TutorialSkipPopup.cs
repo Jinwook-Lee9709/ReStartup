@@ -13,7 +13,12 @@ public class TutorialSkipPopup : PopUp
 
     public void Init(UnityAction acceptAction)
     {
-        cancleButton.onClick.AddListener(OnCancle);
+        cancleButton.onClick.AddListener(() =>
+        {
+            cancleButton.onClick.RemoveAllListeners();
+            acceptButton.onClick.RemoveAllListeners();
+            OnCancle();
+        });
         acceptButton.onClick.AddListener(() =>
         {
             acceptAction?.Invoke();
