@@ -133,6 +133,7 @@ public class InteriorCard : MonoBehaviour
     {
         authorityCheckPanel.SetActive(!isSatisfyRequirements);
         costPanel.SetActive(isSatisfyRequirements && upgradeLevel != Data.MaxUpgradeCount);
+        buyButton.gameObject.SetActive(isSatisfyRequirements);
     }
 
     private void UpdateButtonAndText(int upgradeLevel)
