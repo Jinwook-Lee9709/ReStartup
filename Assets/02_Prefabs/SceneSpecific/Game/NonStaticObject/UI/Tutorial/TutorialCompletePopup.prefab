@@ -79,6 +79,7 @@ GameObject:
   - component: {fileID: 3358383173284544059}
   - component: {fileID: 2071027359140256554}
   - component: {fileID: 8735078833157338385}
+  - component: {fileID: 5224725966783781351}
   m_Layer: 5
   m_Name: BackGround
   m_TagString: Untagged
@@ -186,7 +187,31 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2071027359140256554}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5224725966783781351}
+        m_TargetAssemblyTypeName: TutorialTriggerButton, Assembly-CSharp
+        m_MethodName: OnTutorialTriggerButtonTouch
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &5224725966783781351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1837437022372679699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 334886fe7623e104a9aef0253d0cf717, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5942504274238185719
 GameObject:
   m_ObjectHideFlags: 0
@@ -415,8 +440,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uD29C\uD1A0\uB9AC\uC5BC \uB0B4\uC6A9\uC740 \uC5B8\uC81C\uB4E0\uC9C0\n\uAC00\uC774\uB4DC
-    \uC571\uC5D0\uC11C \uD655\uC778 \uAC00\uB2A5\uD569\uB2C8\uB2E4.\r\n"
+  m_text: 'You can review the tutorial anytime
+
+    in the guide app.
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0c7bbded0b5a243beb970f73fe12ad1c, type: 2}
   m_sharedMaterial: {fileID: -5397116246888319091, guid: 0c7bbded0b5a243beb970f73fe12ad1c, type: 2}

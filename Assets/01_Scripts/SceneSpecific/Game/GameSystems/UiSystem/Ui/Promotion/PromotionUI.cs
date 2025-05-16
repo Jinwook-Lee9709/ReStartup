@@ -72,8 +72,8 @@ public class PromotionUI : MonoBehaviour
     private async UniTask ButtonClose(Button button)
     {
         button.interactable = false;
-        await UniTask.WaitForSeconds(0.5f);
-        button.interactable = true;
+        await UniTask.WaitForSeconds(0.3f);
+        UpdateUI();
     }
 
     public void OnPayButtonClick()

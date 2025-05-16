@@ -17,6 +17,7 @@ public abstract class PopUp : MonoBehaviour
 
     protected virtual void OnCancle()
     {
+        popupUi.GetComponent<Button>()?.onClick.RemoveAllListeners();
         StopAllCoroutines();
         backGround.interactable = false;
         popupUi.transform.DOScale(0f, 0.5f).SetEase(Ease.InOutElastic).OnComplete(() =>
