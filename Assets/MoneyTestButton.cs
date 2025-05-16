@@ -16,8 +16,8 @@ public class MoneyTestButton : MonoBehaviour
 
     private void Start()
     {
-        // button = GetComponent<Button>();
-        // button.onClick.AddListener(AddCost);
+        button = GetComponent<Button>();
+        button.onClick.AddListener(AddCost);
     }
 
     private void AddCost()
