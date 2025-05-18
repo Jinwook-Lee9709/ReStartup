@@ -14,7 +14,6 @@ public class AdTicketPopup : PopUp
 
     public void Init(Func<UniTask> adCallback, Func<UniTask> afterEvent = null)
     {
-        adTicketCheckText.text = "테스트 티켓 사용 텍스트";
         var ticketCnt = UserDataManager.Instance.CurrentUserData.AdTicket;
         adTicketCnt.text = string.Format(cntFormat, ticketCnt < 999 ? ticketCnt : "+999");
         acceptButton.onClick.AddListener(() =>
