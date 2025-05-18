@@ -10,15 +10,18 @@ public class PreferencesUI : MonoBehaviour
     [SerializeField] private Button changeLangaugeButton;
     [SerializeField] private Button updateButton;
     [SerializeField] private Button contactUsButton;
+    [SerializeField] private Button fontButton;
     [SerializeField] private Slider backgroundSound;
     [SerializeField] private Slider effectSound;
     [SerializeField] private PreferencesUpdatePopup updatePopup;
     [SerializeField] private ChangeLanguagePopup changeLanguagePopup;
+    [SerializeField] private GameObject fontPopup;
     void Start()
     {
         backgroundSound.onValueChanged.AddListener(BGMVolumSet);
         effectSound.onValueChanged.AddListener(SFXVolumSet);
         updateButton.onClick.AddListener(UpdatePopupSet);
+        fontButton.onClick.AddListener(OnFontPopup);
         changeLangaugeButton.onClick.AddListener(ChangeLanguageButtonClick);
         contactUsButton.onClick.AddListener(OpenGmailApp);
         backgroundSound.value = LocalSaveLoadManager.Data.BackGroundVolume;
@@ -49,6 +52,12 @@ public class PreferencesUI : MonoBehaviour
     {
         updatePopup.gameObject.SetActive(true);
     }
+
+    public void OnFontPopup()
+    {
+        fontPopup.SetActive(true);
+    }
+    
     public void BGMVolumSet(float vol)
     {
         float volumeDB = Mathf.Lerp(-80f, 0f, vol);
