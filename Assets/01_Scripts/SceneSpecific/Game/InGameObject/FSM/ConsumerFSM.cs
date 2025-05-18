@@ -456,8 +456,8 @@ public class ConsumerFSM : MonoBehaviour
     {
         if (consumer.pairData != null)
         {
-            model.PlayAnimation(PlayerState.IDLE, 2);
-            consumer.pairData.partner.FSM.Model.PlayAnimation(PlayerState.IDLE, 2);
+            model.PlayAnimation(PlayerState.IDLE, 0);
+            consumer.pairData.partner.FSM.Model.PlayAnimation(PlayerState.IDLE, 0);
             if (agent.IsArrive(targetPivot))
             {
                 consumer.pairData.partner.FSM.transform.localScale = new Vector3(-1, 1, 1);
