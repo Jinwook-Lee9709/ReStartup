@@ -11,16 +11,8 @@ public class AdvertisementManager : Singleton<AdvertisementManager>
     private GameObject ticketPopup;
     private bool isInitialized = false;
 
-#if UNITY_ANDROID
-    private string rewardTestADID = "ca-app-pub-3940256099942544/5224354917";
-    private string nativeTestADID = "ca-app-pub-3940256099942544/2247696110";
-#elif UNITY_IPHONE
-    private string rewardTestADID = "ca-app-pub-3940256099942544/1712485313";
-    private string nativeTestADID = "ca-app-pub-3940256099942544/3986624511";
-#else
-    private string rewardTestADID = "unused";
-    private string nativeTestADID = "unused";
-#endif
+    private string rewardTestADID = "ca-app-pub-5468276706415884/7734859057";
+    private string nativeTestADID = "ca-app-pub-5468276706415884/9541090279";
 
     public void Init()
     {
