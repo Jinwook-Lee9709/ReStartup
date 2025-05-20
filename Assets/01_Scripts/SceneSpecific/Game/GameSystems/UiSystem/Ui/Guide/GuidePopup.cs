@@ -16,7 +16,7 @@ public class GuidePopup : MonoBehaviour
     [SerializeField] private TextMeshProUGUI descriptionText;
     [SerializeField] private Button background;
     [SerializeField] private Image panel;
-
+    [SerializeField] private float sizeRatio;
     [SerializeField] private RectTransform canvas;
     
     public void Start()
@@ -30,9 +30,8 @@ public class GuidePopup : MonoBehaviour
     private void CalculateSize()
     {
         Vector2 size = canvas.rect.size;
-        float sizeRatio = size.x / 645;
+        sizeRatio = size.x / 645;
         sizeRatio = Mathf.Clamp(sizeRatio, 1f, maxScaleRatio);
-        panel.transform.localScale = new Vector3(sizeRatio, sizeRatio, sizeRatio);
     }
     
     public void SetInfo(GuideElementData data)
@@ -47,7 +46,7 @@ public class GuidePopup : MonoBehaviour
     public void Open()
     {
         gameObject.SetActive(true);
-        panel.transform.PopupAnimation(onComplete: () => {background.interactable = true;});
+        panel.transform.PopupAnimation(scale:sizeRatio, onComplete: () => {background.interactable = true;});
         if (background != null)
         {
             var backgroundImage = background.GetComponent<Image>();
