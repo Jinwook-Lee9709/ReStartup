@@ -6,7 +6,7 @@ Re-Startup은 식당을 운영하여 성장시켜나가는 2D도트식당운영�
 ## 목차
   - [개요](#개요) 
   - [게임 설명](#게임-설명)
-  - [게임 플레이 방식](#게임-플레이-방식)
+  - [콘텐츠](#콘텐츠)
 
 ## 개요
 - 프로젝트 이름: Re-Startup
@@ -15,9 +15,10 @@ Re-Startup은 식당을 운영하여 성장시켜나가는 2D도트식당운영�
 - 멤버: 김승욱, 박성민, 이진욱
 
 ## 게임 설명
-|![image]([https://user-images.githubusercontent.com/66003567/216818254-18683c3f-af80-4009-b2cc-35bdee865f23.png]))|![image]([https://user-images.githubusercontent.com/66003567/216818272-8749569b-b217-4572-9738-32b0058459f4.png])|
-|:---:|:---:|
-|시작 화면|사용자 정보 화면|
+
+|<img width="200" alt="스크린샷1" src="https://github.com/user-attachments/assets/32f7aadd-6905-4e64-b463-8633e9fb3396"/>|<img width="200" alt="스크린샷2" src="https://github.com/user-attachments/assets/7e761582-b2d0-419d-b03e-60d58ed75144" />|<img width="200" alt="스크린샷3" src="https://github.com/user-attachments/assets/3164f5ba-1634-415b-95b4-7721a0265158" />|
+|:---:|:---:|:---:|
+|시작 화면|식당 화면|랭킹 화면|
 
 
 - 다양한 아트들과 여러 테마<br>
@@ -28,13 +29,11 @@ Re-Startup은 식당을 운영하여 성장시켜나가는 2D도트식당운영�
 여러 행동을 통해 랭킹포인트를 획득가능합니다. 랭킹 포인트는 테마 클리어 척도로 사용됩니다. 이 랭킹 포인트의 총합으로 유저 랭킹을 계산하는 시스템이 구현되어있습니다.<br>
 
 
-## 게임 플레이 방식
+## 콘텐츠
 
-- 콘텐츠
+|<<img width="200" alt="스크린샷 2025-05-21 오전 10 54 55" src="https://github.com/user-attachments/assets/fba34ab0-1e08-4f96-bbee-5a28aeed15ae" />|<img width="200" alt="스크린샷3" src="https://github.com/user-attachments/assets/1738d27d-6f62-4266-9a33-3b850ca617d8" />|<img width="200" alt="스크린샷4" src="https://github.com/user-attachments/assets/8cd80765-ac5b-4d11-9be7-30afbbc51c0b" />|<img width="200" alt="스크린샷 2025-05-28 오후 5 39 59" src="https://github.com/user-attachments/assets/8fa671b0-d0f1-4216-aa52-9b8a13e050f6" />|
+|:---:|:---:|:---:|:--:|
+|직원 고용|랭킹 시스템|홍보 시스템|미션 시스템|
 
-|Home|Forest|Store|Room|
-|---|---|---|---|
-|![image](https://user-images.githubusercontent.com/66003567/216816017-bfd18669-9f70-45c2-8561-bae648690602.png)|![image](https://user-images.githubusercontent.com/66003567/216815971-d8ed6ea8-1f92-45f8-9611-1cbe2b5e8db0.png)|![image](https://user-images.githubusercontent.com/66003567/216815991-88e0f4d6-3e5d-4c19-9eb9-97047b40c0d0.png)|![image](https://user-images.githubusercontent.com/66003567/216816002-4eca6510-4436-44f5-b949-347e75129ada.png)|
-|옥수수 농사 가능|슈팅, 두더지 잡기, 낚시 미니게임 입장 가능|물품 판매 및 구매 가능|게임 저장 가능|
 
 
