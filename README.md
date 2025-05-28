@@ -15,7 +15,7 @@ Re-Startup은 식당을 운영하여 성장시켜나가는 2D도트식당운영�
 - 멤버: 김승욱, 박성민, 이진욱
 
 ## 게임 설명
-|![image]([https://user-images.githubusercontent.com/66003567/216818254-18683c3f-af80-4009-b2cc-35bdee865f23.png](https://github.com/Jinwook-Lee9709/ReStartup/blob/main/ReadmeScreenShots/스크린샷1.png))|![image]([https://user-images.githubusercontent.com/66003567/216818272-8749569b-b217-4572-9738-32b0058459f4.png](https://github.com/Jinwook-Lee9709/ReStartup/blob/main/ReadmeScreenShots/스크린샷1.png))|
+|![image]([https://user-images.githubusercontent.com/66003567/216818254-18683c3f-af80-4009-b2cc-35bdee865f23.png]))|![image]([https://user-images.githubusercontent.com/66003567/216818272-8749569b-b217-4572-9738-32b0058459f4.png])|
 |:---:|:---:|
 |시작 화면|사용자 정보 화면|
 
