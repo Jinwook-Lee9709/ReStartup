@@ -29,7 +29,9 @@ public class LoadingSceneManager : MonoBehaviour
         LoadTargetSceneAsync(targetSceneId, postLoadAction).Forget();
     }
 
-    public async UniTask LoadTargetSceneAsync(SceneIds targetSceneId, Func<UniTask> postLoadAction = null)
+    private async UniTask LoadTargetSceneAsync(
+        SceneIds targetSceneId, 
+        Func<UniTask> postLoadAction = null)
     {
         try
         {

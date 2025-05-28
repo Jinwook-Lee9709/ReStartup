@@ -14,7 +14,7 @@ public static class RestApiService
     private static readonly int RetryCount = 5;
 
 
-    public static UnityWebRequest CreateGetRequest(string url, Dictionary<string, string> data = null)
+    private static UnityWebRequest CreateGetRequest(string url, Dictionary<string, string> data = null)
     {
         url += "?" + GetQueryString(data);
         var request = new UnityWebRequest(url, "GET");
@@ -24,7 +24,7 @@ public static class RestApiService
         return request;
     }
 
-    public static string GetQueryString(Dictionary<string, string> data)
+    private static string GetQueryString(Dictionary<string, string> data)
     {
         if (data == null || data.Count == 0)
             return string.Empty;
@@ -32,7 +32,7 @@ public static class RestApiService
             data.Select(kvp => $"{Uri.EscapeDataString(kvp.Key)}={Uri.EscapeDataString(kvp.Value.ToString())}"));
     }
 
-    public static UnityWebRequest CreatePostRequest(string url, Dictionary<string, string> data = null)
+    private static UnityWebRequest CreatePostRequest(string url, Dictionary<string, string> data = null)
     {
         var request = new UnityWebRequest(url, "POST");
         if (data != null)
@@ -48,7 +48,7 @@ public static class RestApiService
         return request;
     }
 
-    public static UnityWebRequest CreatePostRequest(string url, string jsonPayLoad)
+    private static UnityWebRequest CreatePostRequest(string url, string jsonPayLoad)
     {
         var request = new UnityWebRequest(url, "POST");
         var bodyRaw = Encoding.UTF8.GetBytes(jsonPayLoad);
@@ -71,18 +71,16 @@ public static class RestApiService
     public static async UniTask<ApiResponse<T>> GetAsyncWithToken<T>(string url, Dictionary<string, string> data = null)
     {
         var payload = CreatePayload(data);
-        using (var request = CreateGetRequest(url, data))
+        using var request = CreateGetRequest(url, data);
+        try
         {
-            try
-            {
-                request.SetRequestHeader("Authorization", $"Bearer {TokenManager.LoginToken}");
-                return await SendRequestAsync<T>(request, payload);
-            }
-            catch (Exception e)
-            {
-                Debug.Log(e);
-                throw e;
-            }
+            request.SetRequestHeader("Authorization", $"Bearer {TokenManager.LoginToken}");
+            return await SendRequestAsync<T>(request, payload);
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e);
+            throw e;
         }
     }
 
@@ -91,6 +89,15 @@ public static class RestApiService
         var payload = CreatePayload(data);
         using (var request = CreatePostRequest(url, data))
         {
+            return await SendRequestAsync<T>(request, payload);
+        }
+    }
+    public static async UniTask<ApiResponse<T>> PostAsyncWithToken<T>(string url, Dictionary<string, string> data = null)
+    {
+        var payload = CreatePayload(data);
+        using (var request = CreatePostRequest(url, data))
+        {
+            request.SetRequestHeader("Authorization", $"Bearer {TokenManager.LoginToken}");
             return await SendRequestAsync<T>(request, payload);
         }
     }
@@ -112,17 +119,8 @@ public static class RestApiService
         }
     }
 
-    public static async UniTask<ApiResponse<T>> PostAsyncWithToken<T>(string url,
-        Dictionary<string, string> data = null)
-    {
-        var payload = CreatePayload(data);
-        using (var request = CreatePostRequest(url, data))
-        {
-            request.SetRequestHeader("Authorization", $"Bearer {TokenManager.LoginToken}");
-            return await SendRequestAsync<T>(request, payload);
-        }
-    }
 
+    // ReSharper disable Unity.PerformanceAnalysis
     public static async UniTask<ApiResponse<T>> SendRequestAsync<T>(UnityWebRequest request, byte[] payload)
     {
         request.timeout = DefaultTimeout;
@@ -158,7 +156,6 @@ public static class RestApiService
             }
             catch (Exception e)
             {
-                Debug.LogError(e);
                 if (request.responseCode == 401)
                 {
                     bool refreshResult = await UserAuthController.RefreshToken();
@@ -238,7 +235,6 @@ public static class RestApiService
                             return new ApiResponse<T>(ResponseType.JsonParseError, default);
                         }
                     }
-
                     throw new Exception(
                         $"Request failed with error: {request.error}, ResponseCode: {request.responseCode}");
                 }
@@ -275,7 +271,7 @@ public static class RestApiService
         return null;
     }
 
-    private static UnityWebRequest CloneRequest(UnityWebRequest originalRequest, byte[] payloadClone = null)
+    private static UnityWebRequest CloneRequest(UnityWebRequest originalRequest, byte[] payloadClone = null) 
     {
         var newRequest = new UnityWebRequest(originalRequest.url, originalRequest.method)
         {

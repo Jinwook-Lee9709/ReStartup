@@ -51,7 +51,6 @@ public class GameManager : MonoBehaviour
         
         //EmployeeManager Must Init after InitDictionary
         InitEmployeeManager();
-        
         InitGameScene();
     }
     

@@ -9,8 +9,6 @@ public class EmployeeTableGetData
     public float upgradeWorkSpeed = 0.4f;
     public int upgradeHealth = 10;
     public int StaffID { get; set; }
-    public int StaffNameKey { get; set; }
-    public int Description { get; set; }
     public int Theme { get; set; }
     public int StaffType { get; set; }
     public float WorkSpeed { get; set; }

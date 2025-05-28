@@ -113,7 +113,7 @@ public abstract class InteractWorkBase : WorkBase
         workManager.OnWorkFinished(this);
     }
 
-    protected abstract void HandlePostInteraction();
+
 
     protected virtual void StartInteraction()
     {
@@ -123,18 +123,23 @@ public abstract class InteractWorkBase : WorkBase
         target.OnInteract(interactor);
     }
 
+    // ReSharper disable Unity.PerformanceAnalysis
     private void CompleteInteraction()
     {
         isComplete = true;
         if(Worker.WorkType != WorkType.All)
         {
             var employee = Worker as EmployeeFSM;
-            employee.DecreaseHp(Constants.HEALTH_DECREASE_AMOUNT_ONWORKFINISHED);
-            employee.uiManager.EmployeeHpSet(employee);
+            if (employee != null)
+            {
+                employee.DecreaseHp(Constants.HEALTH_DECREASE_AMOUNT_ONWORKFINISHED);
+                employee.uiManager.EmployeeHpSet(employee);
+            }
         }
         HandlePostInteraction();
         OnWorkFinished();
     }
+    protected abstract void HandlePostInteraction();
 
     private bool IsArrive(NavMeshAgent agent, Transform target)
     {

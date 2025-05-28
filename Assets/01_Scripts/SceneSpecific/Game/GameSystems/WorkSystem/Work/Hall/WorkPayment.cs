@@ -43,7 +43,7 @@ public class WorkPayment : InteractWorkBase
     protected override void HandlePostInteraction()
     {
         var counter = target as CashierCounter;
-        counter.HideIcon();
+        if (counter != null) counter.HideIcon();
         worker.ClearWork();
         context.WorkFlowController.OnCashierFinished();
     }
