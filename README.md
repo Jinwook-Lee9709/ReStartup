@@ -31,7 +31,7 @@ Re-Startup은 식당을 운영하여 성장시켜나가는 2D도트식당운영�
 
 ## 콘텐츠
 
-|<<img width="200" alt="스크린샷 2025-05-21 오전 10 54 55" src="https://github.com/user-attachments/assets/fba34ab0-1e08-4f96-bbee-5a28aeed15ae" />|<img width="200" alt="스크린샷3" src="https://github.com/user-attachments/assets/1738d27d-6f62-4266-9a33-3b850ca617d8" />|<img width="200" alt="스크린샷4" src="https://github.com/user-attachments/assets/8cd80765-ac5b-4d11-9be7-30afbbc51c0b" />|<img width="200" alt="스크린샷 2025-05-28 오후 5 39 59" src="https://github.com/user-attachments/assets/8fa671b0-d0f1-4216-aa52-9b8a13e050f6" />|
+|<img width="200" alt="스크린샷 2025-05-21 오전 10 54 55" src="https://github.com/user-attachments/assets/fba34ab0-1e08-4f96-bbee-5a28aeed15ae" />|<img width="200" alt="스크린샷3" src="https://github.com/user-attachments/assets/1738d27d-6f62-4266-9a33-3b850ca617d8" />|<img width="200" alt="스크린샷4" src="https://github.com/user-attachments/assets/8cd80765-ac5b-4d11-9be7-30afbbc51c0b" />|<img width="200" alt="스크린샷 2025-05-28 오후 5 39 59" src="https://github.com/user-attachments/assets/8fa671b0-d0f1-4216-aa52-9b8a13e050f6" />|
 |:---:|:---:|:---:|:--:|
 |직원 고용|랭킹 시스템|홍보 시스템|미션 시스템|
 
